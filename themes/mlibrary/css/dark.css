@@ -1,0 +1,4 @@
+/* Configurable: These are the styles that change when you switch stylesheets == These are the dark.css settings */
+body{background: none #333333;}
+#primary-nav{background:none transparent;}
+#footer {background:#333;}

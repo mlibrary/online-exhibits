@@ -1,0 +1,14 @@
+<phpunit bootstrap="bootstrap.php"
+         convertErrorsToExceptions="true"
+         convertWarningsToExceptions="true"
+         convertNoticesToExceptions="true"
+         backupGlobals="true">
+    <testsuites>
+        <testsuite name="Integration">
+            <file>integration/TestSuite.php</file>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory>unit</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

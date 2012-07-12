@@ -1,0 +1,6 @@
+/* Configurable: These are the styles that change when you switch stylesheets == These are the paperlight.css settings */
+
+body{background: url("../images/paperlight.jpg") repeat fixed 50% 50% #f2f2f2;}
+#primary-nav{background:#555;}
+#footer {background:#555;}
+#search-container #submit_search {border: 1px solid #DDDDDD;}

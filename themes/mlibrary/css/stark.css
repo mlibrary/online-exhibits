@@ -1,0 +1,26 @@
+/* Configurable: These are the styles that change when you switch stylesheets == These are the stark.css settings */
+
+body{background: none #fff;}
+#primary-nav{background:#555;}
+#footer {background:#555;}
+#content{border-color: #ccc;border-width: 1px}
+
+#site-title, #content{
+
+opacity:1; 
+
+filter: alpha(opacity = 100);
+
+-webkit-box-shadow: none;
+
+-moz-box-shadow: none;
+
+box-shadow: none; 
+
+-webkit-border-radius: 0px;
+
+-moz-border-radius: 0px;
+
+border-radius: 0px; 
+
+}

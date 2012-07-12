@@ -1,0 +1,5 @@
+/* Configurable: These are the styles that change when you switch stylesheets == These are the smoothbrown.css settings */
+body{background: url("../images/smoothbrown.png") repeat fixed 50% 0 #382720;}
+#primary-nav{background:none transparent;border-bottom:none;}
+#footer {background:none transparent;}
+h1, h2, h3, h1 a, h2 a, a:link, #site-title a{color: #382720;}
