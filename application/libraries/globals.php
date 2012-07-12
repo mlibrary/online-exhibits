@@ -786,6 +786,38 @@ function get_group_name_by_group_id($group_id){
     return $name;
 }
 
+function get_groups_ids_attached_to_exhibits($id){
+	 $value = array();
+	 $db = get_db();
+	 if(!empty($id)){
+     	$rows =  $db->getTable("Omlibrarygroupsexhibitrelationship")->fetchObjects("SELECT g.group_id FROM {$db->prefix}groups_exhibit_relationship g where g.entity_id = $id");
+		if (!empty($rows)){
+			foreach($rows as $row){
+				$value[]= $row['group_id'];
+			}
+		}
+	}
+	return $value;
+}
+
+function get_image_attached_to_exhibits($id){
+	 $value = "";
+	 $db = get_db();
+	// print_r($id);
+	
+	 if(!empty($id)){
+     	$row =  $db->getTable("Omlibraryimageexhibitrelationship")->fetchObjects("SELECT * FROM {$db->prefix}image_exhibit_relationship g where g.entity_id = $id");
+     //	print_r($row);
+     	//exit;
+		if (!empty($row)){
+			//foreach($rows as $row){
+				$value= $row[0];
+			//}
+		}
+	}
+	return $value;
+}
+
 
 function get_groups_ids_selected($id){
 	 $value = array();

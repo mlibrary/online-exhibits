@@ -18,7 +18,7 @@ if(isset($_SERVER['REMOTE_USER'])) {
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
     }
    if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
-      $_SERVER['REMOTE_USER']='jlbonnet';
+      $_SERVER['REMOTE_USER']='jlausch';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
     }
   /*  else

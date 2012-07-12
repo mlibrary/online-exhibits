@@ -292,11 +292,11 @@ if ($xml = file_get_contents($url))
                 <label for="theme"><?php echo __('Theme'); ?></label>            
                 <?php $values = array('' => __('Current Public Theme')) + exhibit_builder_get_ex_themes(); ?>
                 <div class="select"><?php echo __v()->formSelect('theme', $exhibit->theme, array('id'=>'theme'), $values); ?>
-                <?php //if ($theme && $theme->hasConfig): ?>
-                <!--<a href="<?php //echo html_escape(uri("exhibits/theme-config/$exhibit->id")); ?>" class="configure-button button" style="vertical-align: baseline; float:none;">-->
-                <?php //echo __('Configure'); ?>
-                <!--</a>-->
-                <?php //endif;?>
+                <?php if ($theme && $theme->hasConfig): ?>
+                <a href="<?php echo html_escape(uri("exhibits/theme-config/$exhibit->id")); ?>" class="configure-button button" style="vertical-align: baseline; float:none;">
+                <?php echo __('Configure'); ?>
+                </a>
+                <?php endif;?>
                 </div>
             </div>
             
@@ -316,28 +316,32 @@ if ($xml = file_get_contents($url))
             </div>  
                     <?php }?>  
             <?php
-          
-            if (($actionName=='Edit') and (($user->role=='super') || ($user->role=='admin'))){?>
+          if($actionName=='Edit'){
+            if (($user->role=='super') || ($user->role=='admin')){?>
                <div class="field">
                 <label for="group-selection"><?php echo __('Select a Group'); ?></label>                              
                 <?php //$values = array('' => __('Select group')) + get_user_groups(); ?>
                 <div class="select"><?php //echo __v()->formSelect('group', array('id'=>'group'), $values); ?>
-               <?php $groupValue =  get_theme_option('exhibitgroup');
-               
+               <?php //$groupValue =  get_theme_option('exhibitgroup');
+                $groupValue =  get_groups_ids_attached_to_exhibits($exhibit->id);
      			  echo select(array('name'=>'group-selection','id'=>'group-selection'),get_groups_names(),$groupValue); ?>
                 </div>
             </div> 
             <?php } else {?>
             <div class="field">
-                <label for="group"><?php echo __('Groups'); ?></label>          
-                    <?php $group_id = get_theme_option('exhibitgroup');
-                   // echo (get_group_by_group_id($group_id));//echo text(array('name'=>'group', 'id'=>'group', 'class'=>'textinput'), get_theme_option('exhibitgroup')); ?>
+                <label for="group"><?php echo __('Groups'); ?></label>
+                    <?php //$group_id = get_theme_option('exhibitgroup');
+             		    $group_id = get_groups_ids_attached_to_exhibits($exhibit->id);
+                    	//echo (get_group_by_group_id($group_id));//echo text(array('name'=>'group', 'id'=>'group', 'class'=>'textinput'), get_theme_option('exhibitgroup')); ?>
                 <?php //$values = array('' => __('Select group')) + get_user_groups(); ?>
                 <div class="select"><?php //echo __v()->formSelect('group', array('id'=>'group'), $values); ?>
-               		<?php echo (get_group_name_by_group_id($group_id)); ?>
+               		<?php //echo (get_group_name_by_group_id($group_id)); 
+               		 	echo select(array('name'=>'group-selection','id'=>'group-selection'),get_groups_names_belongto_user($user->entity_id,$user->role),$group_id); 
+           		  ?>
                 </div>
-            </div>             
-            <?php } ?>
+            </div>
+            <?php }
+            }?>
         
         </fieldset>
         

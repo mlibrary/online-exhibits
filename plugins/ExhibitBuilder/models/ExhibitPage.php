@@ -112,6 +112,9 @@ class ExhibitPage extends Omeka_Record
 	 * 
 	 * @return void
 	 **/
+	 
+
+	 
 	public function afterSaveForm($post)
 	{			
 		$textCount = count($post['Text']);
@@ -135,7 +138,13 @@ class ExhibitPage extends Omeka_Record
 			$ip->order = (int) $i;
 			$ip->forceSave();
 		}
+		
+		//$image = save_image_item($itemCount,$post);		
+		//print_r($image);
+		//exit;
 	}
+	
+	
 	
 	public function getPageEntries()
 	{

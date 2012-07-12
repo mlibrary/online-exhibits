@@ -605,12 +605,14 @@ function exhibit_builder_user_can_edit($exhibit = null, $user = null)
 }
 
 function exhibit_builder_user_can_edit_groups($exhibit=null,$user=null){
-	$data = unserialize($exhibit->theme_options);
-	$group_in_exhibit = $data[mlibrary]['exhibitgroup'];
+	//$data = unserialize($exhibit->theme_options);
+	//$group_in_exhibit = $data[mlibrary]['exhibitgroup'];
+	$group_in_exhibit = get_groups_ids_attached_to_exhibits($exhibit->id);
+	
 	$user_id = $user['entity_id'];
 	$result=0;
-	if(!empty($group_in_exhibit))
-		$result = test($group_in_exhibit,$user_id);
+	if(!empty($group_in_exhibit[0]))
+		$result = test($group_in_exhibit[0],$user_id);
 	//print_r($user_id);
 return $result;
 }

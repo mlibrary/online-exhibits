@@ -35,8 +35,8 @@ foreach($featured_exhibits as $featured_exhibit){
 	
 	// skip exhibit if by some chance is a gallery
 	$themeOptions = unserialize($featured_exhibit->theme_options);
-	$Exhibit_image = $themeOptions[mlibrary][exhibitimage];
-	
+//	$Exhibit_image = $themeOptions[mlibrary][exhibitimage];
+	$Exhibit_image = get_image_attached_to_exhibits($featured_exhibit->id);	
 	if($themeOptions[mlibrary][pages_in_section] == 'pages_3') { continue; };
 	
 	$exhibitNum++;
@@ -46,7 +46,7 @@ foreach($featured_exhibits as $featured_exhibit){
 	  
     <div class="showcase-slide">	
 		<?php //$Exhibit_image =  mlibrary_exhibit_image($featured_exhibit);
-    	echo '<a href="'.exhibit_builder_exhibit_uri($featured_exhibit).'"><img src="'.WEB_ARCHIVE.$Exhibit_image['image'].'" alt="'.$Exhibit_image['title'].'" /></a>';
+    	echo '<a href="'.exhibit_builder_exhibit_uri($featured_exhibit).'"><img src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" /></a>';
 
    echo '<div class="showcase-caption">';
 		echo '<h4>'.exhibit_builder_link_to_exhibit($featured_exhibit).'</h4>';
@@ -55,7 +55,7 @@ foreach($featured_exhibits as $featured_exhibit){
 	
 	<div class="showcase-thumbnail active" style="width:100px;">
 	 	<?php //$Exhibit_image =  mlibrary_exhibit_image($featured_exhibit);
-    	echo '<img  src="'.WEB_ARCHIVE.$Exhibit_image['image'].'" alt="'.$Exhibit_image['title'].'"  width="44" height="44"/>';?>
+    	echo '<img  src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'"  width="44" height="44"/>';?>
     </div>    			    	
 	
 	<?php echo '</div>';			        
@@ -87,8 +87,10 @@ foreach($featured_exhibits as $featured_exhibit){
     set_exhibits_for_loop(exhibit_builder_recent_exhibits());
     while(loop_exhibits()): ?>
     	<?php 
+    	$item_found=false;
 		if($exhibitCount > 4){ break; };    
     	$currentexhibit = get_current_exhibit();
+    	
       ?>
         <?php //if($exhibitCount >= 1 && $exhibitCount <= $end): 
           $theme_options_array = $currentexhibit->getThemeOptions();
@@ -98,8 +100,13 @@ foreach($featured_exhibits as $featured_exhibit){
 	 	    	<?php $first_exhibit='true';?>
 	    			<h4><?php echo link_to_exhibit(); ?></h4> 
 	    		   <?php //$Exhibit_image =  mlibrary_exhibit_image($currentexhibit);
-	    		   $Exhibit_image = $theme_options_array['exhibitimage'];
-    		   		echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image'].'" alt="'.$Exhibit_image['title'].'" />';
+	    		   $Exhibit_image = get_image_attached_to_exhibits($currentexhibit->id);
+	    		   if (!empty($Exhibit_image))
+	    		  // $Exhibit_image = $theme_options_array['exhibitimage'];
+    			   		echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+    		   		else
+    		   			echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  
+    		   		
 					echo '<p class="description">'.snippet($currentexhibit->description, 0, 300).'</p>';
 		    		echo '<p class="tags">'.tag_string($currentexhibit, uri('exhibits/browse?tags=')).'</p>';?>
     		    </div>

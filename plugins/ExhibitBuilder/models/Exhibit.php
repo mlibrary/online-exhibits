@@ -24,7 +24,7 @@ class Exhibit extends Omeka_Record
 	public $description;
 	public $credits;
     public $featured = 0;
-    public $public = 1;
+    public $public = 0;
 	
 	public $theme;
 	public $theme_options;
@@ -78,12 +78,13 @@ class Exhibit extends Omeka_Record
 	protected function setFromPost($post)
 	{
 	    unset($post['featured']);
-            return parent::setFromPost($post);
+	        return parent::setFromPost($post);
 	}
 	
 	protected function afterSaveForm($post)
 	{
-	
+//	print_r($post['Pages']);
+//	exit;
 		//Save theme-options with image for exhibits.
 		//Add the tags after the form has been saved
 		$current_user = Omeka_Context::getInstance()->getCurrentUser();		

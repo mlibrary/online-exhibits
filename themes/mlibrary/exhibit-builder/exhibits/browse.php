@@ -81,14 +81,12 @@ jQuery(document).ready(function()
 	 	    	<?php $first_exhibit='true';?>
 	    			<h2><?php echo link_to_exhibit(); ?></h2> 
 	    		   <?php //$Exhibit_image =  mlibrary_exhibit_image($currentexhibit);
-	    		   
-	    		 	  	$Exhibit_image = $theme_options_array['exhibitimage'];
-	    		 //  set_theme_option_with_image($Exhibit_image);
-	    		 //comment calling this function it should be called from admin page
-	    		 //set_theme_option_with_image();
-    		   		echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image'].'" alt="'.$Exhibit_image['title'].'" />';
-//print_r($Exhibit_image);
-//exit;
+	    		   $theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($currentexhibit->id);
+	    		 	$Exhibit_image = $theme_options_array['exhibitimage'];
+	    		 	if (!empty($Exhibit_image))
+		    		 echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+		    		 else
+		    		 	echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  
 					echo '<p class="description">'.snippet($currentexhibit->description, 0, 300).'</p>';
 		    		echo '<p class="tags">'.tag_string($currentexhibit, uri('exhibits/browse?tags=')).'</p>';?>
     		    </div>

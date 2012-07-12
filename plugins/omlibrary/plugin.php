@@ -1,8 +1,11 @@
 <?php
 add_plugin_hook('install', 'omlibrary_install');
 add_plugin_hook('initialize', 'omlibrary_initialize');
-add_plugin_hook('after_save_form_exhibit', 'omlibrary_save_exhibit_item_image');
-//add_plugin_hook('before_save_form_exhibit', 'omlibrary_save_exhibit_group');
+add_plugin_hook('after_save_form_exhibit_page', 'omlibrary_save_exhibit_page');
+add_plugin_hook('after_save_form_exhibit','omlibrary_save_exhibit');
+add_plugin_hook('after_delete_exhibit', 'omlibrary_delete_exhibit');
+
+add_plugin_hook('before_delete_exhibit_page', 'omlibrary_delete_exhibit_page');
 add_plugin_hook('before_delete_user','omlibrary_delete_user_from_group');
 add_plugin_hook('define_acl', 'omlibrary_setup_acl');
  add_filter('admin_whitelist','omlibrary_addToWhitelist');
@@ -17,6 +20,9 @@ function omlibrary_delete_user_from_group($user){
 	$grouping = new Omlibrarygrouping;
 	$grouping->deleteGroupingRecords($user['entity_id']);
 }
+
+
+
 
 function omlibrary_save_form_user($user){
 	$tempuser= $user;
@@ -41,6 +47,111 @@ function omlibrary_save_form_user($user){
     	//exit;
   //  }
 }
+
+
+function omlibrary_save_exhibit_page($page){
+$exhibit = $page['Section']['Exhibit'];
+omlibrary_save_exhibit($exhibit);
+}
+
+function omlibrary_delete_exhibit_page($page){
+$temp_page_id = $page['id'];
+// get first page
+$exhibit = $page['Section']['Exhibit'];
+$section = $exhibit->getFirstSection();
+if(!empty($section)){
+	$first_page= $exhibit->getFirstSection()->getPageByOrder(1);
+	}
+	
+if($temp_page_id == $first_page['id']){
+	 $newimageexhibitrelationship = new Omlibraryimageexhibitrelationship;
+	$newimageexhibitrelationship->deleteimagexhibitrelationshipRecords($exhibit->id);
+	}
+}
+
+
+function omlibrary_delete_exhibit($exhibit){
+	$newimageexhibitrelationship = new Omlibraryimageexhibitrelationship;
+	$newimageexhibitrelationship->deleteimagexhibitrelationshipRecords($exhibit->id);
+		
+	$newgroupsexhibitrelationship = new Omlibrarygroupsexhibitrelationship;
+	$newgroupsexhibitrelationship->deletegroupsexhibitrelationshipRecords($exhibit->id);
+}
+
+function omlibrary_save_exhibit($exhibit,$post){
+	   require_once HELPERS;  
+	
+	  $itemcount=0;
+	  $page="";
+	  $section = $exhibit->getFirstSection();
+	  if(!empty($section)){
+		  $page= $exhibit->getFirstSection()->getPageByOrder(1);
+	//	  print_r($page);
+		//  exit;
+	  $itemcount = count($page['ExhibitPageEntry']);
+	
+	 $itempageobject = $page['ExhibitPageEntry'];
+	$found=false;
+	if($itemcount>0){
+	for ($i=1; $i <= $itemcount; $i++) {
+	if($found!=true){
+		$item = $itempageobject[$i]['Item'];
+		if(!empty($item)){
+	 		while (loop_files_for_item($item)):
+        		    		$file = get_current_file();          		    	               	
+        		    		//print_r($file['archive_filename']);
+        		    		//exit;
+        		    		if ($file->hasThumbnail()):                
+    	                		if ($index == 0):                        
+									 $Exhibit_image = array('image'=>'/'.$file->getStoragePath('fullsize'),'title'=>item('Dublin Core','Title',array(),$item));
+								//	 print_r($file->getStoragePath('fullsize'));
+								//	 exit;
+									 $index=1;
+									 $found=true;
+								 endif;
+							endif;
+			endwhile;
+			}					
+		}
+	}
+	}
+	
+	}
+
+	if (!empty($Exhibit_image))
+	{
+		$newimageexhibitrelationship = new Omlibraryimageexhibitrelationship;
+		$newimageexhibitrelationship->deleteimagexhibitrelationshipRecords($exhibit->id);
+	
+		$newimageexhibitrelationship->entity_id = $exhibit->id;
+		$newimageexhibitrelationship->image_name = $Exhibit_image['image'];
+		$newimageexhibitrelationship->image_title = $Exhibit_image['title'];
+		$newimageexhibitrelationship->save();
+	}
+	
+	
+	//print_r($post['group-selection']);
+	//exit;
+	if(!empty($post['group-selection'])){
+		$newgroupsexhibitrelationship = new Omlibrarygroupsexhibitrelationship;
+		$newgroupsexhibitrelationship->deletegroupsexhibitrelationshipRecords($exhibit->id);
+	
+		$newgroupsexhibitrelationship->entity_id = $exhibit->id;
+		$newgroupsexhibitrelationship->group_id = $post['group-selection'];
+		$newgroupsexhibitrelationship->save();
+	}
+ 
+
+ 
+	//$data = unserialize($exhibit->theme_options);
+	//$data[mlibrary]['exhibitimage']= $Exhibit_image;
+
+	//$exhibit->theme_options = serialize($data);
+	//$exhibit->save();
+	
+
+
+	 }
 
 
 function omlibrary_install(){
@@ -129,9 +240,12 @@ function omlibrary_save_exhibit_group($exhibit,$post){
 	$exhibit->theme_options = serialize($data);	
 }
 
-
-function omlibrary_save_exhibit_item_image($exhibit,$post){    
+//old function using theme-option method.
+/*function omlibrary_save_exhibit($exhibit,$post){    
   require_once HELPERS;    
+  
+  //$exhibit);
+ //exit;
   $items = get_items(array('exhibit' => $exhibit['id']));
   
    if ($items!=null){
@@ -161,7 +275,7 @@ if(!empty($post['group-selection']))
 	$data[mlibrary]['exhibitgroup']= $post['group-selection'];	
 	$exhibit->theme_options = serialize($data);
 	$exhibit->save();
-}
+}*/
 
   
 class OmlibraryControllerPlugin extends Zend_Controller_Plugin_Abstract {

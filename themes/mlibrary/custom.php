@@ -195,7 +195,7 @@ function mlibrary_display_related_exhibits(){
 		if ($related_exhibits_setting == 'yes')return mlibrary_link_to_related_exhibits(item('ID'));
 }
    
- /*function mlibrary_exhibit_image($currentexhibit=null) {
+/* function mlibrary_exhibit_image($currentexhibit=null) {
 //$exhibit_image_setting=get_theme_option('Exhibit Image');
 if($currentexhibit==null):
 	 $currentexhibit = get_current_exhibit();
@@ -257,7 +257,7 @@ function mlibrary_header_banner() {
 	$header_banner=get_theme_option('Header Banner');
 	$header_text = get_theme_option('Header Text');
 	if($header_banner){
-		$output = "<h1 style='background:url(".CURRENT_BASE_URL.'/archive/theme_uploads/'.$header_banner.")'>";
+		$output = "<h1 class='default' style='background:url(".CURRENT_BASE_URL.'/archive/theme_uploads/'.$header_banner.")'>";
 	} else {
 		$output = "<h1 class='default'>";
 	}

@@ -43,11 +43,12 @@
 		echo('<iframe src="http://www.youtube.com/embed/'.$Exhibit_video.'?theme=light" frameborder="0" width="100%" height="300px"></iframe>');
 	} else {
 		//$Exhibit_image = mlibrary_exhibit_image();   
-		$theme_options_array = get_current_exhibit()->getThemeOptions();        
+		$theme_options_array = get_current_exhibit()->getThemeOptions();  
+		$theme_options_array['exhibitimage'] = get_image_attached_to_exhibits(get_current_exhibit()->id);      
 			$Exhibit_image = $theme_options_array['exhibitimage'];     
 		if ($Exhibit_image)         
 			//echo('<img src="'.CURRENT_BASE_URL.'/archive/theme_uploads/'.$Exhibit_image.'"/>'); 
-    		   		echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image'].'" alt="'.$Exhibit_image['title'].'" />';
+    		   		echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
 		else
 			echo('<div><img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/></div>');  
 	}
