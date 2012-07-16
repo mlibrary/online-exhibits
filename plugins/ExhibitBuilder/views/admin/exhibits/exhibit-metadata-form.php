@@ -169,7 +169,7 @@ fieldset fieldset legend {
       
 			jQuery('#lib-tags input[type=checkbox]').each(function() { // cycle and add new tags to list
 				if(jQuery(this).is(':checked')){
-					console.log(jQuery(this));
+					//console.log(jQuery(this));
 					if(jQuery.inArray(this.name,tags) == -1){ // check if already a tag
 						tags.push(this.name);	
 					}
