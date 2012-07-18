@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><?php echo settings('site_title'); echo $title ? ' | ' . $title : ''; ?></title>
+<title><?php echo $title ? $title.' | ' : '';
+echo settings('site_title'); 
+echo ' | '.'Mlibrary' ?></title>
 
 <!-- Meta -->
 
