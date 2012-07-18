@@ -3,7 +3,7 @@
 <head>
 <title><?php echo $title ? $title.' | ' : '';
 echo settings('site_title'); 
-echo ' | '.'Mlibrary' ?></title>
+echo ' | '.'MLibrary' ?></title>
 
 <!-- Meta -->
 
