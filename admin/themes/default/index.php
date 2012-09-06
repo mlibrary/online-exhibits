@@ -5,7 +5,8 @@ head(array('bodyclass'=>'index primary-secondary', 'title'=>$pageTitle)); ?>
     <div id="primary">
         
         <?php // Retrieve the latest version of Omeka by pinging the Omeka server. ?>
-        <?php if (has_permission('Upgrade', 'index')):
+       
+        <?php if (has_permission('Upgrade', 'index') and has_permission('Settings', 'edit')):
               $latestVersion = get_latest_omeka_version();
                   if ($latestVersion and version_compare(OMEKA_VERSION, $latestVersion, '<')): ?>
                     <div class="success">
