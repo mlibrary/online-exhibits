@@ -47,10 +47,16 @@ width:100px;
     
   
 #exhibit.browse #exhibits img, body#home #recent-exhibits img{
-width:100px;
 height:100px;
 float:left;
-padding:10px;
+padding:7px;
+/*box-shadow:2px 3px 6px 1px #777777;
+-webkit-box-shadow: 2px 3px 6px 1px #777777;
+  -moz-box-shadow: 2px 3px 6px 1px #777777
+Zoom:1;
+filter: progid:DXImageTransform.Microsoft.Shadow(Color=#cccccc, Strength=10, Direction=90),
+filter: progid:DXImageTransform.Microsoft.Shadow(Color=#cccccc, Strength=10, Direction=180);*/
+		
 }
 
 #exhibit.browse .exhibit > p.description, body#home #recent-exhibits p.description{
@@ -828,6 +834,7 @@ body#home #legacy-exhibits h3 {
 }
 #exhibit.browse #exhibits .exhibit .tags, body#home #recent-exhibits .tags {
 	background:url(../images/layout/tag-dark.gif) no-repeat left;
+	/*padding:9px 0 0 20px;*/
 	padding:0 0 0 20px;
 	margin:10px 0 0 0;
 	min-height:11px;
