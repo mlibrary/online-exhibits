@@ -33,7 +33,7 @@ if (empty($pathToConvert) && has_permission('Settings', 'edit')): ?>
     </table>
     </div>
 <?php endif; ?>
-<h3><?php echo __('Add New Files'); ?></h3>
+<h3><?php echo __('Add New Files. File size limit is 32MG'); ?></h3>
 
 <div id="add-more-files">
 <label for="add_num_files"><?php echo __('Find a File'); ?></label>
