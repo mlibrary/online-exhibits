@@ -1,0 +1,2 @@
+Timeline.EventUtils={};Timeline.EventUtils.getNewEventID=function(){if(this._lastEventID==null)this._lastEventID=0;this._lastEventID+=1;return"e"+this._lastEventID};Timeline.EventUtils.decodeEventElID=function(b){var a=b.split("-");if(a[1]!="tl")return alert("Internal Timeline problem 101, please consult support"),{band:null,evt:null};b=Timeline.getTimelineFromID(a[2]).getBand(a[3]);a=b.getEventSource.getEvent(a[4]);return{band:b,evt:a}};
+Timeline.EventUtils.encodeEventElID=function(b,a,c,d){return c+"-tl-"+b.timelineID+"-"+a.getIndex()+"-"+d.getID()};

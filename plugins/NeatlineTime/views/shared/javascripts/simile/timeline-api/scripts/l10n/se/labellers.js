@@ -1,0 +1,1 @@
+Timeline.GregorianDateLabeller.monthNames.se="Jan,Feb,Mar,Apr,Maj,Jun,Jul,Aug,Sep,Okt,Nov,Dec".split(",");Timeline.GregorianDateLabeller.dayNames.se="S\u00f6n,M\u00e5n,Tis,Ons,Tors,Fre,L\u00f6r".split(",");
