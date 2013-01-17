@@ -1230,6 +1230,7 @@ body#exhibit.show .exhibit-text p a[href] {
 }
 .exhibit-item-caption {
 color:#777;
+font-style:inherit;
 }
 
 .gallery-full-left .primary {
