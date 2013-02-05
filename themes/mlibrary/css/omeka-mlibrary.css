@@ -134,7 +134,7 @@ zoom:1;
 	color:#345477;
 	padding:7px 10px;
 
-	text-transform:lowercase;
+	/*text-transform:lowercase;*/
 	transition: color 0.3s ease-in-out;
 	-webkit-transition: color 0.3s ease-in-out;
 	-moz-transition: color 0.3s ease-in-out;
