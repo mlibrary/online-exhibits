@@ -23,6 +23,12 @@
     		<a href="<?php echo uri('items'); ?>"><img src="<?php echo img('icon-archive.gif','images/layout') ?>" alt="archive icon" width="20" heigh="20"/></a>
     		flip through the <a href="<?php echo uri('items'); ?>">archive</a> to see the full listing of items! 
             </li>
+        
+        <li class="timeline-icon">
+    		<a href="<?php echo uri('neatline-time/timelines'); ?>"><img src="<?php echo img('icon-archive.gif','images/layout') ?>" alt="archive icon" width="20" heigh="20"/></a>
+    		flip through the <a href="<?php echo uri('neatline-time/timelines'); ?>">Time Line</a> to see the full listing of time lines! 
+            </li>
+    
     	</ul>
 	</div><!-- end greeting -->	
     
