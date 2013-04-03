@@ -10,6 +10,40 @@
 
 
  **/
+/**.timelines #primary .time .timeline p{
+  padding: 10px;
+  width: 600px;
+}
+
+.timelines #primary .time .timeline h2{
+    background: none repeat scroll 0 0 transparent;
+    border: 0 none;
+    font-family: "Myriad Pro",Arial,Helvetica,Tahoma,sans-serif;
+    font-size: 1.4em;
+    line-height: 1;
+    margin: 0 0 0.5em;
+    padding: 0;
+    text-transform: none;
+}
+    
+.timelines .time{
+  min-height: 538px;
+}
+
+.timelines #primary .time .first{
+  background: none repeat scroll 0 0 transparent;
+     border-top-width: 0;
+    margin-top: 0;
+    padding-top: 37px;
+}
+
+.timelines .time  .timeline {
+  background: url("../images/layout/browse-border.gif") repeat-x scroll center top transparent;
+  border: medium none;
+  margin: 0;
+  padding: 2em 0;
+}*/
+
 
 
 #exhibit.summary .gallery-thumbnail .exhibit-item{
@@ -266,6 +300,11 @@ div#logo {
 	width:12px;
 	background:url(../images/layout/tabs/icons.png) no-repeat 0 -45px;
 }
+#primary-nav .nav-timeline a:before {
+	width:12px;
+	background:url(../images/layout/tabs/icons.png) no-repeat 0 -65px;
+}
+
 
 /***************************** END NAVIGATION TAB EDITS 3-23-12 */
 
@@ -690,7 +729,13 @@ body#home #legacy-exhibits h3 {
 }
 
 
-#exhibit.browse #content, #exhibit.tags #content, #items.browse #content, #items.tags #content  {
+/*#exhibit.browse #content, #exhibit.tags #content, #items.browse #content, #items.tags #content, .timelines #content  {
+	background:url(../images/layout/browse-bg.gif) repeat-x top #F3f3f3;
+}
+#exhibit.browse #content h1, #exhibit.tags #content h1,#items.browse #content h1, #items.tags #content h1, .timelines #content h1 {
+	padding-bottom:1.5em;
+}*/
+#exhibit.browse #content, #exhibit.tags #content, #items.browse #content, #items.tags #content {
 	background:url(../images/layout/browse-bg.gif) repeat-x top #F3f3f3;
 }
 #exhibit.browse #content h1, #exhibit.tags #content h1,#items.browse #content h1, #items.tags #content h1 {
@@ -1340,6 +1385,17 @@ body#items #content >h1 {
 	width:48%;
 }
 
+/*#items.show #content > h1, #items.show #content > h1, #exhibit.browse #content h1, #exhibit.tags #content h1, #items.browse #content h1, #items.tags #content h1, .timelines #content h1, body#home #content #primary h2, body.error404 h1{
+	letter-spacing:1px;
+	font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+	font-weight:bold;
+	color:#555;
+	text-transform:capitalize;
+	text-shadow:2px 2px 0 rgba(0,0,0,.1);
+	
+}*/
+
+
 #items.show #content > h1, #items.show #content > h1, #exhibit.browse #content h1, #exhibit.tags #content h1, #items.browse #content h1, #items.tags #content h1, body#home #content #primary h2, body.error404 h1{
 	letter-spacing:1px;
 	font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
@@ -1349,6 +1405,7 @@ body#items #content >h1 {
 	text-shadow:2px 2px 0 rgba(0,0,0,.1);
 	
 }
+
 
 body#items.show .fullsize img {
 max-height:350px;
