@@ -672,7 +672,7 @@ body#home #legacy-exhibits h3 {
 	color: black;
 	position: relative;
 	top: 100px;
-	left: 40px;
+	left: 10px;
 	background-color: white;
 	display: inline-block;
 	zoom:1;
@@ -681,6 +681,7 @@ body#home #legacy-exhibits h3 {
 	font-size: 80%;
 	box-shadow: 0 1px 6px rgba(0, 0, 0, .3);
 	text-align: right;
+	white-space: pre-wrap;
 }
 
 #secondary-nav {
