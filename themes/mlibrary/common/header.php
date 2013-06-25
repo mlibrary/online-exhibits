@@ -26,8 +26,8 @@ display_css();
 <link rel="stylesheet" media="screen" href="<?php echo html_escape(css(mlibrary_get_stylesheet())); ?>" />
 
 <!-- JavaScripts -->
- <script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
-<script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></scripts>
+<script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
+<script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
 
 <?php echo js('default'); ?>
 <?php display_js();?>

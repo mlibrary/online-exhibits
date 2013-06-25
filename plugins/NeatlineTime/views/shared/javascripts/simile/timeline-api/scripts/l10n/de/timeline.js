@@ -1,1 +1,8 @@
-Timeline.strings.de={wikiLinkLabel:"Diskutieren"};
+/*==================================================
+ *  Common localization strings
+ *==================================================
+ */
+
+Timeline.strings["de"] = {
+    wikiLinkLabel:  "Diskutieren"
+};

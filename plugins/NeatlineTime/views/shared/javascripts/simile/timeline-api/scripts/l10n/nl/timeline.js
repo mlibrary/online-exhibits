@@ -1,1 +1,9 @@
-Timeline.strings.nl={wikiLinkLabel:"Discussieer"};
+/*==================================================
+ *  Common localization strings
+ *==================================================
+ */
+
+Timeline.strings["nl"] = {
+    wikiLinkLabel:  "Discussieer"
+};
+

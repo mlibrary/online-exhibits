@@ -1,36 +1,691 @@
-Timeline.DetailedEventPainter=function(b){this._params=b;this._onSelectListeners=[];this._frc=this._highlightMatcher=this._filterMatcher=null;this._eventIdToElmt={}};Timeline.DetailedEventPainter.prototype.initialize=function(b,a){this._band=b;this._timeline=a;this._eventIdToElmt=this._highlightLayer=this._lineLayer=this._eventLayer=this._backLayer=null};Timeline.DetailedEventPainter.prototype.getType=function(){return"detailed"};Timeline.DetailedEventPainter.prototype.addOnSelectListener=function(b){this._onSelectListeners.push(b)};
-Timeline.DetailedEventPainter.prototype.removeOnSelectListener=function(b){for(var a=0;a<this._onSelectListeners.length;a++)if(this._onSelectListeners[a]==b){this._onSelectListeners.splice(a,1);break}};Timeline.DetailedEventPainter.prototype.getFilterMatcher=function(){return this._filterMatcher};Timeline.DetailedEventPainter.prototype.setFilterMatcher=function(b){this._filterMatcher=b};Timeline.DetailedEventPainter.prototype.getHighlightMatcher=function(){return this._highlightMatcher};
-Timeline.DetailedEventPainter.prototype.setHighlightMatcher=function(b){this._highlightMatcher=b};
-Timeline.DetailedEventPainter.prototype.paint=function(){var b=this._band.getEventSource();if(b!=null){this._eventIdToElmt={};this._prepareForPainting();for(var a=this._params.theme.event,c=Math.max(a.track.height,this._frc.getLineHeight()),a={trackOffset:Math.round(this._band.getViewWidth()/2-c/2),trackHeight:c,trackGap:a.track.gap,trackIncrement:c+a.track.gap,icon:a.instant.icon,iconWidth:a.instant.iconWidth,iconHeight:a.instant.iconHeight,labelWidth:a.label.width},d=this._band.getMinDate(),f=this._band.getMaxDate(),
-c=this._filterMatcher!=null?this._filterMatcher:function(){return!0},h=this._highlightMatcher!=null?this._highlightMatcher:function(){return-1},b=b.getEventReverseIterator(d,f);b.hasNext();)d=b.next(),c(d)&&this.paintEvent(d,a,this._params.theme,h(d));this._highlightLayer.style.display="block";this._lineLayer.style.display="block";this._eventLayer.style.display="block";this._band.updateEventTrackInfo(this._lowerTracks.length+this._upperTracks.length,a.trackIncrement)}};
-Timeline.DetailedEventPainter.prototype.softPaint=function(){};
-Timeline.DetailedEventPainter.prototype._prepareForPainting=function(){var b=this._band;if(this._backLayer==null){this._backLayer=this._band.createLayerDiv(0,"timeline-band-events");this._backLayer.style.visibility="hidden";var a=document.createElement("span");a.className="timeline-event-label";this._backLayer.appendChild(a);this._frc=SimileAjax.Graphics.getFontRenderingContext(a)}this._frc.update();this._lowerTracks=[];this._upperTracks=[];this._highlightLayer!=null&&b.removeLayerDiv(this._highlightLayer);
-this._highlightLayer=b.createLayerDiv(105,"timeline-band-highlights");this._highlightLayer.style.display="none";this._lineLayer!=null&&b.removeLayerDiv(this._lineLayer);this._lineLayer=b.createLayerDiv(110,"timeline-band-lines");this._lineLayer.style.display="none";this._eventLayer!=null&&b.removeLayerDiv(this._eventLayer);this._eventLayer=b.createLayerDiv(110,"timeline-band-events");this._eventLayer.style.display="none"};
-Timeline.DetailedEventPainter.prototype.paintEvent=function(b,a,c,d){b.isInstant()?this.paintInstantEvent(b,a,c,d):this.paintDurationEvent(b,a,c,d)};Timeline.DetailedEventPainter.prototype.paintInstantEvent=function(b,a,c,d){b.isImprecise()?this.paintImpreciseInstantEvent(b,a,c,d):this.paintPreciseInstantEvent(b,a,c,d)};Timeline.DetailedEventPainter.prototype.paintDurationEvent=function(b,a,c,d){b.isImprecise()?this.paintImpreciseDurationEvent(b,a,c,d):this.paintPreciseDurationEvent(b,a,c,d)};
-Timeline.DetailedEventPainter.prototype.paintPreciseInstantEvent=function(b,a,c,d){this._timeline.getDocument();var f=b.getText(),h=b.getStart(),e=Math.round(this._band.dateToPixelOffset(h)),g=Math.round(e+a.iconWidth/2),i=Math.round(e-a.iconWidth/2),h=this._frc.computeSize(f),j=this._findFreeTrackForSolid(g,e),l=this._paintEventIcon(b,j,i,a,c);g+=c.event.label.offsetFromLine;var k=j,m=this._getTrackData(j);Math.min(m.solid,m.text)>=g+h.width?(m.solid=i,m.text=g):(m.solid=i,g=e+c.event.label.offsetFromLine,
-k=this._findFreeTrackForText(j,g+h.width,function(a){a.line=e-2}),this._getTrackData(k).text=i,this._paintEventLine(b,e,j,k,a,c));var a=Math.round(a.trackOffset+k*a.trackIncrement+a.trackHeight/2-h.height/2),f=this._paintEventLabel(b,f,g,a,h.width,h.height,c),n=this,a=function(a,c){return n._onClickInstantEvent(l.elmt,c,b)};SimileAjax.DOM.registerEvent(l.elmt,"mousedown",a);SimileAjax.DOM.registerEvent(f.elmt,"mousedown",a);this._createHighlightDiv(d,l,c);this._eventIdToElmt[b.getID()]=l.elmt};
-Timeline.DetailedEventPainter.prototype.paintImpreciseInstantEvent=function(b,a,c,d){this._timeline.getDocument();var f=b.getText(),h=b.getStart(),e=b.getEnd(),g=Math.round(this._band.dateToPixelOffset(h)),i=Math.round(this._band.dateToPixelOffset(e)),j=Math.round(g+a.iconWidth/2),l=Math.round(g-a.iconWidth/2),e=this._frc.computeSize(f),k=this._findFreeTrackForSolid(i,g),h=this._paintEventTape(b,k,g,i,c.event.instant.impreciseColor,c.event.instant.impreciseOpacity,a,c),m=this._paintEventIcon(b,k,
-l,a,c);this._getTrackData(k).solid=l;j+=c.event.label.offsetFromLine;var n=j+e.width;n<i?i=k:(j=g+c.event.label.offsetFromLine,n=j+e.width,i=this._findFreeTrackForText(k,n,function(a){a.line=g-2}),this._getTrackData(i).text=l,this._paintEventLine(b,g,k,i,a,c));var a=Math.round(a.trackOffset+i*a.trackIncrement+a.trackHeight/2-e.height/2),f=this._paintEventLabel(b,f,j,a,e.width,e.height,c),o=this,a=function(a,c){return o._onClickInstantEvent(m.elmt,c,b)};SimileAjax.DOM.registerEvent(m.elmt,"mousedown",
-a);SimileAjax.DOM.registerEvent(h.elmt,"mousedown",a);SimileAjax.DOM.registerEvent(f.elmt,"mousedown",a);this._createHighlightDiv(d,m,c);this._eventIdToElmt[b.getID()]=m.elmt};
-Timeline.DetailedEventPainter.prototype.paintPreciseDurationEvent=function(b,a,c,d){this._timeline.getDocument();var f=b.getText(),h=b.getStart(),e=b.getEnd(),g=Math.round(this._band.dateToPixelOffset(h)),i=Math.round(this._band.dateToPixelOffset(e)),h=this._frc.computeSize(f),e=this._findFreeTrackForSolid(i),j=b.getColor(),j=j!=null?j:c.event.duration.color,l=this._paintEventTape(b,e,g,i,j,100,a,c);this._getTrackData(e).solid=g;i=g+c.event.label.offsetFromLine;j=this._findFreeTrackForText(e,i+h.width,
-function(a){a.line=g-2});this._getTrackData(j).text=g-2;this._paintEventLine(b,g,e,j,a,c);var a=Math.round(a.trackOffset+j*a.trackIncrement+a.trackHeight/2-h.height/2),f=this._paintEventLabel(b,f,i,a,h.width,h.height,c),k=this,a=function(a,c){return k._onClickDurationEvent(l.elmt,c,b)};SimileAjax.DOM.registerEvent(l.elmt,"mousedown",a);SimileAjax.DOM.registerEvent(f.elmt,"mousedown",a);this._createHighlightDiv(d,l,c);this._eventIdToElmt[b.getID()]=l.elmt};
-Timeline.DetailedEventPainter.prototype.paintImpreciseDurationEvent=function(b,a,c,d){this._timeline.getDocument();var f=b.getText(),h=b.getStart(),e=b.getLatestStart(),g=b.getEnd(),i=b.getEarliestEnd(),h=Math.round(this._band.dateToPixelOffset(h)),j=Math.round(this._band.dateToPixelOffset(e)),g=Math.round(this._band.dateToPixelOffset(g)),l=Math.round(this._band.dateToPixelOffset(i)),i=this._frc.computeSize(f),e=this._findFreeTrackForSolid(g),k=b.getColor(),k=k!=null?k:c.event.duration.color;this._paintEventTape(b,
-e,h,g,c.event.duration.impreciseColor,c.event.duration.impreciseOpacity,a,c);var m=this._paintEventTape(b,e,j,l,k,100,a,c);this._getTrackData(e).solid=h;h=j+c.event.label.offsetFromLine;g=this._findFreeTrackForText(e,h+i.width,function(a){a.line=j-2});this._getTrackData(g).text=j-2;this._paintEventLine(b,j,e,g,a,c);var a=Math.round(a.trackOffset+g*a.trackIncrement+a.trackHeight/2-i.height/2),f=this._paintEventLabel(b,f,h,a,i.width,i.height,c),n=this,a=function(a,c){return n._onClickDurationEvent(m.elmt,
-c,b)};SimileAjax.DOM.registerEvent(m.elmt,"mousedown",a);SimileAjax.DOM.registerEvent(f.elmt,"mousedown",a);this._createHighlightDiv(d,m,c);this._eventIdToElmt[b.getID()]=m.elmt};
-Timeline.DetailedEventPainter.prototype._findFreeTrackForSolid=function(b,a){for(var c=0;;c++){if(c<this._lowerTracks.length){var d=this._lowerTracks[c];if(Math.min(d.solid,d.text)>b&&(!a||d.line>a))return c}else return this._lowerTracks.push({solid:Number.POSITIVE_INFINITY,text:Number.POSITIVE_INFINITY,line:Number.POSITIVE_INFINITY}),c;if(c<this._upperTracks.length){if(d=this._upperTracks[c],Math.min(d.solid,d.text)>b&&(!a||d.line>a))return-1-c}else return this._upperTracks.push({solid:Number.POSITIVE_INFINITY,
-text:Number.POSITIVE_INFINITY,line:Number.POSITIVE_INFINITY}),-1-c}};
-Timeline.DetailedEventPainter.prototype._findFreeTrackForText=function(b,a,c){var d,f;b<0?(d=!0,b=-b,a=this._findFreeUpperTrackForText(b,a),f=-1-a):b>0?(d=!1,b+=1,f=a=this._findFreeLowerTrackForText(b,a)):(f=this._findFreeUpperTrackForText(0,a),a=this._findFreeLowerTrackForText(1,a),a-1<=f?(d=!1,b=1,f=a):(d=!0,b=0,a=f,f=-1-a));if(d){a==this._upperTracks.length&&this._upperTracks.push({solid:Number.POSITIVE_INFINITY,text:Number.POSITIVE_INFINITY,line:Number.POSITIVE_INFINITY});for(d=b;d<a;d++)c(this._upperTracks[d])}else{a==
-this._lowerTracks.length&&this._lowerTracks.push({solid:Number.POSITIVE_INFINITY,text:Number.POSITIVE_INFINITY,line:Number.POSITIVE_INFINITY});for(d=b;d<a;d++)c(this._lowerTracks[d])}return f};Timeline.DetailedEventPainter.prototype._findFreeLowerTrackForText=function(b,a){for(;b<this._lowerTracks.length;b++){var c=this._lowerTracks[b];if(Math.min(c.solid,c.text)>=a)break}return b};
-Timeline.DetailedEventPainter.prototype._findFreeUpperTrackForText=function(b,a){for(;b<this._upperTracks.length;b++){var c=this._upperTracks[b];if(Math.min(c.solid,c.text)>=a)break}return b};Timeline.DetailedEventPainter.prototype._getTrackData=function(b){return b<0?this._upperTracks[-b-1]:this._lowerTracks[b]};
-Timeline.DetailedEventPainter.prototype._paintEventLine=function(b,a,c,d,f,h){var b=Math.round(f.trackOffset+c*f.trackIncrement+f.trackHeight/2),f=Math.round(Math.abs(d-c)*f.trackIncrement),e="1px solid "+h.event.label.lineColor,g=this._timeline.getDocument().createElement("div");g.style.position="absolute";g.style.left=a+"px";g.style.width=h.event.label.offsetFromLine+"px";g.style.height=f+"px";c>d?(g.style.top=b-f+"px",g.style.borderTop=e):(g.style.top=b+"px",g.style.borderBottom=e);g.style.borderLeft=
-e;this._lineLayer.appendChild(g)};
-Timeline.DetailedEventPainter.prototype._paintEventIcon=function(b,a,c,d){var f=b.getIcon(),f=f!=null?f:d.icon,a=Math.round(d.trackOffset+a*d.trackIncrement+d.trackHeight/2-d.iconHeight/2),f=SimileAjax.Graphics.createTranslucentImage(f),h=this._timeline.getDocument().createElement("div");h.style.position="absolute";h.style.left=c+"px";h.style.top=a+"px";h.appendChild(f);h.style.cursor="pointer";if(b._title!=null)h.title=b._title;this._eventLayer.appendChild(h);return{left:c,top:a,width:d.iconWidth,
-height:d.iconHeight,elmt:h}};
-Timeline.DetailedEventPainter.prototype._paintEventLabel=function(b,a,c,d,f,h,e){var g=this._timeline.getDocument(),i=g.createElement("div");i.style.position="absolute";i.style.left=c+"px";i.style.width=f+"px";i.style.top=d+"px";i.style.height=h+"px";i.style.backgroundColor=e.event.label.backgroundColor;SimileAjax.Graphics.setOpacity(i,e.event.label.backgroundOpacity);this._eventLayer.appendChild(i);e=g.createElement("div");e.style.position="absolute";e.style.left=c+"px";e.style.width=f+"px";e.style.top=
-d+"px";e.innerHTML=a;e.style.cursor="pointer";if(b._title!=null)e.title=b._title;a=b.getTextColor();a==null&&(a=b.getColor());if(a!=null)e.style.color=a;this._eventLayer.appendChild(e);return{left:c,top:d,width:f,height:h,elmt:e}};
-Timeline.DetailedEventPainter.prototype._paintEventTape=function(b,a,c,d,f,h,e,g){d-=c;g=g.event.tape.height;a=Math.round(e.trackOffset+a*e.trackIncrement+e.trackHeight/2-g/2);e=this._timeline.getDocument().createElement("div");e.style.position="absolute";e.style.left=c+"px";e.style.width=d+"px";e.style.top=a+"px";e.style.height=g+"px";e.style.backgroundColor=f;e.style.overflow="hidden";e.style.cursor="pointer";if(b._title!=null)e.title=b._title;SimileAjax.Graphics.setOpacity(e,h);this._eventLayer.appendChild(e);
-return{left:c,top:a,width:d,height:g,elmt:e}};Timeline.DetailedEventPainter.prototype._createHighlightDiv=function(b,a,c){if(b>=0){var d=this._timeline.getDocument(),c=c.event,b=c.highlightColors[Math.min(b,c.highlightColors.length-1)],d=d.createElement("div");d.style.position="absolute";d.style.overflow="hidden";d.style.left=a.left-2+"px";d.style.width=a.width+4+"px";d.style.top=a.top-2+"px";d.style.height=a.height+4+"px";d.style.background=b;this._highlightLayer.appendChild(d)}};
-Timeline.DetailedEventPainter.prototype._onClickInstantEvent=function(b,a,c){var d=SimileAjax.DOM.getPageCoordinates(b);this._showBubble(d.left+Math.ceil(b.offsetWidth/2),d.top+Math.ceil(b.offsetHeight/2),c);this._fireOnSelect(c.getID());a.cancelBubble=!0;SimileAjax.DOM.cancelEvent(a);return!1};
-Timeline.DetailedEventPainter.prototype._onClickDurationEvent=function(b,a,c){if("pageX"in a)var b=a.pageX,d=a.pageY;else d=SimileAjax.DOM.getPageCoordinates(b),b=a.offsetX+d.left,d=a.offsetY+d.top;this._showBubble(b,d,c);this._fireOnSelect(c.getID());a.cancelBubble=!0;SimileAjax.DOM.cancelEvent(a);return!1};
-Timeline.DetailedEventPainter.prototype.showBubble=function(b){var a=this._eventIdToElmt[b.getID()];if(a){var c=SimileAjax.DOM.getPageCoordinates(a);this._showBubble(c.left+a.offsetWidth/2,c.top+a.offsetHeight/2,b)}};
-Timeline.DetailedEventPainter.prototype._showBubble=function(b,a,c){var d=document.createElement("div"),f=this._params.theme.event.bubble;c.fillInfoBubble(d,this._params.theme,this._band.getLabeller());SimileAjax.WindowManager.cancelPopups();SimileAjax.Graphics.createBubbleForContentAndPoint(d,b,a,f.width,null,f.maxHeight)};Timeline.DetailedEventPainter.prototype._fireOnSelect=function(b){for(var a=0;a<this._onSelectListeners.length;a++)this._onSelectListeners[a](b)};
+/*==================================================
+ *  Detailed Event Painter
+ *==================================================
+ */
+
+// Note: a number of features from original-painter 
+//       are not yet implemented in detailed painter.
+//       Eg classname, id attributes for icons, labels, tapes
+
+Timeline.DetailedEventPainter = function(params) {
+    this._params = params;
+    this._onSelectListeners = [];
+    
+    this._filterMatcher = null;
+    this._highlightMatcher = null;
+    this._frc = null;
+    
+    this._eventIdToElmt = {};
+};
+
+Timeline.DetailedEventPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backLayer = null;
+    this._eventLayer = null;
+    this._lineLayer = null;
+    this._highlightLayer = null;
+    
+    this._eventIdToElmt = null;
+};
+
+Timeline.DetailedEventPainter.prototype.getType = function() {
+    return 'detailed';
+};
+
+Timeline.DetailedEventPainter.prototype.addOnSelectListener = function(listener) {
+    this._onSelectListeners.push(listener);
+};
+
+Timeline.DetailedEventPainter.prototype.removeOnSelectListener = function(listener) {
+    for (var i = 0; i < this._onSelectListeners.length; i++) {
+        if (this._onSelectListeners[i] == listener) {
+            this._onSelectListeners.splice(i, 1);
+            break;
+        }
+    }
+};
+
+Timeline.DetailedEventPainter.prototype.getFilterMatcher = function() {
+    return this._filterMatcher;
+};
+
+Timeline.DetailedEventPainter.prototype.setFilterMatcher = function(filterMatcher) {
+    this._filterMatcher = filterMatcher;
+};
+
+Timeline.DetailedEventPainter.prototype.getHighlightMatcher = function() {
+    return this._highlightMatcher;
+};
+
+Timeline.DetailedEventPainter.prototype.setHighlightMatcher = function(highlightMatcher) {
+    this._highlightMatcher = highlightMatcher;
+};
+
+Timeline.DetailedEventPainter.prototype.paint = function() {
+    var eventSource = this._band.getEventSource();
+    if (eventSource == null) {
+        return;
+    }
+    
+    this._eventIdToElmt = {};
+    this._prepareForPainting();
+    
+    var eventTheme = this._params.theme.event;
+    var trackHeight = Math.max(eventTheme.track.height, this._frc.getLineHeight());
+    var metrics = {
+        trackOffset:    Math.round(this._band.getViewWidth() / 2 - trackHeight / 2),
+        trackHeight:    trackHeight,
+        trackGap:       eventTheme.track.gap,
+        trackIncrement: trackHeight + eventTheme.track.gap,
+        icon:           eventTheme.instant.icon,
+        iconWidth:      eventTheme.instant.iconWidth,
+        iconHeight:     eventTheme.instant.iconHeight,
+        labelWidth:     eventTheme.label.width
+    }
+    
+    var minDate = this._band.getMinDate();
+    var maxDate = this._band.getMaxDate();
+    
+    var filterMatcher = (this._filterMatcher != null) ? 
+        this._filterMatcher :
+        function(evt) { return true; };
+    var highlightMatcher = (this._highlightMatcher != null) ? 
+        this._highlightMatcher :
+        function(evt) { return -1; };
+    
+    var iterator = eventSource.getEventReverseIterator(minDate, maxDate);
+    while (iterator.hasNext()) {
+        var evt = iterator.next();
+        if (filterMatcher(evt)) {
+            this.paintEvent(evt, metrics, this._params.theme, highlightMatcher(evt));
+        }
+    }
+    
+    this._highlightLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+    this._eventLayer.style.display = "block";
+    // update the band object for max number of tracks in this section of the ether
+    this._band.updateEventTrackInfo(this._lowerTracks.length + this._upperTracks.length,
+                                 metrics.trackIncrement); 
+};
+
+Timeline.DetailedEventPainter.prototype.softPaint = function() {
+};
+
+Timeline.DetailedEventPainter.prototype._prepareForPainting = function() {
+    var band = this._band;
+        
+    if (this._backLayer == null) {
+        this._backLayer = this._band.createLayerDiv(0, "timeline-band-events");
+        this._backLayer.style.visibility = "hidden";
+        
+        var eventLabelPrototype = document.createElement("span");
+        eventLabelPrototype.className = "timeline-event-label";
+        this._backLayer.appendChild(eventLabelPrototype);
+        this._frc = SimileAjax.Graphics.getFontRenderingContext(eventLabelPrototype);
+    }
+    this._frc.update();
+    this._lowerTracks = [];
+    this._upperTracks = [];
+    
+    if (this._highlightLayer != null) {
+        band.removeLayerDiv(this._highlightLayer);
+    }
+    this._highlightLayer = band.createLayerDiv(105, "timeline-band-highlights");
+    this._highlightLayer.style.display = "none";
+    
+    if (this._lineLayer != null) {
+        band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = band.createLayerDiv(110, "timeline-band-lines");
+    this._lineLayer.style.display = "none";
+    
+    if (this._eventLayer != null) {
+        band.removeLayerDiv(this._eventLayer);
+    }
+    this._eventLayer = band.createLayerDiv(110, "timeline-band-events");
+    this._eventLayer.style.display = "none";
+};
+
+Timeline.DetailedEventPainter.prototype.paintEvent = function(evt, metrics, theme, highlightIndex) {
+    if (evt.isInstant()) {
+        this.paintInstantEvent(evt, metrics, theme, highlightIndex);
+    } else {
+        this.paintDurationEvent(evt, metrics, theme, highlightIndex);
+    }
+};
+    
+Timeline.DetailedEventPainter.prototype.paintInstantEvent = function(evt, metrics, theme, highlightIndex) {
+    if (evt.isImprecise()) {
+        this.paintImpreciseInstantEvent(evt, metrics, theme, highlightIndex);
+    } else {
+        this.paintPreciseInstantEvent(evt, metrics, theme, highlightIndex);
+    }
+}
+
+Timeline.DetailedEventPainter.prototype.paintDurationEvent = function(evt, metrics, theme, highlightIndex) {
+    if (evt.isImprecise()) {
+        this.paintImpreciseDurationEvent(evt, metrics, theme, highlightIndex);
+    } else {
+        this.paintPreciseDurationEvent(evt, metrics, theme, highlightIndex);
+    }
+}
+    
+Timeline.DetailedEventPainter.prototype.paintPreciseInstantEvent = function(evt, metrics, theme, highlightIndex) {
+    var doc = this._timeline.getDocument();
+    var text = evt.getText();
+    
+    var startDate = evt.getStart();
+    var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
+    var iconRightEdge = Math.round(startPixel + metrics.iconWidth / 2);
+    var iconLeftEdge = Math.round(startPixel - metrics.iconWidth / 2);
+    
+    var labelSize = this._frc.computeSize(text);
+    var iconTrack = this._findFreeTrackForSolid(iconRightEdge, startPixel);
+    var iconElmtData = this._paintEventIcon(evt, iconTrack, iconLeftEdge, metrics, theme);
+    
+    var labelLeft = iconRightEdge + theme.event.label.offsetFromLine;
+    var labelTrack = iconTrack;
+    
+    var iconTrackData = this._getTrackData(iconTrack);
+    if (Math.min(iconTrackData.solid, iconTrackData.text) >= labelLeft + labelSize.width) { // label on the same track, to the right of icon
+        iconTrackData.solid = iconLeftEdge;
+        iconTrackData.text = labelLeft;
+    } else { // label on a different track, below icon
+        iconTrackData.solid = iconLeftEdge;
+        
+        labelLeft = startPixel + theme.event.label.offsetFromLine;
+        labelTrack = this._findFreeTrackForText(iconTrack, labelLeft + labelSize.width, function(t) { t.line = startPixel - 2; });
+        this._getTrackData(labelTrack).text = iconLeftEdge;
+        
+        this._paintEventLine(evt, startPixel, iconTrack, labelTrack, metrics, theme);
+    }
+    
+    var labelTop = Math.round(
+        metrics.trackOffset + labelTrack * metrics.trackIncrement + 
+        metrics.trackHeight / 2 - labelSize.height / 2);
+        
+    var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
+
+    var self = this;
+    var clickHandler = function(elmt, domEvt, target) {
+        return self._onClickInstantEvent(iconElmtData.elmt, domEvt, evt);
+    };
+    SimileAjax.DOM.registerEvent(iconElmtData.elmt, "mousedown", clickHandler);
+    SimileAjax.DOM.registerEvent(labelElmtData.elmt, "mousedown", clickHandler);
+    
+    this._createHighlightDiv(highlightIndex, iconElmtData, theme);
+    
+    this._eventIdToElmt[evt.getID()] = iconElmtData.elmt;
+};
+
+Timeline.DetailedEventPainter.prototype.paintImpreciseInstantEvent = function(evt, metrics, theme, highlightIndex) {
+    var doc = this._timeline.getDocument();
+    var text = evt.getText();
+    
+    var startDate = evt.getStart();
+    var endDate = evt.getEnd();
+    var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
+    var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
+    
+    var iconRightEdge = Math.round(startPixel + metrics.iconWidth / 2);
+    var iconLeftEdge = Math.round(startPixel - metrics.iconWidth / 2);
+    
+    var labelSize = this._frc.computeSize(text);
+    var iconTrack = this._findFreeTrackForSolid(endPixel, startPixel);
+    
+    var tapeElmtData = this._paintEventTape(evt, iconTrack, startPixel, endPixel, 
+        theme.event.instant.impreciseColor, theme.event.instant.impreciseOpacity, metrics, theme);
+    var iconElmtData = this._paintEventIcon(evt, iconTrack, iconLeftEdge, metrics, theme);
+    
+    var iconTrackData = this._getTrackData(iconTrack);
+    iconTrackData.solid = iconLeftEdge;
+    
+    var labelLeft = iconRightEdge + theme.event.label.offsetFromLine;
+    var labelRight = labelLeft + labelSize.width;
+    var labelTrack;
+    if (labelRight < endPixel) {
+        labelTrack = iconTrack;
+    } else {
+        labelLeft = startPixel + theme.event.label.offsetFromLine;
+        labelRight = labelLeft + labelSize.width;
+    
+        labelTrack = this._findFreeTrackForText(iconTrack, labelRight, function(t) { t.line = startPixel - 2; });
+        this._getTrackData(labelTrack).text = iconLeftEdge;
+        
+        this._paintEventLine(evt, startPixel, iconTrack, labelTrack, metrics, theme);
+    }
+    var labelTop = Math.round(
+        metrics.trackOffset + labelTrack * metrics.trackIncrement + 
+        metrics.trackHeight / 2 - labelSize.height / 2);
+        
+    var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
+    
+    var self = this;
+    var clickHandler = function(elmt, domEvt, target) {
+        return self._onClickInstantEvent(iconElmtData.elmt, domEvt, evt);
+    };
+    SimileAjax.DOM.registerEvent(iconElmtData.elmt, "mousedown", clickHandler);
+    SimileAjax.DOM.registerEvent(tapeElmtData.elmt, "mousedown", clickHandler);
+    SimileAjax.DOM.registerEvent(labelElmtData.elmt, "mousedown", clickHandler);
+    
+    this._createHighlightDiv(highlightIndex, iconElmtData, theme);
+    
+    this._eventIdToElmt[evt.getID()] = iconElmtData.elmt;
+};
+
+Timeline.DetailedEventPainter.prototype.paintPreciseDurationEvent = function(evt, metrics, theme, highlightIndex) {
+    var doc = this._timeline.getDocument();
+    var text = evt.getText();
+    
+    var startDate = evt.getStart();
+    var endDate = evt.getEnd();
+    var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
+    var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
+    
+    var labelSize = this._frc.computeSize(text);
+    var tapeTrack = this._findFreeTrackForSolid(endPixel);
+    var color = evt.getColor();
+    color = color != null ? color : theme.event.duration.color;
+    
+    var tapeElmtData = this._paintEventTape(evt, tapeTrack, startPixel, endPixel, color, 100, metrics, theme);
+    
+    var tapeTrackData = this._getTrackData(tapeTrack);
+    tapeTrackData.solid = startPixel;
+    
+    var labelLeft = startPixel + theme.event.label.offsetFromLine;
+    var labelTrack = this._findFreeTrackForText(tapeTrack, labelLeft + labelSize.width, function(t) { t.line = startPixel - 2; });
+    this._getTrackData(labelTrack).text = startPixel - 2;
+    
+    this._paintEventLine(evt, startPixel, tapeTrack, labelTrack, metrics, theme);
+    
+    var labelTop = Math.round(
+        metrics.trackOffset + labelTrack * metrics.trackIncrement + 
+        metrics.trackHeight / 2 - labelSize.height / 2);
+        
+    var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
+
+    var self = this;
+    var clickHandler = function(elmt, domEvt, target) {
+        return self._onClickDurationEvent(tapeElmtData.elmt, domEvt, evt);
+    };
+    SimileAjax.DOM.registerEvent(tapeElmtData.elmt, "mousedown", clickHandler);
+    SimileAjax.DOM.registerEvent(labelElmtData.elmt, "mousedown", clickHandler);
+    
+    this._createHighlightDiv(highlightIndex, tapeElmtData, theme);
+    
+    this._eventIdToElmt[evt.getID()] = tapeElmtData.elmt;
+};
+
+Timeline.DetailedEventPainter.prototype.paintImpreciseDurationEvent = function(evt, metrics, theme, highlightIndex) {
+    var doc = this._timeline.getDocument();
+    var text = evt.getText();
+    
+    var startDate = evt.getStart();
+    var latestStartDate = evt.getLatestStart();
+    var endDate = evt.getEnd();
+    var earliestEndDate = evt.getEarliestEnd();
+    
+    var startPixel = Math.round(this._band.dateToPixelOffset(startDate));
+    var latestStartPixel = Math.round(this._band.dateToPixelOffset(latestStartDate));
+    var endPixel = Math.round(this._band.dateToPixelOffset(endDate));
+    var earliestEndPixel = Math.round(this._band.dateToPixelOffset(earliestEndDate));
+    
+    var labelSize = this._frc.computeSize(text);
+    var tapeTrack = this._findFreeTrackForSolid(endPixel);
+    var color = evt.getColor();
+    color = color != null ? color : theme.event.duration.color;
+    
+    var impreciseTapeElmtData = this._paintEventTape(evt, tapeTrack, startPixel, endPixel, 
+        theme.event.duration.impreciseColor, theme.event.duration.impreciseOpacity, metrics, theme);
+    var tapeElmtData = this._paintEventTape(evt, tapeTrack, latestStartPixel, earliestEndPixel, color, 100, metrics, theme);
+    
+    var tapeTrackData = this._getTrackData(tapeTrack);
+    tapeTrackData.solid = startPixel;
+    
+    var labelLeft = latestStartPixel + theme.event.label.offsetFromLine;
+    var labelTrack = this._findFreeTrackForText(tapeTrack, labelLeft + labelSize.width, function(t) { t.line = latestStartPixel - 2; });
+    this._getTrackData(labelTrack).text = latestStartPixel - 2;
+    
+    this._paintEventLine(evt, latestStartPixel, tapeTrack, labelTrack, metrics, theme);
+    
+    var labelTop = Math.round(
+        metrics.trackOffset + labelTrack * metrics.trackIncrement + 
+        metrics.trackHeight / 2 - labelSize.height / 2);
+        
+    var labelElmtData = this._paintEventLabel(evt, text, labelLeft, labelTop, labelSize.width, labelSize.height, theme);
+    
+    var self = this;
+    var clickHandler = function(elmt, domEvt, target) {
+        return self._onClickDurationEvent(tapeElmtData.elmt, domEvt, evt);
+    };
+    SimileAjax.DOM.registerEvent(tapeElmtData.elmt, "mousedown", clickHandler);
+    SimileAjax.DOM.registerEvent(labelElmtData.elmt, "mousedown", clickHandler);
+    
+    this._createHighlightDiv(highlightIndex, tapeElmtData, theme);
+    
+    this._eventIdToElmt[evt.getID()] = tapeElmtData.elmt;
+};
+
+Timeline.DetailedEventPainter.prototype._findFreeTrackForSolid = function(solidEdge, softEdge) {
+    for (var i = 0; true; i++) {
+        if (i < this._lowerTracks.length) {
+            var t = this._lowerTracks[i];
+            if (Math.min(t.solid, t.text) > solidEdge && (!(softEdge) || t.line > softEdge)) {
+                return i;
+            }
+        } else {
+            this._lowerTracks.push({
+                solid:  Number.POSITIVE_INFINITY,
+                text:   Number.POSITIVE_INFINITY,
+                line:   Number.POSITIVE_INFINITY
+            });
+            
+            return i;
+        }
+        
+        if (i < this._upperTracks.length) {
+            var t = this._upperTracks[i];
+            if (Math.min(t.solid, t.text) > solidEdge && (!(softEdge) || t.line > softEdge)) {
+                return -1 - i;
+            }
+        } else {
+            this._upperTracks.push({
+                solid:  Number.POSITIVE_INFINITY,
+                text:   Number.POSITIVE_INFINITY,
+                line:   Number.POSITIVE_INFINITY
+            });
+            
+            return -1 - i;
+        }
+    }
+};
+
+Timeline.DetailedEventPainter.prototype._findFreeTrackForText = function(fromTrack, edge, occupiedTrackVisitor) {
+    var extendUp;
+    var index;
+    var firstIndex;
+    var result;
+    
+    if (fromTrack < 0) {
+        extendUp = true;
+        firstIndex = -fromTrack;
+        
+        index = this._findFreeUpperTrackForText(firstIndex, edge);
+        result = -1 - index;
+    } else if (fromTrack > 0) {
+        extendUp = false;
+        firstIndex = fromTrack + 1;
+        
+        index = this._findFreeLowerTrackForText(firstIndex, edge);
+        result = index;
+    } else {
+        var upIndex = this._findFreeUpperTrackForText(0, edge);
+        var downIndex = this._findFreeLowerTrackForText(1, edge);
+        
+        if (downIndex - 1 <= upIndex) {
+            extendUp = false;
+            firstIndex = 1;
+            index = downIndex;
+            result = index;
+        } else {
+            extendUp = true;
+            firstIndex = 0;
+            index = upIndex;
+            result = -1 - index;
+        }
+    }
+    
+    if (extendUp) {
+        if (index == this._upperTracks.length) {
+            this._upperTracks.push({
+                solid:  Number.POSITIVE_INFINITY,
+                text:   Number.POSITIVE_INFINITY,
+                line:   Number.POSITIVE_INFINITY
+            });
+        }
+        for (var i = firstIndex; i < index; i++) {
+            occupiedTrackVisitor(this._upperTracks[i]);
+        }
+    } else {
+        if (index == this._lowerTracks.length) {
+            this._lowerTracks.push({
+                solid:  Number.POSITIVE_INFINITY,
+                text:   Number.POSITIVE_INFINITY,
+                line:   Number.POSITIVE_INFINITY
+            });
+        }
+        for (var i = firstIndex; i < index; i++) {
+            occupiedTrackVisitor(this._lowerTracks[i]);
+        }
+    }
+    return result;
+};
+
+Timeline.DetailedEventPainter.prototype._findFreeLowerTrackForText = function(index, edge) {
+    for (; index < this._lowerTracks.length; index++) {
+        var t = this._lowerTracks[index];
+        if (Math.min(t.solid, t.text) >= edge) {
+            break;
+        }
+    }
+    return index;
+};
+
+Timeline.DetailedEventPainter.prototype._findFreeUpperTrackForText = function(index, edge) {
+    for (; index < this._upperTracks.length; index++) {
+        var t = this._upperTracks[index];
+        if (Math.min(t.solid, t.text) >= edge) {
+            break;
+        }
+    }
+    return index;
+};
+
+Timeline.DetailedEventPainter.prototype._getTrackData = function(index) {
+    return (index < 0) ? this._upperTracks[-index - 1] : this._lowerTracks[index];
+};
+
+Timeline.DetailedEventPainter.prototype._paintEventLine = function(evt, left, startTrack, endTrack, metrics, theme) {
+    var top = Math.round(metrics.trackOffset + startTrack * metrics.trackIncrement + metrics.trackHeight / 2);
+    var height = Math.round(Math.abs(endTrack - startTrack) * metrics.trackIncrement);
+    
+    var lineStyle = "1px solid " + theme.event.label.lineColor;
+    var lineDiv = this._timeline.getDocument().createElement("div");
+	lineDiv.style.position = "absolute";
+    lineDiv.style.left = left + "px";
+    lineDiv.style.width = theme.event.label.offsetFromLine + "px";
+    lineDiv.style.height = height + "px";
+    if (startTrack > endTrack) {
+        lineDiv.style.top = (top - height) + "px";
+        lineDiv.style.borderTop = lineStyle;
+    } else {
+        lineDiv.style.top = top + "px";
+        lineDiv.style.borderBottom = lineStyle;
+    }
+    lineDiv.style.borderLeft = lineStyle;
+    this._lineLayer.appendChild(lineDiv);
+};
+
+Timeline.DetailedEventPainter.prototype._paintEventIcon = function(evt, iconTrack, left, metrics, theme) {
+    var icon = evt.getIcon();
+    icon = icon != null ? icon : metrics.icon;
+    
+    var middle = metrics.trackOffset + iconTrack * metrics.trackIncrement + metrics.trackHeight / 2;
+    var top = Math.round(middle - metrics.iconHeight / 2);
+
+    var img = SimileAjax.Graphics.createTranslucentImage(icon);
+    var iconDiv = this._timeline.getDocument().createElement("div");
+    iconDiv.style.position = "absolute";
+    iconDiv.style.left = left + "px";
+    iconDiv.style.top = top + "px";
+    iconDiv.appendChild(img);
+    iconDiv.style.cursor = "pointer";
+
+    if(evt._title != null)
+        iconDiv.title = evt._title
+
+    this._eventLayer.appendChild(iconDiv);
+    
+    return {
+        left:   left,
+        top:    top,
+        width:  metrics.iconWidth,
+        height: metrics.iconHeight,
+        elmt:   iconDiv
+    };
+};
+
+Timeline.DetailedEventPainter.prototype._paintEventLabel = function(evt, text, left, top, width, height, theme) {
+    var doc = this._timeline.getDocument();
+    
+    var labelBackgroundDiv = doc.createElement("div");
+    labelBackgroundDiv.style.position = "absolute";
+    labelBackgroundDiv.style.left = left + "px";
+    labelBackgroundDiv.style.width = width + "px";
+    labelBackgroundDiv.style.top = top + "px";
+    labelBackgroundDiv.style.height = height + "px";
+    labelBackgroundDiv.style.backgroundColor = theme.event.label.backgroundColor;
+    SimileAjax.Graphics.setOpacity(labelBackgroundDiv, theme.event.label.backgroundOpacity);
+    this._eventLayer.appendChild(labelBackgroundDiv);
+    
+    var labelDiv = doc.createElement("div");
+    labelDiv.style.position = "absolute";
+    labelDiv.style.left = left + "px";
+    labelDiv.style.width = width + "px";
+    labelDiv.style.top = top + "px";
+    labelDiv.innerHTML = text;
+    labelDiv.style.cursor = "pointer";
+
+    if(evt._title != null)
+        labelDiv.title = evt._title;
+    
+    var color = evt.getTextColor();
+    if (color == null) {
+        color = evt.getColor();
+    }
+    if (color != null) {
+        labelDiv.style.color = color;
+    }
+    
+    this._eventLayer.appendChild(labelDiv);
+    
+    return {
+        left:   left,
+        top:    top,
+        width:  width,
+        height: height,
+        elmt:   labelDiv
+    };
+};
+
+Timeline.DetailedEventPainter.prototype._paintEventTape = function(
+    evt, iconTrack, startPixel, endPixel, color, opacity, metrics, theme) {
+    
+    var tapeWidth = endPixel - startPixel;
+    var tapeHeight = theme.event.tape.height;
+    var middle = metrics.trackOffset + iconTrack * metrics.trackIncrement + metrics.trackHeight / 2;
+    var top = Math.round(middle - tapeHeight / 2);
+    
+    var tapeDiv = this._timeline.getDocument().createElement("div");
+    tapeDiv.style.position = "absolute";
+    tapeDiv.style.left = startPixel + "px";
+    tapeDiv.style.width = tapeWidth + "px";
+    tapeDiv.style.top = top + "px";
+    tapeDiv.style.height = tapeHeight + "px";
+    tapeDiv.style.backgroundColor = color;
+    tapeDiv.style.overflow = "hidden";
+    tapeDiv.style.cursor = "pointer";
+
+    if(evt._title != null)
+        tapeDiv.title = evt._title;
+
+    SimileAjax.Graphics.setOpacity(tapeDiv, opacity);
+    
+    this._eventLayer.appendChild(tapeDiv);
+    
+    return {
+        left:   startPixel,
+        top:    top,
+        width:  tapeWidth,
+        height: tapeHeight,
+        elmt:   tapeDiv
+    };
+}
+
+Timeline.DetailedEventPainter.prototype._createHighlightDiv = function(highlightIndex, dimensions, theme) {
+    if (highlightIndex >= 0) {
+        var doc = this._timeline.getDocument();
+        var eventTheme = theme.event;
+        
+        var color = eventTheme.highlightColors[Math.min(highlightIndex, eventTheme.highlightColors.length - 1)];
+        
+        var div = doc.createElement("div");
+        div.style.position = "absolute";
+        div.style.overflow = "hidden";
+        div.style.left =    (dimensions.left - 2) + "px";
+        div.style.width =   (dimensions.width + 4) + "px";
+        div.style.top =     (dimensions.top - 2) + "px";
+        div.style.height =  (dimensions.height + 4) + "px";
+        div.style.background = color;
+        
+        this._highlightLayer.appendChild(div);
+    }
+};
+
+Timeline.DetailedEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
+    var c = SimileAjax.DOM.getPageCoordinates(icon);
+    this._showBubble(
+        c.left + Math.ceil(icon.offsetWidth / 2), 
+        c.top + Math.ceil(icon.offsetHeight / 2),
+        evt
+    );
+    this._fireOnSelect(evt.getID());
+    
+    domEvt.cancelBubble = true;
+    SimileAjax.DOM.cancelEvent(domEvt);
+    return false;
+};
+
+Timeline.DetailedEventPainter.prototype._onClickDurationEvent = function(target, domEvt, evt) {
+    if ("pageX" in domEvt) {
+        var x = domEvt.pageX;
+        var y = domEvt.pageY;
+    } else {
+        var c = SimileAjax.DOM.getPageCoordinates(target);
+        var x = domEvt.offsetX + c.left;
+        var y = domEvt.offsetY + c.top;
+    }
+    this._showBubble(x, y, evt);
+    this._fireOnSelect(evt.getID());
+    
+    domEvt.cancelBubble = true;
+    SimileAjax.DOM.cancelEvent(domEvt);
+    return false;
+};
+
+Timeline.DetailedEventPainter.prototype.showBubble = function(evt) {
+    var elmt = this._eventIdToElmt[evt.getID()];
+    if (elmt) {
+        var c = SimileAjax.DOM.getPageCoordinates(elmt);
+        this._showBubble(c.left + elmt.offsetWidth / 2, c.top + elmt.offsetHeight / 2, evt);
+    }
+};
+
+Timeline.DetailedEventPainter.prototype._showBubble = function(x, y, evt) {
+    var div = document.createElement("div");
+    var themeBubble = this._params.theme.event.bubble;
+    evt.fillInfoBubble(div, this._params.theme, this._band.getLabeller());
+    
+    SimileAjax.WindowManager.cancelPopups();
+    SimileAjax.Graphics.createBubbleForContentAndPoint(div, x, y, 
+       themeBubble.width, null, themeBubble.maxHeight);
+};
+
+Timeline.DetailedEventPainter.prototype._fireOnSelect = function(eventID) {
+    for (var i = 0; i < this._onSelectListeners.length; i++) {
+        this._onSelectListeners[i](eventID);
+    }
+};

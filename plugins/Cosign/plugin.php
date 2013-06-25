@@ -1,7 +1,7 @@
 <?php
 
    //Define hooks
-   add_plugin_hook('install', 'cosign_install');
+  // add_plugin_hook('install', 'cosign_install');
    add_plugin_hook('initialize', 'cosign_initialize');
  ///Define filters
    add_filter('login_adapter', 'login');

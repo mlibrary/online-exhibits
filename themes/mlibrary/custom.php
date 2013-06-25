@@ -4,6 +4,21 @@
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
+add_filter('neatlinetime_display_search_query', 'mlibrary_neatlinetime_display_search_query');
+
+function mlibrary_neatlinetime_display_search_query($neat_line_exhibit)
+{
+		if (function_exists('exhibit_builder_get_exhibit_by_id')) {
+        $exhibit = exhibit_builder_get_exhibit_by_id($neat_line_exhibit);
+        }
+    $slug = $exhibit->slug;
+    $title = $exhibit->title;
+
+    $html = '<div id="timeline-exhibit">';
+    $html .='<a href=https://nancymou.www.lib.umich.edu/online-exhibits/exhibits/show/'.$slug.'><----'.$title.'</a>';
+    $html .= '</div>';
+   return $html;
+}
 
 add_filter('exhibit_builder_generate_xml', 'mlibrary_exhibit_builder_generate_xml');
 

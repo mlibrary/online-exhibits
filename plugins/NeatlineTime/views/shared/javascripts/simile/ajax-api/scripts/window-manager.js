@@ -1,23 +1,414 @@
-SimileAjax.WindowManager={_initialized:!1,_listeners:[],_draggedElement:null,_draggedElementCallback:null,_dropTargetHighlightElement:null,_lastCoords:null,_ghostCoords:null,_draggingMode:"",_dragging:!1,_layers:[]};
-SimileAjax.WindowManager.initialize=function(){if(!SimileAjax.WindowManager._initialized)SimileAjax.DOM.registerEvent(document.body,"mousedown",SimileAjax.WindowManager._onBodyMouseDown),SimileAjax.DOM.registerEvent(document.body,"mousemove",SimileAjax.WindowManager._onBodyMouseMove),SimileAjax.DOM.registerEvent(document.body,"mouseup",SimileAjax.WindowManager._onBodyMouseUp),SimileAjax.DOM.registerEvent(document,"keydown",SimileAjax.WindowManager._onBodyKeyDown),SimileAjax.DOM.registerEvent(document,
-"keyup",SimileAjax.WindowManager._onBodyKeyUp),SimileAjax.WindowManager._layers.push({index:0}),SimileAjax.WindowManager._historyListener={onBeforeUndoSeveral:function(){},onAfterUndoSeveral:function(){},onBeforeUndo:function(){},onAfterUndo:function(){},onBeforeRedoSeveral:function(){},onAfterRedoSeveral:function(){},onBeforeRedo:function(){},onAfterRedo:function(){}},SimileAjax.History.addListener(SimileAjax.WindowManager._historyListener),SimileAjax.WindowManager._initialized=!0};
-SimileAjax.WindowManager.getBaseLayer=function(){SimileAjax.WindowManager.initialize();return SimileAjax.WindowManager._layers[0]};SimileAjax.WindowManager.getHighestLayer=function(){SimileAjax.WindowManager.initialize();return SimileAjax.WindowManager._layers[SimileAjax.WindowManager._layers.length-1]};SimileAjax.WindowManager.registerEventWithObject=function(a,b,c,d,g){SimileAjax.WindowManager.registerEvent(a,b,function(a,b,g){return c[d].call(c,a,b,g)},g)};
-SimileAjax.WindowManager.registerEvent=function(a,b,c,d){d==null&&(d=SimileAjax.WindowManager.getHighestLayer());SimileAjax.DOM.registerEvent(a,b,function(a,b,i){if(SimileAjax.WindowManager._canProcessEventAtLayer(d)){SimileAjax.WindowManager._popToLayer(d.index);try{c(a,b,i)}catch(j){SimileAjax.Debug.exception(j)}}SimileAjax.DOM.cancelEvent(b);return!1})};
-SimileAjax.WindowManager.pushLayer=function(a,b,c){a={onPop:a,index:SimileAjax.WindowManager._layers.length,ephemeral:b,elmt:c};SimileAjax.WindowManager._layers.push(a);return a};SimileAjax.WindowManager.popLayer=function(a){for(var b=1;b<SimileAjax.WindowManager._layers.length;b++)if(SimileAjax.WindowManager._layers[b]==a){SimileAjax.WindowManager._popToLayer(b-1);break}};SimileAjax.WindowManager.popAllLayers=function(){SimileAjax.WindowManager._popToLayer(0)};
-SimileAjax.WindowManager.registerForDragging=function(a,b,c){SimileAjax.WindowManager.registerEvent(a,"mousedown",function(a,c){SimileAjax.WindowManager._handleMouseDown(a,c,b)},c)};SimileAjax.WindowManager._popToLayer=function(a){for(;a+1<SimileAjax.WindowManager._layers.length;)try{var b=SimileAjax.WindowManager._layers.pop();if(b.onPop!=null)b.onPop()}catch(c){}};
-SimileAjax.WindowManager._canProcessEventAtLayer=function(a){if(a.index==SimileAjax.WindowManager._layers.length-1)return!0;for(a=a.index+1;a<SimileAjax.WindowManager._layers.length;a++)if(!SimileAjax.WindowManager._layers[a].ephemeral)return!1;return!0};
-SimileAjax.WindowManager.cancelPopups=function(a){for(var a=a?SimileAjax.DOM.getEventPageCoordinates(a):{x:-1,y:-1},b=SimileAjax.WindowManager._layers.length-1;b>0&&SimileAjax.WindowManager._layers[b].ephemeral;){var c=SimileAjax.WindowManager._layers[b];if(c.elmt!=null){var c=c.elmt,d=SimileAjax.DOM.getPageCoordinates(c);if(a.x>=d.left&&a.x<d.left+c.offsetWidth&&a.y>=d.top&&a.y<d.top+c.offsetHeight)break}b--}SimileAjax.WindowManager._popToLayer(b)};
-SimileAjax.WindowManager._onBodyMouseDown=function(a,b){(!("eventPhase"in b)||b.eventPhase==b.BUBBLING_PHASE)&&SimileAjax.WindowManager.cancelPopups(b)};SimileAjax.WindowManager._handleMouseDown=function(a,b,c){SimileAjax.WindowManager._draggedElement=a;SimileAjax.WindowManager._draggedElementCallback=c;SimileAjax.WindowManager._lastCoords={x:b.clientX,y:b.clientY};SimileAjax.DOM.cancelEvent(b);return!1};
-SimileAjax.WindowManager._onBodyKeyDown=function(a,b){if(SimileAjax.WindowManager._dragging)if(b.keyCode==27)SimileAjax.WindowManager._cancelDragging();else if((b.keyCode==17||b.keyCode==16)&&SimileAjax.WindowManager._draggingMode!="copy"){SimileAjax.WindowManager._draggingMode="copy";var c=SimileAjax.Graphics.createTranslucentImage(SimileAjax.urlPrefix+"images/copy.png");c.style.position="absolute";c.style.left=SimileAjax.WindowManager._ghostCoords.left-16+"px";c.style.top=SimileAjax.WindowManager._ghostCoords.top+
-"px";document.body.appendChild(c);SimileAjax.WindowManager._draggingModeIndicatorElmt=c}};SimileAjax.WindowManager._onBodyKeyUp=function(a,b){if(SimileAjax.WindowManager._dragging&&(b.keyCode==17||b.keyCode==16))if(SimileAjax.WindowManager._draggingMode="",SimileAjax.WindowManager._draggingModeIndicatorElmt!=null)document.body.removeChild(SimileAjax.WindowManager._draggingModeIndicatorElmt),SimileAjax.WindowManager._draggingModeIndicatorElmt=null};
-SimileAjax.WindowManager._onBodyMouseMove=function(a,b,c){if(SimileAjax.WindowManager._draggedElement!=null){var a=SimileAjax.WindowManager._draggedElementCallback,d=SimileAjax.WindowManager._lastCoords,g=b.clientX-d.x,d=b.clientY-d.y;if(SimileAjax.WindowManager._dragging)try{SimileAjax.WindowManager._lastCoords={x:b.clientX,y:b.clientY};if("onDragBy"in a)a.onDragBy(g,d);if("_ghostElmt"in a){e=a._ghostElmt;SimileAjax.WindowManager._ghostCoords.left+=g;SimileAjax.WindowManager._ghostCoords.top+=d;
-e.style.left=SimileAjax.WindowManager._ghostCoords.left+"px";e.style.top=SimileAjax.WindowManager._ghostCoords.top+"px";if(SimileAjax.WindowManager._draggingModeIndicatorElmt!=null){var h=SimileAjax.WindowManager._draggingModeIndicatorElmt;h.style.left=SimileAjax.WindowManager._ghostCoords.left-16+"px";h.style.top=SimileAjax.WindowManager._ghostCoords.top+"px"}if("droppable"in a&&a.droppable){var i=SimileAjax.DOM.getEventPageCoordinates(b),c=SimileAjax.DOM.hittest(i.x,i.y,[SimileAjax.WindowManager._ghostElmt,
-SimileAjax.WindowManager._dropTargetHighlightElement]),c=SimileAjax.WindowManager._findDropTarget(c);if(c!=SimileAjax.WindowManager._potentialDropTarget){if(SimileAjax.WindowManager._dropTargetHighlightElement!=null)document.body.removeChild(SimileAjax.WindowManager._dropTargetHighlightElement),SimileAjax.WindowManager._dropTargetHighlightElement=null,SimileAjax.WindowManager._potentialDropTarget=null;h=!1;if(c!=null&&(!("canDropOn"in a)||a.canDropOn(c))&&(!("canDrop"in c)||c.canDrop(SimileAjax.WindowManager._draggedElement)))h=
-!0;if(h){var j=SimileAjax.DOM.getPageCoordinates(c),f=document.createElement("div");f.style.border="4px solid yellow";f.style.backgroundColor="yellow";f.style.position="absolute";f.style.left=j.left+"px";f.style.top=j.top+"px";f.style.width=c.offsetWidth-8+"px";f.style.height=c.offsetHeight-8+"px";SimileAjax.Graphics.setOpacity(f,30);document.body.appendChild(f);SimileAjax.WindowManager._potentialDropTarget=c;SimileAjax.WindowManager._dropTargetHighlightElement=f}}}}}catch(l){SimileAjax.Debug.exception("WindowManager: Error handling mouse move",
-l),SimileAjax.WindowManager._cancelDragging()}else if(Math.abs(g)>5||Math.abs(d)>5)try{if("onDragStart"in a)a.onDragStart();if("ghost"in a&&a.ghost){var k=SimileAjax.WindowManager._draggedElement;SimileAjax.WindowManager._ghostCoords=SimileAjax.DOM.getPageCoordinates(k);SimileAjax.WindowManager._ghostCoords.left+=g;SimileAjax.WindowManager._ghostCoords.top+=d;var e=k.cloneNode(!0);e.style.position="absolute";e.style.left=SimileAjax.WindowManager._ghostCoords.left+"px";e.style.top=SimileAjax.WindowManager._ghostCoords.top+
-"px";e.style.zIndex=1E3;SimileAjax.Graphics.setOpacity(e,50);document.body.appendChild(e);a._ghostElmt=e}SimileAjax.WindowManager._dragging=!0;SimileAjax.WindowManager._lastCoords={x:b.clientX,y:b.clientY};document.body.focus()}catch(m){SimileAjax.Debug.exception("WindowManager: Error handling mouse down",m),SimileAjax.WindowManager._cancelDragging()}SimileAjax.DOM.cancelEvent(b);return!1}};
-SimileAjax.WindowManager._onBodyMouseUp=function(a,b,c){if(SimileAjax.WindowManager._draggedElement!=null){try{if(SimileAjax.WindowManager._dragging){var d=SimileAjax.WindowManager._draggedElementCallback;if("onDragEnd"in d)d.onDragEnd();if("droppable"in d&&d.droppable&&(c=SimileAjax.WindowManager._potentialDropTarget,c!=null&&(!("canDropOn"in d)||d.canDropOn(c))&&(!("canDrop"in c)||c.canDrop(SimileAjax.WindowManager._draggedElement)))){if("onDropOn"in d)d.onDropOn(c);c.ondrop(SimileAjax.WindowManager._draggedElement,
-SimileAjax.WindowManager._draggingMode)}}}finally{SimileAjax.WindowManager._cancelDragging()}SimileAjax.DOM.cancelEvent(b);return!1}};
-SimileAjax.WindowManager._cancelDragging=function(){var a=SimileAjax.WindowManager._draggedElementCallback;"_ghostElmt"in a&&(document.body.removeChild(a._ghostElmt),delete a._ghostElmt);if(SimileAjax.WindowManager._dropTargetHighlightElement!=null)document.body.removeChild(SimileAjax.WindowManager._dropTargetHighlightElement),SimileAjax.WindowManager._dropTargetHighlightElement=null;if(SimileAjax.WindowManager._draggingModeIndicatorElmt!=null)document.body.removeChild(SimileAjax.WindowManager._draggingModeIndicatorElmt),
-SimileAjax.WindowManager._draggingModeIndicatorElmt=null;SimileAjax.WindowManager._draggedElement=null;SimileAjax.WindowManager._draggedElementCallback=null;SimileAjax.WindowManager._potentialDropTarget=null;SimileAjax.WindowManager._dropTargetHighlightElement=null;SimileAjax.WindowManager._lastCoords=null;SimileAjax.WindowManager._ghostCoords=null;SimileAjax.WindowManager._draggingMode="";SimileAjax.WindowManager._dragging=!1};
-SimileAjax.WindowManager._findDropTarget=function(a){for(;a!=null;){if("ondrop"in a&&typeof a.ondrop=="function")break;a=a.parentNode}return a};
+/**
+ * @fileOverview UI layers and window-wide dragging
+ * @name SimileAjax.WindowManager
+ */
+
+/**
+ *  This is a singleton that keeps track of UI layers (modal and 
+ *  modeless) and enables/disables UI elements based on which layers
+ *  they belong to. It also provides window-wide dragging 
+ *  implementation.
+ */ 
+SimileAjax.WindowManager = {
+    _initialized:       false,
+    _listeners:         [],
+    
+    _draggedElement:                null,
+    _draggedElementCallback:        null,
+    _dropTargetHighlightElement:    null,
+    _lastCoords:                    null,
+    _ghostCoords:                   null,
+    _draggingMode:                  "",
+    _dragging:                      false,
+    
+    _layers:            []
+};
+
+SimileAjax.WindowManager.initialize = function() {
+    if (SimileAjax.WindowManager._initialized) {
+        return;
+    }
+    
+    SimileAjax.DOM.registerEvent(document.body, "mousedown", SimileAjax.WindowManager._onBodyMouseDown);
+    SimileAjax.DOM.registerEvent(document.body, "mousemove", SimileAjax.WindowManager._onBodyMouseMove);
+    SimileAjax.DOM.registerEvent(document.body, "mouseup",   SimileAjax.WindowManager._onBodyMouseUp);
+    SimileAjax.DOM.registerEvent(document, "keydown",       SimileAjax.WindowManager._onBodyKeyDown);
+    SimileAjax.DOM.registerEvent(document, "keyup",         SimileAjax.WindowManager._onBodyKeyUp);
+    
+    SimileAjax.WindowManager._layers.push({index: 0});
+    
+    SimileAjax.WindowManager._historyListener = {
+        onBeforeUndoSeveral:    function() {},
+        onAfterUndoSeveral:     function() {},
+        onBeforeUndo:           function() {},
+        onAfterUndo:            function() {},
+        
+        onBeforeRedoSeveral:    function() {},
+        onAfterRedoSeveral:     function() {},
+        onBeforeRedo:           function() {},
+        onAfterRedo:            function() {}
+    };
+    SimileAjax.History.addListener(SimileAjax.WindowManager._historyListener);
+    
+    SimileAjax.WindowManager._initialized = true;
+};
+
+SimileAjax.WindowManager.getBaseLayer = function() {
+    SimileAjax.WindowManager.initialize();
+    return SimileAjax.WindowManager._layers[0];
+};
+
+SimileAjax.WindowManager.getHighestLayer = function() {
+    SimileAjax.WindowManager.initialize();
+    return SimileAjax.WindowManager._layers[SimileAjax.WindowManager._layers.length - 1];
+};
+
+SimileAjax.WindowManager.registerEventWithObject = function(elmt, eventName, obj, handlerName, layer) {
+    SimileAjax.WindowManager.registerEvent(
+        elmt, 
+        eventName, 
+        function(elmt2, evt, target) {
+            return obj[handlerName].call(obj, elmt2, evt, target);
+        },
+        layer
+    );
+};
+
+SimileAjax.WindowManager.registerEvent = function(elmt, eventName, handler, layer) {
+    if (layer == null) {
+        layer = SimileAjax.WindowManager.getHighestLayer();
+    }
+    
+    var handler2 = function(elmt, evt, target) {
+        if (SimileAjax.WindowManager._canProcessEventAtLayer(layer)) {
+            SimileAjax.WindowManager._popToLayer(layer.index);
+            try {
+                handler(elmt, evt, target);
+            } catch (e) {
+                SimileAjax.Debug.exception(e);
+            }
+        }
+        SimileAjax.DOM.cancelEvent(evt);
+        return false;
+    }
+    
+    SimileAjax.DOM.registerEvent(elmt, eventName, handler2);
+};
+
+SimileAjax.WindowManager.pushLayer = function(f, ephemeral, elmt) {
+    var layer = { onPop: f, index: SimileAjax.WindowManager._layers.length, ephemeral: (ephemeral), elmt: elmt };
+    SimileAjax.WindowManager._layers.push(layer);
+    
+    return layer;
+};
+
+SimileAjax.WindowManager.popLayer = function(layer) {
+    for (var i = 1; i < SimileAjax.WindowManager._layers.length; i++) {
+        if (SimileAjax.WindowManager._layers[i] == layer) {
+            SimileAjax.WindowManager._popToLayer(i - 1);
+            break;
+        }
+    }
+};
+
+SimileAjax.WindowManager.popAllLayers = function() {
+    SimileAjax.WindowManager._popToLayer(0);
+};
+
+SimileAjax.WindowManager.registerForDragging = function(elmt, callback, layer) {
+    SimileAjax.WindowManager.registerEvent(
+        elmt, 
+        "mousedown", 
+        function(elmt, evt, target) {
+            SimileAjax.WindowManager._handleMouseDown(elmt, evt, callback);
+        }, 
+        layer
+    );
+};
+
+SimileAjax.WindowManager._popToLayer = function(level) {
+    while (level+1 < SimileAjax.WindowManager._layers.length) {
+        try {
+            var layer = SimileAjax.WindowManager._layers.pop();
+            if (layer.onPop != null) {
+                layer.onPop();
+            }
+        } catch (e) {
+        }
+    }
+};
+
+SimileAjax.WindowManager._canProcessEventAtLayer = function(layer) {
+    if (layer.index == (SimileAjax.WindowManager._layers.length - 1)) {
+        return true;
+    }
+    for (var i = layer.index + 1; i < SimileAjax.WindowManager._layers.length; i++) {
+        if (!SimileAjax.WindowManager._layers[i].ephemeral) {
+            return false;
+        }
+    }
+    return true;
+};
+
+SimileAjax.WindowManager.cancelPopups = function(evt) {
+    var evtCoords = (evt) ? SimileAjax.DOM.getEventPageCoordinates(evt) : { x: -1, y: -1 };
+    
+    var i = SimileAjax.WindowManager._layers.length - 1;
+    while (i > 0 && SimileAjax.WindowManager._layers[i].ephemeral) {
+        var layer = SimileAjax.WindowManager._layers[i];
+        if (layer.elmt != null) { // if event falls within main element of layer then don't cancel
+            var elmt = layer.elmt;
+            var elmtCoords = SimileAjax.DOM.getPageCoordinates(elmt);
+            if (evtCoords.x >= elmtCoords.left && evtCoords.x < (elmtCoords.left + elmt.offsetWidth) &&
+                evtCoords.y >= elmtCoords.top && evtCoords.y < (elmtCoords.top + elmt.offsetHeight)) {
+                break;
+            }
+        }
+        i--;
+    }
+    SimileAjax.WindowManager._popToLayer(i);
+};
+
+SimileAjax.WindowManager._onBodyMouseDown = function(elmt, evt, target) {
+    if (!("eventPhase" in evt) || evt.eventPhase == evt.BUBBLING_PHASE) {
+        SimileAjax.WindowManager.cancelPopups(evt);
+    }
+};
+
+SimileAjax.WindowManager._handleMouseDown = function(elmt, evt, callback) {
+    SimileAjax.WindowManager._draggedElement = elmt;
+    SimileAjax.WindowManager._draggedElementCallback = callback;
+    SimileAjax.WindowManager._lastCoords = { x: evt.clientX, y: evt.clientY };
+        
+    SimileAjax.DOM.cancelEvent(evt);
+    return false;
+};
+
+SimileAjax.WindowManager._onBodyKeyDown = function(elmt, evt, target) {
+    if (SimileAjax.WindowManager._dragging) {
+        if (evt.keyCode == 27) { // esc
+            SimileAjax.WindowManager._cancelDragging();
+        } else if ((evt.keyCode == 17 || evt.keyCode == 16) && SimileAjax.WindowManager._draggingMode != "copy") {
+            SimileAjax.WindowManager._draggingMode = "copy";
+            
+            var img = SimileAjax.Graphics.createTranslucentImage(SimileAjax.urlPrefix + "images/copy.png");
+            img.style.position = "absolute";
+            img.style.left = (SimileAjax.WindowManager._ghostCoords.left - 16) + "px";
+            img.style.top = (SimileAjax.WindowManager._ghostCoords.top) + "px";
+            document.body.appendChild(img);
+            
+            SimileAjax.WindowManager._draggingModeIndicatorElmt = img;
+        }
+    }
+};
+
+SimileAjax.WindowManager._onBodyKeyUp = function(elmt, evt, target) {
+    if (SimileAjax.WindowManager._dragging) {
+        if (evt.keyCode == 17 || evt.keyCode == 16) {
+            SimileAjax.WindowManager._draggingMode = "";
+            if (SimileAjax.WindowManager._draggingModeIndicatorElmt != null) {
+                document.body.removeChild(SimileAjax.WindowManager._draggingModeIndicatorElmt);
+                SimileAjax.WindowManager._draggingModeIndicatorElmt = null;
+            }
+        }
+    }
+};
+
+SimileAjax.WindowManager._onBodyMouseMove = function(elmt, evt, target) {
+    if (SimileAjax.WindowManager._draggedElement != null) {
+        var callback = SimileAjax.WindowManager._draggedElementCallback;
+        
+        var lastCoords = SimileAjax.WindowManager._lastCoords;
+        var diffX = evt.clientX - lastCoords.x;
+        var diffY = evt.clientY - lastCoords.y;
+        
+        if (!SimileAjax.WindowManager._dragging) {
+            if (Math.abs(diffX) > 5 || Math.abs(diffY) > 5) {
+                try {
+                    if ("onDragStart" in callback) {
+                        callback.onDragStart();
+                    }
+                    
+                    if ("ghost" in callback && callback.ghost) {
+                        var draggedElmt = SimileAjax.WindowManager._draggedElement;
+                        
+                        SimileAjax.WindowManager._ghostCoords = SimileAjax.DOM.getPageCoordinates(draggedElmt);
+                        SimileAjax.WindowManager._ghostCoords.left += diffX;
+                        SimileAjax.WindowManager._ghostCoords.top += diffY;
+                        
+                        var ghostElmt = draggedElmt.cloneNode(true);
+                        ghostElmt.style.position = "absolute";
+                        ghostElmt.style.left = SimileAjax.WindowManager._ghostCoords.left + "px";
+                        ghostElmt.style.top = SimileAjax.WindowManager._ghostCoords.top + "px";
+                        ghostElmt.style.zIndex = 1000;
+                        SimileAjax.Graphics.setOpacity(ghostElmt, 50);
+                        
+                        document.body.appendChild(ghostElmt);
+                        callback._ghostElmt = ghostElmt;
+                    }
+                    
+                    SimileAjax.WindowManager._dragging = true;
+                    SimileAjax.WindowManager._lastCoords = { x: evt.clientX, y: evt.clientY };
+                    
+                    document.body.focus();
+                } catch (e) {
+                    SimileAjax.Debug.exception("WindowManager: Error handling mouse down", e);
+                    SimileAjax.WindowManager._cancelDragging();
+                }
+            }
+        } else {
+            try {
+                SimileAjax.WindowManager._lastCoords = { x: evt.clientX, y: evt.clientY };
+                
+                if ("onDragBy" in callback) {
+                    callback.onDragBy(diffX, diffY);
+                }
+                
+                if ("_ghostElmt" in callback) {
+                    var ghostElmt = callback._ghostElmt;
+                    
+                    SimileAjax.WindowManager._ghostCoords.left += diffX;
+                    SimileAjax.WindowManager._ghostCoords.top += diffY;
+                    
+                    ghostElmt.style.left = SimileAjax.WindowManager._ghostCoords.left + "px";
+                    ghostElmt.style.top = SimileAjax.WindowManager._ghostCoords.top + "px";
+                    if (SimileAjax.WindowManager._draggingModeIndicatorElmt != null) {
+                        var indicatorElmt = SimileAjax.WindowManager._draggingModeIndicatorElmt;
+                        
+                        indicatorElmt.style.left = (SimileAjax.WindowManager._ghostCoords.left - 16) + "px";
+                        indicatorElmt.style.top = SimileAjax.WindowManager._ghostCoords.top + "px";
+                    }
+                    
+                    if ("droppable" in callback && callback.droppable) {
+                        var coords = SimileAjax.DOM.getEventPageCoordinates(evt);
+                        var target = SimileAjax.DOM.hittest(
+                            coords.x, coords.y, 
+                            [   SimileAjax.WindowManager._ghostElmt, 
+                                SimileAjax.WindowManager._dropTargetHighlightElement 
+                            ]
+                        );
+                        target = SimileAjax.WindowManager._findDropTarget(target);
+                        
+                        if (target != SimileAjax.WindowManager._potentialDropTarget) {
+                            if (SimileAjax.WindowManager._dropTargetHighlightElement != null) {
+                                document.body.removeChild(SimileAjax.WindowManager._dropTargetHighlightElement);
+                                
+                                SimileAjax.WindowManager._dropTargetHighlightElement = null;
+                                SimileAjax.WindowManager._potentialDropTarget = null;
+                            }
+
+                            var droppable = false;
+                            if (target != null) {
+                                if ((!("canDropOn" in callback) || callback.canDropOn(target)) &&
+                                    (!("canDrop" in target) || target.canDrop(SimileAjax.WindowManager._draggedElement))) {
+                                    
+                                    droppable = true;
+                                }
+                            }
+                            
+                            if (droppable) {
+                                var border = 4;
+                                var targetCoords = SimileAjax.DOM.getPageCoordinates(target);
+                                var highlight = document.createElement("div");
+                                highlight.style.border = border + "px solid yellow";
+                                highlight.style.backgroundColor = "yellow";
+                                highlight.style.position = "absolute";
+                                highlight.style.left = targetCoords.left + "px";
+                                highlight.style.top = targetCoords.top + "px";
+                                highlight.style.width = (target.offsetWidth - border * 2) + "px";
+                                highlight.style.height = (target.offsetHeight - border * 2) + "px";
+                                SimileAjax.Graphics.setOpacity(highlight, 30);
+                                document.body.appendChild(highlight);
+                                
+                                SimileAjax.WindowManager._potentialDropTarget = target;
+                                SimileAjax.WindowManager._dropTargetHighlightElement = highlight;
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                SimileAjax.Debug.exception("WindowManager: Error handling mouse move", e);
+                SimileAjax.WindowManager._cancelDragging();
+            }
+        }
+        
+        SimileAjax.DOM.cancelEvent(evt);
+        return false;
+    }
+};
+
+SimileAjax.WindowManager._onBodyMouseUp = function(elmt, evt, target) {
+    if (SimileAjax.WindowManager._draggedElement != null) {
+        try {
+            if (SimileAjax.WindowManager._dragging) {
+                var callback = SimileAjax.WindowManager._draggedElementCallback;
+                if ("onDragEnd" in callback) {
+                    callback.onDragEnd();
+                }
+                if ("droppable" in callback && callback.droppable) {
+                    var dropped = false;
+                    
+                    var target = SimileAjax.WindowManager._potentialDropTarget;
+                    if (target != null) {
+                        if ((!("canDropOn" in callback) || callback.canDropOn(target)) &&
+                            (!("canDrop" in target) || target.canDrop(SimileAjax.WindowManager._draggedElement))) {
+                            
+                            if ("onDropOn" in callback) {
+                                callback.onDropOn(target);
+                            }
+                            target.ondrop(SimileAjax.WindowManager._draggedElement, SimileAjax.WindowManager._draggingMode);
+                            
+                            dropped = true;
+                        }
+                    }
+                    
+                    if (!dropped) {
+                        // TODO: do holywood explosion here
+                    }
+                }
+            }
+        } finally {
+            SimileAjax.WindowManager._cancelDragging();
+        }
+        
+        SimileAjax.DOM.cancelEvent(evt);
+        return false;
+    }
+};
+
+SimileAjax.WindowManager._cancelDragging = function() {
+    var callback = SimileAjax.WindowManager._draggedElementCallback;
+    if ("_ghostElmt" in callback) {
+        var ghostElmt = callback._ghostElmt;
+        document.body.removeChild(ghostElmt);
+        
+        delete callback._ghostElmt;
+    }
+    if (SimileAjax.WindowManager._dropTargetHighlightElement != null) {
+        document.body.removeChild(SimileAjax.WindowManager._dropTargetHighlightElement);
+        SimileAjax.WindowManager._dropTargetHighlightElement = null;
+    }
+    if (SimileAjax.WindowManager._draggingModeIndicatorElmt != null) {
+        document.body.removeChild(SimileAjax.WindowManager._draggingModeIndicatorElmt);
+        SimileAjax.WindowManager._draggingModeIndicatorElmt = null;
+    }
+    
+    SimileAjax.WindowManager._draggedElement = null;
+    SimileAjax.WindowManager._draggedElementCallback = null;
+    SimileAjax.WindowManager._potentialDropTarget = null;
+    SimileAjax.WindowManager._dropTargetHighlightElement = null;
+    SimileAjax.WindowManager._lastCoords = null;
+    SimileAjax.WindowManager._ghostCoords = null;
+    SimileAjax.WindowManager._draggingMode = "";
+    SimileAjax.WindowManager._dragging = false;
+};
+
+SimileAjax.WindowManager._findDropTarget = function(elmt) {
+    while (elmt != null) {
+        if ("ondrop" in elmt && (typeof elmt.ondrop) == "function") {
+            break;
+        }
+        elmt = elmt.parentNode;
+    }
+    return elmt;
+};

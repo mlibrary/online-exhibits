@@ -1,2 +1,30 @@
-Timeline.GregorianDateLabeller.monthNames.cs="Leden,\ufffdnor,B\ufffdezen,Duben,Kv\ufffdten,\ufffderven,\ufffdervenec,Srpen,Z\ufffd\ufffd\ufffd,\ufffd\ufffdjen,Listopad,Prosinec".split(",");Timeline.GregorianDateLabeller.dayNames.cs="Ne,Po,\ufffdt,St,\ufffdt,P\ufffd,So".split(",");
-Timeline.GregorianDateLabeller.labelIntervalFunctions.cs=function(b,c){var a;a=Timeline.DateTime.removeTimeZoneOffset(b,this._timeZone);switch(c){case Timeline.DateTime.DAY:case Timeline.DateTime.WEEK:a=a.getUTCDate()+". "+(a.getUTCMonth()+1)+".";break;default:return this.defaultLabelInterval(b,c)}return{text:a,emphasized:!1}};
+/*==================================================
+ *  Localization of labellers.js
+ *==================================================
+ */
+
+Timeline.GregorianDateLabeller.monthNames["cs"] = [
+    "Leden", "Únor", "Bøezen", "Duben", "Kvìten", "Èerven", "Èervenec", "Srpen", "Záøí", "Øíjen", "Listopad", "Prosinec"
+];
+
+Timeline.GregorianDateLabeller.dayNames["cs"] = [
+    "Ne", "Po", "Út", "St", "Èt", "Pá", "So"
+];
+
+Timeline.GregorianDateLabeller.labelIntervalFunctions["cs"] = function(date, intervalUnit) {
+    var text;
+    var emphasized = false;
+
+    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    
+    switch(intervalUnit) {
+    case Timeline.DateTime.DAY:
+    case Timeline.DateTime.WEEK:
+        text = date2.getUTCDate() + ". " + (date2.getUTCMonth() + 1) + ".";
+        break;
+    default:
+        return this.defaultLabelInterval(date, intervalUnit);
+    }
+    
+    return { text: text, emphasized: emphasized };
+};

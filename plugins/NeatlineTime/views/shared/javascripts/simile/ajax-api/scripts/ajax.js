@@ -1,2 +1,45 @@
-SimileAjax.ListenerQueue=function(a){this._listeners=[];this._wildcardHandlerName=a};SimileAjax.ListenerQueue.prototype.add=function(a){this._listeners.push(a)};SimileAjax.ListenerQueue.prototype.remove=function(a){for(var d=this._listeners,b=0;b<d.length;b++)if(d[b]==a){d.splice(b,1);break}};
-SimileAjax.ListenerQueue.prototype.fire=function(a,d){for(var b=[].concat(this._listeners),e=0;e<b.length;e++){var c=b[e];if(a in c)try{c[a].apply(c,d)}catch(f){SimileAjax.Debug.exception("Error firing event of name "+a,f)}else if(this._wildcardHandlerName!=null&&this._wildcardHandlerName in c)try{c[this._wildcardHandlerName].apply(c,[a])}catch(g){SimileAjax.Debug.exception("Error firing event of name "+a+" to wildcard handler",g)}}};
+/*==================================================
+ *  General, miscellaneous SimileAjax stuff
+ *==================================================
+ */
+
+SimileAjax.ListenerQueue = function(wildcardHandlerName) {
+    this._listeners = [];
+    this._wildcardHandlerName = wildcardHandlerName;
+};
+
+SimileAjax.ListenerQueue.prototype.add = function(listener) {
+    this._listeners.push(listener);
+};
+
+SimileAjax.ListenerQueue.prototype.remove = function(listener) {
+    var listeners = this._listeners;
+    for (var i = 0; i < listeners.length; i++) {
+        if (listeners[i] == listener) {
+            listeners.splice(i, 1);
+            break;
+        }
+    }
+};
+
+SimileAjax.ListenerQueue.prototype.fire = function(handlerName, args) {
+    var listeners = [].concat(this._listeners);
+    for (var i = 0; i < listeners.length; i++) {
+        var listener = listeners[i];
+        if (handlerName in listener) {
+            try {
+                listener[handlerName].apply(listener, args);
+            } catch (e) {
+                SimileAjax.Debug.exception("Error firing event of name " + handlerName, e);
+            }
+        } else if (this._wildcardHandlerName != null &&
+            this._wildcardHandlerName in listener) {
+            try {
+                listener[this._wildcardHandlerName].apply(listener, [ handlerName ]);
+            } catch (e) {
+                SimileAjax.Debug.exception("Error firing event of name " + handlerName + " to wildcard handler", e);
+            }
+        }
+    }
+};
+

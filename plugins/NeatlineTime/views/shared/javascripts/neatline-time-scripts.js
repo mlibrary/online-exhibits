@@ -1,5 +1,112 @@
-var NeatlineTime={resizeTimerID:null,resizeTimeline:function(){resizeTimerID==null&&(resizeTimerID=window.setTimeout(function(){resizeTimerID=null;tl.layout()},500))},_monkeyPatchFillInfoBubble:function(){Timeline.DefaultEventSource.Event.prototype.fillInfoBubble=function(d,e,c){var a=d.ownerDocument,h=this.getText(),b=this.getLink(),f=this.getImage();if(f!=null){var g=a.createElement("img");g.src=f;e.event.bubble.imageStyler(g);d.appendChild(g)}f=a.createElement("div");g=a.createElement("span");
-g.innerHTML=h;b!=null?(h=a.createElement("a"),h.href=b,h.appendChild(g),f.appendChild(h)):f.appendChild(g);e.event.bubble.titleStyler(f);d.appendChild(f);b=a.createElement("div");this.fillDescription(b);e.event.bubble.bodyStyler(b);d.appendChild(b);b=a.createElement("div");this.fillTime(b,c);e.event.bubble.timeStyler(b);d.appendChild(b);c=a.createElement("div");this.fillWikiInfo(c);e.event.bubble.wikiStyler(c);d.appendChild(c)}},loadTimeline:function(d,e){NeatlineTime._monkeyPatchFillInfoBubble();
-var c=new Timeline.DefaultEventSource;Timeline.getDefaultTheme().mouseWheel="zoom";var a=[Timeline.createBandInfo({eventSource:c,width:"80%",intervalUnit:Timeline.DateTime.MONTH,intervalPixels:100,zoomIndex:10,zoomSteps:[{pixelsPerInterval:280,unit:Timeline.DateTime.HOUR},{pixelsPerInterval:140,unit:Timeline.DateTime.HOUR},{pixelsPerInterval:70,unit:Timeline.DateTime.HOUR},{pixelsPerInterval:35,unit:Timeline.DateTime.HOUR},{pixelsPerInterval:400,unit:Timeline.DateTime.DAY},{pixelsPerInterval:200,
-unit:Timeline.DateTime.DAY},{pixelsPerInterval:100,unit:Timeline.DateTime.DAY},{pixelsPerInterval:50,unit:Timeline.DateTime.DAY},{pixelsPerInterval:400,unit:Timeline.DateTime.MONTH},{pixelsPerInterval:200,unit:Timeline.DateTime.MONTH},{pixelsPerInterval:100,unit:Timeline.DateTime.MONTH}]}),Timeline.createBandInfo({overview:!0,eventSource:c,width:"20%",intervalUnit:Timeline.DateTime.YEAR,intervalPixels:200})];a[1].syncWith=0;a[1].highlight=!0;tl=Timeline.create(document.getElementById(d),a);tl.loadJSON(e,
-function(a,b){a.events.length>0&&(c.loadJSON(a,b),tl.getBand(0).setCenterVisibleDate(c.getEarliestDate()))})}};
+var NeatlineTime = {
+  resizeTimerID: null,
+
+  resizeTimeline: function() {
+     if (resizeTimerID == null) {
+        resizeTimerID = window.setTimeout(function() {
+            resizeTimerID = null;
+            tl.layout();
+        }, 500);
+    }
+  },
+
+  _monkeyPatchFillInfoBubble: function() {
+      var oldFillInfoBubble =
+          Timeline.DefaultEventSource.Event.prototype.fillInfoBubble;
+      Timeline.DefaultEventSource.Event.prototype.fillInfoBubble =
+          function(elmt, theme, labeller) {
+          var doc = elmt.ownerDocument;
+
+          var title = this.getText();
+          var link = this.getLink();
+          var image = this.getImage();
+
+          if (image != null) {
+              var img = doc.createElement("img");
+              img.src = image;
+
+              theme.event.bubble.imageStyler(img);
+              elmt.appendChild(img);
+          }
+
+          var divTitle = doc.createElement("div");
+          var textTitle = doc.createElement("span");
+          textTitle.innerHTML = title;
+          if (link != null) {
+              var a = doc.createElement("a");
+              a.href = link;
+              a.appendChild(textTitle);
+              divTitle.appendChild(a);
+          } else {
+              divTitle.appendChild(textTitle);
+          }
+          theme.event.bubble.titleStyler(divTitle);
+          elmt.appendChild(divTitle);
+
+          var divBody = doc.createElement("div");
+          this.fillDescription(divBody);
+          theme.event.bubble.bodyStyler(divBody);
+          elmt.appendChild(divBody);
+
+          var divTime = doc.createElement("div");
+          this.fillTime(divTime, labeller);
+          theme.event.bubble.timeStyler(divTime);
+          elmt.appendChild(divTime);
+
+          var divWiki = doc.createElement("div");
+          this.fillWikiInfo(divWiki);
+          theme.event.bubble.wikiStyler(divWiki);
+          elmt.appendChild(divWiki);
+      };
+  },
+
+  loadTimeline: function(timelineId, timelineData) {
+    NeatlineTime._monkeyPatchFillInfoBubble();
+    var eventSource = new Timeline.DefaultEventSource();
+
+    var defaultTheme = Timeline.getDefaultTheme();
+    defaultTheme.mouseWheel = 'zoom';
+
+    var bandInfos = [
+        Timeline.createBandInfo({
+            eventSource:    eventSource,
+            width:          "80%",
+            intervalUnit:   Timeline.DateTime.MONTH,
+            intervalPixels: 100,
+            zoomIndex:      10,
+            zoomSteps:      new Array(
+              {pixelsPerInterval: 280,  unit: Timeline.DateTime.HOUR},
+              {pixelsPerInterval: 140,  unit: Timeline.DateTime.HOUR},
+              {pixelsPerInterval:  70,  unit: Timeline.DateTime.HOUR},
+              {pixelsPerInterval:  35,  unit: Timeline.DateTime.HOUR},
+              {pixelsPerInterval: 400,  unit: Timeline.DateTime.DAY},
+              {pixelsPerInterval: 200,  unit: Timeline.DateTime.DAY},
+              {pixelsPerInterval: 100,  unit: Timeline.DateTime.DAY},
+              {pixelsPerInterval:  50,  unit: Timeline.DateTime.DAY},
+              {pixelsPerInterval: 400,  unit: Timeline.DateTime.MONTH},
+              {pixelsPerInterval: 200,  unit: Timeline.DateTime.MONTH},
+              {pixelsPerInterval: 100,  unit: Timeline.DateTime.MONTH} // DEFAULT zoomIndex
+            )
+        }),
+        Timeline.createBandInfo({
+            overview:       true,
+            eventSource:    eventSource,
+            width:          "20%",
+            intervalUnit:   Timeline.DateTime.YEAR,
+            intervalPixels: 200
+        })
+    ];
+
+    bandInfos[1].syncWith = 0;
+    bandInfos[1].highlight = true;
+
+    tl = Timeline.create(document.getElementById(timelineId), bandInfos);
+    tl.loadJSON(timelineData, function(json, url) {
+        if (json.events.length > 0) {
+            eventSource.loadJSON(json, url);
+            tl.getBand(0).setCenterVisibleDate(eventSource.getEarliestDate());
+        }
+    });
+
+  }
+};

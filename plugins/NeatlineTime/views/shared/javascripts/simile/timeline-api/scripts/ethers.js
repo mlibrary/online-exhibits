@@ -1,13 +1,305 @@
-Timeline.LinearEther=function(a){this._params=a;this._interval=a.interval;this._pixelsPerInterval=a.pixelsPerInterval};
-Timeline.LinearEther.prototype.initialize=function(a,c){this._band=a;this._timeline=c;this._unit=c.getUnit();"startsOn"in this._params?this._start=this._unit.parseFromObject(this._params.startsOn):"endsOn"in this._params?(this._start=this._unit.parseFromObject(this._params.endsOn),this.shiftPixels(-this._timeline.getPixelLength())):(this._start="centersOn"in this._params?this._unit.parseFromObject(this._params.centersOn):this._unit.makeDefaultValue(),this.shiftPixels(-this._timeline.getPixelLength()/
-2))};Timeline.LinearEther.prototype.setDate=function(a){this._start=this._unit.cloneValue(a)};Timeline.LinearEther.prototype.shiftPixels=function(a){this._start=this._unit.change(this._start,this._interval*a/this._pixelsPerInterval)};Timeline.LinearEther.prototype.dateToPixelOffset=function(a){return this._pixelsPerInterval*this._unit.compare(a,this._start)/this._interval};Timeline.LinearEther.prototype.pixelOffsetToDate=function(a){return this._unit.change(this._start,a*this._interval/this._pixelsPerInterval)};
-Timeline.LinearEther.prototype.zoom=function(a){var c=0,e=c=this._band._zoomIndex;a&&c>0&&(e=c-1);!a&&c<this._band._zoomSteps.length-1&&(e=c+1);this._band._zoomIndex=e;this._interval=SimileAjax.DateTime.gregorianUnitLengths[this._band._zoomSteps[e].unit];this._pixelsPerInterval=this._band._zoomSteps[e].pixelsPerInterval;return c=this._band._zoomSteps[e].unit-this._band._zoomSteps[c].unit};
-Timeline.HotZoneEther=function(a){this._params=a;this._interval=a.interval;this._pixelsPerInterval=a.pixelsPerInterval;this._theme=a.theme};
-Timeline.HotZoneEther.prototype.initialize=function(a,c){this._band=a;this._timeline=c;this._unit=c.getUnit();this._zones=[{startTime:Number.NEGATIVE_INFINITY,endTime:Number.POSITIVE_INFINITY,magnify:1}];for(var e=this._params,d=0;d<e.zones.length;d++)for(var f=e.zones[d],b=this._unit.parseFromObject(f.start),h=this._unit.parseFromObject(f.end),g=0;g<this._zones.length&&this._unit.compare(h,b)>0;g++){var i=this._zones[g];if(this._unit.compare(b,i.endTime)<0){if(this._unit.compare(b,i.startTime)>0)this._zones.splice(g,
-0,{startTime:i.startTime,endTime:b,magnify:i.magnify}),g++,i.startTime=b;this._unit.compare(h,i.endTime)<0?(this._zones.splice(g,0,{startTime:b,endTime:h,magnify:f.magnify*i.magnify}),g++,b=i.startTime=h):(i.magnify*=f.magnify,b=i.endTime)}}"startsOn"in this._params?this._start=this._unit.parseFromObject(this._params.startsOn):"endsOn"in this._params?(this._start=this._unit.parseFromObject(this._params.endsOn),this.shiftPixels(-this._timeline.getPixelLength())):(this._start="centersOn"in this._params?
-this._unit.parseFromObject(this._params.centersOn):this._unit.makeDefaultValue(),this.shiftPixels(-this._timeline.getPixelLength()/2))};Timeline.HotZoneEther.prototype.setDate=function(a){this._start=this._unit.cloneValue(a)};Timeline.HotZoneEther.prototype.shiftPixels=function(a){this._start=this.pixelOffsetToDate(a)};Timeline.HotZoneEther.prototype.dateToPixelOffset=function(a){return this._dateDiffToPixelOffset(this._start,a)};
-Timeline.HotZoneEther.prototype.pixelOffsetToDate=function(a){return this._pixelOffsetToDate(a,this._start)};Timeline.HotZoneEther.prototype.zoom=function(a){var c=0,e=c=this._band._zoomIndex;a&&c>0&&(e=c-1);!a&&c<this._band._zoomSteps.length-1&&(e=c+1);this._band._zoomIndex=e;this._interval=SimileAjax.DateTime.gregorianUnitLengths[this._band._zoomSteps[e].unit];this._pixelsPerInterval=this._band._zoomSteps[e].pixelsPerInterval;return c=this._band._zoomSteps[e].unit-this._band._zoomSteps[c].unit};
-Timeline.HotZoneEther.prototype._dateDiffToPixelOffset=function(a,c){var e=this._getScale(),d=a,f=0;if(this._unit.compare(d,c)<0){for(var b=0;b<this._zones.length;){if(this._unit.compare(d,this._zones[b].endTime)<0)break;b++}for(;this._unit.compare(d,c)<0;){var h=this._zones[b],g=this._unit.earlier(c,h.endTime);f+=this._unit.compare(g,d)/(e/h.magnify);d=g;b++}}else{for(b=this._zones.length-1;b>=0;){if(this._unit.compare(d,this._zones[b].startTime)>0)break;b--}for(;this._unit.compare(d,c)>0;)h=this._zones[b],
-g=this._unit.later(c,h.startTime),f+=this._unit.compare(g,d)/(e/h.magnify),d=g,b--}return f};
-Timeline.HotZoneEther.prototype._pixelOffsetToDate=function(a,c){var e=this._getScale(),d=c;if(a>0){for(var f=0;f<this._zones.length;){if(this._unit.compare(d,this._zones[f].endTime)<0)break;f++}for(;a>0;){var b=this._zones[f],h=e/b.magnify;if(b.endTime==Number.POSITIVE_INFINITY)d=this._unit.change(d,a*h),a=0;else{var g=this._unit.compare(b.endTime,d)/h;g>a?(d=this._unit.change(d,a*h),a=0):(d=b.endTime,a-=g)}f++}}else{for(f=this._zones.length-1;f>=0;){if(this._unit.compare(d,this._zones[f].startTime)>
-0)break;f--}for(a=-a;a>0;)b=this._zones[f],h=e/b.magnify,b.startTime==Number.NEGATIVE_INFINITY?(d=this._unit.change(d,-a*h),a=0):(g=this._unit.compare(d,b.startTime)/h,g>a?(d=this._unit.change(d,-a*h),a=0):(d=b.startTime,a-=g)),f--}return d};Timeline.HotZoneEther.prototype._getScale=function(){return this._interval/this._pixelsPerInterval};
+/*==================================================
+ *  An "ether" is a object that maps date/time to pixel coordinates.
+ *==================================================
+ */
+
+/*==================================================
+ *  Linear Ether
+ *==================================================
+ */
+ 
+Timeline.LinearEther = function(params) {
+    this._params = params;
+    this._interval = params.interval;
+    this._pixelsPerInterval = params.pixelsPerInterval;
+};
+
+Timeline.LinearEther.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    this._unit = timeline.getUnit();
+    
+    if ("startsOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.startsOn);
+    } else if ("endsOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.endsOn);
+        this.shiftPixels(-this._timeline.getPixelLength());
+    } else if ("centersOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.centersOn);
+        this.shiftPixels(-this._timeline.getPixelLength() / 2);
+    } else {
+        this._start = this._unit.makeDefaultValue();
+        this.shiftPixels(-this._timeline.getPixelLength() / 2);
+    }
+};
+
+Timeline.LinearEther.prototype.setDate = function(date) {
+    this._start = this._unit.cloneValue(date);
+};
+
+Timeline.LinearEther.prototype.shiftPixels = function(pixels) {
+    var numeric = this._interval * pixels / this._pixelsPerInterval;
+    this._start = this._unit.change(this._start, numeric);
+};
+
+Timeline.LinearEther.prototype.dateToPixelOffset = function(date) {
+    var numeric = this._unit.compare(date, this._start);
+    return this._pixelsPerInterval * numeric / this._interval;
+};
+
+Timeline.LinearEther.prototype.pixelOffsetToDate = function(pixels) {
+    var numeric = pixels * this._interval / this._pixelsPerInterval;
+    return this._unit.change(this._start, numeric);
+};
+
+Timeline.LinearEther.prototype.zoom = function(zoomIn) {
+  var netIntervalChange = 0;
+  var currentZoomIndex = this._band._zoomIndex;
+  var newZoomIndex = currentZoomIndex;
+
+  if (zoomIn && (currentZoomIndex > 0)) {
+    newZoomIndex = currentZoomIndex - 1;
+  }
+  
+  if (!zoomIn && (currentZoomIndex < (this._band._zoomSteps.length - 1))) {
+    newZoomIndex = currentZoomIndex + 1;
+  }
+
+  this._band._zoomIndex = newZoomIndex;  
+  this._interval = 
+    SimileAjax.DateTime.gregorianUnitLengths[this._band._zoomSteps[newZoomIndex].unit];
+  this._pixelsPerInterval = this._band._zoomSteps[newZoomIndex].pixelsPerInterval;
+  netIntervalChange = this._band._zoomSteps[newZoomIndex].unit - 
+    this._band._zoomSteps[currentZoomIndex].unit;
+
+  return netIntervalChange;
+};
+
+
+/*==================================================
+ *  Hot Zone Ether
+ *==================================================
+ */
+ 
+Timeline.HotZoneEther = function(params) {
+    this._params = params;
+    this._interval = params.interval;
+    this._pixelsPerInterval = params.pixelsPerInterval;
+    this._theme = params.theme;
+};
+
+Timeline.HotZoneEther.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    this._unit = timeline.getUnit();
+    
+    this._zones = [{
+        startTime:  Number.NEGATIVE_INFINITY,
+        endTime:    Number.POSITIVE_INFINITY,
+        magnify:    1
+    }];
+    var params = this._params;
+    for (var i = 0; i < params.zones.length; i++) {
+        var zone = params.zones[i];
+        var zoneStart = this._unit.parseFromObject(zone.start);
+        var zoneEnd =   this._unit.parseFromObject(zone.end);
+        
+        for (var j = 0; j < this._zones.length && this._unit.compare(zoneEnd, zoneStart) > 0; j++) {
+            var zone2 = this._zones[j];
+            
+            if (this._unit.compare(zoneStart, zone2.endTime) < 0) {
+                if (this._unit.compare(zoneStart, zone2.startTime) > 0) {
+                    this._zones.splice(j, 0, {
+                        startTime:   zone2.startTime,
+                        endTime:     zoneStart,
+                        magnify:     zone2.magnify
+                    });
+                    j++;
+                    
+                    zone2.startTime = zoneStart;
+                }
+                
+                if (this._unit.compare(zoneEnd, zone2.endTime) < 0) {
+                    this._zones.splice(j, 0, {
+                        startTime:  zoneStart,
+                        endTime:    zoneEnd,
+                        magnify:    zone.magnify * zone2.magnify
+                    });
+                    j++;
+                    
+                    zone2.startTime = zoneEnd;
+                    zoneStart = zoneEnd;
+                } else {
+                    zone2.magnify *= zone.magnify;
+                    zoneStart = zone2.endTime;
+                }
+            } // else, try the next existing zone
+        }
+    }
+
+    if ("startsOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.startsOn);
+    } else if ("endsOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.endsOn);
+        this.shiftPixels(-this._timeline.getPixelLength());
+    } else if ("centersOn" in this._params) {
+        this._start = this._unit.parseFromObject(this._params.centersOn);
+        this.shiftPixels(-this._timeline.getPixelLength() / 2);
+    } else {
+        this._start = this._unit.makeDefaultValue();
+        this.shiftPixels(-this._timeline.getPixelLength() / 2);
+    }
+};
+
+Timeline.HotZoneEther.prototype.setDate = function(date) {
+    this._start = this._unit.cloneValue(date);
+};
+
+Timeline.HotZoneEther.prototype.shiftPixels = function(pixels) {
+    this._start = this.pixelOffsetToDate(pixels);
+};
+
+Timeline.HotZoneEther.prototype.dateToPixelOffset = function(date) {
+    return this._dateDiffToPixelOffset(this._start, date);
+};
+
+Timeline.HotZoneEther.prototype.pixelOffsetToDate = function(pixels) {
+    return this._pixelOffsetToDate(pixels, this._start);
+};
+
+Timeline.HotZoneEther.prototype.zoom = function(zoomIn) {
+  var netIntervalChange = 0;
+  var currentZoomIndex = this._band._zoomIndex;
+  var newZoomIndex = currentZoomIndex;
+
+  if (zoomIn && (currentZoomIndex > 0)) {
+    newZoomIndex = currentZoomIndex - 1;
+  }
+  
+  if (!zoomIn && (currentZoomIndex < (this._band._zoomSteps.length - 1))) {
+    newZoomIndex = currentZoomIndex + 1;
+  }
+
+  this._band._zoomIndex = newZoomIndex;  
+  this._interval = 
+    SimileAjax.DateTime.gregorianUnitLengths[this._band._zoomSteps[newZoomIndex].unit];
+  this._pixelsPerInterval = this._band._zoomSteps[newZoomIndex].pixelsPerInterval;
+  netIntervalChange = this._band._zoomSteps[newZoomIndex].unit - 
+    this._band._zoomSteps[currentZoomIndex].unit;
+
+  return netIntervalChange;
+};
+
+Timeline.HotZoneEther.prototype._dateDiffToPixelOffset = function(fromDate, toDate) {
+    var scale = this._getScale();
+    var fromTime = fromDate;
+    var toTime = toDate;
+    
+    var pixels = 0;
+    if (this._unit.compare(fromTime, toTime) < 0) {
+        var z = 0;
+        while (z < this._zones.length) {
+            if (this._unit.compare(fromTime, this._zones[z].endTime) < 0) {
+                break;
+            }
+            z++;
+        }
+        
+        while (this._unit.compare(fromTime, toTime) < 0) {
+            var zone = this._zones[z];
+            var toTime2 = this._unit.earlier(toTime, zone.endTime);
+            
+            pixels += (this._unit.compare(toTime2, fromTime) / (scale / zone.magnify));
+            
+            fromTime = toTime2;
+            z++;
+        }
+    } else {
+        var z = this._zones.length - 1;
+        while (z >= 0) {
+            if (this._unit.compare(fromTime, this._zones[z].startTime) > 0) {
+                break;
+            }
+            z--;
+        }
+        
+        while (this._unit.compare(fromTime, toTime) > 0) {
+            var zone = this._zones[z];
+            var toTime2 = this._unit.later(toTime, zone.startTime);
+            
+            pixels += (this._unit.compare(toTime2, fromTime) / (scale / zone.magnify));
+            
+            fromTime = toTime2;
+            z--;
+        }
+    }
+    return pixels;
+};
+
+Timeline.HotZoneEther.prototype._pixelOffsetToDate = function(pixels, fromDate) {
+    var scale = this._getScale();
+    var time = fromDate;
+    if (pixels > 0) {
+        var z = 0;
+        while (z < this._zones.length) {
+            if (this._unit.compare(time, this._zones[z].endTime) < 0) {
+                break;
+            }
+            z++;
+        }
+        
+        while (pixels > 0) {
+            var zone = this._zones[z];
+            var scale2 = scale / zone.magnify;
+            
+            if (zone.endTime == Number.POSITIVE_INFINITY) {
+                time = this._unit.change(time, pixels * scale2);
+                pixels = 0;
+            } else {
+                var pixels2 = this._unit.compare(zone.endTime, time) / scale2;
+                if (pixels2 > pixels) {
+                    time = this._unit.change(time, pixels * scale2);
+                    pixels = 0;
+                } else {
+                    time = zone.endTime;
+                    pixels -= pixels2;
+                }
+            }
+            z++;
+        }
+    } else {
+        var z = this._zones.length - 1;
+        while (z >= 0) {
+            if (this._unit.compare(time, this._zones[z].startTime) > 0) {
+                break;
+            }
+            z--;
+        }
+        
+        pixels = -pixels;
+        while (pixels > 0) {
+            var zone = this._zones[z];
+            var scale2 = scale / zone.magnify;
+            
+            if (zone.startTime == Number.NEGATIVE_INFINITY) {
+                time = this._unit.change(time, -pixels * scale2);
+                pixels = 0;
+            } else {
+                var pixels2 = this._unit.compare(time, zone.startTime) / scale2;
+                if (pixels2 > pixels) {
+                    time = this._unit.change(time, -pixels * scale2);
+                    pixels = 0;
+                } else {
+                    time = zone.startTime;
+                    pixels -= pixels2;
+                }
+            }
+            z--;
+        }
+    }
+    return time;
+};
+
+Timeline.HotZoneEther.prototype._getScale = function() {
+    return this._interval / this._pixelsPerInterval;
+};

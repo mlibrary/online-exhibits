@@ -1,2 +1,27 @@
-Timeline.GregorianDateLabeller.monthNames.zh="1\u6708,2\u6708,3\u6708,4\u6708,5\u6708,6\u6708,7\u6708,8\u6708,9\u6708,10\u6708,11\u6708,12\u6708".split(",");
-Timeline.GregorianDateLabeller.labelIntervalFunctions.zh=function(b,c){var a;a=Timeline.DateTime.removeTimeZoneOffset(b,this._timeZone);switch(c){case Timeline.DateTime.DAY:case Timeline.DateTime.WEEK:a=Timeline.GregorianDateLabeller.getMonthName(a.getUTCMonth(),this._locale)+a.getUTCDate()+"\u65e5";break;default:return this.defaultLabelInterval(b,c)}return{text:a,emphasized:!1}};
+﻿/*==================================================
+ *  Localization of labellers.js
+ *==================================================
+ */
+
+Timeline.GregorianDateLabeller.monthNames["zh"] = [
+    "1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"
+];
+
+Timeline.GregorianDateLabeller.labelIntervalFunctions["zh"] = function(date, intervalUnit) {
+    var text;
+    var emphasized = false;
+    
+    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    
+    switch(intervalUnit) {
+    case Timeline.DateTime.DAY:
+    case Timeline.DateTime.WEEK:
+        text = Timeline.GregorianDateLabeller.getMonthName(date2.getUTCMonth(), this._locale) + 
+            date2.getUTCDate() + "日";
+        break;
+    default:
+        return this.defaultLabelInterval(date, intervalUnit);
+    }
+    
+    return { text: text, emphasized: emphasized };
+};

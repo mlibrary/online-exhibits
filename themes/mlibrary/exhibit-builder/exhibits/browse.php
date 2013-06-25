@@ -1,6 +1,6 @@
 <?php head(array('title'=>html_escape('Browse Exhibits'),'bodyid'=>'exhibit','bodyclass'=>'browse')); ?>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
 jQuery.noConflict();
 jQuery(document).ready(function()
 {
@@ -34,15 +34,16 @@ jQuery(document).ready(function()
 //	});
   
 //	jQuery('#primary').click(function(e){
-		jQuery('#primary .pagination a').click(function(e){
-		var ahref = jQuery(this).attr('href').split('/');
-		var page = ahref[ahref.length-1]-1;
+//I will comment this code since it starts causing errors when we have three pages, instead I change the number of exhibits from exhibit controller.
+		//jQuery('#primary .pagination a').click(function(e){
+		//var ahref = jQuery(this).attr('href').split('/');
+		//var page = ahref[ahref.length-1]-1;
 		
-		jQuery('#exhibits').load(location.href+' #exhibits>*',{expage: page});
-		return false;
-	});
+		//jQuery('#exhibits').load(location.href+' #exhibits>*',{expage: page});
+		//return false;
+	//});
 });
-</script>
+</script>-->
 
 <?php $awkward_gallery_setting=get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; 
 //if ($awkward_gallery_setting=='yes') {?>
@@ -64,38 +65,37 @@ jQuery(document).ready(function()
     <div id="exhibits">	
     <?php 
 	$exhibitCount = 0;	
-	$exhibitPage =  $_POST['expage'] ? $_POST['expage'] : 0;
-	$perPage = 6;
-	$start = $perPage * $exhibitPage + 1;	
+//	$exhibitPage =  $_POST['expage'] ? $_POST['expage'] : 0;
+//	$perPage = 6;
+//	$start = $perPage * $exhibitPage + 1;	
 	$first_exhibit='false';
 	?>
 	
     <?php while(loop_exhibits()): ?>
-    	<?php $exhibitCount++; 
+    	<?php //$exhibitCount++; 
     	$currentexhibit = get_current_exhibit();
     	$theme_options_array = $currentexhibit->getThemeOptions();
     	?>
-        <?php if($exhibitCount >= $start && $exhibitCount < $start+$perPage): 
+        <?php //if($exhibitCount >= $start && $exhibitCount < $start+$perPage): 
         	if (mlibrary_exhibit_gallery()!='gallery'){?>
-	 	    	<div class="exhibit <?php if ($first_exhibit=='false') echo 'first';  ?>">
-	 	    	<?php $first_exhibit='true';?>
+	 	    	  <div class="exhibit <?php if ($first_exhibit=='false') echo 'first';  ?>">
+	 	    	  <?php $first_exhibit='true';?>
 	    			<h2><?php echo link_to_exhibit(); ?></h2> 
-	    		   <?php //$Exhibit_image =  mlibrary_exhibit_image($currentexhibit);
-	    		   $theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($currentexhibit->id);
+	    		  <?php //$Exhibit_image =  mlibrary_exhibit_image($currentexhibit);
+	    		  $theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($currentexhibit->id);
 	    		 	$Exhibit_image = $theme_options_array['exhibitimage'];
 	    		 	if (!empty($Exhibit_image))
 		    		 echo '<img src="'.WEB_ARCHIVE.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
-		    		 else
-		    		 	echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  
-					echo '<p class="description">'.snippet($currentexhibit->description, 0, 300).'</p>';
+		    		else
+		    		 echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  
+					  echo '<p class="description">'.snippet($currentexhibit->description, 0, 300).'</p>';
 		    		echo '<p class="tags">'.tag_string($currentexhibit, uri('exhibits/browse?tags=')).'</p>';?>
     		    </div>
     		<?php }
-        endif;         
+        //endif;         
      endwhile; ?>
    
-    
-    <div class="pagination"><?php echo pagination_links($options=array('per_page'=>6,'page'=>$exhibitPage+1)); ?></div>
+    <div class="pagination"><?php echo pagination_links(); ?></div>
  </div>
     <?php else: ?>
 	<p>There are no exhibits available yet.</p>
@@ -136,5 +136,5 @@ jQuery(document).ready(function()
 </div>-->
 
         
-<?php// }?>
+<?php //}?>
 <?php foot(); ?>

@@ -1,2 +1,26 @@
-Timeline.GregorianDateLabeller.monthNames.vi="Th\ufffdng 1,Th\ufffdng 2,Th\ufffdng 3,Th\ufffdng 4,Th\ufffdng 5,Th\ufffdng 6,Th\ufffdng 7,Th\ufffdng 8,Th\ufffdng 9,Th\ufffdng 10,Th\ufffdng 11,Th\ufffdng 12".split(",");
-Timeline.GregorianDateLabeller.labelIntervalFunctions.vi=function(b,c){var a;a=Timeline.DateTime.removeTimeZoneOffset(b,this._timeZone);switch(c){case Timeline.DateTime.DAY:case Timeline.DateTime.WEEK:a=a.getUTCDate()+"/"+(a.getUTCMonth()+1);break;default:return this.defaultLabelInterval(b,c)}return{text:a,emphasized:!1}};
+/*==================================================
+ *  Localization of labellers.js
+ *==================================================
+ */
+
+Timeline.GregorianDateLabeller.monthNames["vi"] = [
+    "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+];
+
+Timeline.GregorianDateLabeller.labelIntervalFunctions["vi"] = function(date, intervalUnit) {
+    var text;
+    var emphasized = false;
+    
+    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    
+    switch(intervalUnit) {
+    case Timeline.DateTime.DAY:
+    case Timeline.DateTime.WEEK:
+        text = date2.getUTCDate() + "/" + (date2.getUTCMonth() + 1);
+        break;
+    default:
+        return this.defaultLabelInterval(date, intervalUnit);
+    }
+    
+    return { text: text, emphasized: emphasized };
+};

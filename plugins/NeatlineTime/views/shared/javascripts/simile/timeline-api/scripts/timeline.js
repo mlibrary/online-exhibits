@@ -1,24 +1,645 @@
-Timeline.version="2.3.0";Timeline.ajax_lib_version=SimileAjax.version;Timeline.display_version=Timeline.version+" (with Ajax lib "+Timeline.ajax_lib_version+")";Timeline.strings={};Timeline.HORIZONTAL=0;Timeline.VERTICAL=1;Timeline._defaultTheme=null;Timeline.getDefaultLocale=function(){return Timeline.clientLocale};
-Timeline.create=function(a,d,b,e){if(Timeline.timelines==null)Timeline.timelines=[];var f=Timeline.timelines.length;Timeline.timelines[f]=null;a=new Timeline._Impl(a,d,b,e,f);return Timeline.timelines[f]=a};
-Timeline.createBandInfo=function(a){var d="theme"in a?a.theme:Timeline.getDefaultTheme(),b="eventSource"in a?a.eventSource:null,e=new Timeline.LinearEther({centersOn:"date"in a?a.date:new Date,interval:SimileAjax.DateTime.gregorianUnitLengths[a.intervalUnit],pixelsPerInterval:a.intervalPixels,theme:d}),f=new Timeline.GregorianEtherPainter({unit:a.intervalUnit,multiple:"multiple"in a?a.multiple:1,theme:d,align:"align"in a?a.align:void 0}),c={showText:"showEventText"in a?a.showEventText:!0,theme:d};
-if("eventPainterParams"in a)for(var g in a.eventPainterParams)c[g]=a.eventPainterParams[g];if("trackHeight"in a)c.trackHeight=a.trackHeight;if("trackGap"in a)c.trackGap=a.trackGap;g="overview"in a&&a.overview?"overview":"layout"in a?a.layout:"original";if("eventPainter"in a)c=new a.eventPainter(c);else switch(g){case "overview":c=new Timeline.OverviewEventPainter(c);break;case "detailed":c=new Timeline.DetailedEventPainter(c);break;default:c=new Timeline.OriginalEventPainter(c)}return{width:a.width,
-eventSource:b,timeZone:"timeZone"in a?a.timeZone:0,ether:e,etherPainter:f,eventPainter:c,theme:d,zoomIndex:"zoomIndex"in a?a.zoomIndex:0,zoomSteps:"zoomSteps"in a?a.zoomSteps:null}};
-Timeline.createHotZoneBandInfo=function(a){var d="theme"in a?a.theme:Timeline.getDefaultTheme(),b="eventSource"in a?a.eventSource:null,e=new Timeline.HotZoneEther({centersOn:"date"in a?a.date:new Date,interval:SimileAjax.DateTime.gregorianUnitLengths[a.intervalUnit],pixelsPerInterval:a.intervalPixels,zones:a.zones,theme:d}),f=new Timeline.HotZoneGregorianEtherPainter({unit:a.intervalUnit,zones:a.zones,theme:d,align:"align"in a?a.align:void 0}),c={showText:"showEventText"in a?a.showEventText:!0,theme:d};
-if("eventPainterParams"in a)for(var g in a.eventPainterParams)c[g]=a.eventPainterParams[g];if("trackHeight"in a)c.trackHeight=a.trackHeight;if("trackGap"in a)c.trackGap=a.trackGap;g="overview"in a&&a.overview?"overview":"layout"in a?a.layout:"original";if("eventPainter"in a)c=new a.eventPainter(c);else switch(g){case "overview":c=new Timeline.OverviewEventPainter(c);break;case "detailed":c=new Timeline.DetailedEventPainter(c);break;default:c=new Timeline.OriginalEventPainter(c)}return{width:a.width,
-eventSource:b,timeZone:"timeZone"in a?a.timeZone:0,ether:e,etherPainter:f,eventPainter:c,theme:d,zoomIndex:"zoomIndex"in a?a.zoomIndex:0,zoomSteps:"zoomSteps"in a?a.zoomSteps:null}};Timeline.getDefaultTheme=function(){if(Timeline._defaultTheme==null)Timeline._defaultTheme=Timeline.ClassicTheme.create(Timeline.getDefaultLocale());return Timeline._defaultTheme};Timeline.setDefaultTheme=function(a){Timeline._defaultTheme=a};
-Timeline.loadXML=function(a,d){SimileAjax.XmlHttp.get(a,function(b){alert("Failed to load data xml from "+a+"\n"+b)},function(b){var e=b.responseXML;!e.documentElement&&b.responseStream&&e.load(b.responseStream);d(e,a)})};Timeline.loadJSON=function(a,d){SimileAjax.XmlHttp.get(a,function(b){alert("Failed to load json data from "+a+"\n"+b)},function(b){d(eval("("+b.responseText+")"),a)})};Timeline.getTimelineFromID=function(a){return Timeline.timelines[a]};
-Timeline.writeVersion=function(a){document.getElementById(a).innerHTML=this.display_version};
-Timeline._Impl=function(a,d,b,e,f){SimileAjax.WindowManager.initialize();this._containerDiv=a;this._bandInfos=d;this._orientation=b==null?Timeline.HORIZONTAL:b;this._unit=e!=null?e:SimileAjax.NativeDateUnit;this._starting=!0;this._autoResizing=!1;this.autoWidth=d&&d[0]&&d[0].theme&&d[0].theme.autoWidth;this.autoWidthAnimationTime=d&&d[0]&&d[0].theme&&d[0].theme.autoWidthAnimationTime;this.timelineID=f;this.timeline_start=d&&d[0]&&d[0].theme&&d[0].theme.timeline_start;this.timeline_stop=d&&d[0]&&d[0].theme&&
-d[0].theme.timeline_stop;this.timeline_at_stop=this.timeline_at_start=!1;this._initialize()};Timeline._Impl.prototype.dispose=function(){for(var a=0;a<this._bands.length;a++)this._bands[a].dispose();this._bandInfos=this._bands=null;this._containerDiv.innerHTML="";Timeline.timelines[this.timelineID]=null};Timeline._Impl.prototype.getBandCount=function(){return this._bands.length};Timeline._Impl.prototype.getBand=function(a){return this._bands[a]};
-Timeline._Impl.prototype.finishedEventLoading=function(){this._autoWidthCheck(!0);this._starting=!1};Timeline._Impl.prototype.layout=function(){this._autoWidthCheck(!0);this._distributeWidths()};Timeline._Impl.prototype.paint=function(){for(var a=0;a<this._bands.length;a++)this._bands[a].paint()};Timeline._Impl.prototype.getDocument=function(){return this._containerDiv.ownerDocument};Timeline._Impl.prototype.addDiv=function(a){this._containerDiv.appendChild(a)};
-Timeline._Impl.prototype.removeDiv=function(a){this._containerDiv.removeChild(a)};Timeline._Impl.prototype.isHorizontal=function(){return this._orientation==Timeline.HORIZONTAL};Timeline._Impl.prototype.isVertical=function(){return this._orientation==Timeline.VERTICAL};Timeline._Impl.prototype.getPixelLength=function(){return this._orientation==Timeline.HORIZONTAL?this._containerDiv.offsetWidth:this._containerDiv.offsetHeight};
-Timeline._Impl.prototype.getPixelWidth=function(){return this._orientation==Timeline.VERTICAL?this._containerDiv.offsetWidth:this._containerDiv.offsetHeight};Timeline._Impl.prototype.getUnit=function(){return this._unit};Timeline._Impl.prototype.getWidthStyle=function(){return this._orientation==Timeline.HORIZONTAL?"height":"width"};
-Timeline._Impl.prototype.loadXML=function(a,d){var b=this,e=function(c){alert("Failed to load data xml from "+a+"\n"+c);b.hideLoadingMessage()},f=function(c){try{var e=c.responseXML;!e.documentElement&&c.responseStream&&e.load(c.responseStream);d(e,a)}finally{b.hideLoadingMessage()}};this.showLoadingMessage();window.setTimeout(function(){SimileAjax.XmlHttp.get(a,e,f)},0)};
-Timeline._Impl.prototype.loadJSON=function(a,d){var b=this,e=function(c){alert("Failed to load json data from "+a+"\n"+c);b.hideLoadingMessage()},f=function(c){try{d(eval("("+c.responseText+")"),a)}finally{b.hideLoadingMessage()}};this.showLoadingMessage();window.setTimeout(function(){SimileAjax.XmlHttp.get(a,e,f)},0)};Timeline._Impl.prototype._autoWidthScrollListener=function(a){a.getTimeline()._autoWidthCheck(!1)};
-Timeline._Impl.prototype._autoWidthCheck=function(a){function d(){var a=b.getWidthStyle();if(e)b._containerDiv.style[a]=f+"px";else{b._autoResizing=!0;var d={};d[a]=f+"px";SimileAjax.jQuery(b._containerDiv).animate(d,b.autoWidthAnimationTime,"linear",function(){b._autoResizing=!1})}}var b=this,e=b._starting,f=0;b.autoWidth&&function(){var c=0,e=b.getPixelWidth();if(!b._autoResizing){for(var h=0;h<b._bands.length;h++)b._bands[h].checkAutoWidth(),c+=b._bandInfos[h].width;if(c>e||a)f=c,d(),b._distributeWidths()}}()};
-Timeline._Impl.prototype._initialize=function(){var a=this._containerDiv,d=a.ownerDocument;a.className=a.className.split(" ").concat("timeline-container").join(" ");var b=this.isHorizontal()?"horizontal":"vertical";for(a.className+=" timeline-"+b;a.firstChild;)a.removeChild(a.firstChild);b=SimileAjax.Graphics.createTranslucentImage(Timeline.urlPrefix+(this.isHorizontal()?"images/copyright-vertical.png":"images/copyright.png"));b.className="timeline-copyright";b.title="Timeline copyright SIMILE - www.code.google.com/p/simile-widgets/";
-SimileAjax.DOM.registerEvent(b,"click",function(){window.location="http://code.google.com/p/simile-widgets/"});a.appendChild(b);this._bands=[];for(b=0;b<this._bandInfos.length;b++)this._bands.push(new Timeline._Band(this,this._bandInfos[b],b));this._distributeWidths();for(b=0;b<this._bandInfos.length;b++){var e=this._bandInfos[b];"syncWith"in e&&this._bands[b].setSyncWithBand(this._bands[e.syncWith],"highlight"in e?e.highlight:!1)}if(this.autoWidth)for(b=0;b<this._bands.length;b++)this._bands[b].addOnScrollListener(this._autoWidthScrollListener);
-var f=SimileAjax.Graphics.createMessageBubble(d);f.containerDiv.className="timeline-message-container";a.appendChild(f.containerDiv);f.contentDiv.className="timeline-message";f.contentDiv.innerHTML="<img src='"+Timeline.urlPrefix+"images/progress-running.gif' /> Loading...";this.showLoadingMessage=function(){f.containerDiv.style.display="block"};this.hideLoadingMessage=function(){f.containerDiv.style.display="none"}};
-Timeline._Impl.prototype._distributeWidths=function(){for(var a=this.getPixelLength(),d=this.getPixelWidth(),b=0,e=0;e<this._bands.length;e++){var f=this._bands[e],c=this._bandInfos[e].width;if(typeof c=="string"){var g=c.indexOf("%");g>0?(c=parseInt(c.substr(0,g)),c=Math.round(c*d/100)):c=parseInt(c)}f.setBandShiftAndWidth(b,c);f.setViewLength(a);b+=c}};
-Timeline._Impl.prototype.shiftOK=function(a,d){var b=d>0,e=d<0;if(b&&this.timeline_start==null||e&&this.timeline_stop==null||d==0)return!0;for(var f=!1,c=0;c<this._bands.length&&!f;c++)f=this._bands[c].busy();if(f)return!0;if(b&&this.timeline_at_start||e&&this.timeline_at_stop)return!1;e=!1;for(c=0;c<this._bands.length&&!e;c++)e=this._bands[c],e=b?(c==a?e.getMinVisibleDateAfterDelta(d):e.getMinVisibleDate())>=this.timeline_start:(c==a?e.getMaxVisibleDateAfterDelta(d):e.getMaxVisibleDate())<=this.timeline_stop;
-b?(this.timeline_at_start=!e,this.timeline_at_stop=!1):(this.timeline_at_stop=!e,this.timeline_at_start=!1);return e};Timeline._Impl.prototype.zoom=function(a,d,b,e){var f=null,c=/^timeline-band-([0-9]+)$/.exec(e.id);c&&(f=parseInt(c[1]));f!=null&&this._bands[f].zoom(a,d,b,e);this.paint()};
+/*=================================================
+ *
+ * Coding standards:
+ *
+ * We aim towards Douglas Crockford's Javascript conventions.
+ * See:  http://javascript.crockford.com/code.html
+ * See also: http://www.crockford.com/javascript/javascript.html
+ *
+ * That said, this JS code was written before some recent JS
+ * support libraries became widely used or available.
+ * In particular, the _ character is used to indicate a class function or
+ * variable that should be considered private to the class.
+ *
+ * The code mostly uses accessor methods for getting/setting the private
+ * class variables.
+ *
+ * Over time, we'd like to formalize the convention by using support libraries
+ * which enforce privacy in objects.
+ *
+ * We also want to use jslint:  http://www.jslint.com/
+ *
+ *
+ *==================================================
+ */
+
+
+
+/*==================================================
+ *  Timeline VERSION     
+ *==================================================
+ */
+// Note: version is also stored in the build.xml file
+Timeline.version = '2.3.0';  // use format 'pre 1.2.3' for trunk versions 
+Timeline.ajax_lib_version = SimileAjax.version;  // Waiting for version string method from Ajax library
+Timeline.display_version = Timeline.version + ' (with Ajax lib ' + Timeline.ajax_lib_version + ')';
+ // cf method Timeline.writeVersion
+
+/*==================================================
+ *  Timeline
+ *==================================================
+ */
+Timeline.strings = {}; // localization string tables
+Timeline.HORIZONTAL = 0;
+Timeline.VERTICAL = 1;
+Timeline._defaultTheme = null;
+
+Timeline.getDefaultLocale = function() {
+    return Timeline.clientLocale;
+};
+
+Timeline.create = function(elmt, bandInfos, orientation, unit) {
+    if (Timeline.timelines == null) {
+        Timeline.timelines = [];
+        // Timeline.timelines array can have null members--Timelines that
+        // once existed on the page, but were later disposed of.
+    }
+    
+    var timelineID = Timeline.timelines.length;
+    Timeline.timelines[timelineID] = null; // placeholder until we have the object
+    var new_tl = new Timeline._Impl(elmt, bandInfos, orientation, unit,
+      timelineID);
+    Timeline.timelines[timelineID] = new_tl;    
+    return new_tl;
+};
+
+Timeline.createBandInfo = function(params) {
+    var theme = ("theme" in params) ? params.theme : Timeline.getDefaultTheme();
+    
+    var eventSource = ("eventSource" in params) ? params.eventSource : null;
+    
+    var ether = new Timeline.LinearEther({ 
+        centersOn:          ("date" in params) ? params.date : new Date(),
+        interval:           SimileAjax.DateTime.gregorianUnitLengths[params.intervalUnit],
+        pixelsPerInterval:  params.intervalPixels,
+        theme:              theme
+    });
+    
+    var etherPainter = new Timeline.GregorianEtherPainter({
+        unit:       params.intervalUnit, 
+        multiple:   ("multiple" in params) ? params.multiple : 1,
+        theme:      theme,
+        align:      ("align" in params) ? params.align : undefined
+    });
+    
+    var eventPainterParams = {
+        showText:   ("showEventText" in params) ? params.showEventText : true,
+        theme:      theme
+    };
+    // pass in custom parameters for the event painter
+    if ("eventPainterParams" in params) {
+        for (var prop in params.eventPainterParams) {
+            eventPainterParams[prop] = params.eventPainterParams[prop];
+        }
+    }
+    
+    if ("trackHeight" in params) {
+        eventPainterParams.trackHeight = params.trackHeight;
+    }
+    if ("trackGap" in params) {
+        eventPainterParams.trackGap = params.trackGap;
+    }
+    
+    var layout = ("overview" in params && params.overview) ? "overview" : ("layout" in params ? params.layout : "original");
+    var eventPainter;
+    if ("eventPainter" in params) {
+        eventPainter = new params.eventPainter(eventPainterParams);
+    } else {
+        switch (layout) {
+            case "overview" :
+                eventPainter = new Timeline.OverviewEventPainter(eventPainterParams);
+                break;
+            case "detailed" :
+                eventPainter = new Timeline.DetailedEventPainter(eventPainterParams);
+                break;
+            default:
+                eventPainter = new Timeline.OriginalEventPainter(eventPainterParams);
+        }
+    }
+    
+    return {   
+        width:          params.width,
+        eventSource:    eventSource,
+        timeZone:       ("timeZone" in params) ? params.timeZone : 0,
+        ether:          ether,
+        etherPainter:   etherPainter,
+        eventPainter:   eventPainter,
+        theme:          theme,
+        zoomIndex:      ("zoomIndex" in params) ? params.zoomIndex : 0,
+        zoomSteps:      ("zoomSteps" in params) ? params.zoomSteps : null
+    };
+};
+
+Timeline.createHotZoneBandInfo = function(params) {
+    var theme = ("theme" in params) ? params.theme : Timeline.getDefaultTheme();
+    
+    var eventSource = ("eventSource" in params) ? params.eventSource : null;
+    
+    var ether = new Timeline.HotZoneEther({ 
+        centersOn:          ("date" in params) ? params.date : new Date(),
+        interval:           SimileAjax.DateTime.gregorianUnitLengths[params.intervalUnit],
+        pixelsPerInterval:  params.intervalPixels,
+        zones:              params.zones,
+        theme:              theme
+    });
+    
+    var etherPainter = new Timeline.HotZoneGregorianEtherPainter({
+        unit:       params.intervalUnit, 
+        zones:      params.zones,
+        theme:      theme,
+        align:      ("align" in params) ? params.align : undefined
+    });
+    
+    var eventPainterParams = {
+        showText:   ("showEventText" in params) ? params.showEventText : true,
+        theme:      theme
+    };
+    // pass in custom parameters for the event painter
+    if ("eventPainterParams" in params) {
+        for (var prop in params.eventPainterParams) {
+            eventPainterParams[prop] = params.eventPainterParams[prop];
+        }
+    }
+    if ("trackHeight" in params) {
+        eventPainterParams.trackHeight = params.trackHeight;
+    }
+    if ("trackGap" in params) {
+        eventPainterParams.trackGap = params.trackGap;
+    }
+    
+    var layout = ("overview" in params && params.overview) ? "overview" : ("layout" in params ? params.layout : "original");
+    var eventPainter;
+    if ("eventPainter" in params) {
+        eventPainter = new params.eventPainter(eventPainterParams);
+    } else {
+        switch (layout) {
+            case "overview" :
+                eventPainter = new Timeline.OverviewEventPainter(eventPainterParams);
+                break;
+            case "detailed" :
+                eventPainter = new Timeline.DetailedEventPainter(eventPainterParams);
+                break;
+            default:
+                eventPainter = new Timeline.OriginalEventPainter(eventPainterParams);
+        }
+    }   
+    return {   
+        width:          params.width,
+        eventSource:    eventSource,
+        timeZone:       ("timeZone" in params) ? params.timeZone : 0,
+        ether:          ether,
+        etherPainter:   etherPainter,
+        eventPainter:   eventPainter,
+        theme:          theme,
+        zoomIndex:      ("zoomIndex" in params) ? params.zoomIndex : 0,
+        zoomSteps:      ("zoomSteps" in params) ? params.zoomSteps : null
+    };
+};
+
+Timeline.getDefaultTheme = function() {
+    if (Timeline._defaultTheme == null) {
+        Timeline._defaultTheme = Timeline.ClassicTheme.create(Timeline.getDefaultLocale());
+    }
+    return Timeline._defaultTheme;
+};
+
+Timeline.setDefaultTheme = function(theme) {
+    Timeline._defaultTheme = theme;
+};
+
+Timeline.loadXML = function(url, f) {
+    var fError = function(statusText, status, xmlhttp) {
+        alert("Failed to load data xml from " + url + "\n" + statusText);
+    };
+    var fDone = function(xmlhttp) {
+        var xml = xmlhttp.responseXML;
+        if (!xml.documentElement && xmlhttp.responseStream) {
+            xml.load(xmlhttp.responseStream);
+        } 
+        f(xml, url);
+    };
+    SimileAjax.XmlHttp.get(url, fError, fDone);
+};
+
+
+Timeline.loadJSON = function(url, f) {
+    var fError = function(statusText, status, xmlhttp) {
+        alert("Failed to load json data from " + url + "\n" + statusText);
+    };
+    var fDone = function(xmlhttp) {
+        f(eval('(' + xmlhttp.responseText + ')'), url);
+    };
+    SimileAjax.XmlHttp.get(url, fError, fDone);
+};
+
+Timeline.getTimelineFromID = function(timelineID) {
+    return Timeline.timelines[timelineID];
+};
+
+// Write the current Timeline version as the contents of element with id el_id
+Timeline.writeVersion = function(el_id) {
+  document.getElementById(el_id).innerHTML = this.display_version;    
+};
+
+
+
+/*==================================================
+ *  Timeline Implementation object
+ *==================================================
+ */
+Timeline._Impl = function(elmt, bandInfos, orientation, unit, timelineID) {
+    SimileAjax.WindowManager.initialize();
+    
+    this._containerDiv = elmt;
+    
+    this._bandInfos = bandInfos;
+    this._orientation = orientation == null ? Timeline.HORIZONTAL : orientation;
+    this._unit = (unit != null) ? unit : SimileAjax.NativeDateUnit;
+    this._starting = true; // is the Timeline being created? Used by autoWidth
+                           // functions
+    this._autoResizing = false;
+    
+    // autoWidth is a "public" property of the Timeline object
+    this.autoWidth = bandInfos && bandInfos[0] && bandInfos[0].theme && 
+                     bandInfos[0].theme.autoWidth;
+    this.autoWidthAnimationTime = bandInfos && bandInfos[0] && bandInfos[0].theme && 
+                     bandInfos[0].theme.autoWidthAnimationTime;
+    this.timelineID = timelineID; // also public attribute
+    this.timeline_start = bandInfos && bandInfos[0] && bandInfos[0].theme && 
+                     bandInfos[0].theme.timeline_start;
+    this.timeline_stop  = bandInfos && bandInfos[0] && bandInfos[0].theme && 
+                     bandInfos[0].theme.timeline_stop;
+    this.timeline_at_start = false; // already at start or stop? Then won't 
+    this.timeline_at_stop = false;  // try to move further in the wrong direction
+    
+    this._initialize();
+};
+
+//
+// Public functions used by client sw
+//
+Timeline._Impl.prototype.dispose = function() {
+    for (var i = 0; i < this._bands.length; i++) {
+        this._bands[i].dispose();
+    }
+    this._bands = null;
+    this._bandInfos = null;
+    this._containerDiv.innerHTML = "";
+    // remove from array of Timelines
+    Timeline.timelines[this.timelineID] = null;
+};
+
+Timeline._Impl.prototype.getBandCount = function() {
+    return this._bands.length;
+};
+
+Timeline._Impl.prototype.getBand = function(index) {
+    return this._bands[index];
+};
+
+Timeline._Impl.prototype.finishedEventLoading = function() {
+    // Called by client after events have been loaded into Timeline
+    // Only used if the client has set autoWidth
+    // Sets width to Timeline's requested amount and will shrink down the div if
+    // need be.
+    this._autoWidthCheck(true);
+    this._starting = false;
+};
+
+Timeline._Impl.prototype.layout = function() {
+    // called by client when browser is resized
+    this._autoWidthCheck(true);
+    this._distributeWidths();
+};
+
+Timeline._Impl.prototype.paint = function() {
+    for (var i = 0; i < this._bands.length; i++) {
+        this._bands[i].paint();
+    }
+};
+
+Timeline._Impl.prototype.getDocument = function() {
+    return this._containerDiv.ownerDocument;
+};
+
+Timeline._Impl.prototype.addDiv = function(div) {
+    this._containerDiv.appendChild(div);
+};
+
+Timeline._Impl.prototype.removeDiv = function(div) {
+    this._containerDiv.removeChild(div);
+};
+
+Timeline._Impl.prototype.isHorizontal = function() {
+    return this._orientation == Timeline.HORIZONTAL;
+};
+
+Timeline._Impl.prototype.isVertical = function() {
+    return this._orientation == Timeline.VERTICAL;
+};
+
+Timeline._Impl.prototype.getPixelLength = function() {
+    return this._orientation == Timeline.HORIZONTAL ? 
+        this._containerDiv.offsetWidth : this._containerDiv.offsetHeight;
+};
+
+Timeline._Impl.prototype.getPixelWidth = function() {
+    return this._orientation == Timeline.VERTICAL ? 
+        this._containerDiv.offsetWidth : this._containerDiv.offsetHeight;
+};
+
+Timeline._Impl.prototype.getUnit = function() {
+    return this._unit;
+};
+
+Timeline._Impl.prototype.getWidthStyle = function() {
+    // which element.style attribute should be changed to affect Timeline's "width"
+    return this._orientation == Timeline.HORIZONTAL ? 'height' : 'width';
+};
+
+Timeline._Impl.prototype.loadXML = function(url, f) {
+    var tl = this;
+    
+    
+    var fError = function(statusText, status, xmlhttp) {
+        alert("Failed to load data xml from " + url + "\n" + statusText);
+        tl.hideLoadingMessage();
+    };
+    var fDone = function(xmlhttp) {
+        try {
+            var xml = xmlhttp.responseXML;
+            if (!xml.documentElement && xmlhttp.responseStream) {
+                xml.load(xmlhttp.responseStream);
+            } 
+            f(xml, url);
+        } finally {
+            tl.hideLoadingMessage();
+        }
+    };
+    
+    this.showLoadingMessage();
+    window.setTimeout(function() { SimileAjax.XmlHttp.get(url, fError, fDone); }, 0);
+};
+
+Timeline._Impl.prototype.loadJSON = function(url, f) {
+    var tl = this;
+    
+    var fError = function(statusText, status, xmlhttp) {
+        alert("Failed to load json data from " + url + "\n" + statusText);
+        tl.hideLoadingMessage();
+    };
+    var fDone = function(xmlhttp) {
+        try {
+            f(eval('(' + xmlhttp.responseText + ')'), url);
+        } finally {
+            tl.hideLoadingMessage();
+        }
+    };
+    
+    this.showLoadingMessage();
+    window.setTimeout(function() { SimileAjax.XmlHttp.get(url, fError, fDone); }, 0);
+};
+
+
+//
+// Private functions used by Timeline object functions
+//
+
+Timeline._Impl.prototype._autoWidthScrollListener = function(band) {	
+    band.getTimeline()._autoWidthCheck(false);
+};
+
+// called to re-calculate auto width and adjust the overall Timeline div if needed
+Timeline._Impl.prototype._autoWidthCheck = function(okToShrink) {	
+    var timeline = this; // this Timeline
+    var immediateChange = timeline._starting;
+    var newWidth = 0;
+    
+    function changeTimelineWidth() {        
+        var widthStyle = timeline.getWidthStyle();
+        if (immediateChange) {
+            timeline._containerDiv.style[widthStyle] = newWidth + 'px';
+        } else {
+        	  // animate change
+        	  timeline._autoResizing = true;
+        	  var animateParam ={};
+        	  animateParam[widthStyle] = newWidth + 'px';
+        	  
+        	  SimileAjax.jQuery(timeline._containerDiv).animate(
+        	      animateParam, timeline.autoWidthAnimationTime,
+        	      'linear', function(){timeline._autoResizing = false;});
+        }
+    }
+        	
+    function checkTimelineWidth() {
+        var targetWidth = 0; // the new desired width
+        var currentWidth = timeline.getPixelWidth();
+        
+        if (timeline._autoResizing) {
+        	return; // early return
+        }
+
+        // compute targetWidth
+        for (var i = 0; i < timeline._bands.length; i++) {
+            timeline._bands[i].checkAutoWidth();
+            targetWidth += timeline._bandInfos[i].width;
+        }
+        
+        if (targetWidth > currentWidth || okToShrink) {
+            // yes, let's change the size
+            newWidth = targetWidth;
+            changeTimelineWidth();
+            timeline._distributeWidths();
+        }
+    }
+    
+    // function's mainline
+    if (!timeline.autoWidth) {
+        return; // early return
+    }
+
+    checkTimelineWidth();
+};
+
+Timeline._Impl.prototype._initialize = function() {
+    var containerDiv = this._containerDiv;
+    var doc = containerDiv.ownerDocument;
+    
+    containerDiv.className = 
+        containerDiv.className.split(" ").concat("timeline-container").join(" ");
+    
+	/*
+	 * Set css-class on container div that will define orientation
+	 */
+	var orientation = (this.isHorizontal()) ? 'horizontal' : 'vertical'
+	containerDiv.className +=' timeline-'+orientation;
+	
+	
+    while (containerDiv.firstChild) {
+        containerDiv.removeChild(containerDiv.firstChild);
+    }
+    
+    /*
+     *  inserting copyright and link to simile
+     */
+    var elmtCopyright = SimileAjax.Graphics.createTranslucentImage(Timeline.urlPrefix + (this.isHorizontal() ? "images/copyright-vertical.png" : "images/copyright.png"));
+    elmtCopyright.className = "timeline-copyright";
+    elmtCopyright.title = "Timeline copyright SIMILE - www.code.google.com/p/simile-widgets/";
+    SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://code.google.com/p/simile-widgets/"; });
+    containerDiv.appendChild(elmtCopyright);
+    
+    /*
+     *  creating bands
+     */
+    this._bands = [];
+    for (var i = 0; i < this._bandInfos.length; i++) {
+        var band = new Timeline._Band(this, this._bandInfos[i], i);
+        this._bands.push(band);
+    }
+    this._distributeWidths();
+    
+    /*
+     *  sync'ing bands
+     */
+    for (var i = 0; i < this._bandInfos.length; i++) {
+        var bandInfo = this._bandInfos[i];
+        if ("syncWith" in bandInfo) {
+            this._bands[i].setSyncWithBand(
+                this._bands[bandInfo.syncWith], 
+                ("highlight" in bandInfo) ? bandInfo.highlight : false
+            );
+        }
+    }
+    
+    
+    if (this.autoWidth) {
+        for (var i = 0; i < this._bands.length; i++) {
+            this._bands[i].addOnScrollListener(this._autoWidthScrollListener);
+        }
+    }
+    
+    
+    /*
+     *  creating loading UI
+     */
+    var message = SimileAjax.Graphics.createMessageBubble(doc);
+    message.containerDiv.className = "timeline-message-container";
+    containerDiv.appendChild(message.containerDiv);
+    
+    message.contentDiv.className = "timeline-message";
+    message.contentDiv.innerHTML = "<img src='" + Timeline.urlPrefix + "images/progress-running.gif' /> Loading...";
+    
+    this.showLoadingMessage = function() { message.containerDiv.style.display = "block"; };
+    this.hideLoadingMessage = function() { message.containerDiv.style.display = "none"; };
+};
+
+Timeline._Impl.prototype._distributeWidths = function() {
+    var length = this.getPixelLength();
+    var width = this.getPixelWidth();
+    var cumulativeWidth = 0;
+    
+    for (var i = 0; i < this._bands.length; i++) {
+        var band = this._bands[i];
+        var bandInfos = this._bandInfos[i];
+        var widthString = bandInfos.width;
+        var bandWidth;
+        
+        if (typeof widthString == 'string') {
+          var x =  widthString.indexOf("%");
+          if (x > 0) {
+              var percent = parseInt(widthString.substr(0, x));
+              bandWidth = Math.round(percent * width / 100);
+          } else {
+              bandWidth = parseInt(widthString);
+          }
+        } else {
+        	// was given an integer
+        	bandWidth = widthString;
+        }
+        	 
+        band.setBandShiftAndWidth(cumulativeWidth, bandWidth);
+        band.setViewLength(length);
+        
+        cumulativeWidth += bandWidth;
+    }
+};
+
+Timeline._Impl.prototype.shiftOK = function(index, shift) {
+    // Returns true if the proposed shift is ok
+    //
+    // Positive shift means going back in time
+    var going_back = shift > 0,
+        going_forward = shift < 0;
+    
+    // Is there an edge?
+    if ((going_back    && this.timeline_start == null) ||
+        (going_forward && this.timeline_stop  == null) ||
+        (shift == 0)) {
+        return (true);  // early return
+    }
+    
+    // If any of the bands has noted that it is changing the others,
+    // then this shift is a secondary shift in reaction to the real shift,
+    // which already happened. In such cases, ignore it. (The issue is
+    // that a positive original shift can cause a negative secondary shift, 
+    // as the bands adjust.)
+    var secondary_shift = false;
+    for (var i = 0; i < this._bands.length && !secondary_shift; i++) {
+       secondary_shift = this._bands[i].busy();
+    }
+    if (secondary_shift) {
+        return(true); // early return
+    }
+    
+    // If we are already at an edge, then don't even think about going any further
+    if ((going_back    && this.timeline_at_start) ||
+        (going_forward && this.timeline_at_stop)) {
+        return (false);  // early return
+    }
+    
+    // Need to check all the bands
+    var ok = false; // return value
+    // If any of the bands will be or are showing an ok date, then let the shift proceed.
+    for (var i = 0; i < this._bands.length && !ok; i++) {
+       var band = this._bands[i];
+       if (going_back) {
+           ok = (i == index ? band.getMinVisibleDateAfterDelta(shift) : band.getMinVisibleDate())
+                >= this.timeline_start;
+       } else {
+           ok = (i == index ? band.getMaxVisibleDateAfterDelta(shift) : band.getMaxVisibleDate())
+                <= this.timeline_stop;
+       }	
+    }
+    
+    // process results
+    if (going_back) {
+       this.timeline_at_start = !ok;
+       this.timeline_at_stop = false;
+    } else {
+       this.timeline_at_stop = !ok;
+       this.timeline_at_start = false;
+    }
+    // This is where you could have an effect once per hitting an
+    // edge of the Timeline. Eg jitter the Timeline
+    //if (!ok) {
+        //alert(going_back ? "At beginning" : "At end");
+    //}
+    return (ok);
+};
+
+Timeline._Impl.prototype.zoom = function (zoomIn, x, y, target) {
+  var matcher = new RegExp("^timeline-band-([0-9]+)$");
+  var bandIndex = null;
+  
+  var result = matcher.exec(target.id);
+  if (result) {
+    bandIndex = parseInt(result[1]);
+  }
+
+  if (bandIndex != null) {
+    this._bands[bandIndex].zoom(zoomIn, x, y, target);
+  }   
+
+  this.paint();
+};
+
