@@ -1176,6 +1176,7 @@ exhibit-page-nav li a:link {
 	background:transparent;
 	padding:6px 0px;
 	color:#333;
+	line-height: 1.5em;
 }
 .exhibit-section-nav > li.current > a:after,.exhibit-section-nav > li > a:hover:after {
 	content: ' ';
