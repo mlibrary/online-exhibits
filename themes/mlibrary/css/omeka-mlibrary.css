@@ -300,10 +300,10 @@ div#logo {
 	width:12px;
 	background:url(../images/layout/tabs/icons.png) no-repeat 0 -45px;
 }
-#primary-nav .nav-timeline a:before {
+/*#primary-nav .nav-timeline a:before {
 	width:12px;
 	background:url(../images/layout/tabs/icons.png) no-repeat 0 -65px;
-}
+}*/
 
 
 /***************************** END NAVIGATION TAB EDITS 3-23-12 */
