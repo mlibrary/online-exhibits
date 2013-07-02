@@ -1,3 +1,6 @@
-archive
-application/logs/errors.log
-db.ini
+/db.ini
+/archive
+!/archive/.htaccess
+/application/logs/errors.log
+/application/logs/
+!/application/logs/.htaccess
