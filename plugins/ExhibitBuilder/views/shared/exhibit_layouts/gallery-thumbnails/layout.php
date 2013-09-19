@@ -22,7 +22,7 @@ $end=12;
 		    $filename = basename($item->Files[0]->archive_filename,'.jpg');
 		    
 		    //	$filename = basename($file->archive_filename,'.jpg');	
-		    	if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){  
+		    	if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')) {  
 					$html_fullsize_image= '<div class="zoom swf-zoom"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="450" HEIGHT="350" ID="theMovie">
 					<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata">
 					<PARAM NAME="MENU" VALUE="FALSE">
@@ -34,29 +34,28 @@ $end=12;
 
 					echo $html_fullsize_image;
 			
-				} else
+				} else {
 					 echo exhibit_builder_exhibit_display_item(array('imageSize'=>'fullsize','linkToFile'=>false,'imgAttributes'=>array('style'=>'width:400px;height:300px;')), array('class'=>'permalink')); 	            	
+					 }
  
 					$display_creator = "";
 					$display_date = "";
 					$layout_default = "";
 					
-					if (item('Dublin Core', 'Creator')==''){
-						$display_creator="display:none";
-						if(item('Dublin Core', 'Date')=='')
-						$layout_default = "margin-bottom: 38px";
-						else
-						$layout_default = "margin-bottom: 5px";
+					if (item('Dublin Core', 'Creator')=='') {
+					   $display_creator="display:none";
+						 if(item('Dublin Core', 'Date')=='') {
+					    	$layout_default = "margin-top: 15px";
+					   }
 					}
 					
-					if (item('Dublin Core', 'Date')==''){
-						$display_date="display:none";
-						if(item('Dublin Core', 'Creator')=='')
-						$layout_default = "margin-bottom: 38px";
-						else
-						$layout_default = "margin-bottom: 5px";
-					}
-					?>
+					if (item('Dublin Core', 'Date')=='') {
+  					 $display_date="display:none";						
+  					 if(item('Dublin Core', 'Creator')=='') {
+					    	$layout_default = "margin-top: 15px";
+					    }
+					}?>
+					
 				<div class="showcase-caption">
 					
 					<?php echo ('<div class="title" style="font-size:18px;'.$layout_default.'">'.exhibit_builder_link_to_exhibit_item().'</div>'.'<div class="creator" style="font-size:13px;'.$display_creator.'">'.'Creator: '.item('Dublin Core', 'Creator').'</div>'.'<div class="citation" style="font-size:11px;'.$display_date.'">'.'Date: '.item('Dublin Core', 'Date').'</div>');?>

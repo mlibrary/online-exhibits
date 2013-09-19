@@ -4,7 +4,8 @@
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
-add_filter('neatlinetime_display_search_query', 'mlibrary_neatlinetime_display_search_query');
+
+/*add_filter('neatlinetime_display_search_query', 'mlibrary_neatlinetime_display_search_query');
 
 function mlibrary_neatlinetime_display_search_query($neat_line_exhibit)
 {
@@ -14,11 +15,11 @@ function mlibrary_neatlinetime_display_search_query($neat_line_exhibit)
     $slug = $exhibit->slug;
     $title = $exhibit->title;
 
-    $html = '<div id="timeline-exhibit">';
-    $html .='<a href=https://nancymou.www.lib.umich.edu/online-exhibits/exhibits/show/'.$slug.'><----'.$title.'</a>';
-    $html .= '</div>';
+  //  $html = '<div id="timeline-exhibit">';
+    $html ='<a href=https://nancymou.www.lib.umich.edu/online-exhibits/exhibits/show/'.$slug.'>'.$title.'</a>';
+    //$html .= '</div>';
    return $html;
-}
+}*/
 
 add_filter('exhibit_builder_generate_xml', 'mlibrary_exhibit_builder_generate_xml');
 
@@ -395,12 +396,23 @@ $exhibitPage = exhibit_builder_get_current_page();
     	  }
       	  elseif ((item_has_type('Video', $item)) and ($displayFilesOptions['imageSize']=='thumbnail')) {          
 	        $elementids = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));         
-    	    foreach ($elementids as $elementid) { 
-        	    $videoid = str_replace($remove, "", $elementid);               
-            	if ((!empty($videoid)) and ($thumnail_image!=true)){                
+	        $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));
+	        if (!empty($elementids)){
+    	      foreach ($elementids as $elementid) { 
+        	      $videoid = str_replace($remove, "", $elementid);               
+            	  if ((!empty($videoid)) and ($thumnail_image!=true)){                
                 	$image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
 	                $thumnail_image=true;
-    	        }
+    	          }
+        	  }
+        	}
+        	elseif ($elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true))) {
+        		  $data = $elementvideos_VCM[0];
+							preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
+            	$partnerId = 1038472;         	 
+              $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>'; 
+              $thumnail_image=true;
+        		
         	}
 	        $html = exhibit_builder_link_to_exhibit_item($image);   
     	  }         
@@ -555,14 +567,25 @@ $remove[] = " ";
 	        elseif ((exhibit_builder_use_exhibit_page_item($i)) and (item_has_type('Video', $item))){
         	   $thumnail_image=false;
 	           $html .= "\n" . '<div class="exhibit-item">';              
-    	       $elementids = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));          
+    	       $elementids = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));  
+    	       $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));        
+    	       if (!empty($elementids)){
         	    foreach ($elementids as $elementid) {           
             	  $videoid = str_replace($remove, "", $elementid);                
 	              if ((!empty($videoid)) and ($thumnail_image!=true)){                
     	            $image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
         	        $thumnail_image=true;
             	  	}
-	            	}           
+	            	}
+	            }
+	            elseif ($elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true))) {
+          		  $data = $elementvideos_VCM[0];
+          		  preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
+            	  $partnerId = 1038472;         	 
+                $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                 
+        	  		$thumnail_image=true;        		
+            	}
+           
 	    	       $html .= exhibit_builder_link_to_exhibit_item($image);
     	    	   $html .= exhibit_builder_exhibit_display_caption($i);
 	    	       $html .= '</div>' . "\n";

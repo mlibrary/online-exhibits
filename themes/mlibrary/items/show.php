@@ -24,8 +24,8 @@ jQuery(document).ready(function()
 {
 	jQuery("#showcase").awShowcase(
 	{
-		width:					550,
-		height:					500,
+		width:					650,
+		height:					450,
 		auto:					true,
 		interval:				6500,
 		continuous:				true,
@@ -99,7 +99,8 @@ while(loop_files_for_item()):$file = get_current_file();
 					'/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
 			}else{
 //				$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title').' '.'image'.' '.$image_index++.(item_file('Dublin Core','Title')? ' '.item_file('Dublin Core','Title'):'')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-				$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
+		//		$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
+				$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
 			}
 			// added to jason object
 			$json_fullsize['img'.$image_index] = $html_fullsize_image;
@@ -119,7 +120,9 @@ while(loop_files_for_item()):$file = get_current_file();
 					<EMBED FlashVars="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata" SRC="'.uri('').'themes/'.$theme_name.
 					'/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
 			}else{
-	   			$json_fullsize['img'.$image_index] = display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
+   				$html_fullsize_image .= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('style' => 'display:none', 'class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
+   				$json_fullsize['img'.$image_index] = display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
+	   			//$json_fullsize['img'.$image_index] = display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
 			}
         	$html_thumnailsize_image .=display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title').' '.'image'.' '.$image_index),'linkToFile'=>false),array('class' => 'square_thumbnail img'.$image_index )); 
    		} // END - if $fullsizeimge
@@ -132,50 +135,60 @@ echo '<div id="fsize_images">'.$html_fullsize_image.'</div>';
 echo $file_metadata;
 echo $html_thumnailsize_image;
   
-  
 if (($fullsizeimage!=true) and (($audio_file==true) || ($item_type=='Sound')))
 // if first file is an audio file then display a default image for sound file.
- echo '<img src="'.img('audio_default02.gif').'" alt="Oops" />';
-
+   echo '<img src="'.img('audio_default02.gif').'" alt="Oops" />';
 ?>
- 
 </div>
 
 <?php }
 // videos is displayed by using embeded tag from youtube
- elseif ($item_type=='Video')
-  {  
-    	echo'<div id="item-video" style="float:left">';
-    $elementvideos = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));    
-    $elementtitles = item('Item Type Metadata', 'video_title', array('no_escape'=>true,'all'=>true));?>
-    <div id="showcase" class="showcase">
-    <?php $i=0;
-          foreach($elementvideos as $elementvideo ) {          
-            $elementvideo = str_replace( $remove, "", $elementvideo );            
-            echo '<div>';            
-            echo '<iframe src="http://www.youtube.com/embed/'.$elementvideo.'" frameborder="0" width="500" height="400"></iframe>';?>                               
-            <div class="showcase-caption">
-                <?php echo'<h3>'.$elementtitles[$i].'</h3>';?>
-            </div>             
-            <?php echo '</div>'; 
-              $i++;
-           }
-    ?>
-    </div>
-    
-    </div>
- 
-   <?php
-       
-   }
+ elseif ($item_type=='Video') {  
+    	echo'<div id="item-video">';
+      $elementvideos = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));    
+      $elementtitles = item('Item Type Metadata', 'video_title', array('no_escape'=>true,'all'=>true));
+      $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));
+//    print_r($elementvideos_VCM);
+      
+          if (!empty($elementvideos_VCM)) { ?>
+              <div id="showcase" class="showcase">
+              <?php 
+                $i=0;
+                foreach($elementvideos_VCM as $elementvideo_VCM ) {          
+                   $elementvideo_VCM = str_replace( $remove, "", $elementvideo_VCM );            
+                   echo '<div>';            
+                   echo $elementvideo_VCM; ?>
+                   <div class="showcase-caption">
+                       <?php echo'<h3>'.$elementtitles[$i].'</h3>';?>
+                   </div>             
+                   <?php echo '</div>'; 
+                    $i++;
+                }?> <!-- foreach loop-->
+              </div> <!-- showcase -->
+      <?php } 
+          elseif (!empty($elementvideos)) { ?>
+              <div id="showcase" class="showcase">
+              <?php $i=0;
+                foreach($elementvideos as $elementvideo ) {          
+                  $elementvideo = str_replace( $remove, "", $elementvideo );            
+                  echo '<div>';            
+                  echo '<iframe src="http://www.youtube.com/embed/'.$elementvideo.'" frameborder="0" width="650" height="400"></iframe>';  ?>
+                  <div class="showcase-caption">
+                    <?php echo'<h3>'.$elementtitles[$i].'</h3>';?>
+                  </div>             
+                  <?php echo '</div>'; 
+                   $i++;
+                }?> <!-- foreach loop-->
+              </div> <!-- showcase -->
+          <?php } ?>      
+      </div> <!--item-video -->
+<?php }
 
 	$index=0;
-	$aoutput='';  
-  
+	$aoutput='';    
     while(loop_files_for_item()):$file = get_current_file();
 	//variables used to check mime types for VideoJS compatibility, etc.
-    $mime = item_file('MIME Type');
-   
+    $mime = item_file('MIME Type');   
     if (array_search($mime,$audio) !== false) //echo display_file($file, array('width' => 200, 'height' => 20));//,'icons' => array('audio/mpeg'=>img('sound-icon.jpg'))));
 		{      
       $sound_title = $this->fileMetadata($file, 'Dublin Core', 'Title');
