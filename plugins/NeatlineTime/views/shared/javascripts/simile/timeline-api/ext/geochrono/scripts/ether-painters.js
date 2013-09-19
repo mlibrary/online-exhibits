@@ -1,9 +1,204 @@
-Timeline.GeochronoEtherPainter=function(a){this._params=a;this._intervalUnit=a.intervalUnit;this._multiple="multiple"in a?a.multiple:1;this._theme=a.theme};
-Timeline.GeochronoEtherPainter.prototype.initialize=function(a,f){this._band=a;this._timeline=f;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.style.background=this._theme.ether.backgroundColors[a.getIndex()];this._lineLayer=this._markerLayer=null;var b="align"in this._params&&typeof this._params.align=="string"?this._params.align:this._theme.ether.interval.marker[f.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=
-new Timeline.GeochronoEtherMarkerLayout(this._timeline,this._band,this._theme,b,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.GeochronoEtherPainter.prototype.setHighlight=function(a,f){this._highlight.position(a,f)};
-Timeline.GeochronoEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";var a=Math.ceil(Timeline.GeochronoUnit.toNumber(this._band.getMinDate())),
-f=Math.floor(Timeline.GeochronoUnit.toNumber(this._band.getMaxDate())),b,g;(function(j,i){var d;switch(j){case Timeline.GeochronoUnit.AGE:d=Timeline.Geochrono.ages;break;case Timeline.GeochronoUnit.EPOCH:d=Timeline.Geochrono.epoches;break;case Timeline.GeochronoUnit.PERIOD:d=Timeline.Geochrono.periods;break;case Timeline.GeochronoUnit.ERA:d=Timeline.Geochrono.eras;break;case Timeline.GeochronoUnit.EON:d=Timeline.Geochrono.eons;break;default:g=function(){return a>0&&a>f};b=function(){a-=i};return}for(var h=
-d.length-1;h>0;){if(a<=d[h].start)break;h--}a=d[h].start;g=function(){return h<d.length-1&&a>f};b=function(){h++;a=d[h].start}})(this._intervalUnit,this._multiple);for(var k=this._band.getLabeller();;)if(this._intervalMarkerLayout.createIntervalMarker(Timeline.GeochronoUnit.fromNumber(a),k,this._intervalUnit,this._markerLayer,this._lineLayer),g())b();else break;this._markerLayer.style.display="block";this._lineLayer.style.display="block"};Timeline.GeochronoEtherPainter.prototype.softPaint=function(){};
-Timeline.GeochronoEtherMarkerLayout=function(a,f,b,g,k){var j=a.isHorizontal();this.positionDiv=j?g=="Top"?function(a,c){a.style.left=c+"px";a.style.top="0px"}:function(a,c){a.style.left=c+"px";a.style.bottom="0px"}:g=="Left"?function(a,c){a.style.top=c+"px";a.style.left="0px"}:function(a,c){a.style.top=c+"px";a.style.right="0px"};var i=b.ether.interval.marker,d=b.ether.interval.line,b=(j?"h":"v")+g,h=i[b+"Styler"],m=i[b+"EmphasizedStyler"];this.createIntervalMarker=function(b,c,g,i,n){var l=Math.round(f.dateToPixelOffset(b));
-if(k){var e=a.getDocument().createElement("div");e.style.position="absolute";d.opacity<100&&SimileAjax.Graphics.setOpacity(e,d.opacity);j?(e.style.borderLeft="1px solid "+d.color,e.style.left=l+"px",e.style.width="1px",e.style.top="0px",e.style.height="100%"):(e.style.borderTop="1px solid "+d.color,e.style.top=l+"px",e.style.height="1px",e.style.left="0px",e.style.width="100%");n.appendChild(e)}b=c.labelInterval(b,g);c=a.getDocument().createElement("div");c.innerHTML=b.text;c.style.position="absolute";
-(b.emphasized?m:h)(c);this.positionDiv(c,l);i.appendChild(c);return c}};
+﻿/*==================================================
+ *  Geochrono Ether Painter
+ *==================================================
+ */
+ 
+Timeline.GeochronoEtherPainter = function(params, band, timeline) {
+    this._params = params;
+    this._intervalUnit = params.intervalUnit;
+    this._multiple = ("multiple" in params) ? params.multiple : 1;
+    this._theme = params.theme;
+};
+
+Timeline.GeochronoEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params && typeof this._params.align == "string") ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.GeochronoEtherMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+}
+
+Timeline.GeochronoEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+}
+
+Timeline.GeochronoEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minDate = Math.ceil(Timeline.GeochronoUnit.toNumber(this._band.getMinDate()));
+    var maxDate = Math.floor(Timeline.GeochronoUnit.toNumber(this._band.getMaxDate()));
+    
+    var increment;
+    var hasMore;
+    (function(intervalUnit, multiple) {
+        var dates;
+        
+        switch (intervalUnit) {
+        case Timeline.GeochronoUnit.AGE:
+            dates = Timeline.Geochrono.ages; break;
+        case Timeline.GeochronoUnit.EPOCH:
+            dates = Timeline.Geochrono.epoches; break;
+        case Timeline.GeochronoUnit.PERIOD:
+            dates = Timeline.Geochrono.periods; break;
+        case Timeline.GeochronoUnit.ERA:
+            dates = Timeline.Geochrono.eras; break;
+        case Timeline.GeochronoUnit.EON:
+            dates = Timeline.Geochrono.eons; break;
+        default:
+            hasMore = function() {
+                return minDate > 0 && minDate > maxDate;
+            }
+            increment = function() {
+                minDate -= multiple;
+            };
+            return;
+        }
+        
+        var startIndex = dates.length - 1;
+        while (startIndex > 0) {
+            if (minDate <= dates[startIndex].start) {
+                break;
+            }
+            startIndex--;
+        }
+        
+        minDate = dates[startIndex].start;
+        hasMore = function() {
+            return startIndex < (dates.length - 1) && minDate > maxDate;
+        };
+        increment = function() {
+            startIndex++;
+            minDate = dates[startIndex].start;
+        };
+    })(this._intervalUnit, this._multiple);
+    
+    var labeller = this._band.getLabeller();
+    while (true) {
+        this._intervalMarkerLayout.createIntervalMarker(
+            Timeline.GeochronoUnit.fromNumber(minDate), 
+            labeller, 
+            this._intervalUnit, 
+            this._markerLayer, 
+            this._lineLayer
+        );
+        if (hasMore()) {
+            increment();
+        } else {
+            break;
+        }
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.GeochronoEtherPainter.prototype.softPaint = function() {
+};
+
+
+/*==================================================
+ *  Geochrono Ether Marker Layout
+ *==================================================
+ */
+ 
+Timeline.GeochronoEtherMarkerLayout = function(timeline, band, theme, align, showLine) {
+    var horizontal = timeline.isHorizontal();
+    if (horizontal) {
+        if (align == "Top") {
+            this.positionDiv = function(div, offset) {
+                div.style.left = offset + "px";
+                div.style.top = "0px";
+            };
+        } else {
+            this.positionDiv = function(div, offset) {
+                div.style.left = offset + "px";
+                div.style.bottom = "0px";
+            };
+        }
+    } else {
+        if (align == "Left") {
+            this.positionDiv = function(div, offset) {
+                div.style.top = offset + "px";
+                div.style.left = "0px";
+            };
+        } else {
+            this.positionDiv = function(div, offset) {
+                div.style.top = offset + "px";
+                div.style.right = "0px";
+            };
+        }
+    }
+    
+    var markerTheme = theme.ether.interval.marker;
+    var lineTheme = theme.ether.interval.line;
+    
+    var stylePrefix = (horizontal ? "h" : "v") + align;
+    var labelStyler = markerTheme[stylePrefix + "Styler"];
+    var emphasizedLabelStyler = markerTheme[stylePrefix + "EmphasizedStyler"];
+    
+    this.createIntervalMarker = function(date, labeller, unit, markerDiv, lineDiv) {
+        var offset = Math.round(band.dateToPixelOffset(date));
+
+        if (showLine) {
+            var divLine = timeline.getDocument().createElement("div");
+            divLine.style.position = "absolute";
+            
+            if (lineTheme.opacity < 100) {
+                SimileAjax.Graphics.setOpacity(divLine, lineTheme.opacity);
+            }
+            
+            if (horizontal) {
+                divLine.style.borderLeft = "1px solid " + lineTheme.color;
+                divLine.style.left = offset + "px";
+                divLine.style.width = "1px";
+                divLine.style.top = "0px";
+                divLine.style.height = "100%";
+            } else {
+                divLine.style.borderTop = "1px solid " + lineTheme.color;
+                divLine.style.top = offset + "px";
+                divLine.style.height = "1px";
+                divLine.style.left = "0px";
+                divLine.style.width = "100%";
+            }
+            lineDiv.appendChild(divLine);
+        }
+        
+        var label = labeller.labelInterval(date, unit);
+        
+        var div = timeline.getDocument().createElement("div");
+        div.innerHTML = label.text;
+        div.style.position = "absolute";
+        (label.emphasized ? emphasizedLabelStyler : labelStyler)(div);
+        
+        this.positionDiv(div, offset);
+        markerDiv.appendChild(div);
+        
+        return div;
+    };
+};

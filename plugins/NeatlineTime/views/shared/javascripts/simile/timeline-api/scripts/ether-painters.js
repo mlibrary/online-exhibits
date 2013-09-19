@@ -1,29 +1,576 @@
-Timeline.GregorianEtherPainter=function(a){this._params=a;this._theme=a.theme;this._unit=a.unit;this._multiple="multiple"in a?a.multiple:1};
-Timeline.GregorianEtherPainter.prototype.initialize=function(a,b){this._band=a;this._timeline=b;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.className="timeline-ether-bg";this._lineLayer=this._markerLayer=null;var c="align"in this._params&&this._params.align!=void 0?this._params.align:this._theme.ether.interval.marker[b.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=new Timeline.EtherIntervalMarkerLayout(this._timeline,
-this._band,this._theme,c,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.GregorianEtherPainter.prototype.setHighlight=function(a,b){this._highlight.position(a,b)};
-Timeline.GregorianEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";var a=this._band.getMinDate(),b=this._band.getMaxDate(),
-c=this._band.getTimeZone(),d=this._band.getLabeller();SimileAjax.DateTime.roundDownToInterval(a,this._unit,c,this._multiple,this._theme.firstDayOfWeek);for(var g=this,c=function(a){for(var b=0;b<g._multiple;b++)SimileAjax.DateTime.incrementByInterval(a,g._unit)};a.getTime()<b.getTime();)this._intervalMarkerLayout.createIntervalMarker(a,d,this._unit,this._markerLayer,this._lineLayer),c(a);this._markerLayer.style.display="block";this._lineLayer.style.display="block"};
-Timeline.GregorianEtherPainter.prototype.softPaint=function(){};Timeline.GregorianEtherPainter.prototype.zoom=function(a){a!=0&&(this._unit+=a)};
-Timeline.HotZoneGregorianEtherPainter=function(a){this._params=a;this._theme=a.theme;this._zones=[{startTime:Number.NEGATIVE_INFINITY,endTime:Number.POSITIVE_INFINITY,unit:a.unit,multiple:1}];for(var b=0;b<a.zones.length;b++)for(var c=a.zones[b],d=SimileAjax.DateTime.parseGregorianDateTime(c.start).getTime(),g=SimileAjax.DateTime.parseGregorianDateTime(c.end).getTime(),f=0;f<this._zones.length&&g>d;f++){var e=this._zones[f];if(d<e.endTime){if(d>e.startTime)this._zones.splice(f,0,{startTime:e.startTime,
-endTime:d,unit:e.unit,multiple:e.multiple}),f++,e.startTime=d;g<e.endTime?(this._zones.splice(f,0,{startTime:d,endTime:g,unit:c.unit,multiple:c.multiple?c.multiple:1}),f++,d=e.startTime=g):(e.multiple=c.multiple,e.unit=c.unit,d=e.endTime)}}};
-Timeline.HotZoneGregorianEtherPainter.prototype.initialize=function(a,b){this._band=a;this._timeline=b;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.className="timeline-ether-bg";this._lineLayer=this._markerLayer=null;var c="align"in this._params&&this._params.align!=void 0?this._params.align:this._theme.ether.interval.marker[b.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=new Timeline.EtherIntervalMarkerLayout(this._timeline,
-this._band,this._theme,c,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.HotZoneGregorianEtherPainter.prototype.setHighlight=function(a,b){this._highlight.position(a,b)};
-Timeline.HotZoneGregorianEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";for(var a=this._band.getMinDate(),b=
-this._band.getMaxDate(),c=this._band.getTimeZone(),d=this._band.getLabeller(),g=function(a,b){for(var c=0;c<b.multiple;c++)SimileAjax.DateTime.incrementByInterval(a,b.unit)},f=0;f<this._zones.length;){if(a.getTime()<this._zones[f].endTime)break;f++}for(var e=this._zones.length-1;e>=0;){if(b.getTime()>this._zones[e].startTime)break;e--}for(;f<=e;f++){var j=this._zones[f],i=new Date(Math.max(a.getTime(),j.startTime)),p=new Date(Math.min(b.getTime(),j.endTime));SimileAjax.DateTime.roundDownToInterval(i,
-j.unit,c,j.multiple,this._theme.firstDayOfWeek);for(SimileAjax.DateTime.roundUpToInterval(p,j.unit,c,j.multiple,this._theme.firstDayOfWeek);i.getTime()<p.getTime();)this._intervalMarkerLayout.createIntervalMarker(i,d,j.unit,this._markerLayer,this._lineLayer),g(i,j)}this._markerLayer.style.display="block";this._lineLayer.style.display="block"};Timeline.HotZoneGregorianEtherPainter.prototype.softPaint=function(){};
-Timeline.HotZoneGregorianEtherPainter.prototype.zoom=function(a){if(a!=0)for(var b=0;b<this._zones.length;++b)this._zones[b]&&(this._zones[b].unit+=a)};Timeline.YearCountEtherPainter=function(a){this._params=a;this._theme=a.theme;this._startDate=SimileAjax.DateTime.parseGregorianDateTime(a.startDate);this._multiple="multiple"in a?a.multiple:1};
-Timeline.YearCountEtherPainter.prototype.initialize=function(a,b){this._band=a;this._timeline=b;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.className="timeline-ether-bg";this._lineLayer=this._markerLayer=null;var c="align"in this._params?this._params.align:this._theme.ether.interval.marker[b.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=new Timeline.EtherIntervalMarkerLayout(this._timeline,this._band,
-this._theme,c,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.YearCountEtherPainter.prototype.setHighlight=function(a,b){this._highlight.position(a,b)};
-Timeline.YearCountEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";var a=new Date(this._startDate.getTime()),b=
-this._band.getMaxDate(),c=this._band.getMinDate().getUTCFullYear()-this._startDate.getUTCFullYear();a.setUTCFullYear(this._band.getMinDate().getUTCFullYear()-c%this._multiple);for(var d=this,c=function(a){for(var b=0;b<d._multiple;b++)SimileAjax.DateTime.incrementByInterval(a,SimileAjax.DateTime.YEAR)},g={labelInterval:function(a){a=a.getUTCFullYear()-d._startDate.getUTCFullYear();return{text:a,emphasized:a==0}}};a.getTime()<b.getTime();)this._intervalMarkerLayout.createIntervalMarker(a,g,SimileAjax.DateTime.YEAR,
-this._markerLayer,this._lineLayer),c(a);this._markerLayer.style.display="block";this._lineLayer.style.display="block"};Timeline.YearCountEtherPainter.prototype.softPaint=function(){};Timeline.QuarterlyEtherPainter=function(a){this._params=a;this._theme=a.theme;this._startDate=SimileAjax.DateTime.parseGregorianDateTime(a.startDate)};
-Timeline.QuarterlyEtherPainter.prototype.initialize=function(a,b){this._band=a;this._timeline=b;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.className="timeline-ether-bg";this._lineLayer=this._markerLayer=null;var c="align"in this._params?this._params.align:this._theme.ether.interval.marker[b.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=new Timeline.EtherIntervalMarkerLayout(this._timeline,this._band,
-this._theme,c,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.QuarterlyEtherPainter.prototype.setHighlight=function(a,b){this._highlight.position(a,b)};
-Timeline.QuarterlyEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";var a=new Date(0),b=this._band.getMaxDate();
-a.setUTCFullYear(Math.max(this._startDate.getUTCFullYear(),this._band.getMinDate().getUTCFullYear()));a.setUTCMonth(this._startDate.getUTCMonth());for(var c=this,d={labelInterval:function(a){var b=(4+(a.getUTCMonth()-c._startDate.getUTCMonth())/3)%4;return b!=0?{text:"Q"+(b+1),emphasized:!1}:{text:"Y"+(a.getUTCFullYear()-c._startDate.getUTCFullYear()+1),emphasized:!0}}};a.getTime()<b.getTime();)this._intervalMarkerLayout.createIntervalMarker(a,d,SimileAjax.DateTime.YEAR,this._markerLayer,this._lineLayer),
-a.setUTCMonth(a.getUTCMonth()+3);this._markerLayer.style.display="block";this._lineLayer.style.display="block"};Timeline.QuarterlyEtherPainter.prototype.softPaint=function(){};
-Timeline.EtherIntervalMarkerLayout=function(a,b,c,d,g){var f=a.isHorizontal();this.positionDiv=f?d=="Top"?function(a,b){a.style.left=b+"px";a.style.top="0px"}:function(a,b){a.style.left=b+"px";a.style.bottom="0px"}:d=="Left"?function(a,b){a.style.top=b+"px";a.style.left="0px"}:function(a,b){a.style.top=b+"px";a.style.right="0px"};var e=c.ether.interval.line,j=c.ether.interval.weekend,i=SimileAjax.DateTime.gregorianUnitLengths[SimileAjax.DateTime.DAY];this.createIntervalMarker=function(d,k,n,r,q){var o=
-Math.round(b.dateToPixelOffset(d));if(g&&n!=SimileAjax.DateTime.WEEK){var h=a.getDocument().createElement("div");h.className="timeline-ether-lines";e.opacity<100&&SimileAjax.Graphics.setOpacity(h,e.opacity);f?h.style.left=o+"px":h.style.top=o+"px";q.appendChild(h)}if(n==SimileAjax.DateTime.WEEK){var h=c.firstDayOfWeek,h=new Date(d.getTime()+(6-h-7)*i),m=new Date(h.getTime()+2*i),h=Math.round(b.dateToPixelOffset(h)),m=Math.round(b.dateToPixelOffset(m)),m=Math.max(1,m-h),l=a.getDocument().createElement("div");
-l.className="timeline-ether-weekends";j.opacity<100&&SimileAjax.Graphics.setOpacity(l,j.opacity);f?(l.style.left=h+"px",l.style.width=m+"px"):(l.style.top=h+"px",l.style.height=m+"px");q.appendChild(l)}d=k.labelInterval(d,n);k=a.getDocument().createElement("div");k.innerHTML=d.text;k.className="timeline-date-label";d.emphasized&&(k.className+=" timeline-date-label-em");this.positionDiv(k,o);r.appendChild(k);return k}};
-Timeline.EtherHighlight=function(a,b,c,d){var g=a.isHorizontal();this._highlightDiv=null;this._createHighlightDiv=function(){if(this._highlightDiv==null){this._highlightDiv=a.getDocument().createElement("div");this._highlightDiv.setAttribute("name","ether-highlight");this._highlightDiv.className="timeline-ether-highlight";var b=c.ether.highlightOpacity;b<100&&SimileAjax.Graphics.setOpacity(this._highlightDiv,b);d.appendChild(this._highlightDiv)}};this.position=function(a,c){this._createHighlightDiv();
-var d=Math.round(b.dateToPixelOffset(a)),i=Math.round(b.dateToPixelOffset(c)),i=Math.max(i-d,3);g?(this._highlightDiv.style.left=d+"px",this._highlightDiv.style.width=i+"px",this._highlightDiv.style.height=b.getViewWidth()-4+"px"):(this._highlightDiv.style.top=d+"px",this._highlightDiv.style.height=i+"px",this._highlightDiv.style.width=b.getViewWidth()-4+"px")}};
+/*==================================================
+ *  Gregorian Ether Painter
+ *==================================================
+ */
+ 
+Timeline.GregorianEtherPainter = function(params) {
+    this._params = params;
+    this._theme = params.theme;
+    this._unit = params.unit;
+    this._multiple = ("multiple" in params) ? params.multiple : 1;
+};
+
+Timeline.GregorianEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.className = 'timeline-ether-bg';
+  //  this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params && this._params.align != undefined) ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.EtherIntervalMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+}
+
+Timeline.GregorianEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+}
+
+Timeline.GregorianEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minDate = this._band.getMinDate();
+    var maxDate = this._band.getMaxDate();
+    
+    var timeZone = this._band.getTimeZone();
+    var labeller = this._band.getLabeller();
+    
+    SimileAjax.DateTime.roundDownToInterval(minDate, this._unit, timeZone, this._multiple, this._theme.firstDayOfWeek);
+    
+    var p = this;
+    var incrementDate = function(date) {
+        for (var i = 0; i < p._multiple; i++) {
+            SimileAjax.DateTime.incrementByInterval(date, p._unit);
+        }
+    };
+    
+    while (minDate.getTime() < maxDate.getTime()) {
+        this._intervalMarkerLayout.createIntervalMarker(
+            minDate, labeller, this._unit, this._markerLayer, this._lineLayer);
+            
+        incrementDate(minDate);
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.GregorianEtherPainter.prototype.softPaint = function() {
+};
+
+Timeline.GregorianEtherPainter.prototype.zoom = function(netIntervalChange) {
+  if (netIntervalChange != 0) {
+    this._unit += netIntervalChange;
+  }
+};
+
+
+/*==================================================
+ *  Hot Zone Gregorian Ether Painter
+ *==================================================
+ */
+ 
+Timeline.HotZoneGregorianEtherPainter = function(params) {
+    this._params = params;
+    this._theme = params.theme;
+    
+    this._zones = [{
+        startTime:  Number.NEGATIVE_INFINITY,
+        endTime:    Number.POSITIVE_INFINITY,
+        unit:       params.unit,
+        multiple:   1
+    }];
+    for (var i = 0; i < params.zones.length; i++) {
+        var zone = params.zones[i];
+        var zoneStart = SimileAjax.DateTime.parseGregorianDateTime(zone.start).getTime();
+        var zoneEnd = SimileAjax.DateTime.parseGregorianDateTime(zone.end).getTime();
+        
+        for (var j = 0; j < this._zones.length && zoneEnd > zoneStart; j++) {
+            var zone2 = this._zones[j];
+            
+            if (zoneStart < zone2.endTime) {
+                if (zoneStart > zone2.startTime) {
+                    this._zones.splice(j, 0, {
+                        startTime:   zone2.startTime,
+                        endTime:     zoneStart,
+                        unit:        zone2.unit,
+                        multiple:    zone2.multiple
+                    });
+                    j++;
+                    
+                    zone2.startTime = zoneStart;
+                }
+                
+                if (zoneEnd < zone2.endTime) {
+                    this._zones.splice(j, 0, {
+                        startTime:  zoneStart,
+                        endTime:    zoneEnd,
+                        unit:       zone.unit,
+                        multiple:   (zone.multiple) ? zone.multiple : 1
+                    });
+                    j++;
+                    
+                    zone2.startTime = zoneEnd;
+                    zoneStart = zoneEnd;
+                } else {
+                    zone2.multiple = zone.multiple;
+                    zone2.unit = zone.unit;
+                    zoneStart = zone2.endTime;
+                }
+            } // else, try the next existing zone
+        }
+    }
+};
+
+Timeline.HotZoneGregorianEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.className ='timeline-ether-bg';
+    //this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params && this._params.align != undefined) ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.EtherIntervalMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+}
+
+Timeline.HotZoneGregorianEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+}
+
+Timeline.HotZoneGregorianEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minDate = this._band.getMinDate();
+    var maxDate = this._band.getMaxDate();
+    
+    var timeZone = this._band.getTimeZone();
+    var labeller = this._band.getLabeller();
+    
+    var p = this;
+    var incrementDate = function(date, zone) {
+        for (var i = 0; i < zone.multiple; i++) {
+            SimileAjax.DateTime.incrementByInterval(date, zone.unit);
+        }
+    };
+    
+    var zStart = 0;
+    while (zStart < this._zones.length) {
+        if (minDate.getTime() < this._zones[zStart].endTime) {
+            break;
+        }
+        zStart++;
+    }
+    var zEnd = this._zones.length - 1;
+    while (zEnd >= 0) {
+        if (maxDate.getTime() > this._zones[zEnd].startTime) {
+            break;
+        }
+        zEnd--;
+    }
+    
+    for (var z = zStart; z <= zEnd; z++) {
+        var zone = this._zones[z];
+        
+        var minDate2 = new Date(Math.max(minDate.getTime(), zone.startTime));
+        var maxDate2 = new Date(Math.min(maxDate.getTime(), zone.endTime));
+        
+        SimileAjax.DateTime.roundDownToInterval(minDate2, zone.unit, timeZone, zone.multiple, this._theme.firstDayOfWeek);
+        SimileAjax.DateTime.roundUpToInterval(maxDate2, zone.unit, timeZone, zone.multiple, this._theme.firstDayOfWeek);
+        
+        while (minDate2.getTime() < maxDate2.getTime()) {
+            this._intervalMarkerLayout.createIntervalMarker(
+                minDate2, labeller, zone.unit, this._markerLayer, this._lineLayer);
+                
+            incrementDate(minDate2, zone);
+        }
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.HotZoneGregorianEtherPainter.prototype.softPaint = function() {
+};
+
+Timeline.HotZoneGregorianEtherPainter.prototype.zoom = function(netIntervalChange) {
+  if (netIntervalChange != 0) {
+    for (var i = 0; i < this._zones.length; ++i) {
+      if (this._zones[i]) {
+        this._zones[i].unit += netIntervalChange;
+      }
+    }
+  }
+};
+
+/*==================================================
+ *  Year Count Ether Painter
+ *==================================================
+ */
+ 
+Timeline.YearCountEtherPainter = function(params) {
+    this._params = params;
+    this._theme = params.theme;
+    this._startDate = SimileAjax.DateTime.parseGregorianDateTime(params.startDate);
+    this._multiple = ("multiple" in params) ? params.multiple : 1;
+};
+
+Timeline.YearCountEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.className = 'timeline-ether-bg';
+   // this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params) ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.EtherIntervalMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+};
+
+Timeline.YearCountEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+};
+
+Timeline.YearCountEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minDate = new Date(this._startDate.getTime());
+    var maxDate = this._band.getMaxDate();
+    var yearDiff = this._band.getMinDate().getUTCFullYear() - this._startDate.getUTCFullYear();
+    minDate.setUTCFullYear(this._band.getMinDate().getUTCFullYear() - yearDiff % this._multiple);
+    
+    var p = this;
+    var incrementDate = function(date) {
+        for (var i = 0; i < p._multiple; i++) {
+            SimileAjax.DateTime.incrementByInterval(date, SimileAjax.DateTime.YEAR);
+        }
+    };
+    var labeller = {
+        labelInterval: function(date, intervalUnit) {
+            var diff = date.getUTCFullYear() - p._startDate.getUTCFullYear();
+            return {
+                text: diff,
+                emphasized: diff == 0
+            };
+        }
+    };
+    
+    while (minDate.getTime() < maxDate.getTime()) {
+        this._intervalMarkerLayout.createIntervalMarker(
+            minDate, labeller, SimileAjax.DateTime.YEAR, this._markerLayer, this._lineLayer);
+            
+        incrementDate(minDate);
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.YearCountEtherPainter.prototype.softPaint = function() {
+};
+
+/*==================================================
+ *  Quarterly Ether Painter
+ *==================================================
+ */
+ 
+Timeline.QuarterlyEtherPainter = function(params) {
+    this._params = params;
+    this._theme = params.theme;
+    this._startDate = SimileAjax.DateTime.parseGregorianDateTime(params.startDate);
+};
+
+Timeline.QuarterlyEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.className = 'timeline-ether-bg';
+ //   this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params) ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.EtherIntervalMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+};
+
+Timeline.QuarterlyEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+};
+
+Timeline.QuarterlyEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minDate = new Date(0);
+    var maxDate = this._band.getMaxDate();
+    
+    minDate.setUTCFullYear(Math.max(this._startDate.getUTCFullYear(), this._band.getMinDate().getUTCFullYear()));
+    minDate.setUTCMonth(this._startDate.getUTCMonth());
+    
+    var p = this;
+    var incrementDate = function(date) {
+        date.setUTCMonth(date.getUTCMonth() + 3);
+    };
+    var labeller = {
+        labelInterval: function(date, intervalUnit) {
+            var quarters = (4 + (date.getUTCMonth() - p._startDate.getUTCMonth()) / 3) % 4;
+            if (quarters != 0) {
+                return { text: "Q" + (quarters + 1), emphasized: false };
+            } else {
+                return { text: "Y" + (date.getUTCFullYear() - p._startDate.getUTCFullYear() + 1), emphasized: true };
+            }
+        }
+    };
+    
+    while (minDate.getTime() < maxDate.getTime()) {
+        this._intervalMarkerLayout.createIntervalMarker(
+            minDate, labeller, SimileAjax.DateTime.YEAR, this._markerLayer, this._lineLayer);
+            
+        incrementDate(minDate);
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.QuarterlyEtherPainter.prototype.softPaint = function() {
+};
+
+/*==================================================
+ *  Ether Interval Marker Layout
+ *==================================================
+ */
+ 
+Timeline.EtherIntervalMarkerLayout = function(timeline, band, theme, align, showLine) {
+    var horizontal = timeline.isHorizontal();
+    if (horizontal) {
+        if (align == "Top") {
+            this.positionDiv = function(div, offset) {
+                div.style.left = offset + "px";
+                div.style.top = "0px";
+            };
+        } else {
+            this.positionDiv = function(div, offset) {
+                div.style.left = offset + "px";
+                div.style.bottom = "0px";
+            };
+        }
+    } else {
+        if (align == "Left") {
+            this.positionDiv = function(div, offset) {
+                div.style.top = offset + "px";
+                div.style.left = "0px";
+            };
+        } else {
+            this.positionDiv = function(div, offset) {
+                div.style.top = offset + "px";
+                div.style.right = "0px";
+            };
+        }
+    }
+    
+    var markerTheme = theme.ether.interval.marker;
+    var lineTheme = theme.ether.interval.line;
+    var weekendTheme = theme.ether.interval.weekend;
+    
+    var stylePrefix = (horizontal ? "h" : "v") + align;
+    var labelStyler = markerTheme[stylePrefix + "Styler"];
+    var emphasizedLabelStyler = markerTheme[stylePrefix + "EmphasizedStyler"];
+    var day = SimileAjax.DateTime.gregorianUnitLengths[SimileAjax.DateTime.DAY];
+    
+    this.createIntervalMarker = function(date, labeller, unit, markerDiv, lineDiv) {
+        var offset = Math.round(band.dateToPixelOffset(date));
+
+        if (showLine && unit != SimileAjax.DateTime.WEEK) {
+            var divLine = timeline.getDocument().createElement("div");
+            divLine.className = "timeline-ether-lines";
+
+            if (lineTheme.opacity < 100) {
+                SimileAjax.Graphics.setOpacity(divLine, lineTheme.opacity);
+            }
+            
+            if (horizontal) {
+				//divLine.className += " timeline-ether-lines-vertical";
+				divLine.style.left = offset + "px";
+            } else {
+				//divLine.className += " timeline-ether-lines-horizontal";
+                divLine.style.top = offset + "px";
+            }
+            lineDiv.appendChild(divLine);
+        }
+        if (unit == SimileAjax.DateTime.WEEK) {
+            var firstDayOfWeek = theme.firstDayOfWeek;
+            
+            var saturday = new Date(date.getTime() + (6 - firstDayOfWeek - 7) * day);
+            var monday = new Date(saturday.getTime() + 2 * day);
+            
+            var saturdayPixel = Math.round(band.dateToPixelOffset(saturday));
+            var mondayPixel = Math.round(band.dateToPixelOffset(monday));
+            var length = Math.max(1, mondayPixel - saturdayPixel);
+            
+            var divWeekend = timeline.getDocument().createElement("div");            
+			divWeekend.className = 'timeline-ether-weekends'
+
+            if (weekendTheme.opacity < 100) {
+                SimileAjax.Graphics.setOpacity(divWeekend, weekendTheme.opacity);
+            }
+            
+            if (horizontal) {				
+                divWeekend.style.left = saturdayPixel + "px";
+                divWeekend.style.width = length + "px";                
+            } else {				
+                divWeekend.style.top = saturdayPixel + "px";
+                divWeekend.style.height = length + "px";                
+            }
+            lineDiv.appendChild(divWeekend);
+        }
+        
+        var label = labeller.labelInterval(date, unit);
+        
+        var div = timeline.getDocument().createElement("div");
+        div.innerHTML = label.text;
+        
+        
+        
+		div.className = 'timeline-date-label'
+		if(label.emphasized) div.className += ' timeline-date-label-em'
+		
+        this.positionDiv(div, offset);
+        markerDiv.appendChild(div);
+        
+        return div;
+    };
+};
+
+/*==================================================
+ *  Ether Highlight Layout
+ *==================================================
+ */
+ 
+Timeline.EtherHighlight = function(timeline, band, theme, backgroundLayer) {
+    var horizontal = timeline.isHorizontal();
+    
+    this._highlightDiv = null;
+    this._createHighlightDiv = function() {
+        if (this._highlightDiv == null) {
+            this._highlightDiv = timeline.getDocument().createElement("div");
+            this._highlightDiv.setAttribute("name", "ether-highlight"); // for debugging
+            this._highlightDiv.className = 'timeline-ether-highlight'            
+            
+            var opacity = theme.ether.highlightOpacity;
+            if (opacity < 100) {
+                SimileAjax.Graphics.setOpacity(this._highlightDiv, opacity);
+            }
+            
+            backgroundLayer.appendChild(this._highlightDiv);
+        }
+    }
+    
+    this.position = function(startDate, endDate) {
+        this._createHighlightDiv();
+        
+        var startPixel = Math.round(band.dateToPixelOffset(startDate));
+        var endPixel = Math.round(band.dateToPixelOffset(endDate));
+        var length = Math.max(endPixel - startPixel, 3);
+        if (horizontal) {
+            this._highlightDiv.style.left = startPixel + "px";
+            this._highlightDiv.style.width = length + "px";           
+            this._highlightDiv.style.height = (band.getViewWidth() - 4) + "px";
+        } else {
+            this._highlightDiv.style.top = startPixel + "px";
+            this._highlightDiv.style.height = length + "px";
+            this._highlightDiv.style.width = (band.getViewWidth() - 4) + "px";
+        }
+    }
+};

@@ -22,7 +22,7 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_Action
         } else {
             $this->_modelClass = 'Exhibit';
         }
-        $this->_browseRecordsPerPage = 10;
+        $this->_browseRecordsPerPage = 6;
         
         require_once 'Zend/Session.php';
         $this->session = new Zend_Session_Namespace('Exhibit');

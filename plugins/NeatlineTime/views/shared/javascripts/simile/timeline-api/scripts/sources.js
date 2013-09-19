@@ -1,24 +1,567 @@
-Timeline.DefaultEventSource=function(a){this._events=a instanceof Object?a:new SimileAjax.EventIndex;this._listeners=[]};Timeline.DefaultEventSource.prototype.addListener=function(a){this._listeners.push(a)};Timeline.DefaultEventSource.prototype.removeListener=function(a){for(var b=0;b<this._listeners.length;b++)if(this._listeners[b]==a){this._listeners.splice(b,1);break}};
-Timeline.DefaultEventSource.prototype.loadXML=function(a,b){for(var f=this._getBaseURL(b),e=a.documentElement.getAttribute("wiki-url"),g=a.documentElement.getAttribute("wiki-section"),i=a.documentElement.getAttribute("date-time-format"),i=this._events.getUnit().getParser(i),d=a.documentElement.firstChild,c=!1;d!=null;){if(d.nodeType==1){c="";if(d.firstChild!=null&&d.firstChild.nodeType==3)c=d.firstChild.nodeValue;var h=d.getAttribute("isDuration")===null&&d.getAttribute("durationEvent")===null||d.getAttribute("isDuration")==
-"false"||d.getAttribute("durationEvent")=="false",c=new Timeline.DefaultEventSource.Event({id:d.getAttribute("id"),start:i(d.getAttribute("start")),end:i(d.getAttribute("end")),latestStart:i(d.getAttribute("latestStart")),earliestEnd:i(d.getAttribute("earliestEnd")),instant:h,text:d.getAttribute("title"),description:c,image:this._resolveRelativeURL(d.getAttribute("image"),f),link:this._resolveRelativeURL(d.getAttribute("link"),f),icon:this._resolveRelativeURL(d.getAttribute("icon"),f),color:d.getAttribute("color"),
-textColor:d.getAttribute("textColor"),hoverText:d.getAttribute("hoverText"),classname:d.getAttribute("classname"),tapeImage:d.getAttribute("tapeImage"),tapeRepeat:d.getAttribute("tapeRepeat"),caption:d.getAttribute("caption"),eventID:d.getAttribute("eventID"),trackNum:d.getAttribute("trackNum")});c._node=d;c.getProperty=function(a){return this._node.getAttribute(a)};c.setWikiInfo(e,g);this._events.add(c);c=!0}d=d.nextSibling}c&&this._fire("onAddMany",[])};
-Timeline.DefaultEventSource.prototype.loadJSON=function(a,b){var f=this._getBaseURL(b),e=!1;if(a&&a.events){var g="wikiURL"in a?a.wikiURL:null,i="wikiSection"in a?a.wikiSection:null,d="dateTimeFormat"in a?a.dateTimeFormat:null,d=this._events.getUnit().getParser(d),c=0;for(;c<a.events.length;c++){var e=a.events[c],h=e.isDuration||e.durationEvent!=null&&!e.durationEvent,h=new Timeline.DefaultEventSource.Event({id:"id"in e?e.id:void 0,start:d(e.start),end:d(e.end),latestStart:d(e.latestStart),earliestEnd:d(e.earliestEnd),
-instant:h,text:e.title,description:e.description,image:this._resolveRelativeURL(e.image,f),link:this._resolveRelativeURL(e.link,f),icon:this._resolveRelativeURL(e.icon,f),color:e.color,textColor:e.textColor,hoverText:e.hoverText,classname:e.classname,tapeImage:e.tapeImage,tapeRepeat:e.tapeRepeat,caption:e.caption,eventID:e.eventID,trackNum:e.trackNum});h._obj=e;h.getProperty=function(a){return this._obj[a]};h.setWikiInfo(g,i);this._events.add(h);e=!0}}e&&this._fire("onAddMany",[])};
-Timeline.DefaultEventSource.prototype.loadSPARQL=function(a,b){var f=this._getBaseURL(b),e=this._events.getUnit().getParser("iso8601");if(a!=null){for(var g=a.documentElement.firstChild;g!=null&&(g.nodeType!=1||g.nodeName!="results");)g=g.nextSibling;var i=null,d=null;if(g!=null)i=g.getAttribute("wiki-url"),d=g.getAttribute("wiki-section"),g=g.firstChild;for(var c=!1;g!=null;){if(g.nodeType==1){for(var c={},h=g.firstChild;h!=null;){if(h.nodeType==1&&h.firstChild!=null&&h.firstChild.nodeType==1&&h.firstChild.firstChild!=
-null&&h.firstChild.firstChild.nodeType==3)c[h.getAttribute("name")]=h.firstChild.firstChild.nodeValue;h=h.nextSibling}c.start==null&&c.date!=null&&(c.start=c.date);h=c.isDuration===null&&c.durationEvent===null||c.isDuration=="false"||c.durationEvent=="false";h=new Timeline.DefaultEventSource.Event({id:c.id,start:e(c.start),end:e(c.end),latestStart:e(c.latestStart),earliestEnd:e(c.earliestEnd),instant:h,text:c.title,description:c.description,image:this._resolveRelativeURL(c.image,f),link:this._resolveRelativeURL(c.link,
-f),icon:this._resolveRelativeURL(c.icon,f),color:c.color,textColor:c.textColor,hoverText:c.hoverText,caption:c.caption,classname:c.classname,tapeImage:c.tapeImage,tapeRepeat:c.tapeRepeat,eventID:c.eventID,trackNum:c.trackNum});h._bindings=c;h.getProperty=function(a){return this._bindings[a]};h.setWikiInfo(i,d);this._events.add(h);c=!0}g=g.nextSibling}c&&this._fire("onAddMany",[])}};Timeline.DefaultEventSource.prototype.add=function(a){this._events.add(a);this._fire("onAddOne",[a])};
-Timeline.DefaultEventSource.prototype.addMany=function(a){for(var b=0;b<a.length;b++)this._events.add(a[b]);this._fire("onAddMany",[])};Timeline.DefaultEventSource.prototype.clear=function(){this._events.removeAll();this._fire("onClear",[])};Timeline.DefaultEventSource.prototype.getEvent=function(a){return this._events.getEvent(a)};Timeline.DefaultEventSource.prototype.getEventIterator=function(a,b){return this._events.getIterator(a,b)};
-Timeline.DefaultEventSource.prototype.getEventReverseIterator=function(a,b){return this._events.getReverseIterator(a,b)};Timeline.DefaultEventSource.prototype.getAllEventIterator=function(){return this._events.getAllIterator()};Timeline.DefaultEventSource.prototype.getCount=function(){return this._events.getCount()};Timeline.DefaultEventSource.prototype.getEarliestDate=function(){return this._events.getEarliestDate()};Timeline.DefaultEventSource.prototype.getLatestDate=function(){return this._events.getLatestDate()};
-Timeline.DefaultEventSource.prototype._fire=function(a,b){for(var f=0;f<this._listeners.length;f++){var e=this._listeners[f];if(a in e)try{e[a].apply(e,b)}catch(g){SimileAjax.Debug.exception(g)}}};Timeline.DefaultEventSource.prototype._getBaseURL=function(a){if(a.indexOf("://")<0)var b=this._getBaseURL(document.location.href),a=a.substr(0,1)=="/"?b.substr(0,b.indexOf("/",b.indexOf("://")+3))+a:b+a;b=a.lastIndexOf("/");return b<0?"":a.substr(0,b+1)};
-Timeline.DefaultEventSource.prototype._resolveRelativeURL=function(a,b){return a==null||a==""?a:a.indexOf("://")>0?a:a.substr(0,1)=="/"?b.substr(0,b.indexOf("/",b.indexOf("://")+3))+a:b+a};
-Timeline.DefaultEventSource.Event=function(a){function b(b){return a[b]!=null&&a[b]!=""?a[b]:null}var f=a.id?a.id.trim():"";this._id=f.length>0?f:Timeline.EventUtils.getNewEventID();this._instant=a.instant||a.end==null;this._start=a.start;this._end=a.end!=null?a.end:a.start;this._latestStart=a.latestStart!=null?a.latestStart:a.instant?this._end:this._start;this._earliestEnd=a.earliestEnd!=null?a.earliestEnd:this._end;f=[];if(this._start>this._latestStart)this._latestStart=this._start,f.push("start is > latestStart");
-if(this._start>this._earliestEnd)this._earliestEnd=this._latestStart,f.push("start is > earliestEnd");if(this._start>this._end)this._end=this._earliestEnd,f.push("start is > end");if(this._latestStart>this._earliestEnd)this._earliestEnd=this._latestStart,f.push("latestStart is > earliestEnd");if(this._latestStart>this._end)this._end=this._earliestEnd,f.push("latestStart is > end");if(this._earliestEnd>this._end)this._end=this._earliestEnd,f.push("earliestEnd is > end");this._eventID=b("eventID");
-this._text=a.text!=null?SimileAjax.HTML.deEntify(a.text):"";f.length>0&&(this._text+=" PROBLEM: "+f.join(", "));this._description=SimileAjax.HTML.deEntify(a.description);this._image=b("image");this._link=b("link");this._title=b("hoverText");this._title=b("caption");this._icon=b("icon");this._color=b("color");this._textColor=b("textColor");this._classname=b("classname");this._tapeImage=b("tapeImage");this._tapeRepeat=b("tapeRepeat");this._trackNum=b("trackNum");if(this._trackNum!=null)this._trackNum=
-parseInt(this._trackNum);this._wikiSection=this._wikiURL=null};
-Timeline.DefaultEventSource.Event.prototype={getID:function(){return this._id},isInstant:function(){return this._instant},isImprecise:function(){return this._start!=this._latestStart||this._end!=this._earliestEnd},getStart:function(){return this._start},getEnd:function(){return this._end},getLatestStart:function(){return this._latestStart},getEarliestEnd:function(){return this._earliestEnd},getEventID:function(){return this._eventID},getText:function(){return this._text},getDescription:function(){return this._description},
-getImage:function(){return this._image},getLink:function(){return this._link},getIcon:function(){return this._icon},getColor:function(){return this._color},getTextColor:function(){return this._textColor},getClassName:function(){return this._classname},getTapeImage:function(){return this._tapeImage},getTapeRepeat:function(){return this._tapeRepeat},getTrackNum:function(){return this._trackNum},getProperty:function(){return null},getWikiURL:function(){return this._wikiURL},getWikiSection:function(){return this._wikiSection},
-setWikiInfo:function(a,b){this._wikiURL=a;this._wikiSection=b},fillDescription:function(a){a.innerHTML=this._description},fillWikiInfo:function(a){a.style.display="none";if(!(this._wikiURL==null||this._wikiSection==null)){var b=this.getProperty("wikiID");if(b==null||b.length==0)b=this.getText();if(!(b==null||b.length==0)){a.style.display="inline";var b=b.replace(/\s/g,"_"),b=this._wikiURL+this._wikiSection.replace(/\s/g,"_")+"/"+b,f=document.createElement("a");f.href=b;f.target="new";f.innerHTML=
-Timeline.strings[Timeline.clientLocale].wikiLinkLabel;a.appendChild(document.createTextNode("["));a.appendChild(f);a.appendChild(document.createTextNode("]"))}}},fillTime:function(a,b){this._instant?this.isImprecise()?(a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._start))),a.appendChild(a.ownerDocument.createElement("br")),a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._end)))):a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._start))):this.isImprecise()?
-(a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._start)+" ~ "+b.labelPrecise(this._latestStart))),a.appendChild(a.ownerDocument.createElement("br")),a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._earliestEnd)+" ~ "+b.labelPrecise(this._end)))):(a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._start))),a.appendChild(a.ownerDocument.createElement("br")),a.appendChild(a.ownerDocument.createTextNode(b.labelPrecise(this._end))))},fillInfoBubble:function(a,
-b,f){var e=a.ownerDocument,g=this.getText(),i=this.getLink(),d=this.getImage();if(d!=null){var c=e.createElement("img");c.src=d;b.event.bubble.imageStyler(c);a.appendChild(c)}d=e.createElement("div");g=e.createTextNode(g);i!=null?(c=e.createElement("a"),c.href=i,c.appendChild(g),d.appendChild(c)):d.appendChild(g);b.event.bubble.titleStyler(d);a.appendChild(d);i=e.createElement("div");this.fillDescription(i);b.event.bubble.bodyStyler(i);a.appendChild(i);i=e.createElement("div");this.fillTime(i,f);
-b.event.bubble.timeStyler(i);a.appendChild(i);f=e.createElement("div");this.fillWikiInfo(f);b.event.bubble.wikiStyler(f);a.appendChild(f)}};
+/*==================================================
+ *  Default Event Source
+ *==================================================
+ */
+
+
+Timeline.DefaultEventSource = function(eventIndex) {
+    this._events = (eventIndex instanceof Object) ? eventIndex : new SimileAjax.EventIndex();
+    this._listeners = [];
+};
+
+Timeline.DefaultEventSource.prototype.addListener = function(listener) {
+    this._listeners.push(listener);
+};
+
+Timeline.DefaultEventSource.prototype.removeListener = function(listener) {
+    for (var i = 0; i < this._listeners.length; i++) {
+        if (this._listeners[i] == listener) {
+            this._listeners.splice(i, 1);
+            break;
+        }
+    }
+};
+
+Timeline.DefaultEventSource.prototype.loadXML = function(xml, url) {
+    var base = this._getBaseURL(url);
+    
+    var wikiURL = xml.documentElement.getAttribute("wiki-url");
+    var wikiSection = xml.documentElement.getAttribute("wiki-section");
+
+    var dateTimeFormat = xml.documentElement.getAttribute("date-time-format");
+    var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
+
+    var node = xml.documentElement.firstChild;
+    var added = false;
+    while (node != null) {
+        if (node.nodeType == 1) {
+            var description = "";
+            if (node.firstChild != null && node.firstChild.nodeType == 3) {
+                description = node.firstChild.nodeValue;
+            }
+            // instant event: default is true. Or use values from isDuration or durationEvent
+            var instant = (node.getAttribute("isDuration")    === null &&
+                           node.getAttribute("durationEvent") === null) ||
+                          node.getAttribute("isDuration") == "false" ||
+                          node.getAttribute("durationEvent") == "false";
+            
+            var evt = new Timeline.DefaultEventSource.Event( {
+                          id: node.getAttribute("id"),
+                       start: parseDateTimeFunction(node.getAttribute("start")),
+                         end: parseDateTimeFunction(node.getAttribute("end")),
+                 latestStart: parseDateTimeFunction(node.getAttribute("latestStart")),
+                 earliestEnd: parseDateTimeFunction(node.getAttribute("earliestEnd")),
+                     instant: instant,
+                        text: node.getAttribute("title"),
+                 description: description,
+                       image: this._resolveRelativeURL(node.getAttribute("image"), base),
+                        link: this._resolveRelativeURL(node.getAttribute("link") , base),
+                        icon: this._resolveRelativeURL(node.getAttribute("icon") , base),
+                       color: node.getAttribute("color"),
+                   textColor: node.getAttribute("textColor"),
+                   hoverText: node.getAttribute("hoverText"),
+                   classname: node.getAttribute("classname"),
+                   tapeImage: node.getAttribute("tapeImage"),
+                  tapeRepeat: node.getAttribute("tapeRepeat"),
+                     caption: node.getAttribute("caption"),
+                     eventID: node.getAttribute("eventID"),
+                    trackNum: node.getAttribute("trackNum")
+            });
+
+            evt._node = node;
+            evt.getProperty = function(name) {
+                return this._node.getAttribute(name);
+            };
+            evt.setWikiInfo(wikiURL, wikiSection);
+            
+            this._events.add(evt);
+            
+            added = true;
+        }
+        node = node.nextSibling;
+    }
+
+    if (added) {
+        this._fire("onAddMany", []);
+    }
+};
+
+
+Timeline.DefaultEventSource.prototype.loadJSON = function(data, url) {
+    var base = this._getBaseURL(url);
+    var added = false;  
+    if (data && data.events){
+        var wikiURL = ("wikiURL" in data) ? data.wikiURL : null;
+        var wikiSection = ("wikiSection" in data) ? data.wikiSection : null;
+    
+        var dateTimeFormat = ("dateTimeFormat" in data) ? data.dateTimeFormat : null;
+        var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
+       
+        for (var i=0; i < data.events.length; i++){
+            var event = data.events[i];
+            // Fixing issue 33:
+            // instant event: default (for JSON only) is false. Or use values from isDuration or durationEvent
+            // isDuration was negated (see issue 33, so keep that interpretation
+            var instant = event.isDuration || (event.durationEvent != null && !event.durationEvent);
+
+            var evt = new Timeline.DefaultEventSource.Event({
+                          id: ("id" in event) ? event.id : undefined,
+                       start: parseDateTimeFunction(event.start),
+                         end: parseDateTimeFunction(event.end),
+                 latestStart: parseDateTimeFunction(event.latestStart),
+                 earliestEnd: parseDateTimeFunction(event.earliestEnd),
+                     instant: instant,
+                        text: event.title,
+                 description: event.description,
+                       image: this._resolveRelativeURL(event.image, base),
+                        link: this._resolveRelativeURL(event.link , base),
+                        icon: this._resolveRelativeURL(event.icon , base),
+                       color: event.color,                                      
+                   textColor: event.textColor,
+                   hoverText: event.hoverText,
+                   classname: event.classname,
+                   tapeImage: event.tapeImage,
+                  tapeRepeat: event.tapeRepeat,
+                     caption: event.caption,
+                     eventID: event.eventID,
+                    trackNum: event.trackNum
+            });
+            evt._obj = event;
+            evt.getProperty = function(name) {
+                return this._obj[name];
+            };
+            evt.setWikiInfo(wikiURL, wikiSection);
+
+            this._events.add(evt);
+            added = true;
+        }
+    }
+   
+    if (added) {
+        this._fire("onAddMany", []);
+    }
+};
+
+/*
+ *  Contributed by Morten Frederiksen, http://www.wasab.dk/morten/
+ */
+Timeline.DefaultEventSource.prototype.loadSPARQL = function(xml, url) {
+    var base = this._getBaseURL(url);
+    
+    var dateTimeFormat = 'iso8601';
+    var parseDateTimeFunction = this._events.getUnit().getParser(dateTimeFormat);
+
+    if (xml == null) {
+        return;
+    }
+    
+    /*
+     *  Find <results> tag
+     */
+    var node = xml.documentElement.firstChild;
+    while (node != null && (node.nodeType != 1 || node.nodeName != 'results')) {
+        node = node.nextSibling;
+    }
+    
+    var wikiURL = null;
+    var wikiSection = null;
+    if (node != null) {
+        wikiURL = node.getAttribute("wiki-url");
+        wikiSection = node.getAttribute("wiki-section");
+        
+        node = node.firstChild;
+    }
+    
+    var added = false;
+    while (node != null) {
+        if (node.nodeType == 1) {
+            var bindings = { };
+            var binding = node.firstChild;
+            while (binding != null) {
+                if (binding.nodeType == 1 && 
+                    binding.firstChild != null && 
+                    binding.firstChild.nodeType == 1 && 
+                    binding.firstChild.firstChild != null && 
+                    binding.firstChild.firstChild.nodeType == 3) {
+                    bindings[binding.getAttribute('name')] = binding.firstChild.firstChild.nodeValue;
+                }
+                binding = binding.nextSibling;
+            }
+            
+            if (bindings["start"] == null && bindings["date"] != null) {
+                bindings["start"] = bindings["date"];
+            }
+            
+            // instant event: default is true. Or use values from isDuration or durationEvent
+            var instant = (bindings["isDuration"]    === null &&
+                           bindings["durationEvent"] === null) ||
+                          bindings["isDuration"] == "false" ||
+                          bindings["durationEvent"] == "false";
+
+            var evt = new Timeline.DefaultEventSource.Event({
+                          id: bindings["id"],
+                       start: parseDateTimeFunction(bindings["start"]),
+                         end: parseDateTimeFunction(bindings["end"]),
+                 latestStart: parseDateTimeFunction(bindings["latestStart"]),
+                 earliestEnd: parseDateTimeFunction(bindings["earliestEnd"]),
+                     instant: instant, // instant
+                        text: bindings["title"], // text
+                 description: bindings["description"],
+                       image: this._resolveRelativeURL(bindings["image"], base),
+                        link: this._resolveRelativeURL(bindings["link"] , base),
+                        icon: this._resolveRelativeURL(bindings["icon"] , base),
+                       color: bindings["color"],                                
+                   textColor: bindings["textColor"],
+                   hoverText: bindings["hoverText"],
+                     caption: bindings["caption"],
+                   classname: bindings["classname"],
+                   tapeImage: bindings["tapeImage"],
+                  tapeRepeat: bindings["tapeRepeat"],
+                     eventID: bindings["eventID"],
+                    trackNum: bindings["trackNum"]
+            });
+            evt._bindings = bindings;
+            evt.getProperty = function(name) {
+                return this._bindings[name];
+            };
+            evt.setWikiInfo(wikiURL, wikiSection);
+            
+            this._events.add(evt);
+            added = true;
+        }
+        node = node.nextSibling;
+    }
+
+    if (added) {
+        this._fire("onAddMany", []);
+    }
+};
+
+Timeline.DefaultEventSource.prototype.add = function(evt) {
+    this._events.add(evt);
+    this._fire("onAddOne", [evt]);
+};
+
+Timeline.DefaultEventSource.prototype.addMany = function(events) {
+    for (var i = 0; i < events.length; i++) {
+        this._events.add(events[i]);
+    }
+    this._fire("onAddMany", []);
+};
+
+Timeline.DefaultEventSource.prototype.clear = function() {
+    this._events.removeAll();
+    this._fire("onClear", []);
+};
+
+Timeline.DefaultEventSource.prototype.getEvent = function(id) {
+    return this._events.getEvent(id);
+};
+
+Timeline.DefaultEventSource.prototype.getEventIterator = function(startDate, endDate) {
+    return this._events.getIterator(startDate, endDate);
+};
+
+Timeline.DefaultEventSource.prototype.getEventReverseIterator = function(startDate, endDate) {
+    return this._events.getReverseIterator(startDate, endDate);
+};
+
+Timeline.DefaultEventSource.prototype.getAllEventIterator = function() {
+    return this._events.getAllIterator();
+};
+
+Timeline.DefaultEventSource.prototype.getCount = function() {
+    return this._events.getCount();
+};
+
+Timeline.DefaultEventSource.prototype.getEarliestDate = function() {
+    return this._events.getEarliestDate();
+};
+
+Timeline.DefaultEventSource.prototype.getLatestDate = function() {
+    return this._events.getLatestDate();
+};
+
+Timeline.DefaultEventSource.prototype._fire = function(handlerName, args) {
+    for (var i = 0; i < this._listeners.length; i++) {
+        var listener = this._listeners[i];
+        if (handlerName in listener) {
+            try {
+                listener[handlerName].apply(listener, args);
+            } catch (e) {
+                SimileAjax.Debug.exception(e);
+            }
+        }
+    }
+};
+
+Timeline.DefaultEventSource.prototype._getBaseURL = function(url) {
+    if (url.indexOf("://") < 0) {
+        var url2 = this._getBaseURL(document.location.href);
+        if (url.substr(0,1) == "/") {
+            url = url2.substr(0, url2.indexOf("/", url2.indexOf("://") + 3)) + url;
+        } else {
+            url = url2 + url;
+        }
+    }
+    
+    var i = url.lastIndexOf("/");
+    if (i < 0) {
+        return "";
+    } else {
+        return url.substr(0, i+1);
+    }
+};
+
+Timeline.DefaultEventSource.prototype._resolveRelativeURL = function(url, base) {
+    if (url == null || url == "") {
+        return url;
+    } else if (url.indexOf("://") > 0) {
+        return url;
+    } else if (url.substr(0,1) == "/") {
+        return base.substr(0, base.indexOf("/", base.indexOf("://") + 3)) + url;
+    } else {
+        return base + url;
+    }
+};
+
+
+Timeline.DefaultEventSource.Event = function(args) {
+  //
+  // Attention developers!
+  // If you add a new event attribute, please be sure to add it to
+  // all three load functions: loadXML, loadSPARCL, loadJSON. 
+  // Thanks!
+  //
+  // args is a hash/object. It supports the following keys. Most are optional
+  //   id            -- an internal id. Really shouldn't be used by events.
+  //                    Timeline library clients should use eventID
+  //   eventID       -- For use by library client when writing custom painters or
+  //                    custom fillInfoBubble    
+  //   start
+  //   end
+  //   latestStart
+  //   earliestEnd
+  //   instant      -- boolean. Controls precise/non-precise logic & duration/instant issues
+  //   text         -- event source attribute 'title' -- used as the label on Timelines and in bubbles.
+  //   description  -- used in bubbles   
+  //   image        -- used in bubbles
+  //   link         -- used in bubbles
+  //   icon         -- on the Timeline
+  //   color        -- Timeline label and tape color
+  //   textColor    -- Timeline label color, overrides color attribute
+  //   hoverText    -- deprecated, here for backwards compatibility.
+  //                   Superceeded by caption
+  //   caption      -- tooltip-like caption on the Timeline. Uses HTML title attribute 
+  //   classname    -- used to set classname in Timeline. Enables better CSS selector rules
+  //   tapeImage    -- background image of the duration event's tape div on the Timeline
+  //   tapeRepeat   -- repeat attribute for tapeImage. {repeat | repeat-x | repeat-y }
+       
+  function cleanArg(arg) {
+      // clean up an arg
+      return (args[arg] != null && args[arg] != "") ? args[arg] : null;
+  }
+   
+  var id = args.id ? args.id.trim() : "";
+  this._id = id.length > 0 ? id : Timeline.EventUtils.getNewEventID();
+  
+  this._instant = args.instant || (args.end == null);
+  
+  this._start = args.start;
+  this._end = (args.end != null) ? args.end : args.start;
+  
+  this._latestStart = (args.latestStart != null) ?
+                       args.latestStart : (args.instant ? this._end : this._start);
+  this._earliestEnd = (args.earliestEnd != null) ? args.earliestEnd : this._end;
+  
+  // check sanity of dates since incorrect dates will later cause calculation errors
+  // when painting
+  var err=[];
+  if (this._start > this._latestStart) {
+          this._latestStart = this._start;
+          err.push("start is > latestStart");}
+  if (this._start > this._earliestEnd) {
+          this._earliestEnd = this._latestStart;
+          err.push("start is > earliestEnd");}
+  if (this._start > this._end) {
+          this._end = this._earliestEnd;
+          err.push("start is > end");}
+  if (this._latestStart > this._earliestEnd) {
+          this._earliestEnd = this._latestStart;
+          err.push("latestStart is > earliestEnd");}
+  if (this._latestStart > this._end) {
+          this._end = this._earliestEnd;
+          err.push("latestStart is > end");}
+  if (this._earliestEnd > this._end) {
+          this._end = this._earliestEnd;
+          err.push("earliestEnd is > end");}  
+  
+  this._eventID = cleanArg('eventID');
+  this._text = (args.text != null) ? SimileAjax.HTML.deEntify(args.text) : ""; // Change blank titles to ""
+  if (err.length > 0) {
+          this._text += " PROBLEM: " + err.join(", ");
+  }
+
+  this._description = SimileAjax.HTML.deEntify(args.description);
+  this._image = cleanArg('image');
+  this._link =  cleanArg('link');
+  this._title = cleanArg('hoverText');
+  this._title = cleanArg('caption');
+  
+  this._icon = cleanArg('icon');
+  this._color = cleanArg('color');      
+  this._textColor = cleanArg('textColor');
+  this._classname = cleanArg('classname');
+  this._tapeImage = cleanArg('tapeImage');
+  this._tapeRepeat = cleanArg('tapeRepeat');
+  this._trackNum = cleanArg('trackNum');
+  if (this._trackNum != null) {
+      this._trackNum = parseInt(this._trackNum);
+  }
+    
+  this._wikiURL = null;
+  this._wikiSection = null;
+};
+
+Timeline.DefaultEventSource.Event.prototype = {
+    getID:          function() { return this._id; },
+    
+    isInstant:      function() { return this._instant; },
+    isImprecise:    function() { return this._start != this._latestStart || this._end != this._earliestEnd; },
+    
+    getStart:       function() { return this._start; },
+    getEnd:         function() { return this._end; },
+    getLatestStart: function() { return this._latestStart; },
+    getEarliestEnd: function() { return this._earliestEnd; },
+    
+    getEventID:     function() { return this._eventID; },
+    getText:        function() { return this._text; }, // title
+    getDescription: function() { return this._description; },
+    getImage:       function() { return this._image; },
+    getLink:        function() { return this._link; },
+    
+    getIcon:        function() { return this._icon; },
+    getColor:       function() { return this._color; },
+    getTextColor:   function() { return this._textColor; },
+    getClassName:   function() { return this._classname; },
+    getTapeImage:   function() { return this._tapeImage; },
+    getTapeRepeat:  function() { return this._tapeRepeat; },
+    getTrackNum:    function() { return this._trackNum; },
+    
+    getProperty:    function(name) { return null; },
+    
+    getWikiURL:     function() { return this._wikiURL; },
+    getWikiSection: function() { return this._wikiSection; },
+    setWikiInfo: function(wikiURL, wikiSection) {
+        this._wikiURL = wikiURL;
+        this._wikiSection = wikiSection;
+    },
+    
+    fillDescription: function(elmt) {
+        elmt.innerHTML = this._description;
+    },
+    fillWikiInfo: function(elmt) {
+        // Many bubbles will not support a wiki link. 
+        // 
+        // Strategy: assume no wiki link. If we do have
+        // enough parameters for one, then create it.
+        elmt.style.display = "none"; // default
+        
+        if (this._wikiURL == null || this._wikiSection == null) {
+          return; // EARLY RETURN
+        }
+
+        // create the wikiID from the property or from the event text (the title)      
+        var wikiID = this.getProperty("wikiID");
+        if (wikiID == null || wikiID.length == 0) {
+            wikiID = this.getText(); // use the title as the backup wiki id
+        }
+        
+        if (wikiID == null || wikiID.length == 0) {
+          return; // No wikiID. Thus EARLY RETURN
+        }
+          
+        // ready to go...
+        elmt.style.display = "inline";
+        wikiID = wikiID.replace(/\s/g, "_");
+        var url = this._wikiURL + this._wikiSection.replace(/\s/g, "_") + "/" + wikiID;
+        var a = document.createElement("a");
+        a.href = url;
+        a.target = "new";
+        a.innerHTML = Timeline.strings[Timeline.clientLocale].wikiLinkLabel;
+        
+        elmt.appendChild(document.createTextNode("["));
+        elmt.appendChild(a);
+        elmt.appendChild(document.createTextNode("]"));
+    },
+    
+    fillTime: function(elmt, labeller) {
+        if (this._instant) {
+            if (this.isImprecise()) {
+                elmt.appendChild(elmt.ownerDocument.createTextNode(labeller.labelPrecise(this._start)));
+                elmt.appendChild(elmt.ownerDocument.createElement("br"));
+                elmt.appendChild(elmt.ownerDocument.createTextNode(labeller.labelPrecise(this._end)));
+            } else {
+                elmt.appendChild(elmt.ownerDocument.createTextNode(labeller.labelPrecise(this._start)));
+            }
+        } else {
+            if (this.isImprecise()) {
+                elmt.appendChild(elmt.ownerDocument.createTextNode(
+                    labeller.labelPrecise(this._start) + " ~ " + labeller.labelPrecise(this._latestStart)));
+                elmt.appendChild(elmt.ownerDocument.createElement("br"));
+                elmt.appendChild(elmt.ownerDocument.createTextNode(
+                    labeller.labelPrecise(this._earliestEnd) + " ~ " + labeller.labelPrecise(this._end)));
+            } else {
+                elmt.appendChild(elmt.ownerDocument.createTextNode(labeller.labelPrecise(this._start)));
+                elmt.appendChild(elmt.ownerDocument.createElement("br"));
+                elmt.appendChild(elmt.ownerDocument.createTextNode(labeller.labelPrecise(this._end)));
+            }
+        }
+    },
+    
+    fillInfoBubble: function(elmt, theme, labeller) {
+        var doc = elmt.ownerDocument;
+        
+        var title = this.getText();
+        var link = this.getLink();
+        var image = this.getImage();
+        
+        if (image != null) {
+            var img = doc.createElement("img");
+            img.src = image;
+            
+            theme.event.bubble.imageStyler(img);
+            elmt.appendChild(img);
+        }
+        
+        var divTitle = doc.createElement("div");
+        var textTitle = doc.createTextNode(title);
+        if (link != null) {
+            var a = doc.createElement("a");
+            a.href = link;
+            a.appendChild(textTitle);
+            divTitle.appendChild(a);
+        } else {
+            divTitle.appendChild(textTitle);
+        }
+        theme.event.bubble.titleStyler(divTitle);
+        elmt.appendChild(divTitle);
+        
+        var divBody = doc.createElement("div");
+        this.fillDescription(divBody);
+        theme.event.bubble.bodyStyler(divBody);
+        elmt.appendChild(divBody);
+        
+        var divTime = doc.createElement("div");
+        this.fillTime(divTime, labeller);
+        theme.event.bubble.timeStyler(divTime);
+        elmt.appendChild(divTime);
+        
+        var divWiki = doc.createElement("div");
+        this.fillWikiInfo(divWiki);
+        theme.event.bubble.wikiStyler(divWiki);
+        elmt.appendChild(divWiki);
+    }
+};
+
+

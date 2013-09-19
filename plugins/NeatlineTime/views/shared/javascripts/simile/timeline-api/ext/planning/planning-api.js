@@ -1,2 +1,92 @@
-(function(){var b=["planning.js","units.js","ether-painters.js","labellers.js"],e=[],f=["labellers.js"],g=[],c=["en"];try{for(var h=function(a){document.write("<script src='"+Timeline.urlPrefix+"ext/planning/scripts/"+a+"' type='text/javascript'><\/script>")},i=function(a){document.write("<link rel='stylesheet' href='"+Timeline.urlPrefix+"ext/planning/styles/"+a+"' type='text/css'/>")},a=0;a<b.length;a++)h(b[a]);for(a=0;a<e.length;a++)i(e[a]);var j=[],k=function(a){for(var b=0;b<c.length;b++)if(a==
-c[b])return j[a]=!0;return!1},b=function(a){if(k(a))return a;var b=a.indexOf("-");return b>0&&k(a.substr(0,b))?a.substr(0,b):null};b(Timeline.serverLocale);b(Timeline.clientLocale);for(b=0;b<c.length;b++){var d=c[b];if(j[d]){for(a=0;a<f.length;a++)h("l10n/"+d+"/"+f[a]);for(a=0;a<g.length;a++)i("l10n/"+d+"/"+g[a])}}}catch(l){alert(l)}})();
+/*==================================================
+ *  Planning Extension
+ *
+ *  This file will load all the Javascript files
+ *  necessary to make the extension work.
+ *
+ *==================================================
+ */
+ 
+(function() {
+    var javascriptFiles = [
+        "planning.js",
+        "units.js",
+        "ether-painters.js",
+        "labellers.js"
+    ];
+    var cssFiles = [
+    ];
+    
+    var localizedJavascriptFiles = [
+        "labellers.js"
+    ];
+    var localizedCssFiles = [
+    ];
+    
+    // ISO-639 language codes, ISO-3166 country codes (2 characters)
+    var supportedLocales = [
+        "en"        // English
+    ];
+    
+    try {
+        var includeJavascriptFile = function(filename) {
+            document.write("<script src='" + Timeline.urlPrefix + "ext/planning/scripts/" + filename + "' type='text/javascript'></script>");
+        };
+        var includeCssFile = function(filename) {
+            document.write("<link rel='stylesheet' href='" + Timeline.urlPrefix + "ext/planning/styles/" + filename + "' type='text/css'/>");
+        }
+        
+        /*
+         *  Include non-localized files
+         */
+        for (var i = 0; i < javascriptFiles.length; i++) {
+            includeJavascriptFile(javascriptFiles[i]);
+        }
+        for (var i = 0; i < cssFiles.length; i++) {
+            includeCssFile(cssFiles[i]);
+        }
+        
+        /*
+         *  Include localized files
+         */
+        var loadLocale = [];
+        var tryExactLocale = function(locale) {
+            for (var l = 0; l < supportedLocales.length; l++) {
+                if (locale == supportedLocales[l]) {
+                    loadLocale[locale] = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+        var tryLocale = function(locale) {
+            if (tryExactLocale(locale)) {
+                return locale;
+            }
+            
+            var dash = locale.indexOf("-");
+            if (dash > 0 && tryExactLocale(locale.substr(0, dash))) {
+                return locale.substr(0, dash);
+            }
+            
+            return null;
+        }
+        
+        tryLocale(Timeline.serverLocale);
+        tryLocale(Timeline.clientLocale);
+        
+        for (var l = 0; l < supportedLocales.length; l++) {
+            var locale = supportedLocales[l];
+            if (loadLocale[locale]) {
+                for (var i = 0; i < localizedJavascriptFiles.length; i++) {
+                    includeJavascriptFile("l10n/" + locale + "/" + localizedJavascriptFiles[i]);
+                }
+                for (var i = 0; i < localizedCssFiles.length; i++) {
+                    includeCssFile("l10n/" + locale + "/" + localizedCssFiles[i]);
+                }
+            }
+        }
+    } catch (e) {
+        alert(e);
+    }
+})();

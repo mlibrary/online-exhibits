@@ -1,1 +1,9 @@
-Timeline.strings.tr={wikiLinkLabel:"Tart\u0131\u015f"};
+/*==================================================
+ *  Common localization strings
+ *==================================================
+ */
+
+Timeline.strings["tr"] = {
+    wikiLinkLabel:  "Tartış"
+};
+

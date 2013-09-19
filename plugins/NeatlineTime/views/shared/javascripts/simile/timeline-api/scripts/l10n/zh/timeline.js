@@ -1,1 +1,9 @@
-Timeline.strings.zh={wikiLinkLabel:"\u8ba8\u8bba"};
+﻿/*==================================================
+ *  Common localization strings
+ *==================================================
+ */
+
+Timeline.strings["zh"] = {
+    wikiLinkLabel:  "讨论"
+};
+

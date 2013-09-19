@@ -360,6 +360,7 @@ function exhibit_builder_purify_html($request, $purifier)
  **/
 function exhibit_builder_select_exhibit($props = array(), $value = null, $label = null, $search = array())
 {
+
     return _select_from_table('Exhibit', $props, $value, $label, $search);
 }
 
@@ -388,6 +389,7 @@ function exhibit_builder_initialize()
  */
 function exhibit_builder_item_browse_sql($select, $params)
 {
+
     $db = get_db();
 
     if ($request = Zend_Controller_Front::getInstance()->getRequest()) {
@@ -428,7 +430,10 @@ function exhibit_builder_item_browse_sql($select, $params)
         }
     }
 
+//print_r($select);
+    
     return $select;
+    
 }
 
 /**
@@ -436,9 +441,8 @@ function exhibit_builder_item_browse_sql($select, $params)
  */
 function exhibit_builder_append_to_advanced_search()
 {
-    $html = '<div class="field">'
-          . __v()->formLabel('exhibit', __('Search by Exhibit'))
-          . '<div class="inputs">'
+    $html = '<div class="field">'. __v()->formLabel('exhibit', __('Search by Exhibit'))
+    . '<div class="inputs">'
           . _select_from_table('Exhibit', array('name' => 'exhibit'))
           . '</div></div>';
     echo $html;

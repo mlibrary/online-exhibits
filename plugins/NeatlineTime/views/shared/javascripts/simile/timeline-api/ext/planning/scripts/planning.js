@@ -1,3 +1,47 @@
-Timeline.Planning={};
-Timeline.Planning.createBandInfo=function(a){var b="theme"in a?a.theme:Timeline.getDefaultTheme(),c="eventSource"in a?a.eventSource:null,d=new Timeline.LinearEther({centersOn:"date"in a?a.date:Timeline.PlanningUnit.makeDefaultValue(),interval:1,pixelsPerInterval:a.intervalPixels}),e=new Timeline.PlanningEtherPainter({intervalUnit:a.intervalUnit,multiple:"multiple"in a?a.multiple:1,align:a.align,theme:b}),b={theme:b};if("trackHeight"in a)b.trackHeight=a.trackHeight;if("trackGap"in a)b.trackGap=a.trackGap;
-b="overview"in a&&a.overview?new Timeline.OverviewEventPainter(b):new Timeline.DetailedEventPainter(b);return{width:a.width,eventSource:c,timeZone:"timeZone"in a?a.timeZone:0,ether:d,etherPainter:e,eventPainter:b}};
+/*==================================================
+ *  Planning
+ *==================================================
+ */
+
+Timeline.Planning = new Object();
+
+Timeline.Planning.createBandInfo = function(params) {
+    var theme = ("theme" in params) ? params.theme : Timeline.getDefaultTheme();
+    
+    var eventSource = ("eventSource" in params) ? params.eventSource : null;
+    
+    var ether = new Timeline.LinearEther({ 
+        centersOn:          ("date" in params) ? params.date : Timeline.PlanningUnit.makeDefaultValue(),
+        interval:           1,
+        pixelsPerInterval:  params.intervalPixels
+    });
+    
+    var etherPainter = new Timeline.PlanningEtherPainter({
+        intervalUnit:       params.intervalUnit, 
+        multiple:           ("multiple" in params) ? params.multiple : 1,
+        align:              params.align,
+        theme:              theme 
+    });
+    
+    var eventPainterParams = {
+        theme:      theme
+    };
+    if ("trackHeight" in params) {
+        eventPainterParams.trackHeight = params.trackHeight;
+    }
+    if ("trackGap" in params) {
+        eventPainterParams.trackGap = params.trackGap;
+    }
+    var eventPainter = ("overview" in params && params.overview) ?
+        new Timeline.OverviewEventPainter(eventPainterParams) :
+        new Timeline.DetailedEventPainter(eventPainterParams);
+    
+    return {   
+        width:          params.width,
+        eventSource:    eventSource,
+        timeZone:       ("timeZone" in params) ? params.timeZone : 0,
+        ether:          ether,
+        etherPainter:   etherPainter,
+        eventPainter:   eventPainter
+    };
+};

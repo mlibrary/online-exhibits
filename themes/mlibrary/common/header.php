@@ -26,8 +26,8 @@ display_css();
 <link rel="stylesheet" media="screen" href="<?php echo html_escape(css(mlibrary_get_stylesheet())); ?>" />
 
 <!-- JavaScripts -->
- <script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
-<script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></scripts>
+<script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
+<script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
 
 <?php echo js('default'); ?>
 <?php display_js();?>
@@ -71,7 +71,8 @@ display_css();
 		<div id="primary-nav">
         	
 			<ul class="navigation <?php $urlparts = explode("/",$_SERVER['REQUEST_URI']); if (in_array('galleries',$urlparts)){ echo 'galleries'; }; ?>"> 
-			<?php echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items'),'Time Line'=>uri('neatline-time/timelines'))); ?>
+			<?php //echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items'),'Time Line'=>uri('neatline-time/timelines'))); 
+				echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items')));?>
             <li class="umLogo no-tab"><a href="http://www.umich.edu"><img src="<?php echo img('umLogo.gif','images/layout'); ?>" alt="University of Michigan" width="143" height="18"/></a>
 			</ul>
 		</div><!-- end primary-nav -->

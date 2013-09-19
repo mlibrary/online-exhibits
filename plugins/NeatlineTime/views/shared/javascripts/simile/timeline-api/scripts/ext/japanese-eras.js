@@ -1,44 +1,395 @@
-Timeline.JapaneseEraDateLabeller=function(a,c,b){a=new Timeline.GregorianDateLabeller(a,c);a._useRomanizedName=b;a._oldLabelInterval=a.labelInterval;a.labelInterval=Timeline.JapaneseEraDateLabeller._labelInterval;return a};
-Timeline.JapaneseEraDateLabeller._labelInterval=function(a,c){var b,d=!1;b=Timeline.DateTime.removeTimeZoneOffset(a,this._timeZone);switch(c){case Timeline.DateTime.YEAR:case Timeline.DateTime.DECADE:case Timeline.DateTime.CENTURY:case Timeline.DateTime.MILLENNIUM:var e=b.getUTCFullYear();if(e>=Timeline.JapaneseEraDateLabeller._eras.elementAt(0).startingYear){b=Timeline.JapaneseEraDateLabeller._eras.find(function(a){return a.startingYear-e});b<Timeline.JapaneseEraDateLabeller._eras.length()?(d=Timeline.JapaneseEraDateLabeller._eras.elementAt(b),
-e<d.startingYear&&(d=Timeline.JapaneseEraDateLabeller._eras.elementAt(b-1))):d=Timeline.JapaneseEraDateLabeller._eras.elementAt(b-1);b=(this._useRomanizedName?d.romanizedName:d.japaneseName)+" "+(e-d.startingYear+1);d=c==Timeline.DateTime.YEAR&&e==d.startingYear;break}default:return this._oldLabelInterval(a,c)}return{text:b,emphasized:d}};Timeline.JapaneseEraEtherPainter=function(a){this._params=a;this._theme=a.theme};
-Timeline.JapaneseEraEtherPainter.prototype.initialize=function(a,c){this._band=a;this._timeline=c;this._backgroundLayer=a.createLayerDiv(0);this._backgroundLayer.setAttribute("name","ether-background");this._backgroundLayer.style.background=this._theme.ether.backgroundColors[a.getIndex()];this._lineLayer=this._markerLayer=null;var b="align"in this._params?this._params.align:this._theme.ether.interval.marker[c.isHorizontal()?"hAlign":"vAlign"];this._intervalMarkerLayout=new Timeline.EtherIntervalMarkerLayout(this._timeline,
-this._band,this._theme,b,"showLine"in this._params?this._params.showLine:this._theme.ether.interval.line.show);this._highlight=new Timeline.EtherHighlight(this._timeline,this._band,this._theme,this._backgroundLayer)};Timeline.JapaneseEraEtherPainter.prototype.setHighlight=function(a,c){this._highlight.position(a,c)};
-Timeline.JapaneseEraEtherPainter.prototype.paint=function(){this._markerLayer&&this._band.removeLayerDiv(this._markerLayer);this._markerLayer=this._band.createLayerDiv(100);this._markerLayer.setAttribute("name","ether-markers");this._markerLayer.style.display="none";this._lineLayer&&this._band.removeLayerDiv(this._lineLayer);this._lineLayer=this._band.createLayerDiv(1);this._lineLayer.setAttribute("name","ether-lines");this._lineLayer.style.display="none";for(var a=this._band.getMinDate().getUTCFullYear(),
-c=this._band.getMaxDate().getUTCFullYear(),b=Timeline.JapaneseEraDateLabeller._eras.find(function(b){return b.startingYear-a}),d=Timeline.JapaneseEraDateLabeller._eras.length();b<d;b++){var e=Timeline.JapaneseEraDateLabeller._eras.elementAt(b);if(e.startingYear>c)break;var f=new Date(0);f.setUTCFullYear(e.startingYear);this._intervalMarkerLayout.createIntervalMarker(f,{labelInterval:function(){return{text:e.japaneseName,emphasized:!0}}},Timeline.DateTime.YEAR,this._markerLayer,this._lineLayer)}this._markerLayer.style.display=
-"block";this._lineLayer.style.display="block"};Timeline.JapaneseEraEtherPainter.prototype.softPaint=function(){};
-Timeline.JapaneseEraDateLabeller._eras=new Timeline.SortedArray(function(a,c){return a.startingYear-c.startingYear},[{startingYear:645,japaneseName:"\u5927\u5316",romanizedName:"Taika"},{startingYear:650,japaneseName:"\u767d\u96c9",romanizedName:"Hakuchi"},{startingYear:686,japaneseName:"\u6731\u9ce5",romanizedName:"Shuch\u014d"},{startingYear:701,japaneseName:"\u5927\u5b9d",romanizedName:"Taih\u014d"},{startingYear:704,japaneseName:"\u6176\u96f2",romanizedName:"Keiun"},{startingYear:708,japaneseName:"\u548c\u9285",
-romanizedName:"Wad\u014d"},{startingYear:715,japaneseName:"\u970a\u4e80",romanizedName:"Reiki"},{startingYear:717,japaneseName:"\u990a\u8001",romanizedName:"Y\u014dr\u014d"},{startingYear:724,japaneseName:"\u795e\u4e80",romanizedName:"Jinki"},{startingYear:729,japaneseName:"\u5929\u5e73",romanizedName:"Tenpy\u014d"},{startingYear:749,japaneseName:"\u5929\u5e73\u611f\u5b9d",romanizedName:"Tenpy\u014d-kanp\u014d"},{startingYear:749,japaneseName:"\u5929\u5e73\u52dd\u5b9d",romanizedName:"Tenpy\u014d-sh\u014dh\u014d"},
-{startingYear:757,japaneseName:"\u5929\u5e73\u5b9d\u5b57",romanizedName:"Tenpy\u014d-h\u014dji"},{startingYear:765,japaneseName:"\u5929\u5e73\u795e\u8b77",romanizedName:"Tenpy\u014d-jingo"},{startingYear:767,japaneseName:"\u795e\u8b77\u666f\u96f2",romanizedName:"Jingo-keiun"},{startingYear:770,japaneseName:"\u5b9d\u4e80",romanizedName:"H\u014dki"},{startingYear:781,japaneseName:"\u5929\u5fdc",romanizedName:"Ten'\u014d"},{startingYear:782,japaneseName:"\u5ef6\u66a6",romanizedName:"Enryaku"},{startingYear:806,
-japaneseName:"\u5927\u540c",romanizedName:"Daid\u014d"},{startingYear:810,japaneseName:"\u5f18\u4ec1",romanizedName:"K\u014dnin"},{startingYear:824,japaneseName:"\u5929\u9577",romanizedName:"Tench\u014d"},{startingYear:834,japaneseName:"\u627f\u548c",romanizedName:"J\u014dwa"},{startingYear:848,japaneseName:"\u5609\u7965",romanizedName:"Kaj\u014d"},{startingYear:851,japaneseName:"\u4ec1\u5bff",romanizedName:"Ninju"},{startingYear:854,japaneseName:"\u6589\u8861",romanizedName:"Saik\u014d"},{startingYear:857,
-japaneseName:"\u5929\u5b89",romanizedName:"Tennan"},{startingYear:859,japaneseName:"\u8c9e\u89b3",romanizedName:"J\u014dgan"},{startingYear:877,japaneseName:"\u5143\u6176",romanizedName:"Gangy\u014d"},{startingYear:885,japaneseName:"\u4ec1\u548c",romanizedName:"Ninna"},{startingYear:889,japaneseName:"\u5bdb\u5e73",romanizedName:"Kanpy\u014d"},{startingYear:898,japaneseName:"\u660c\u6cf0",romanizedName:"Sh\u014dtai"},{startingYear:901,japaneseName:"\u5ef6\u559c",romanizedName:"Engi"},{startingYear:923,
-japaneseName:"\u5ef6\u9577",romanizedName:"Ench\u014d"},{startingYear:931,japaneseName:"\u627f\u5e73",romanizedName:"J\u014dhei"},{startingYear:938,japaneseName:"\u5929\u6176",romanizedName:"Tengy\u014d"},{startingYear:947,japaneseName:"\u5929\u66a6",romanizedName:"Tenryaku"},{startingYear:957,japaneseName:"\u5929\u5fb3",romanizedName:"Tentoku"},{startingYear:961,japaneseName:"\u5fdc\u548c",romanizedName:"\u014cwa"},{startingYear:964,japaneseName:"\u5eb7\u4fdd",romanizedName:"K\u014dh\u014d"},{startingYear:968,
-japaneseName:"\u5b89\u548c",romanizedName:"Anna"},{startingYear:970,japaneseName:"\u5929\u7984",romanizedName:"Tenroku"},{startingYear:973,japaneseName:"\u5929\u5ef6",romanizedName:"Ten'en"},{startingYear:976,japaneseName:"\u8c9e\u5143",romanizedName:"J\u014dgen"},{startingYear:978,japaneseName:"\u5929\u5143",romanizedName:"Tengen"},{startingYear:983,japaneseName:"\u6c38\u89b3",romanizedName:"Eikan"},{startingYear:985,japaneseName:"\u5bdb\u548c",romanizedName:"Kanna"},{startingYear:987,japaneseName:"\u6c38\u5ef6",
-romanizedName:"Eien"},{startingYear:988,japaneseName:"\u6c38\u795a",romanizedName:"Eiso"},{startingYear:990,japaneseName:"\u6b63\u66a6",romanizedName:"Sh\u014dryaku"},{startingYear:995,japaneseName:"\u9577\u5fb3",romanizedName:"Ch\u014dtoku"},{startingYear:999,japaneseName:"\u9577\u4fdd",romanizedName:"Ch\u014dh\u014d"},{startingYear:1004,japaneseName:"\u5bdb\u5f18",romanizedName:"Kank\u014d"},{startingYear:1012,japaneseName:"\u9577\u548c",romanizedName:"Ch\u014dwa"},{startingYear:1017,japaneseName:"\u5bdb\u4ec1",
-romanizedName:"Kannin"},{startingYear:1021,japaneseName:"\u6cbb\u5b89",romanizedName:"Jian"},{startingYear:1024,japaneseName:"\u4e07\u5bff",romanizedName:"Manju"},{startingYear:1028,japaneseName:"\u9577\u5143",romanizedName:"Ch\u014dgen"},{startingYear:1037,japaneseName:"\u9577\u66a6",romanizedName:"Ch\u014dryaku"},{startingYear:1040,japaneseName:"\u9577\u4e45",romanizedName:"Ch\u014dky\u016b"},{startingYear:1044,japaneseName:"\u5bdb\u5fb3",romanizedName:"Kantoku"},{startingYear:1046,japaneseName:"\u6c38\u627f",
-romanizedName:"Eish\u014d"},{startingYear:1053,japaneseName:"\u5929\u559c",romanizedName:"Tengi"},{startingYear:1058,japaneseName:"\u5eb7\u5e73",romanizedName:"K\u014dhei"},{startingYear:1065,japaneseName:"\u6cbb\u66a6",romanizedName:"Jiryaku"},{startingYear:1069,japaneseName:"\u5ef6\u4e45",romanizedName:"Enky\u016b"},{startingYear:1074,japaneseName:"\u627f\u4fdd",romanizedName:"J\u014dh\u014d"},{startingYear:1077,japaneseName:"\u627f\u66a6",romanizedName:"J\u014dryaku"},{startingYear:1081,japaneseName:"\u6c38\u4fdd",
-romanizedName:"Eih\u014d"},{startingYear:1084,japaneseName:"\u5fdc\u5fb3",romanizedName:"\u014ctoku"},{startingYear:1087,japaneseName:"\u5bdb\u6cbb",romanizedName:"Kanji"},{startingYear:1094,japaneseName:"\u5609\u4fdd",romanizedName:"Kah\u014d"},{startingYear:1096,japaneseName:"\u6c38\u9577",romanizedName:"Eich\u014d"},{startingYear:1097,japaneseName:"\u627f\u5fb3",romanizedName:"J\u014dtoku"},{startingYear:1099,japaneseName:"\u5eb7\u548c",romanizedName:"K\u014dwa"},{startingYear:1104,japaneseName:"\u9577\u6cbb",
-romanizedName:"Ch\u014dji"},{startingYear:1106,japaneseName:"\u5609\u627f",romanizedName:"Kaj\u014d"},{startingYear:1108,japaneseName:"\u5929\u4ec1",romanizedName:"Tennin"},{startingYear:1110,japaneseName:"\u5929\u6c38",romanizedName:"Ten'ei"},{startingYear:1113,japaneseName:"\u6c38\u4e45",romanizedName:"Eiky\u016b"},{startingYear:1118,japaneseName:"\u5143\u6c38",romanizedName:"Gen'ei"},{startingYear:1120,japaneseName:"\u4fdd\u5b89",romanizedName:"H\u014dan"},{startingYear:1124,japaneseName:"\u5929\u6cbb",
-romanizedName:"Tenji"},{startingYear:1126,japaneseName:"\u5927\u6cbb",romanizedName:"Daiji"},{startingYear:1131,japaneseName:"\u5929\u627f",romanizedName:"Tensh\u014d"},{startingYear:1132,japaneseName:"\u9577\u627f",romanizedName:"Ch\u014dsh\u014d"},{startingYear:1135,japaneseName:"\u4fdd\u5ef6",romanizedName:"H\u014den"},{startingYear:1141,japaneseName:"\u6c38\u6cbb",romanizedName:"Eiji"},{startingYear:1142,japaneseName:"\u5eb7\u6cbb",romanizedName:"K\u014dji"},{startingYear:1144,japaneseName:"\u5929\u990a",
-romanizedName:"Ten'y\u014d"},{startingYear:1145,japaneseName:"\u4e45\u5b89",romanizedName:"Ky\u016ban"},{startingYear:1151,japaneseName:"\u4ec1\u5e73",romanizedName:"Ninpei"},{startingYear:1154,japaneseName:"\u4e45\u5bff",romanizedName:"Ky\u016bju"},{startingYear:1156,japaneseName:"\u4fdd\u5143",romanizedName:"H\u014dgen"},{startingYear:1159,japaneseName:"\u5e73\u6cbb",romanizedName:"Heiji"},{startingYear:1160,japaneseName:"\u6c38\u66a6",romanizedName:"Eiryaku"},{startingYear:1161,japaneseName:"\u5fdc\u4fdd",
-romanizedName:"\u014ch\u014d"},{startingYear:1163,japaneseName:"\u9577\u5bdb",romanizedName:"Ch\u014dkan"},{startingYear:1165,japaneseName:"\u6c38\u4e07",romanizedName:"Eiman"},{startingYear:1166,japaneseName:"\u4ec1\u5b89",romanizedName:"Ninnan"},{startingYear:1169,japaneseName:"\u5609\u5fdc",romanizedName:"Ka\u014d"},{startingYear:1171,japaneseName:"\u627f\u5b89",romanizedName:"J\u014dan"},{startingYear:1175,japaneseName:"\u5b89\u5143",romanizedName:"Angen"},{startingYear:1177,japaneseName:"\u6cbb\u627f",
-romanizedName:"Jish\u014d"},{startingYear:1181,japaneseName:"\u990a\u548c",romanizedName:"Y\u014dwa"},{startingYear:1182,japaneseName:"\u5bff\u6c38",romanizedName:"Juei"},{startingYear:1184,japaneseName:"\u5143\u66a6",romanizedName:"Genryaku"},{startingYear:1185,japaneseName:"\u6587\u6cbb",romanizedName:"Bunji"},{startingYear:1190,japaneseName:"\u5efa\u4e45",romanizedName:"Kenky\u016b"},{startingYear:1199,japaneseName:"\u6b63\u6cbb",romanizedName:"Sh\u014dji"},{startingYear:1201,japaneseName:"\u5efa\u4ec1",
-romanizedName:"Kennin"},{startingYear:1204,japaneseName:"\u5143\u4e45",romanizedName:"Genky\u016b"},{startingYear:1206,japaneseName:"\u5efa\u6c38",romanizedName:"Ken'ei"},{startingYear:1207,japaneseName:"\u627f\u5143",romanizedName:"J\u014dgen"},{startingYear:1211,japaneseName:"\u5efa\u66a6",romanizedName:"Kenryaku"},{startingYear:1213,japaneseName:"\u5efa\u4fdd",romanizedName:"Kenp\u014d"},{startingYear:1219,japaneseName:"\u627f\u4e45",romanizedName:"J\u014dky\u016b"},{startingYear:1222,japaneseName:"\u8c9e\u5fdc",
-romanizedName:"J\u014d\u014d"},{startingYear:1224,japaneseName:"\u5143\u4ec1",romanizedName:"Gennin"},{startingYear:1225,japaneseName:"\u5609\u7984",romanizedName:"Karoku"},{startingYear:1227,japaneseName:"\u5b89\u8c9e",romanizedName:"Antei"},{startingYear:1229,japaneseName:"\u5bdb\u559c",romanizedName:"Kanki"},{startingYear:1232,japaneseName:"\u8c9e\u6c38",romanizedName:"J\u014dei"},{startingYear:1233,japaneseName:"\u5929\u798f",romanizedName:"Tenpuku"},{startingYear:1234,japaneseName:"\u6587\u66a6",
-romanizedName:"Bunryaku"},{startingYear:1235,japaneseName:"\u5609\u798e",romanizedName:"Katei"},{startingYear:1238,japaneseName:"\u66a6\u4ec1",romanizedName:"Ryakunin"},{startingYear:1239,japaneseName:"\u5ef6\u5fdc",romanizedName:"En'\u014d"},{startingYear:1240,japaneseName:"\u4ec1\u6cbb",romanizedName:"Ninji"},{startingYear:1243,japaneseName:"\u5bdb\u5143",romanizedName:"Kangen"},{startingYear:1247,japaneseName:"\u5b9d\u6cbb",romanizedName:"H\u014dji"},{startingYear:1249,japaneseName:"\u5efa\u9577",
-romanizedName:"Kench\u014d"},{startingYear:1256,japaneseName:"\u5eb7\u5143",romanizedName:"K\u014dgen"},{startingYear:1257,japaneseName:"\u6b63\u5609",romanizedName:"Sh\u014dka"},{startingYear:1259,japaneseName:"\u6b63\u5143",romanizedName:"Sh\u014dgen"},{startingYear:1260,japaneseName:"\u6587\u5fdc",romanizedName:"Bun'\u014d"},{startingYear:1261,japaneseName:"\u5f18\u9577",romanizedName:"K\u014dcho"},{startingYear:1264,japaneseName:"\u6587\u6c38",romanizedName:"Bun'ei"},{startingYear:1275,japaneseName:"\u5efa\u6cbb",
-romanizedName:"Kenji"},{startingYear:1278,japaneseName:"\u5f18\u5b89",romanizedName:"K\u014dan"},{startingYear:1288,japaneseName:"\u6b63\u5fdc",romanizedName:"Sh\u014d\u014d"},{startingYear:1293,japaneseName:"\u6c38\u4ec1",romanizedName:"Einin"},{startingYear:1299,japaneseName:"\u6b63\u5b89",romanizedName:"Sh\u014dan"},{startingYear:1302,japaneseName:"\u4e7e\u5143",romanizedName:"Kengen"},{startingYear:1303,japaneseName:"\u5609\u5143",romanizedName:"Kagen"},{startingYear:1306,japaneseName:"\u5fb3\u6cbb",
-romanizedName:"Tokuji"},{startingYear:1308,japaneseName:"\u5ef6\u6176",romanizedName:"Enkei"},{startingYear:1311,japaneseName:"\u5fdc\u9577",romanizedName:"\u014cch\u014d"},{startingYear:1312,japaneseName:"\u6b63\u548c",romanizedName:"Sh\u014dwa"},{startingYear:1317,japaneseName:"\u6587\u4fdd",romanizedName:"Bunp\u014d"},{startingYear:1319,japaneseName:"\u5143\u5fdc",romanizedName:"Gen'\u014d"},{startingYear:1321,japaneseName:"\u5143\u4ea8",romanizedName:"Genky\u014d"},{startingYear:1324,japaneseName:"\u6b63\u4e2d",
-romanizedName:"Sh\u014dch\u016b"},{startingYear:1326,japaneseName:"\u5609\u66a6",romanizedName:"Karyaku"},{startingYear:1329,japaneseName:"\u5143\u5fb3",romanizedName:"Gentoku"},{startingYear:1331,japaneseName:"\u5143\u5f18",romanizedName:"Genk\u014d"},{startingYear:1334,japaneseName:"\u5efa\u6b66",romanizedName:"Kenmu"},{startingYear:1336,japaneseName:"\u5ef6\u5143",romanizedName:"Engen"},{startingYear:1340,japaneseName:"\u8208\u56fd",romanizedName:"K\u014dkoku"},{startingYear:1346,japaneseName:"\u6b63\u5e73",
-romanizedName:"Sh\u014dhei"},{startingYear:1370,japaneseName:"\u5efa\u5fb3",romanizedName:"Kentoku"},{startingYear:1372,japaneseName:"\u6587\u4e2d",romanizedName:"Bunch\u016b"},{startingYear:1375,japaneseName:"\u5929\u6388",romanizedName:"Tenju"},{startingYear:1381,japaneseName:"\u5f18\u548c",romanizedName:"K\u014dwa"},{startingYear:1384,japaneseName:"\u5143\u4e2d",romanizedName:"Gench\u016b"},{startingYear:1332,japaneseName:"\u6b63\u6176",romanizedName:"Sh\u014dkei"},{startingYear:1338,japaneseName:"\u66a6\u5fdc",
-romanizedName:"Ryaku\u014d"},{startingYear:1342,japaneseName:"\u5eb7\u6c38",romanizedName:"K\u014dei"},{startingYear:1345,japaneseName:"\u8c9e\u548c",romanizedName:"J\u014dwa"},{startingYear:1350,japaneseName:"\u89b3\u5fdc",romanizedName:"Kan'\u014d"},{startingYear:1352,japaneseName:"\u6587\u548c",romanizedName:"Bunna"},{startingYear:1356,japaneseName:"\u5ef6\u6587",romanizedName:"Enbun"},{startingYear:1361,japaneseName:"\u5eb7\u5b89",romanizedName:"K\u014dan"},{startingYear:1362,japaneseName:"\u8c9e\u6cbb",
-romanizedName:"J\u014dji"},{startingYear:1368,japaneseName:"\u5fdc\u5b89",romanizedName:"\u014can"},{startingYear:1375,japaneseName:"\u6c38\u548c",romanizedName:"Eiwa"},{startingYear:1379,japaneseName:"\u5eb7\u66a6",romanizedName:"K\u014dryaku"},{startingYear:1381,japaneseName:"\u6c38\u5fb3",romanizedName:"Eitoku"},{startingYear:1384,japaneseName:"\u81f3\u5fb3",romanizedName:"Shitoku"},{startingYear:1387,japaneseName:"\u5609\u6176",romanizedName:"Kakei"},{startingYear:1389,japaneseName:"\u5eb7\u5fdc",
-romanizedName:"K\u014d\u014d"},{startingYear:1390,japaneseName:"\u660e\u5fb3",romanizedName:"Meitoku"},{startingYear:1394,japaneseName:"\u5fdc\u6c38",romanizedName:"\u014cei"},{startingYear:1428,japaneseName:"\u6b63\u9577",romanizedName:"Sh\u014dch\u014d"},{startingYear:1429,japaneseName:"\u6c38\u4eab",romanizedName:"Eiky\u014d"},{startingYear:1441,japaneseName:"\u5609\u5409",romanizedName:"Kakitsu"},{startingYear:1444,japaneseName:"\u6587\u5b89",romanizedName:"Bunnan"},{startingYear:1449,japaneseName:"\u5b9d\u5fb3",
-romanizedName:"H\u014dtoku"},{startingYear:1452,japaneseName:"\u4eab\u5fb3",romanizedName:"Ky\u014dtoku"},{startingYear:1455,japaneseName:"\u5eb7\u6b63",romanizedName:"K\u014dsh\u014d"},{startingYear:1457,japaneseName:"\u9577\u7984",romanizedName:"Ch\u014droku"},{startingYear:1460,japaneseName:"\u5bdb\u6b63",romanizedName:"Kansh\u014d"},{startingYear:1466,japaneseName:"\u6587\u6b63",romanizedName:"Bunsh\u014d"},{startingYear:1467,japaneseName:"\u5fdc\u4ec1",romanizedName:"\u014cnin"},{startingYear:1469,
-japaneseName:"\u6587\u660e",romanizedName:"Bunmei"},{startingYear:1487,japaneseName:"\u9577\u4eab",romanizedName:"Ch\u014dky\u014d"},{startingYear:1489,japaneseName:"\u5ef6\u5fb3",romanizedName:"Entoku"},{startingYear:1492,japaneseName:"\u660e\u5fdc",romanizedName:"Mei\u014d"},{startingYear:1501,japaneseName:"\u6587\u4e80",romanizedName:"Bunki"},{startingYear:1504,japaneseName:"\u6c38\u6b63",romanizedName:"Eish\u014d"},{startingYear:1521,japaneseName:"\u5927\u6c38",romanizedName:"Daiei"},{startingYear:1528,
-japaneseName:"\u4eab\u7984",romanizedName:"Ky\u014droku"},{startingYear:1532,japaneseName:"\u5929\u6587",romanizedName:"Tenbun"},{startingYear:1555,japaneseName:"\u5f18\u6cbb",romanizedName:"K\u014dji"},{startingYear:1558,japaneseName:"\u6c38\u7984",romanizedName:"Eiroku"},{startingYear:1570,japaneseName:"\u5143\u4e80",romanizedName:"Genki"},{startingYear:1573,japaneseName:"\u5929\u6b63",romanizedName:"Tensh\u014d"},{startingYear:1592,japaneseName:"\u6587\u7984",romanizedName:"Bunroku"},{startingYear:1596,
-japaneseName:"\u6176\u9577",romanizedName:"Keich\u014d"},{startingYear:1615,japaneseName:"\u5143\u548c",romanizedName:"Genna"},{startingYear:1624,japaneseName:"\u5bdb\u6c38",romanizedName:"Kan'ei"},{startingYear:1644,japaneseName:"\u6b63\u4fdd",romanizedName:"Sh\u014dh\u014d"},{startingYear:1648,japaneseName:"\u6176\u5b89",romanizedName:"Keian"},{startingYear:1652,japaneseName:"\u627f\u5fdc",romanizedName:"J\u014d\u014d"},{startingYear:1655,japaneseName:"\u660e\u66a6",romanizedName:"Meireki"},{startingYear:1658,
-japaneseName:"\u4e07\u6cbb",romanizedName:"Manji"},{startingYear:1661,japaneseName:"\u5bdb\u6587",romanizedName:"Kanbun"},{startingYear:1673,japaneseName:"\u5ef6\u5b9d",romanizedName:"Enp\u014d"},{startingYear:1681,japaneseName:"\u5929\u548c",romanizedName:"Tenna"},{startingYear:1684,japaneseName:"\u8c9e\u4eab",romanizedName:"J\u014dky\u014d"},{startingYear:1688,japaneseName:"\u5143\u7984",romanizedName:"Genroku"},{startingYear:1704,japaneseName:"\u5b9d\u6c38",romanizedName:"H\u014dei"},{startingYear:1711,
-japaneseName:"\u6b63\u5fb3",romanizedName:"Sh\u014dtoku"},{startingYear:1716,japaneseName:"\u4eab\u4fdd",romanizedName:"Ky\u014dh\u014d"},{startingYear:1736,japaneseName:"\u5143\u6587",romanizedName:"Genbun"},{startingYear:1741,japaneseName:"\u5bdb\u4fdd",romanizedName:"Kanp\u014d"},{startingYear:1744,japaneseName:"\u5ef6\u4eab",romanizedName:"Enky\u014d"},{startingYear:1748,japaneseName:"\u5bdb\u5ef6",romanizedName:"Kan'en"},{startingYear:1751,japaneseName:"\u5b9d\u66a6",romanizedName:"H\u014dreki"},
-{startingYear:1764,japaneseName:"\u660e\u548c",romanizedName:"Meiwa"},{startingYear:1772,japaneseName:"\u5b89\u6c38",romanizedName:"An'ei"},{startingYear:1781,japaneseName:"\u5929\u660e",romanizedName:"Tenmei"},{startingYear:1789,japaneseName:"\u5bdb\u653f",romanizedName:"Kansei"},{startingYear:1801,japaneseName:"\u4eab\u548c",romanizedName:"Ky\u014dwa"},{startingYear:1804,japaneseName:"\u6587\u5316",romanizedName:"Bunka"},{startingYear:1818,japaneseName:"\u6587\u653f",romanizedName:"Bunsei"},{startingYear:1830,
-japaneseName:"\u5929\u4fdd",romanizedName:"Tenp\u014d"},{startingYear:1844,japaneseName:"\u5f18\u5316",romanizedName:"K\u014dka"},{startingYear:1848,japaneseName:"\u5609\u6c38",romanizedName:"Kaei"},{startingYear:1854,japaneseName:"\u5b89\u653f",romanizedName:"Ansei"},{startingYear:1860,japaneseName:"\u4e07\u5ef6",romanizedName:"Man'en"},{startingYear:1861,japaneseName:"\u6587\u4e45",romanizedName:"Bunky\u016b"},{startingYear:1864,japaneseName:"\u5143\u6cbb",romanizedName:"Genji"},{startingYear:1865,
-japaneseName:"\u6176\u5fdc",romanizedName:"Kei\u014d"},{startingYear:1868,japaneseName:"\u660e\u6cbb",romanizedName:"Meiji"},{startingYear:1912,japaneseName:"\u5927\u6b63",romanizedName:"Taish\u014d"},{startingYear:1926,japaneseName:"\u662d\u548c",romanizedName:"Sh\u014dwa"},{startingYear:1989,japaneseName:"\u5e73\u6210",romanizedName:"Heisei"}]);
+﻿/*==================================================
+ *  Japanese Era Date Labeller
+ *==================================================
+ */
+
+Timeline.JapaneseEraDateLabeller = function(locale, timeZone, useRomanizedName) {
+    var o = new Timeline.GregorianDateLabeller(locale, timeZone);
+    
+    o._useRomanizedName = (useRomanizedName);
+    o._oldLabelInterval = o.labelInterval;
+    o.labelInterval = Timeline.JapaneseEraDateLabeller._labelInterval;
+    
+    return o;
+};
+
+Timeline.JapaneseEraDateLabeller._labelInterval = function(date, intervalUnit) {
+    var text;
+    var emphasized = false;
+    
+    var date2 = Timeline.DateTime.removeTimeZoneOffset(date, this._timeZone);
+    
+    switch(intervalUnit) {
+    case Timeline.DateTime.YEAR:
+    case Timeline.DateTime.DECADE:
+    case Timeline.DateTime.CENTURY:
+    case Timeline.DateTime.MILLENNIUM:
+        var y = date2.getUTCFullYear();
+        if (y >= Timeline.JapaneseEraDateLabeller._eras.elementAt(0).startingYear) {
+            var eraIndex = Timeline.JapaneseEraDateLabeller._eras.find(function(era) {
+                    return era.startingYear - y;
+                }
+            );
+            if (eraIndex < Timeline.JapaneseEraDateLabeller._eras.length()) {
+                var era = Timeline.JapaneseEraDateLabeller._eras.elementAt(eraIndex);
+                if (y < era.startingYear) {
+                    era = Timeline.JapaneseEraDateLabeller._eras.elementAt(eraIndex - 1);
+                }
+            } else {
+                var era = Timeline.JapaneseEraDateLabeller._eras.elementAt(eraIndex - 1);
+            }
+            
+            text = (this._useRomanizedName ? era.romanizedName : era.japaneseName) + " " + (y - era.startingYear + 1);
+            emphasized = intervalUnit == Timeline.DateTime.YEAR && y == era.startingYear;
+            break;
+        } // else, fall through
+    default:
+        return this._oldLabelInterval(date, intervalUnit);
+    }
+    
+    return { text: text, emphasized: emphasized };
+};
+
+/*==================================================
+ *  Japanese Era Ether Painter
+ *==================================================
+ */
+ 
+Timeline.JapaneseEraEtherPainter = function(params, band, timeline) {
+    this._params = params;
+    this._theme = params.theme;
+};
+
+Timeline.JapaneseEraEtherPainter.prototype.initialize = function(band, timeline) {
+    this._band = band;
+    this._timeline = timeline;
+    
+    this._backgroundLayer = band.createLayerDiv(0);
+    this._backgroundLayer.setAttribute("name", "ether-background"); // for debugging
+    this._backgroundLayer.style.background = this._theme.ether.backgroundColors[band.getIndex()];
+    
+    this._markerLayer = null;
+    this._lineLayer = null;
+    
+    var align = ("align" in this._params) ? this._params.align : 
+        this._theme.ether.interval.marker[timeline.isHorizontal() ? "hAlign" : "vAlign"];
+    var showLine = ("showLine" in this._params) ? this._params.showLine : 
+        this._theme.ether.interval.line.show;
+        
+    this._intervalMarkerLayout = new Timeline.EtherIntervalMarkerLayout(
+        this._timeline, this._band, this._theme, align, showLine);
+        
+    this._highlight = new Timeline.EtherHighlight(
+        this._timeline, this._band, this._theme, this._backgroundLayer);
+}
+
+Timeline.JapaneseEraEtherPainter.prototype.setHighlight = function(startDate, endDate) {
+    this._highlight.position(startDate, endDate);
+}
+
+Timeline.JapaneseEraEtherPainter.prototype.paint = function() {
+    if (this._markerLayer) {
+        this._band.removeLayerDiv(this._markerLayer);
+    }
+    this._markerLayer = this._band.createLayerDiv(100);
+    this._markerLayer.setAttribute("name", "ether-markers"); // for debugging
+    this._markerLayer.style.display = "none";
+    
+    if (this._lineLayer) {
+        this._band.removeLayerDiv(this._lineLayer);
+    }
+    this._lineLayer = this._band.createLayerDiv(1);
+    this._lineLayer.setAttribute("name", "ether-lines"); // for debugging
+    this._lineLayer.style.display = "none";
+    
+    var minYear = this._band.getMinDate().getUTCFullYear();
+    var maxYear = this._band.getMaxDate().getUTCFullYear();
+    var eraIndex = Timeline.JapaneseEraDateLabeller._eras.find(function(era) {
+            return era.startingYear - minYear;
+        }
+    );
+    
+    var l = Timeline.JapaneseEraDateLabeller._eras.length();
+    for (var i = eraIndex; i < l; i++) {
+        var era = Timeline.JapaneseEraDateLabeller._eras.elementAt(i);
+        if (era.startingYear > maxYear) {
+            break;
+        }
+        
+        var d = new Date(0);
+        d.setUTCFullYear(era.startingYear);
+        
+        var labeller = {
+            labelInterval: function(date, intervalUnit) {
+                return {
+                    text: era.japaneseName,
+                    emphasized: true
+                };
+            }
+        };
+        
+        this._intervalMarkerLayout.createIntervalMarker(
+            d, labeller, Timeline.DateTime.YEAR, this._markerLayer, this._lineLayer);
+    }
+    this._markerLayer.style.display = "block";
+    this._lineLayer.style.display = "block";
+};
+
+Timeline.JapaneseEraEtherPainter.prototype.softPaint = function() {
+};
+
+
+Timeline.JapaneseEraDateLabeller._eras = new Timeline.SortedArray(
+    function(e1, e2) {
+        return e1.startingYear - e2.startingYear;
+    },
+    [
+        { startingYear: 645, japaneseName: '大化', romanizedName: "Taika" },
+        { startingYear: 650, japaneseName: '白雉', romanizedName: "Hakuchi" },
+        { startingYear: 686, japaneseName: '朱鳥', romanizedName: "Shuchō" },
+        { startingYear: 701, japaneseName: '大宝', romanizedName: "Taihō" },
+        { startingYear: 704, japaneseName: '慶雲', romanizedName: "Keiun" },
+        { startingYear: 708, japaneseName: '和銅', romanizedName: "Wadō" },
+        { startingYear: 715, japaneseName: '霊亀', romanizedName: "Reiki" },
+        { startingYear: 717, japaneseName: '養老', romanizedName: "Yōrō" },
+        { startingYear: 724, japaneseName: '神亀', romanizedName: "Jinki" },
+        { startingYear: 729, japaneseName: '天平', romanizedName: "Tenpyō" },
+        { startingYear: 749, japaneseName: '天平感宝', romanizedName: "Tenpyō-kanpō" },
+        { startingYear: 749, japaneseName: '天平勝宝', romanizedName: "Tenpyō-shōhō" },
+        { startingYear: 757, japaneseName: '天平宝字', romanizedName: "Tenpyō-hōji" },
+        { startingYear: 765, japaneseName: '天平神護', romanizedName: "Tenpyō-jingo" },
+        { startingYear: 767, japaneseName: '神護景雲', romanizedName: "Jingo-keiun" },
+        { startingYear: 770, japaneseName: '宝亀', romanizedName: "Hōki" },
+        { startingYear: 781, japaneseName: '天応', romanizedName: "Ten'ō" },
+        { startingYear: 782, japaneseName: '延暦', romanizedName: "Enryaku" },
+        { startingYear: 806, japaneseName: '大同', romanizedName: "Daidō" },
+        { startingYear: 810, japaneseName: '弘仁', romanizedName: "Kōnin" },
+        { startingYear: 824, japaneseName: '天長', romanizedName: "Tenchō" },
+        { startingYear: 834, japaneseName: '承和', romanizedName: "Jōwa" },
+        { startingYear: 848, japaneseName: '嘉祥', romanizedName: "Kajō" },
+        { startingYear: 851, japaneseName: '仁寿', romanizedName: "Ninju" },
+        { startingYear: 854, japaneseName: '斉衡', romanizedName: "Saikō" },
+        { startingYear: 857, japaneseName: '天安', romanizedName: "Tennan" },
+        { startingYear: 859, japaneseName: '貞観', romanizedName: "Jōgan" },
+        { startingYear: 877, japaneseName: '元慶', romanizedName: "Gangyō" },
+        { startingYear: 885, japaneseName: '仁和', romanizedName: "Ninna" },
+        { startingYear: 889, japaneseName: '寛平', romanizedName: "Kanpyō" },
+        { startingYear: 898, japaneseName: '昌泰', romanizedName: "Shōtai" },
+        { startingYear: 901, japaneseName: '延喜', romanizedName: "Engi" },
+        { startingYear: 923, japaneseName: '延長', romanizedName: "Enchō" },
+        { startingYear: 931, japaneseName: '承平', romanizedName: "Jōhei" },
+        { startingYear: 938, japaneseName: '天慶', romanizedName: "Tengyō" },
+        { startingYear: 947, japaneseName: '天暦', romanizedName: "Tenryaku" },
+        { startingYear: 957, japaneseName: '天徳', romanizedName: "Tentoku" },
+        { startingYear: 961, japaneseName: '応和', romanizedName: "Ōwa" },
+        { startingYear: 964, japaneseName: '康保', romanizedName: "Kōhō" },
+        { startingYear: 968, japaneseName: '安和', romanizedName: "Anna" },
+        { startingYear: 970, japaneseName: '天禄', romanizedName: "Tenroku" },
+        { startingYear: 973, japaneseName: '天延', romanizedName: "Ten'en" },
+        { startingYear: 976, japaneseName: '貞元', romanizedName: "Jōgen" },
+        { startingYear: 978, japaneseName: '天元', romanizedName: "Tengen" },
+        { startingYear: 983, japaneseName: '永観', romanizedName: "Eikan" },
+        { startingYear: 985, japaneseName: '寛和', romanizedName: "Kanna" },
+        { startingYear: 987, japaneseName: '永延', romanizedName: "Eien" },
+        { startingYear: 988, japaneseName: '永祚', romanizedName: "Eiso" },
+        { startingYear: 990, japaneseName: '正暦', romanizedName: "Shōryaku" },
+        { startingYear: 995, japaneseName: '長徳', romanizedName: "Chōtoku" },
+        { startingYear: 999, japaneseName: '長保', romanizedName: "Chōhō" },
+        { startingYear: 1004, japaneseName: '寛弘', romanizedName: "Kankō" },
+        { startingYear: 1012, japaneseName: '長和', romanizedName: "Chōwa" },
+        { startingYear: 1017, japaneseName: '寛仁', romanizedName: "Kannin" },
+        { startingYear: 1021, japaneseName: '治安', romanizedName: "Jian" },
+        { startingYear: 1024, japaneseName: '万寿', romanizedName: "Manju" },
+        { startingYear: 1028, japaneseName: '長元', romanizedName: "Chōgen" },
+        { startingYear: 1037, japaneseName: '長暦', romanizedName: "Chōryaku" },
+        { startingYear: 1040, japaneseName: '長久', romanizedName: "Chōkyū" },
+        { startingYear: 1044, japaneseName: '寛徳', romanizedName: "Kantoku" },
+        { startingYear: 1046, japaneseName: '永承', romanizedName: "Eishō" },
+        { startingYear: 1053, japaneseName: '天喜', romanizedName: "Tengi" },
+        { startingYear: 1058, japaneseName: '康平', romanizedName: "Kōhei" },
+        { startingYear: 1065, japaneseName: '治暦', romanizedName: "Jiryaku" },
+        { startingYear: 1069, japaneseName: '延久', romanizedName: "Enkyū" },
+        { startingYear: 1074, japaneseName: '承保', romanizedName: "Jōhō" },
+        { startingYear: 1077, japaneseName: '承暦', romanizedName: "Jōryaku" },
+        { startingYear: 1081, japaneseName: '永保', romanizedName: "Eihō" },
+        { startingYear: 1084, japaneseName: '応徳', romanizedName: "Ōtoku" },
+        { startingYear: 1087, japaneseName: '寛治', romanizedName: "Kanji" },
+        { startingYear: 1094, japaneseName: '嘉保', romanizedName: "Kahō" },
+        { startingYear: 1096, japaneseName: '永長', romanizedName: "Eichō" },
+        { startingYear: 1097, japaneseName: '承徳', romanizedName: "Jōtoku" },
+        { startingYear: 1099, japaneseName: '康和', romanizedName: "Kōwa" },
+        { startingYear: 1104, japaneseName: '長治', romanizedName: "Chōji" },
+        { startingYear: 1106, japaneseName: '嘉承', romanizedName: "Kajō" },
+        { startingYear: 1108, japaneseName: '天仁', romanizedName: "Tennin" },
+        { startingYear: 1110, japaneseName: '天永', romanizedName: "Ten'ei" },
+        { startingYear: 1113, japaneseName: '永久', romanizedName: "Eikyū" },
+        { startingYear: 1118, japaneseName: '元永', romanizedName: "Gen'ei" },
+        { startingYear: 1120, japaneseName: '保安', romanizedName: "Hōan" },
+        { startingYear: 1124, japaneseName: '天治', romanizedName: "Tenji" },
+        { startingYear: 1126, japaneseName: '大治', romanizedName: "Daiji" },
+        { startingYear: 1131, japaneseName: '天承', romanizedName: "Tenshō" },
+        { startingYear: 1132, japaneseName: '長承', romanizedName: "Chōshō" },
+        { startingYear: 1135, japaneseName: '保延', romanizedName: "Hōen" },
+        { startingYear: 1141, japaneseName: '永治', romanizedName: "Eiji" },
+        { startingYear: 1142, japaneseName: '康治', romanizedName: "Kōji" },
+        { startingYear: 1144, japaneseName: '天養', romanizedName: "Ten'yō" },
+        { startingYear: 1145, japaneseName: '久安', romanizedName: "Kyūan" },
+        { startingYear: 1151, japaneseName: '仁平', romanizedName: "Ninpei" },
+        { startingYear: 1154, japaneseName: '久寿', romanizedName: "Kyūju" },
+        { startingYear: 1156, japaneseName: '保元', romanizedName: "Hōgen" },
+        { startingYear: 1159, japaneseName: '平治', romanizedName: "Heiji" },
+        { startingYear: 1160, japaneseName: '永暦', romanizedName: "Eiryaku" },
+        { startingYear: 1161, japaneseName: '応保', romanizedName: "Ōhō" },
+        { startingYear: 1163, japaneseName: '長寛', romanizedName: "Chōkan" },
+        { startingYear: 1165, japaneseName: '永万', romanizedName: "Eiman" },
+        { startingYear: 1166, japaneseName: '仁安', romanizedName: "Ninnan" },
+        { startingYear: 1169, japaneseName: '嘉応', romanizedName: "Kaō" },
+        { startingYear: 1171, japaneseName: '承安', romanizedName: "Jōan" },
+        { startingYear: 1175, japaneseName: '安元', romanizedName: "Angen" },
+        { startingYear: 1177, japaneseName: '治承', romanizedName: "Jishō" },
+        { startingYear: 1181, japaneseName: '養和', romanizedName: "Yōwa" },
+        { startingYear: 1182, japaneseName: '寿永', romanizedName: "Juei" },
+        { startingYear: 1184, japaneseName: '元暦', romanizedName: "Genryaku" },
+        { startingYear: 1185, japaneseName: '文治', romanizedName: "Bunji" },
+        { startingYear: 1190, japaneseName: '建久', romanizedName: "Kenkyū" },
+        { startingYear: 1199, japaneseName: '正治', romanizedName: "Shōji" },
+        { startingYear: 1201, japaneseName: '建仁', romanizedName: "Kennin" },
+        { startingYear: 1204, japaneseName: '元久', romanizedName: "Genkyū" },
+        { startingYear: 1206, japaneseName: '建永', romanizedName: "Ken'ei" },
+        { startingYear: 1207, japaneseName: '承元', romanizedName: "Jōgen" },
+        { startingYear: 1211, japaneseName: '建暦', romanizedName: "Kenryaku" },
+        { startingYear: 1213, japaneseName: '建保', romanizedName: "Kenpō" },
+        { startingYear: 1219, japaneseName: '承久', romanizedName: "Jōkyū" },
+        { startingYear: 1222, japaneseName: '貞応', romanizedName: "Jōō" },
+        { startingYear: 1224, japaneseName: '元仁', romanizedName: "Gennin" },
+        { startingYear: 1225, japaneseName: '嘉禄', romanizedName: "Karoku" },
+        { startingYear: 1227, japaneseName: '安貞', romanizedName: "Antei" },
+        { startingYear: 1229, japaneseName: '寛喜', romanizedName: "Kanki" },
+        { startingYear: 1232, japaneseName: '貞永', romanizedName: "Jōei" },
+        { startingYear: 1233, japaneseName: '天福', romanizedName: "Tenpuku" },
+        { startingYear: 1234, japaneseName: '文暦', romanizedName: "Bunryaku" },
+        { startingYear: 1235, japaneseName: '嘉禎', romanizedName: "Katei" },
+        { startingYear: 1238, japaneseName: '暦仁', romanizedName: "Ryakunin" },
+        { startingYear: 1239, japaneseName: '延応', romanizedName: "En'ō" },
+        { startingYear: 1240, japaneseName: '仁治', romanizedName: "Ninji" },
+        { startingYear: 1243, japaneseName: '寛元', romanizedName: "Kangen" },
+        { startingYear: 1247, japaneseName: '宝治', romanizedName: "Hōji" },
+        { startingYear: 1249, japaneseName: '建長', romanizedName: "Kenchō" },
+        { startingYear: 1256, japaneseName: '康元', romanizedName: "Kōgen" },
+        { startingYear: 1257, japaneseName: '正嘉', romanizedName: "Shōka" },
+        { startingYear: 1259, japaneseName: '正元', romanizedName: "Shōgen" },
+        { startingYear: 1260, japaneseName: '文応', romanizedName: "Bun'ō" },
+        { startingYear: 1261, japaneseName: '弘長', romanizedName: "Kōcho" },
+        { startingYear: 1264, japaneseName: '文永', romanizedName: "Bun'ei" },
+        { startingYear: 1275, japaneseName: '建治', romanizedName: "Kenji" },
+        { startingYear: 1278, japaneseName: '弘安', romanizedName: "Kōan" },
+        { startingYear: 1288, japaneseName: '正応', romanizedName: "Shōō" },
+        { startingYear: 1293, japaneseName: '永仁', romanizedName: "Einin" },
+        { startingYear: 1299, japaneseName: '正安', romanizedName: "Shōan" },
+        { startingYear: 1302, japaneseName: '乾元', romanizedName: "Kengen" },
+        { startingYear: 1303, japaneseName: '嘉元', romanizedName: "Kagen" },
+        { startingYear: 1306, japaneseName: '徳治', romanizedName: "Tokuji" },
+        { startingYear: 1308, japaneseName: '延慶', romanizedName: "Enkei" },
+        { startingYear: 1311, japaneseName: '応長', romanizedName: "Ōchō" },
+        { startingYear: 1312, japaneseName: '正和', romanizedName: "Shōwa" },
+        { startingYear: 1317, japaneseName: '文保', romanizedName: "Bunpō" },
+        { startingYear: 1319, japaneseName: '元応', romanizedName: "Gen'ō" },
+        { startingYear: 1321, japaneseName: '元亨', romanizedName: "Genkyō" },
+        { startingYear: 1324, japaneseName: '正中', romanizedName: "Shōchū" },
+        { startingYear: 1326, japaneseName: '嘉暦', romanizedName: "Karyaku" },
+        { startingYear: 1329, japaneseName: '元徳', romanizedName: "Gentoku" },
+        { startingYear: 1331, japaneseName: '元弘', romanizedName: "Genkō" },
+        { startingYear: 1334, japaneseName: '建武', romanizedName: "Kenmu" },
+        { startingYear: 1336, japaneseName: '延元', romanizedName: "Engen" },
+        { startingYear: 1340, japaneseName: '興国', romanizedName: "Kōkoku" },
+        { startingYear: 1346, japaneseName: '正平', romanizedName: "Shōhei" },
+        { startingYear: 1370, japaneseName: '建徳', romanizedName: "Kentoku" },
+        { startingYear: 1372, japaneseName: '文中', romanizedName: "Bunchū" },
+        { startingYear: 1375, japaneseName: '天授', romanizedName: "Tenju" },
+        { startingYear: 1381, japaneseName: '弘和', romanizedName: "Kōwa" },
+        { startingYear: 1384, japaneseName: '元中', romanizedName: "Genchū" },
+        { startingYear: 1332, japaneseName: '正慶', romanizedName: "Shōkei" },
+        { startingYear: 1338, japaneseName: '暦応', romanizedName: "Ryakuō" },
+        { startingYear: 1342, japaneseName: '康永', romanizedName: "Kōei" },
+        { startingYear: 1345, japaneseName: '貞和', romanizedName: "Jōwa" },
+        { startingYear: 1350, japaneseName: '観応', romanizedName: "Kan'ō" },
+        { startingYear: 1352, japaneseName: '文和', romanizedName: "Bunna" },
+        { startingYear: 1356, japaneseName: '延文', romanizedName: "Enbun" },
+        { startingYear: 1361, japaneseName: '康安', romanizedName: "Kōan" },
+        { startingYear: 1362, japaneseName: '貞治', romanizedName: "Jōji" },
+        { startingYear: 1368, japaneseName: '応安', romanizedName: "Ōan" },
+        { startingYear: 1375, japaneseName: '永和', romanizedName: "Eiwa" },
+        { startingYear: 1379, japaneseName: '康暦', romanizedName: "Kōryaku" },
+        { startingYear: 1381, japaneseName: '永徳', romanizedName: "Eitoku" },
+        { startingYear: 1384, japaneseName: '至徳', romanizedName: "Shitoku" },
+        { startingYear: 1387, japaneseName: '嘉慶', romanizedName: "Kakei" },
+        { startingYear: 1389, japaneseName: '康応', romanizedName: "Kōō" },
+        { startingYear: 1390, japaneseName: '明徳', romanizedName: "Meitoku" },
+        { startingYear: 1394, japaneseName: '応永', romanizedName: "Ōei" },
+        { startingYear: 1428, japaneseName: '正長', romanizedName: "Shōchō" },
+        { startingYear: 1429, japaneseName: '永享', romanizedName: "Eikyō" },
+        { startingYear: 1441, japaneseName: '嘉吉', romanizedName: "Kakitsu" },
+        { startingYear: 1444, japaneseName: '文安', romanizedName: "Bunnan" },
+        { startingYear: 1449, japaneseName: '宝徳', romanizedName: "Hōtoku" },
+        { startingYear: 1452, japaneseName: '享徳', romanizedName: "Kyōtoku" },
+        { startingYear: 1455, japaneseName: '康正', romanizedName: "Kōshō" },
+        { startingYear: 1457, japaneseName: '長禄', romanizedName: "Chōroku" },
+        { startingYear: 1460, japaneseName: '寛正', romanizedName: "Kanshō" },
+        { startingYear: 1466, japaneseName: '文正', romanizedName: "Bunshō" },
+        { startingYear: 1467, japaneseName: '応仁', romanizedName: "Ōnin" },
+        { startingYear: 1469, japaneseName: '文明', romanizedName: "Bunmei" },
+        { startingYear: 1487, japaneseName: '長享', romanizedName: "Chōkyō" },
+        { startingYear: 1489, japaneseName: '延徳', romanizedName: "Entoku" },
+        { startingYear: 1492, japaneseName: '明応', romanizedName: "Meiō" },
+        { startingYear: 1501, japaneseName: '文亀', romanizedName: "Bunki" },
+        { startingYear: 1504, japaneseName: '永正', romanizedName: "Eishō" },
+        { startingYear: 1521, japaneseName: '大永', romanizedName: "Daiei" },
+        { startingYear: 1528, japaneseName: '享禄', romanizedName: "Kyōroku" },
+        { startingYear: 1532, japaneseName: '天文', romanizedName: "Tenbun" },
+        { startingYear: 1555, japaneseName: '弘治', romanizedName: "Kōji" },
+        { startingYear: 1558, japaneseName: '永禄', romanizedName: "Eiroku" },
+        { startingYear: 1570, japaneseName: '元亀', romanizedName: "Genki" },
+        { startingYear: 1573, japaneseName: '天正', romanizedName: "Tenshō" },
+        { startingYear: 1592, japaneseName: '文禄', romanizedName: "Bunroku" },
+        { startingYear: 1596, japaneseName: '慶長', romanizedName: "Keichō" },
+        { startingYear: 1615, japaneseName: '元和', romanizedName: "Genna" },
+        { startingYear: 1624, japaneseName: '寛永', romanizedName: "Kan'ei" },
+        { startingYear: 1644, japaneseName: '正保', romanizedName: "Shōhō" },
+        { startingYear: 1648, japaneseName: '慶安', romanizedName: "Keian" },
+        { startingYear: 1652, japaneseName: '承応', romanizedName: "Jōō" },
+        { startingYear: 1655, japaneseName: '明暦', romanizedName: "Meireki" },
+        { startingYear: 1658, japaneseName: '万治', romanizedName: "Manji" },
+        { startingYear: 1661, japaneseName: '寛文', romanizedName: "Kanbun" },
+        { startingYear: 1673, japaneseName: '延宝', romanizedName: "Enpō" },
+        { startingYear: 1681, japaneseName: '天和', romanizedName: "Tenna" },
+        { startingYear: 1684, japaneseName: '貞享', romanizedName: "Jōkyō" },
+        { startingYear: 1688, japaneseName: '元禄', romanizedName: "Genroku" },
+        { startingYear: 1704, japaneseName: '宝永', romanizedName: "Hōei" },
+        { startingYear: 1711, japaneseName: '正徳', romanizedName: "Shōtoku" },
+        { startingYear: 1716, japaneseName: '享保', romanizedName: "Kyōhō" },
+        { startingYear: 1736, japaneseName: '元文', romanizedName: "Genbun" },
+        { startingYear: 1741, japaneseName: '寛保', romanizedName: "Kanpō" },
+        { startingYear: 1744, japaneseName: '延享', romanizedName: "Enkyō" },
+        { startingYear: 1748, japaneseName: '寛延', romanizedName: "Kan'en" },
+        { startingYear: 1751, japaneseName: '宝暦', romanizedName: "Hōreki" },
+        { startingYear: 1764, japaneseName: '明和', romanizedName: "Meiwa" },
+        { startingYear: 1772, japaneseName: '安永', romanizedName: "An'ei" },
+        { startingYear: 1781, japaneseName: '天明', romanizedName: "Tenmei" },
+        { startingYear: 1789, japaneseName: '寛政', romanizedName: "Kansei" },
+        { startingYear: 1801, japaneseName: '享和', romanizedName: "Kyōwa" },
+        { startingYear: 1804, japaneseName: '文化', romanizedName: "Bunka" },
+        { startingYear: 1818, japaneseName: '文政', romanizedName: "Bunsei" },
+        { startingYear: 1830, japaneseName: '天保', romanizedName: "Tenpō" },
+        { startingYear: 1844, japaneseName: '弘化', romanizedName: "Kōka" },
+        { startingYear: 1848, japaneseName: '嘉永', romanizedName: "Kaei" },
+        { startingYear: 1854, japaneseName: '安政', romanizedName: "Ansei" },
+        { startingYear: 1860, japaneseName: '万延', romanizedName: "Man'en" },
+        { startingYear: 1861, japaneseName: '文久', romanizedName: "Bunkyū" },
+        { startingYear: 1864, japaneseName: '元治', romanizedName: "Genji" },
+        { startingYear: 1865, japaneseName: '慶応', romanizedName: "Keiō" },
+        { startingYear: 1868, japaneseName: '明治', romanizedName: "Meiji" },
+        { startingYear: 1912, japaneseName: '大正', romanizedName: "Taishō" },
+        { startingYear: 1926, japaneseName: '昭和', romanizedName: "Shōwa" },
+        { startingYear: 1989, japaneseName: '平成', romanizedName: "Heisei" }
+    ]
+);

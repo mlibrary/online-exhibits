@@ -1,12 +1,344 @@
-SimileAjax.DOM={};SimileAjax.DOM.registerEventWithObject=function(a,b,c,d){SimileAjax.DOM.registerEvent(a,b,function(a,b,g){return c[d].call(c,a,b,g)})};SimileAjax.DOM.registerEvent=function(a,b,c){var d=function(b){if(b=b?b:event?event:null){var d=b.target?b.target:b.srcElement?b.srcElement:null;d&&(d=d.nodeType==1||d.nodeType==9?d:d.parentNode);return c(a,b,d)}return!0};SimileAjax.Platform.browser.isIE?a.attachEvent("on"+b,d):a.addEventListener(b,d,!1)};
-SimileAjax.DOM.getPageCoordinates=function(a){var b=0,c=0;if(a.nodeType!=1)a=a.parentNode;for(var d=a;d!=null;)b+=d.offsetLeft,c+=d.offsetTop,d=d.offsetParent;for(d=document.body;a!=null&&a!=d;)"scrollLeft"in a&&(b-=a.scrollLeft,c-=a.scrollTop),a=a.parentNode;return{left:b,top:c}};SimileAjax.DOM.getSize=function(a){var b=this.getStyle(a,"width"),a=this.getStyle(a,"height");b.indexOf("px")>-1&&(b=b.replace("px",""));a.indexOf("px")>-1&&(a=a.replace("px",""));return{w:b,h:a}};
-SimileAjax.DOM.getStyle=function(a,b){return a.currentStyle?a.currentStyle[b]:window.getComputedStyle?document.defaultView.getComputedStyle(a,null).getPropertyValue(b):""};
-SimileAjax.DOM.getEventRelativeCoordinates=function(a,b){if(SimileAjax.Platform.browser.isIE)if(a.type=="mousewheel"){var c=SimileAjax.DOM.getPageCoordinates(b);return{x:a.clientX-c.left,y:a.clientY-c.top}}else return{x:a.offsetX,y:a.offsetY};else return c=SimileAjax.DOM.getPageCoordinates(b),a.type=="DOMMouseScroll"&&SimileAjax.Platform.browser.isFirefox&&SimileAjax.Platform.browser.majorVersion==2?{x:a.screenX-c.left,y:a.screenY-c.top}:{x:a.pageX-c.left,y:a.pageY-c.top}};
-SimileAjax.DOM.getEventPageCoordinates=function(a){return SimileAjax.Platform.browser.isIE?{x:a.clientX+document.body.scrollLeft,y:a.clientY+document.body.scrollTop}:{x:a.pageX,y:a.pageY}};SimileAjax.DOM.hittest=function(a,b,c){return SimileAjax.DOM._hittest(document.body,a,b,c)};
-SimileAjax.DOM._hittest=function(a,b,c,d){var e=a.childNodes,f=0;a:for(;f<e.length;f++){for(var g=e[f],h=0;h<d.length;h++)if(g==d[h])continue a;if(g.offsetWidth==0&&g.offsetHeight==0){if(h=SimileAjax.DOM._hittest(g,b,c,d),h!=g)return h}else{for(var j=h=0,i=g;i;)h+=i.offsetTop,j+=i.offsetLeft,i=i.offsetParent;if(j<=b&&h<=c&&b-j<g.offsetWidth&&c-h<g.offsetHeight)return SimileAjax.DOM._hittest(g,b,c,d);else if(g.nodeType==1&&g.tagName=="TR"&&(h=SimileAjax.DOM._hittest(g,b,c,d),h!=g))return h}}return a};
-SimileAjax.DOM.cancelEvent=function(a){a.returnValue=!1;a.cancelBubble=!0;"preventDefault"in a&&a.preventDefault()};SimileAjax.DOM.appendClassName=function(a,b){for(var c=a.className.split(" "),d=0;d<c.length;d++)if(c[d]==b)return;c.push(b);a.className=c.join(" ")};SimileAjax.DOM.createInputElement=function(a){var b=document.createElement("div");b.innerHTML="<input type='"+a+"' />";return b.firstChild};
-SimileAjax.DOM.createDOMFromTemplate=function(a){var b={};b.elmt=SimileAjax.DOM._createDOMFromTemplate(a,b,null);return b};
-SimileAjax.DOM._createDOMFromTemplate=function(a,b,c){if(a==null)return null;else if(typeof a!="object")return a=document.createTextNode(a),c!=null&&c.appendChild(a),a;else{var d=null;if("tag"in a){var e=a.tag;c!=null&&(e=="tr"?d=c.insertRow(c.rows.length):e=="td"&&(d=c.insertCell(c.cells.length)));d==null&&(d=e=="input"?SimileAjax.DOM.createInputElement(a.type):document.createElement(e),c!=null&&c.appendChild(d))}else d=a.elmt,c!=null&&c.appendChild(d);for(var f in a)if(c=a[f],f=="field")b[c]=d;
-else if(f=="className")d.className=c;else if(f=="id")d.id=c;else if(f=="title")d.title=c;else if(!(f=="type"&&d.tagName=="input"))if(f=="style")for(n in c)e=c[n],n=="float"&&(n=SimileAjax.Platform.browser.isIE?"styleFloat":"cssFloat"),d.style[n]=e;else if(f=="children")for(e=0;e<c.length;e++)SimileAjax.DOM._createDOMFromTemplate(c[e],b,d);else f!="tag"&&f!="elmt"&&d.setAttribute(f,c);return d}};SimileAjax.DOM._cachedParent=null;
-SimileAjax.DOM.createElementFromString=function(a){if(SimileAjax.DOM._cachedParent==null)SimileAjax.DOM._cachedParent=document.createElement("div");SimileAjax.DOM._cachedParent.innerHTML=a;return SimileAjax.DOM._cachedParent.firstChild};SimileAjax.DOM.createDOMFromString=function(a,b,c){a=typeof a=="string"?document.createElement(a):a;a.innerHTML=b;b={elmt:a};SimileAjax.DOM._processDOMChildrenConstructedFromString(b,a,c!=null?c:{});return b};
-SimileAjax.DOM._processDOMConstructedFromString=function(a,b,c){var d=b.id;if(d!=null&&d.length>0)if(b.removeAttribute("id"),d in c){var e=b.parentNode;e.insertBefore(c[d],b);e.removeChild(b);a[d]=c[d];return}else a[d]=b;b.hasChildNodes()&&SimileAjax.DOM._processDOMChildrenConstructedFromString(a,b,c)};SimileAjax.DOM._processDOMChildrenConstructedFromString=function(a,b,c){for(b=b.firstChild;b!=null;){var d=b.nextSibling;b.nodeType==1&&SimileAjax.DOM._processDOMConstructedFromString(a,b,c);b=d}};
+/*==================================================
+ *  DOM Utility Functions
+ *==================================================
+ */
+
+SimileAjax.DOM = new Object();
+
+SimileAjax.DOM.registerEventWithObject = function(elmt, eventName, obj, handlerName) {
+    SimileAjax.DOM.registerEvent(elmt, eventName, function(elmt2, evt, target) {
+        return obj[handlerName].call(obj, elmt2, evt, target);
+    });
+};
+
+SimileAjax.DOM.registerEvent = function(elmt, eventName, handler) {
+    var handler2 = function(evt) {
+        evt = (evt) ? evt : ((event) ? event : null);
+        if (evt) {
+            var target = (evt.target) ? 
+                evt.target : ((evt.srcElement) ? evt.srcElement : null);
+            if (target) {
+                target = (target.nodeType == 1 || target.nodeType == 9) ? 
+                    target : target.parentNode;
+            }
+            
+            return handler(elmt, evt, target);
+        }
+        return true;
+    }
+    
+    if (SimileAjax.Platform.browser.isIE) {
+        elmt.attachEvent("on" + eventName, handler2);
+    } else {
+        elmt.addEventListener(eventName, handler2, false);
+    }
+};
+
+SimileAjax.DOM.getPageCoordinates = function(elmt) {
+    var left = 0;
+    var top = 0;
+    
+    if (elmt.nodeType != 1) {
+        elmt = elmt.parentNode;
+    }
+    
+    var elmt2 = elmt;
+    while (elmt2 != null) {
+        left += elmt2.offsetLeft;
+        top += elmt2.offsetTop;
+        elmt2 = elmt2.offsetParent;
+    }
+    
+    var body = document.body;
+    while (elmt != null && elmt != body) {
+        if ("scrollLeft" in elmt) {
+            left -= elmt.scrollLeft;
+            top -= elmt.scrollTop;
+        }
+        elmt = elmt.parentNode;
+    }
+    
+    return { left: left, top: top };
+};
+
+SimileAjax.DOM.getSize = function(elmt) {
+	var w = this.getStyle(elmt,"width");
+	var h = this.getStyle(elmt,"height");
+	if (w.indexOf("px") > -1) w = w.replace("px","");
+	if (h.indexOf("px") > -1) h = h.replace("px","");
+	return {
+		w: w,
+		h: h
+	}
+}
+
+SimileAjax.DOM.getStyle = function(elmt, styleProp) {
+    if (elmt.currentStyle) { // IE
+        var style = elmt.currentStyle[styleProp];
+    } else if (window.getComputedStyle) { // standard DOM
+        var style = document.defaultView.getComputedStyle(elmt, null).getPropertyValue(styleProp);
+    } else {
+    	var style = "";
+    }
+    return style;
+}
+
+SimileAjax.DOM.getEventRelativeCoordinates = function(evt, elmt) {
+    if (SimileAjax.Platform.browser.isIE) {
+      if (evt.type == "mousewheel") {
+        var coords = SimileAjax.DOM.getPageCoordinates(elmt);
+        return {
+          x: evt.clientX - coords.left, 
+          y: evt.clientY - coords.top
+        };        
+      } else {
+        return {
+          x: evt.offsetX,
+          y: evt.offsetY
+        };
+      }
+    } else {
+        var coords = SimileAjax.DOM.getPageCoordinates(elmt);
+
+        if ((evt.type == "DOMMouseScroll") &&
+          SimileAjax.Platform.browser.isFirefox &&
+          (SimileAjax.Platform.browser.majorVersion == 2)) {
+          // Due to: https://bugzilla.mozilla.org/show_bug.cgi?id=352179                  
+
+          return {
+            x: evt.screenX - coords.left,
+            y: evt.screenY - coords.top 
+          };
+        } else {
+          return {
+              x: evt.pageX - coords.left,
+              y: evt.pageY - coords.top
+          };
+        }
+    }
+};
+
+SimileAjax.DOM.getEventPageCoordinates = function(evt) {
+    if (SimileAjax.Platform.browser.isIE) {
+        return {
+            x: evt.clientX + document.body.scrollLeft,
+            y: evt.clientY + document.body.scrollTop
+        };
+    } else {
+        return {
+            x: evt.pageX,
+            y: evt.pageY
+        };
+    }
+};
+
+SimileAjax.DOM.hittest = function(x, y, except) {
+    return SimileAjax.DOM._hittest(document.body, x, y, except);
+};
+
+SimileAjax.DOM._hittest = function(elmt, x, y, except) {
+    var childNodes = elmt.childNodes;
+    outer: for (var i = 0; i < childNodes.length; i++) {
+        var childNode = childNodes[i];
+        for (var j = 0; j < except.length; j++) {
+            if (childNode == except[j]) {
+                continue outer;
+            }
+        }
+        
+        if (childNode.offsetWidth == 0 && childNode.offsetHeight == 0) {
+            /*
+             *  Sometimes SPAN elements have zero width and height but
+             *  they have children like DIVs that cover non-zero areas.
+             */
+            var hitNode = SimileAjax.DOM._hittest(childNode, x, y, except);
+            if (hitNode != childNode) {
+                return hitNode;
+            }
+        } else {
+            var top = 0;
+            var left = 0;
+            
+            var node = childNode;
+            while (node) {
+                top += node.offsetTop;
+                left += node.offsetLeft;
+                node = node.offsetParent;
+            }
+            
+            if (left <= x && top <= y && (x - left) < childNode.offsetWidth && (y - top) < childNode.offsetHeight) {
+                return SimileAjax.DOM._hittest(childNode, x, y, except);
+            } else if (childNode.nodeType == 1 && childNode.tagName == "TR") {
+                /*
+                 *  Table row might have cells that span several rows.
+                 */
+                var childNode2 = SimileAjax.DOM._hittest(childNode, x, y, except);
+                if (childNode2 != childNode) {
+                    return childNode2;
+                }
+            }
+        }
+    }
+    return elmt;
+};
+
+SimileAjax.DOM.cancelEvent = function(evt) {
+    evt.returnValue = false;
+    evt.cancelBubble = true;
+    if ("preventDefault" in evt) {
+        evt.preventDefault();
+    }
+};
+
+SimileAjax.DOM.appendClassName = function(elmt, className) {
+    var classes = elmt.className.split(" ");
+    for (var i = 0; i < classes.length; i++) {
+        if (classes[i] == className) {
+            return;
+        }
+    }
+    classes.push(className);
+    elmt.className = classes.join(" ");
+};
+
+SimileAjax.DOM.createInputElement = function(type) {
+    var div = document.createElement("div");
+    div.innerHTML = "<input type='" + type + "' />";
+    
+    return div.firstChild;
+};
+
+SimileAjax.DOM.createDOMFromTemplate = function(template) {
+    var result = {};
+    result.elmt = SimileAjax.DOM._createDOMFromTemplate(template, result, null);
+    
+    return result;
+};
+
+SimileAjax.DOM._createDOMFromTemplate = function(templateNode, result, parentElmt) {
+    if (templateNode == null) {
+        /*
+        var node = doc.createTextNode("--null--");
+        if (parentElmt != null) {
+            parentElmt.appendChild(node);
+        }
+        return node;
+        */
+        return null;
+    } else if (typeof templateNode != "object") {
+        var node = document.createTextNode(templateNode);
+        if (parentElmt != null) {
+            parentElmt.appendChild(node);
+        }
+        return node;
+    } else {
+        var elmt = null;
+        if ("tag" in templateNode) {
+            var tag = templateNode.tag;
+            if (parentElmt != null) {
+                if (tag == "tr") {
+                    elmt = parentElmt.insertRow(parentElmt.rows.length);
+                } else if (tag == "td") {
+                    elmt = parentElmt.insertCell(parentElmt.cells.length);
+                }
+            }
+            if (elmt == null) {
+                elmt = tag == "input" ?
+                    SimileAjax.DOM.createInputElement(templateNode.type) :
+                    document.createElement(tag);
+                    
+                if (parentElmt != null) {
+                    parentElmt.appendChild(elmt);
+                }
+            }
+        } else {
+            elmt = templateNode.elmt;
+            if (parentElmt != null) {
+                parentElmt.appendChild(elmt);
+            }
+        }
+        
+        for (var attribute in templateNode) {
+            var value = templateNode[attribute];
+            
+            if (attribute == "field") {
+                result[value] = elmt;
+                
+            } else if (attribute == "className") {
+                elmt.className = value;
+            } else if (attribute == "id") {
+                elmt.id = value;
+            } else if (attribute == "title") {
+                elmt.title = value;
+            } else if (attribute == "type" && elmt.tagName == "input") {
+                // do nothing
+            } else if (attribute == "style") {
+                for (n in value) {
+                    var v = value[n];
+                    if (n == "float") {
+                        n = SimileAjax.Platform.browser.isIE ? "styleFloat" : "cssFloat";
+                    }
+                    elmt.style[n] = v;
+                }
+            } else if (attribute == "children") {
+                for (var i = 0; i < value.length; i++) {
+                    SimileAjax.DOM._createDOMFromTemplate(value[i], result, elmt);
+                }
+            } else if (attribute != "tag" && attribute != "elmt") {
+                elmt.setAttribute(attribute, value);
+            }
+        }
+        return elmt;
+    }
+}
+
+SimileAjax.DOM._cachedParent = null;
+SimileAjax.DOM.createElementFromString = function(s) {
+    if (SimileAjax.DOM._cachedParent == null) {
+        SimileAjax.DOM._cachedParent = document.createElement("div");
+    }
+    SimileAjax.DOM._cachedParent.innerHTML = s;
+    return SimileAjax.DOM._cachedParent.firstChild;
+};
+
+SimileAjax.DOM.createDOMFromString = function(root, s, fieldElmts) {
+    var elmt = typeof root == "string" ? document.createElement(root) : root;
+    elmt.innerHTML = s;
+    
+    var dom = { elmt: elmt };
+    SimileAjax.DOM._processDOMChildrenConstructedFromString(dom, elmt, fieldElmts != null ? fieldElmts : {} );
+    
+    return dom;
+};
+
+SimileAjax.DOM._processDOMConstructedFromString = function(dom, elmt, fieldElmts) {
+    var id = elmt.id;
+    if (id != null && id.length > 0) {
+        elmt.removeAttribute("id");
+        if (id in fieldElmts) {
+            var parentElmt = elmt.parentNode;
+            parentElmt.insertBefore(fieldElmts[id], elmt);
+            parentElmt.removeChild(elmt);
+            
+            dom[id] = fieldElmts[id];
+            return;
+        } else {
+            dom[id] = elmt;
+        }
+    }
+    
+    if (elmt.hasChildNodes()) {
+        SimileAjax.DOM._processDOMChildrenConstructedFromString(dom, elmt, fieldElmts);
+    }
+};
+
+SimileAjax.DOM._processDOMChildrenConstructedFromString = function(dom, elmt, fieldElmts) {
+    var node = elmt.firstChild;
+    while (node != null) {
+        var node2 = node.nextSibling;
+        if (node.nodeType == 1) {
+            SimileAjax.DOM._processDOMConstructedFromString(dom, node, fieldElmts);
+        }
+        node = node2;
+    }
+};
