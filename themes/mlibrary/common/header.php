@@ -71,7 +71,8 @@ display_css();
 		<div id="primary-nav">
         	
 			<ul class="navigation <?php $urlparts = explode("/",$_SERVER['REQUEST_URI']); if (in_array('galleries',$urlparts)){ echo 'galleries'; }; ?>"> 
-			<?php echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items'),'Time Line'=>uri('neatline-time/timelines'))); ?>
+			<?php //echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items'),'Time Line'=>uri('neatline-time/timelines'))); 
+				echo public_nav(array('Home'=>uri(''),'Browse'=>uri('exhibits'),'Galleries'=>uri('exhibits/show/galleries'),'Item Archive'=>uri('items')));?>
             <li class="umLogo no-tab"><a href="http://www.umich.edu"><img src="<?php echo img('umLogo.gif','images/layout'); ?>" alt="University of Michigan" width="143" height="18"/></a>
 			</ul>
 		</div><!-- end primary-nav -->
