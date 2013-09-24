@@ -11,7 +11,7 @@
 
 function loginf($loginform){
 
-if(isset($_SERVER['REMOTE_USER'])) {
+/*if(isset($_SERVER['REMOTE_USER'])) {
   if($_SERVER['REMOTE_USER'] == 'nancymou') {
     if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") !== false) {
       $_SERVER['REMOTE_USER'] = 'moconway';
@@ -21,19 +21,17 @@ if(isset($_SERVER['REMOTE_USER'])) {
       $_SERVER['REMOTE_USER']='jlausch';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
     }
-  /*  else
-    {
-     $_SERVER['REMOTE_USER']='websystem';
-      $_SERVER['ORIGINAL_USER'] = 'nancymou';
-    }*/
   }
-}  
-	$_POST['username']= $_SERVER['REMOTE_USER'];
-//	$_POST['username']= 'jlausch';//$_SERVER['REMOTE_USER'];
-//	$_POST['username']= 'websystem';
-	$_POST['password']='dd';
-	$_SERVER['REQUEST_METHOD']='POST';
-	return $loginform;
+} */ 
+  if((isset($_SERVER['REMOTE_USER']))) {
+	  $_POST['username']= $_SERVER['REMOTE_USER'];
+	  $_POST['password']='dd';
+	  $_SERVER['REQUEST_METHOD']='POST';
+	  return $loginform;
+	  }
+	else {
+   	header('location: https://www.lib.umich.edu/online-exhibits/admin/');
+	} 
 }
 
 function login($authAdapter,$loginForm) {    
@@ -57,12 +55,14 @@ function login($authAdapter,$loginForm) {
 
 // print_r($_SERVER['REMOTE_USER']);
 //   exit;
-$username = $_SERVER['REMOTE_USER'];
-//$username ='websystem';
-$pwd = '';//$_SERVER['REMOTE_USER'];
-$authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
-
-return $authAdapter;        
+if(isset($_SERVER['REMOTE_USER'])){
+  $username = $_SERVER['REMOTE_USER'];
+  $pwd = '';
+  $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
+}
+else
+  header('location: https://www.lib.umich.edu/online-exhibits/admin/');
+return $authAdapter; 
 }
 
  function addToWhitelist($adminWhiteList){   	

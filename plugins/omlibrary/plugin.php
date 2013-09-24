@@ -178,23 +178,19 @@ function omlibrary_setup_acl($acl){
 }
 
 
-function omlibrary_loginf($loginform){
-	if ($_SERVER['REMOTE_USER']=='nancymou')
-	$_SERVER['REMOTE_USER']= 'websystem';
-//	print_r('in loginform'.$_SERVER['REMOTE_USER']);
-//	exit;
-	$_POST['username']= $_SERVER['REMOTE_USER'];
-//	$_POST['username']= 'jlausch';//$_SERVER['REMOTE_USER'];
-//	$_POST['username']= 'websystem';
-	$_POST['password']='dd';
-	$_SERVER['REQUEST_METHOD']='POST';
+/*function omlibrary_loginf($loginform){
+//	if ($_SERVER['REMOTE_USER']=='nancymou')
+//	$_SERVER['REMOTE_USER']= 'websystem';
+//	$_POST['username']= $_SERVER['REMOTE_USER'];
+//	$_POST['password']='dd';
+//	$_SERVER['REQUEST_METHOD']='POST';
 	return $loginform;
-}
+}*/
 
-function omlibrary_login($authAdapter,$loginForm) {   
+/*function omlibrary_login($authAdapter,$loginForm) {   
 // print_r('from cosign'.$_SERVER['REMOTE_USER']);
 //exit;
-if(isset($_SERVER['REMOTE_USER'])) {
+/*if(isset($_SERVER['REMOTE_USER'])) {
   if($_SERVER['REMOTE_USER'] == 'nancymou') {
     if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") !== false) {
       $_SERVER['REMOTE_USER'] = 'moconway';
@@ -203,21 +199,25 @@ if(isset($_SERVER['REMOTE_USER'])) {
    if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
       $_SERVER['REMOTE_USER']='jlausch';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
-    }
-   
-  }
-}  
+    }   
+  }  
+} 
   // $username = 'jlausch';//$_SERVER['REMOTE_USER'];
   //  if($_SERVER['REMOTE_USER'] == 'nancymou') 
 //    $_SERVER['REMOTE_USER'] = 'websystem';
-
-$username = $_SERVER['REMOTE_USER'];
-//$username = 'jlausch';//$_SERVER['REMOTE_USER'];
-//$username ='websystem';
-$pwd = '';//$_SERVER['REMOTE_USER'];
-$authAdapter = new Omeka_Auth_Adapter_omlibrary($username,$pwd);
-return $authAdapter;        
-}
+  if (isset($_SERVER['REMOTE_USER'])) {
+  header( 'Location: http://www.google.com' );
+  
+//    $username = $_SERVER['REMOTE_USER'];
+  //  $pwd = '';//$_SERVER['REMOTE_USER'];
+   // $authAdapter = new Omeka_Auth_Adapter_omlibrary($username,$pwd);
+    //return $authAdapter;        
+   }
+  else {
+  exit;
+		//header( 'Location: http://www.umich.edu' ) ;
+   }
+}*/
 
 
 function omlibrary_addToWhitelist($adminWhiteList){    	
