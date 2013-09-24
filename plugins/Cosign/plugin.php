@@ -23,15 +23,18 @@ function loginf($loginform){
     }
   }
 } */ 
+ 
+
   if((isset($_SERVER['REMOTE_USER']))) {
 	  $_POST['username']= $_SERVER['REMOTE_USER'];
 	  $_POST['password']='dd';
 	  $_SERVER['REQUEST_METHOD']='POST';
-	  return $loginform;
+	  return $loginform; 
 	  }
 	else {
-   	header('location: https://www.lib.umich.edu/online-exhibits/admin/');
-	} 
+	 $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits/admin/';
+    header('location: '.$redirected_url); 
+	  } 		 
 }
 
 function login($authAdapter,$loginForm) {    
@@ -53,29 +56,28 @@ function login($authAdapter,$loginForm) {
   }
 }  */
 
-// print_r($_SERVER['REMOTE_USER']);
-//   exit;
-if(isset($_SERVER['REMOTE_USER'])){
-  $username = $_SERVER['REMOTE_USER'];
-  $pwd = '';
-  $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
-}
-else
-  header('location: https://www.lib.umich.edu/online-exhibits/admin/');
-return $authAdapter; 
-}
+    if(isset($_SERVER['REMOTE_USER'])) {
+        $username = $_SERVER['REMOTE_USER'];
+        $pwd = '';
+        $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
+        return $authAdapter; 
+    }
+    else {
+       $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits/admin/';
+       header('location: '.$redirected_url);  
+    }
 
- function addToWhitelist($adminWhiteList){   	
+ }
+
+  function addToWhitelist($adminWhiteList){   	
 	   array_push($adminWhiteList,array('controller' => 'cosign', 'action' => 'forgot-password'));
 	   return $adminWhiteList;	   
-    }
+  }
 
-
-    function cosign_initialize(){
+  function cosign_initialize(){
 	   $front = Zend_Controller_Front::getInstance();
-       Zend_Controller_Front::getInstance()->registerPlugin(new CosignControllerPlugin);
-    
-    }
+       Zend_Controller_Front::getInstance()->registerPlugin(new CosignControllerPlugin);    
+  }
 
 
  class Omeka_Auth_Adapter_Cosign implements Zend_Auth_Adapter_Interface {
@@ -87,6 +89,7 @@ return $authAdapter;
 	}
 		
 	public function authenticate() {
+
         // Omeka needs the user ID (not username)
         $omeka_user = get_db()->getTable('User')->findBySql("username = ?", array($this->omeka_userid), true);
         if ($omeka_user) {
