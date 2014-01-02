@@ -35,7 +35,7 @@ if (empty($pathToConvert) && has_permission('Settings', 'edit')): ?>
 <?php endif; ?>
 
 <h3><?php //Nancy added a file size message
-echo __('Add New Files. File size limit is 32MG'); ?></h3>
+echo __('Add New Files. File size limit is 32MB'); ?></h3>
 
 <div id="add-more-files">
 <label for="add_num_files"><?php echo __('Find a File'); ?></label>
