@@ -1,5 +1,6 @@
-<?php $item_title = item('Dublin Core', 'Title');?>
-<?php head(array('title'=> html_escape("{$item_title}"),'bodyid'=>'items','bodyclass'=>'show item')); ?>
+<?php $item_title = item('Dublin Core', 'Title');
+$item_title_in_browse = strip_formatting($item_title);?>
+<?php head(array('title'=> html_escape("{$item_title_in_browse}"),'bodyid'=>'items','bodyclass'=>'show item')); ?>
 
 <h1><?php echo $item_title; ?></h1>
 
