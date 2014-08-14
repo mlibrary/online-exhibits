@@ -66,6 +66,8 @@ class Omeka_Form_GeneralSettings extends Omeka_Form
             'validators' => array('Digits'), 
             'required' => true
         ));
+
+        $this->addElement('hash', 'settings_csrf');
         
         $this->addElement('text', 'thumbnail_constraint', array(
             'label' => __('Thumbnail Size'),

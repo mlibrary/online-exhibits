@@ -32,7 +32,8 @@ class Omeka_Controller_UsersControllerTest extends Omeka_Test_AppTestCase
                       'institution' => 'foobar',
                       'email'       => $this->email,
                       'role'        => 'admin',
-                      'active'      => '1');
+                      'active'      => '1',
+                      'user_csrf'   => $this->_getCsrfToken());
         $this->getRequest()->setPost($post);
         $this->getRequest()->setMethod('post');
         $this->dispatch('users/add');
@@ -104,7 +105,8 @@ class Omeka_Controller_UsersControllerTest extends Omeka_Test_AppTestCase
             'last_name' => 'User',
             'email' => $this->email,
             'role' => 'super',
-            'username' => 'newuser'
+            'username' => 'newuser',
+            'user_csrf' => $this->_getCsrfToken()
         );
 
         $user = new User;
@@ -137,4 +139,12 @@ class Omeka_Controller_UsersControllerTest extends Omeka_Test_AppTestCase
         $this->dispatch("users/edit/$id");
         $this->assertRedirectTo('/');
     }
+
+    private function _getCsrfToken()
+    {
+        $hash = new Zend_Form_Element_Hash('user_csrf');
+        $hash->initCsrfToken();
+        return $hash->getHash();
+    }
+
 }
