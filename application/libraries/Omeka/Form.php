@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * A Zend_Form subclass that sets up forms to be properly displayed in Omeka.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * 
+ * @package Omeka\Form
  */
 class Omeka_Form extends Zend_Form
 {
@@ -35,9 +35,6 @@ class Omeka_Form extends Zend_Form
      */
     public function init()
     {
-        // We handle form translations manually.
-        $this->setDisableTranslator(true);
-
         $this->addElementPrefixPath('Omeka_', 'Omeka/');
         $this->addPrefixPath('Omeka_Form_Element', 'Omeka/Form/Element/', 'element');
         
@@ -85,11 +82,11 @@ class Omeka_Form extends Zend_Form
         // </div>
             
         return array(
+                        array('Description', array('tag' => 'p', 'class' => 'explanation', 'escape'=>false)), 
                         'ViewHelper', 
-                        'Errors', 
-                        array(array('InputsTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'inputs')), 
-                        array('Description', array('tag' => 'p', 'class' => 'explanation')), 
-                        'Label', 
+                        array('Errors', array('class' => 'error')),
+                        array(array('InputsTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'inputs five columns omega')), 
+                        array('Label', array('tag' => 'div', 'tagClass' => 'two columns alpha')),
                         array(array('FieldTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field'))
                     );
     }
@@ -106,37 +103,19 @@ class Omeka_Form extends Zend_Form
     {
         foreach ($this->getElements() as $element) {
             if ($element instanceof Zend_Form_Element_Submit) {
-                // All submit form elements should have class 'submit'.
-                $this->_addClassNameToElement($element, 'submit');
                 // All submit form elements should be wrapped in a div with 
                 // no class.
                 $element->setDecorators(array(
                     'ViewHelper', 
                     array('HtmlTag', array('tag' => 'div'))));
-            } else if ($element instanceof Zend_Form_Element_Text) {
-                // Text inputs should have class = "textinput".
-                $this->_addClassNameToElement($element, 'textinput');
-            } else if ($element instanceof Zend_Form_Element_Textarea) {
-                $this->_addClassNameToElement($element, 'textinput');
-            } else if ($element instanceof Zend_Form_Element_Password) {
-                $this->_addClassNameToElement($element, 'textinput');
-            } else if ($element instanceof Zend_Form_Element_File) {       
-                $this->_addClassNameToElement($element, 'fileinput');
-                $element->setDecorators(array(
-                    'File', 
-                    'Errors', 
-                    array(array('InputsTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'inputs')), 
-                    array('Description', array('tag' => 'p', 'class' => 'explanation')), 
-                    'Label', 
-                    array(array('FieldTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field'))
-                ));
+            } else if ($element instanceof Zend_Form_Element_File) {
+                // Picking the same name as the ViewHelper allows us to change
+                // it in-place.
+                $element->addDecorator(
+                    array('Zend_Form_Decorator_ViewHelper' => 'File'));
             } else if($element instanceof Zend_Form_Element_Radio) {
-                // ZF sets some strange decorators for Radios by default,
-                // explicitly replace them with our own: see ZF-10065
-                $element->setDecorators($this->getDefaultElementDecorators());
                 // Radio buttons must have a 'radio' class on the div wrapper.
                 $element->getDecorator('InputsTag')->setOption('class', 'inputs radio');
-                $element->getDecorator('Label')->setOption('disableFor', true);
                 $element->setSeparator('');
             } else if ($element instanceof Zend_Form_Element_Hidden 
                     || $element instanceof Zend_Form_Element_Hash) {
@@ -165,19 +144,6 @@ class Omeka_Form extends Zend_Form
             $errors[] = Inflector::humanize($elementName) . ': ' . join($messageDelimiter, $errorArray);
         }
         return join($elementDelimiter, $errors);
-    }
-
-    /**
-     * The logical counterpart to Zend_Form::getMessages(), this is clearly 
-     * missing from the interface.
-     *
-     * @param array $messages
-     */
-    public function setMessages(array $messages)
-    {
-        foreach ($messages as $element => $errors) {
-            $this->$element->addErrors($errors);
-        }
     }
     
     /**

@@ -1,50 +1,39 @@
-<?php echo flash(); ?>
-
-<fieldset id="editcollection">
-    <h2><?php echo __('Collection Details'); ?> <span id="required-note">* <?php echo __('Required Fields'); ?></span></h2>
-
-<div class="field">
-    <?php echo $this->formLabel('name', __('Collection Name'), array('class' => 'required')); ?>
-    <div class="inputs">
-        <?php echo text(array('name'=>'name', 'class'=>'textinput', 'id'=>'name', 'size'=>'40'),$collection->name); ?>
-    </div>
-<?php echo form_error('name'); ?>
-</div>
-
-<div class="field">
-    <?php echo $this->formLabel('description', __('Collection Description')); ?>
+<?php echo js_tag('vendor/tiny_mce/tiny_mce'); ?>
+<?php echo js_tag('elements'); ?>
+<?php echo js_tag('tabs'); ?>
+<script type="text/javascript">
+// TinyMCE hates document.ready.
+jQuery(window).load(function () {
+    Omeka.Tabs.initialize();
     
-<?php echo form_error('description'); ?>
-<div class="inputs">
-<?php echo textarea(array('name'=>'description', 'class'=>'textinput', 'id'=>'description','rows'=>'10','cols'=>'60'),$collection->description); ?>
-</div>
-</div>
+    Omeka.wysiwyg({
+        mode: "none",
+        forced_root_block: ""
+    });
 
-<h2>Collectors</h2>
-<div class="field">
-    <?php echo $this->formLabel('collectors', __('List collectors for this collection (optional - enter one name per line)')); ?>
-    <div class="inputs">
-        <div class="input">
-    <?php echo $this->formTextarea('collectors', $collection->collectors, array('class' => 'texinput', 'rows' => '10', 'cols' => '60')); 
-?>
-</div></div>
-</div>
+    // Must run the element form scripts AFTER reseting textarea ids.
+    jQuery(document).trigger('omeka:elementformload');
 
-<h2>Status: </h2>
-<div class="field">
-    <?php echo $this->formLabel('public', __('Public')); ?>
-<?php 
-    echo radio(array('name'=>'public'),array('0'=>__('Not Public'),'1'=>__('Public')), $collection->isPublic());
-?>
-</div>
+});
 
-<div class="field">
-    <?php echo $this->formLabel('featured', __('Featured')); ?>
-<?php 
-    echo radio(array('name'=>'featured'),array('0'=>__('Not Featured'),'1'=>__('Featured')), $collection->isFeatured()); 
-?>
-</div>  
+jQuery(document).bind('omeka:elementformload', function (event) {
+    Omeka.Elements.makeElementControls(event.target, <?php echo js_escape(url('elements/element-form')); ?>,'Item'<?php if ($id = metadata('collection', 'id')) echo ', '.$id; ?>);
+    Omeka.Elements.enableWysiwyg(event.target);
+});
+</script>
 
-</fieldset>
-
-<?php fire_plugin_hook('admin_append_to_collections_form', $collection); ?>
+<section class="seven columns alpha" id="edit-form">
+    <div id="collection-metadata">
+    <?php foreach ($tabs as $tabName => $tabContent): ?>
+        <?php if (!empty($tabContent)): ?>
+            <div id="<?php echo text_to_id(html_escape($tabName)); ?>-metadata">
+                <fieldset class="set">
+                    <h2><?php echo html_escape(__($tabName)); ?></h2>
+                    <?php echo $tabContent; ?>
+                </fieldset>
+            </div>
+        <?php endif; ?>
+    <?php endforeach; ?>
+    </div>
+    <?php fire_plugin_hook('admin_collections_form', array('collection' => $collection, 'view' => $this)); ?>
+</section>

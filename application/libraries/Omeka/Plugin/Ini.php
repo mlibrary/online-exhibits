@@ -1,18 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Responsible for parsing the plugin.ini file for any given plugin.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * 
+ * @package Omeka\Plugin
  */
 class Omeka_Plugin_Ini
 {
@@ -54,7 +51,6 @@ class Omeka_Plugin_Ini
         if ($pluginDirName instanceof Plugin) {
             $pluginDirName = $pluginDirName->getDirectoryName();
         }
-
         $pluginIniPath = $this->getPluginIniFilePath($pluginDirName);
         if (file_exists($pluginIniPath)) {
             if (array_key_exists($pluginDirName, $this->_configs)) {
@@ -63,9 +59,8 @@ class Omeka_Plugin_Ini
                 $config = new Zend_Config_Ini($pluginIniPath, 'info');
                 $this->_configs[$pluginDirName] = $config;
             }
-
         } else {
-            throw new Exception("Path to plugin.ini for '$pluginDirName' is not correct.");
+            throw new RuntimeException(__('Path to plugin.ini for "%s" is not correct.', $pluginDirName));
         }
         return $config->$iniKeyName;
     }
@@ -119,7 +114,7 @@ class Omeka_Plugin_Ini
             'setRequiredPlugins'        => 'required_plugins',
             'setOptionalPlugins'        => 'optional_plugins',
             'setIniTags'                => 'tags',
-            'setRequireOnce'            => 'require_once',
+            'setSupportLinkUrl'         => 'support_link'
         );
 
         foreach ($setters as $method => $iniField) {

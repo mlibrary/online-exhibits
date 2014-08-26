@@ -1,14 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Edit form for Omeka users.
- *
- * @package Omeka
+ * 
+ * @package Omeka\Form
  */
 class Omeka_Form_User extends Omeka_Form
 {
@@ -26,6 +27,7 @@ class Omeka_Form_User extends Omeka_Form
         
         $this->addElement('text', 'username', array(
             'label'         => __('Username'),
+            'description'   => __('Username must contain only letters and numbers, and be 30 characters or fewer.'),
             'required'      => true,
             'size'          => '30',
             'validators' => array(
@@ -74,27 +76,15 @@ class Omeka_Form_User extends Omeka_Form
             
         ));
         
-        $this->addElement('text', 'first_name', array(
-            'label' => __('First Name'),
+        $this->addElement('text', 'name', array(
+            'label' => __('Display Name'),
+            'description' => __('Name as it should be displayed on the site'),
             'size' => '30',
             'required' => true,
             'validators' => array(
                 array('validator' => 'NotEmpty', 'breakChainOnFailure' => true, 'options' => array(
                     'messages' => array(
-                        Zend_Validate_NotEmpty::IS_EMPTY => __('First name is required.')
-                    )
-                ))
-            )
-        ));
-        
-        $this->addElement('text', 'last_name', array(
-            'label' => __('Last Name'),
-            'size'  => '30',
-            'required' => true,
-            'validators' => array(
-                array('validator' => 'NotEmpty', 'breakChainOnFailure' => true, 'options' => array(
-                    'messages' => array(
-                        Zend_Validate_NotEmpty::IS_EMPTY => __('Last name is required.')
+                        Zend_Validate_NotEmpty::IS_EMPTY => __('Real Name is required.')
                     )
                 ))
             )
@@ -119,11 +109,11 @@ class Omeka_Form_User extends Omeka_Form
                     )
                 )),
                 array('validator' => 'Db_NoRecordExists', 'options' => array(
-                    'table'     =>  $this->_user->getDb()->Entity, 
+                    'table'     =>  $this->_user->getTable()->getTableName(), 
                     'field'     =>  'email',
                     'exclude'   =>  array(
-                        'field' => 'email',
-                        'value' => (string)$this->_user->email
+                        'field' => 'id',
+                        'value' => (int)$this->_user->id
                     ),
                     'adapter'   =>  $this->_user->getDb()->getAdapter(), 
                     'messages'  =>  array(
@@ -133,14 +123,10 @@ class Omeka_Form_User extends Omeka_Form
             )
         ));
         
-        $this->addElement('text', 'institution', array(
-            'label' => __('Institution'),
-            'size' => '30'
-        ));
-        
         if ($this->_hasRoleElement) {
             $this->addElement('select', 'role', array(
                 'label' => __('Role'),
+                'description' => __("Roles describe the permissions a user has. See <a href='http://omeka.org/codex/User_Roles' target='_blank'>documentation</a> for details."),
                 'multiOptions' => get_user_roles(),
                 'required' => true
             ));
@@ -148,7 +134,8 @@ class Omeka_Form_User extends Omeka_Form
         
         if ($this->_hasActiveElement) {
             $this->addElement('checkbox', 'active', array(
-                'label' => __('Active?')
+                'label' => __('Active?'),
+                'description' => __('Inactive users cannot log in to the site.')
             ));
         }
         

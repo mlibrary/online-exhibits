@@ -1,57 +1,55 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @package Omeka
- * @subpackage Models
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * A tag and its metadata.
+ * 
+ * @package Omeka\Record
  */
-class Tag extends Omeka_Record { 
-    
+class Tag extends Omeka_Record_AbstractRecord {
+
+    /**
+     * The tag text.
+     *
+     * @var string
+     */
     public $name;
-    
+
+    /**
+     * Use the tag text when using this record as a string.
+     *
+     * @return string
+     */
     public function __toString() {
         return $this->name;
     }
     
     /**
-     * Must also delete the taggings associated with this tag
-     *
-     * @return void
+     * Delete handling for a tag.
+     * 
+     * Delete the taggings associated with this tag.
      */
     protected function _delete()
     {
         $taggings = $this->getDb()
-                         ->getTable('Taggings')
+                         ->getTable('RecordsTags')
                          ->findBySql('tag_id = ?', array((int) $this->id));
         
         foreach ($taggings as $tagging) {
             $tagging->delete();
         }
     }
-    
+
     /**
-     * Delete only the taggings entries for this specific tag/entity combination
+     * Validate this tag.
      *
-     * @return void
+     * The tag "name" must be non-empty and unique.
      */
-    protected function deleteForEntity(Entity $entity)
-    {
-        $taggings = $this->getDb()
-                         ->getTable('Taggings')
-                         ->findBySql('entity_id = ? AND tag_id = ?', 
-                                     array( (int)$entity->id, (int) $this->id));
-        
-        foreach ($taggings as $tagging) {
-            $tagging->delete();
-        }
-    }
-    
     protected function _validate()
     {
         if (trim($this->name) == '') {
@@ -64,6 +62,8 @@ class Tag extends Omeka_Record {
     }
     
     /**
+     * Check whether a field is unique.
+     * 
      * The check for unique tag names must take into account CASE SENSITIVITY, 
      * which is accomplished via COLLATE utf8_bin sql
      *
@@ -85,76 +85,58 @@ class Tag extends Omeka_Record {
     }
     
     /**
-     * Rename all the instances of a tag
-     * 1) Find a set of all the joins that need to be updated
-     * 2) Ignore the original tag if included in the list of new tags
-     * 3) Loop through the new tags, loop through the joins and create a new one for each new tag
-     * @return void
+     * Rename a tag.
+     *
+     * Any records tagged with the "old" tag will be tagged with each
+     * of the tags given in $new_names. The original tag will be
+     * deleted (unless it is given as one of the $new_names).
+     *
+     * @param array $new_names Names of the tags this one should be
+     *  renamed to.
      */
-    public function rename($new_names, $user_id = null) 
+    public function rename($new_names) 
     {
-        $joins = array();
-        
-        $find_criteria = array('tag'=>$this->name);
-        
-        if ($user_id) {
-            $find_criteria['user'] = (int) $user_id;
-        }
-        
-        $taggings = $this->getTable('Taggings')->findBy($find_criteria);
+        $taggings = $this->getTable('RecordsTags')->findBy(array('tag' => $this->name));
+        $keepOldTaggings = false;
 
+        // If the current tag is in the new tag list, we don't need
+        // to do anything to it or its taggings.
         if (in_array($this->name, $new_names)) {
-
-            //Remove the original name from the list
-            $new_names = array_diff($new_names,array($this->name));
-            //Ignore the existing joins
+            $new_names = array_diff($new_names, array($this->name));
             
-            //If there are no new names left, finish
+            // If the current name was the only new name, stop.
             if (!count($new_names)) {
                 return true;
             }
-            
+
+            $keepOldTaggings = true;
+        // Otherwise, we need to delete the old tag.
         } else {
-            //Otherwise take the first name and use it to update the existing joins
-            $new_name = array_shift($new_names);
-                
-            //Find the tag or make a new one
-            $new_tag = $this->getTable()->findOrNew($new_name);
-            $new_tag->forceSave();
-            
-            $new_tag_id = $new_tag->id;
-                    
-            //Update all the existing joins
-            foreach ($taggings as $key => $tagging) {
-                $tagging->tag_id = $new_tag_id;
-            
-                //If saving doesn't work, its because of unique constraint violations
-                //So we should delete the join because it already exists
-                try {
-                    $tagging->save();
-                } catch (Zend_Db_Exception $e) {
-                    $tagging->delete();
-                }
-            }
+            $this->delete();
         }
         
-        //Create new joins for the newly entered tags (if applicable)
-        foreach ($new_names as $k => $new_name) {
+        // Switch the existing taggings to the first of the new names,
+        // and create new taggings for the remainder.
+        foreach ($new_names as $key => $new_name) {
             $new_tag = $this->getTable()->findOrNew($new_name);
-            $new_tag->forceSave();
-            
             $new_tag_id = $new_tag->id;
                         
             foreach ($taggings as $tagging) {
-                //clone the existing join
-                $new_tagging = clone $tagging;
+                // After the first pass, or if we didn't delete the
+                // original tag, operate on new copies of the taggings
+                if ($key > 0 || $keepOldTaggings) {
+                    $tagging = clone $tagging;
+                }
                 
-                //set the tag_id for the cloned join
+                $tagging->tag_id = $new_tag_id;
                 
-                $new_tagging->tag_id = $new_tag_id; 
-                
-                //save the new join
-                $new_tagging->save();
+                try {
+                    $tagging->save();
+                } catch (Zend_Db_Exception $e) {
+                    // If we couldn't save, it's because this tagging
+                    // already exists, so we should delete it.
+                    $tagging->delete();
+                }
             }
         }
     }

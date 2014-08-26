@@ -1,40 +1,42 @@
-<?php 
-$pageTitle = __('Browse Element Sets');
-head(array('title'=> $pageTitle, 'content_class' => 'vertical-nav', 'bodyclass'=>'element-sets primary'));?>
-<h1><?php echo $pageTitle; ?> <?php echo __('(%s total)', $total_records); ?></h1>
-<?php common('settings-nav'); ?>
+<?php
+$doNotDelete = array('Dublin Core', 'Item Type Metadata');
 
-<div id="primary">
-
+echo head(
+    array(
+        'title' => __('Settings'),
+        'bodyclass'=>'element-sets'
+    )
+);
+echo common('settings-nav');
+echo flash();
+?>
 <table>
     <thead>
         <tr>
             <th><?php echo __('Name'); ?></th>
             <th><?php echo __('Description'); ?></th>
-            <th><?php echo __('Delete'); ?></th>
         </tr>
     </thead>
     <tbody>
-    <?php foreach ($elementsets as $elementSet): ?>
+    <?php foreach (loop('element_sets') as $elementSet): ?>
+        <?php if (ElementSet::ITEM_TYPE_NAME == $elementSet->name): continue; endif; ?>
         <tr>
-            <?php $doNotDelete = array('Dublin Core', 'Item Type Metadata', 'Omeka Image File', 'Omeka Video File'); ?>
-            
             <td class="element-set-name">
                 <?php echo html_escape(__($elementSet->name)); ?>
+                <ul class="action-links">
+                    <li><?php echo link_to($elementSet, 'edit', __('Edit')); ?></li>
+                    <?php if (!in_array($elementSet->name, $doNotDelete)): ?>
+                    <li><?php echo link_to($elementSet, 'delete-confirm', __('Delete'), array('class' => 'delete')); ?></li>
+                    <?php endif; ?>
+                </ul>
+                <?php fire_plugin_hook('admin_element_sets_browse_each', array('element_set' => $elementSet, 'view' => $this)); ?>
             </td>
             <td>
                 <?php echo html_escape(__($elementSet->description)); ?>
-            </td>
-            <td>
-                <?php if (has_permission('ElementSets', 'delete') and !in_array($elementSet->name, $doNotDelete)): ?>
-                    <?php echo delete_button($elementSet); ?>
-                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
-
-</div>
-
-<?php foot(); ?>
+<?php fire_plugin_hook('admin_element_sets_browse', array('element_sets' => $element_sets, 'view' => $this)); ?>
+<?php echo foot(); ?>

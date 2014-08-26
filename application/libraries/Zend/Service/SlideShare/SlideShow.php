@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage SlideShare
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: SlideShow.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version    $Id: SlideShow.php 25283 2013-03-09 10:07:13Z frosch $
  */
 
 
@@ -28,12 +28,11 @@
  * @category   Zend
  * @package    Zend_Service
  * @subpackage SlideShare
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2012 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Service_SlideShare_SlideShow
 {
-
     /**
      * Status constant mapping for web service
      *
@@ -328,7 +327,7 @@ class Zend_Service_SlideShare_SlideShow
     /**
      * Sets the description for the Slide show
      *
-     * @param strign $desc The description of the slide show
+     * @param string $desc The description of the slide show
      * @return Zend_Service_SlideShare_SlideShow
      */
     public function setDescription($desc)

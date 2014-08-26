@@ -1,139 +1,14 @@
-﻿/* CSS for the gallery-thumbnails showcase layout */
-
 .exhibit-item {
-    display:block; 
-    float:left; 
+    display: inline-block;
+    vertical-align: top;
     width: 23%; 
-    height:23%; 
-    margin-right:2%;
-    margin-bottom:2%;
-}
-
-
-#content {
-overflow:visible;
+    margin-right: 1%;
+    margin-bottom: 2%;
+    /* IE 7 */
+    *display: inline;
+    zoom: 1;
 }
 
 .exhibit-item img {
     max-width: 100%;
-}
-
-#showcase {
-	background:#777 url(../../../../../../themes/mlibrary/images/layout/flap_borderbottom.jpg) repeat-x bottom right;
-	padding:20px 0 13px;
-	width:714px !important;
-	box-shadow:0 3px 5px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 0 rgba(0, 0, 0, .3);
-	}
-.showcase-content, .showcase-thumbnail-container {
-	background:none;
-}
-.showcase-content-wrapper {
-	margin-left:20px;
-	}
-
-.showcase-content img {
-box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 1px 20px rgba(40, 0, 40, .4);
-border: 1px solid #333;
-width:auto !important;
-height:auto !important;
-max-height:350px;
-max-width:85%;
-
-}
-
-.showcase-thumbnail-container .showcase-thumbnail {
- 	border:0;
-}
-
-.showcase-thumbnail-container {
-	position: absolute;
-	right: 0px;
-	top:0;
-	padding:20px 30px 30px 20px;
-	/*-webkit-border-top-left-radius: 4px;
-	-webkit-border-bottom-left-radius: 4px;
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-bottomleft: 4px;
-	border-top-left-radius: 4px;
-	border-bottom-left-radius: 4px;*/
-	height:500px !important;
-	background:transparent url(../../../../../../themes/mlibrary/images/layout/sidebarRight_flap.png) no-repeat bottom right;
-
-}
-.showcase-thumbnail-restriction {
-	height:440px !important;
-	left:8px;
-	}
-.showcase-thumbnail-wrapper-vertical {
-	padding:9px;
-}
-
-.showcase-thumbnail.active > img, .showcase-thumbnail:hover img{
-	opacity:1;
-	filter: alpha(opacity = 100);
-}
-
-.showcase-thumbnail-wrapper-vertical .showcase-thumbnail {
-box-shadow: 0 1px 3px rgba(0, 0, 0, .8);
-margin-bottom:13px;
-height:60px;
-width:80px;
-}
-
-.showcase-thumbnail-button-backward .showcase-thumbnail-vertical, .showcase-thumbnail-button-forward .showcase-thumbnail-vertical {
-	margin-left:43px;
-}
-
-	
-.showcase-thumbnail img {
-width:100% !important;
-height:100% !important;
-opacity:.5;
-filter: alpha(opacity = 50);
-}
-.showcase-arrow-previous, .showcase-arrow-next {
-position: absolute;
-background:#555 url(../../../../../../themes/mlibrary/images/layout/arrows.png) no-repeat;
-background-repeat:no-repeat;
-background-position:center 4px;
-width: 250px;
-height: 25px;
-top: 390px;
-cursor: pointer;
--webkit-border-radius: 4px;
--moz-border-radius: 4px;
-border-radius: 5px;
-z-index: 100;
-}
-
-.showcase-arrow-next {
-	background-position:center 5px;
-right:165px;
-}
-.showcase-arrow-previous {
-background-position:center -30px;
-left:20px;
-}
-.showcase-arrow-previous:hover {
-	background-position:center -30px;
-	background-color:#888;
-}
- .showcase-arrow-next:hover {
-	background-position:center 5px;
-	background-color:#888;
-}
-.showcase-caption {
-
-	background:none;
-	color:white;
-	bottom:20px;
-	}
-	
-.title a:link, .title a:visited {
-font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
-color: #ADC0DE;
-text-decoration:none;
-}
-.title a:hover {
-color:#d2dced;
 }

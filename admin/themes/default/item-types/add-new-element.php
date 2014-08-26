@@ -1,9 +1,29 @@
-<tr class="new-element-row">
-    <td class="element-name"><?php echo $this->formText($addNewElementNamePrefix . $elementTempId, $elementName, array('class'=>'textinput')); ?></td>
-    <td><?php echo $this->formTextarea($addNewElementDescriptionPrefix . $elementTempId, $elementDescription, array('class'=>'textinput', 'rows'=>'10', 'cols'=>'30')); ?></td>
-    <td><?php echo select_data_types(array('name'=> $addNewElementDataTypeIdPrefix . $elementTempId), $elementDataTypeId); ?></td>
-    <td class="element-order"><?php echo $this->formText( $addNewElementOrderPrefix . $elementTempId, $elementOrder, array('size'=>2)); ?></td>
-    <?php if (has_permission('ItemTypes', 'delete-element')): ?>
-        <td><a href="" class="delete-element"><?php echo __('Remove'); ?></a></td>
-    <?php endif; ?>
-</tr>
+<li class="element">
+    <div class="sortable-item">
+        <?php
+        echo $this->formText(
+            $element_name_name, $element_name_value,
+            array('placeholder' => __('Element Name'))
+        );
+        ?>
+        <?php
+        echo $this->formHidden(
+            $element_order_name, $element_order_value,
+            array('class' => 'element-order')
+        );
+        ?>
+        <a href="" class="delete-element"><?php echo __('Remove'); ?></a>
+    </div>
+    <div class="drawer-contents">
+        <?php
+        echo $this->formTextarea(
+            $element_description_name, $element_description_value,
+            array(
+                'placeholder' => __('Element Description'),
+                'rows' => '3',
+                'cols'=>'30'
+            )
+        );
+        ?>
+    </div>
+</li>

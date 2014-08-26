@@ -1,20 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Controllers
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
+ * @package Omeka\Controller
  */
-class SystemInfoController extends Omeka_Controller_Action
+class SystemInfoController extends Omeka_Controller_AbstractActionController
 {
     public function preDispatch()
     {
@@ -31,7 +26,7 @@ class SystemInfoController extends Omeka_Controller_Action
 
     public function indexAction()
     {
-        $this->_db = $this->getDb();
+        $this->_db = $this->_helper->db->getDb();
         $this->view->info = $this->_getInfoArray();
     }
 
@@ -58,7 +53,7 @@ class SystemInfoController extends Omeka_Controller_Action
         $this->_addPluginInfo($info);
         $this->_addThemeInfo($info);
 
-        return apply_filters('system_info_array', $info);
+        return apply_filters('system_info', $info);
     }
 
     private function _addExtensionInfo(&$info)
@@ -96,7 +91,7 @@ class SystemInfoController extends Omeka_Controller_Action
 
     private function _addThemeInfo(&$info)
     {
-        $themes = Theme::getAvailable();
+        $themes = Theme::getAllThemes();
         $currentTheme = get_option('public_theme');
         $info['Themes'] = array();
 

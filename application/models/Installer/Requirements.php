@@ -1,20 +1,17 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
+ * @package Omeka\Install
  */
 class Installer_Requirements
 {
-    const OMEKA_PHP_VERSION = '5.2.4';
+    const OMEKA_PHP_VERSION = '5.2.11';
     const OMEKA_MYSQL_VERSION = '5.0';
     
     private $_dbAdapter;
@@ -31,8 +28,7 @@ class Installer_Requirements
         $this->_checkHtaccessFilesExist();
         $this->_checkRegisterGlobalsIsOff();
         $this->_checkExifModuleIsLoaded();
-        $this->_checkModRewriteIsEnabled();
-        $this->_checkArchiveStorageSetup();
+        $this->_checkFileStorageSetup();
         $this->_checkFileinfoIsLoaded();
     }
     
@@ -138,45 +134,13 @@ class Installer_Requirements
         }
     }
     
-    private function _checkModRewriteIsEnabled()
-    {
-        $modRewriteUrl = WEB_ROOT . '/check-mod-rewrite.html';
-        
-        // Set the http timeout to 5 to prevent recursion, which leads to a 
-        // MySQL "too many connections" error. This assumes Apache needs only 5 
-        // second to rewrite the URL.
-        $context = stream_context_create(array('http' => array('timeout' => 5))); 
-        
-        // If we can't use the http wrapper for file_get_contents(), warn that 
-        // we were unable to check for mod_rewrite.
-        if (!ini_get('allow_url_fopen')) {
-            $header = 'Unable to check for mod_rewrite';
-            $message = "Unable to verify that <a href=\"http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html\">mod_rewrite</a> 
-            is enabled on your server. mod_rewrite is an Apache extension that 
-            is required for Omeka to work properly. Omeka is unable to check 
-            because your php.ini <a href=\"http://us2.php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen\">allow_url_fopen</a> 
-            setting has been disabled. You can manually verify that Omeka 
-            mod_rewrite by checking to see that the following URL works in your 
-            browser: <a href=\"$modRewriteUrl\">$modRewriteUrl</a>";
-            $this->_warningMessages[] = compact('header', 'message');
-        
-        // We are trying to retrieve this URL.
-        } else if (!$modRewrite = @file_get_contents($modRewriteUrl, false, $context)) {
-            $header = 'mod_rewrite is not enabled';
-            $message = "Apache's <a href=\"http://httpd.apache.org/docs/1.3/mod/mod_rewrite.html\">mod_rewrite</a> 
-            extension must be enabled for Omeka to work properly. Please enable 
-            mod_rewrite and try again.";
-            $this->_errorMessages[] = compact('header', 'message');
-        }
-    }
-    
-    private function _checkArchiveStorageSetup()
+    private function _checkFileStorageSetup()
     {
         if (!$this->_storage->canStore()) {
             try {
                 $this->_storage->setUp();
             } catch (Omeka_Storage_Exception $e) {
-                $header = 'Archive storage not set up properly.';
+                $header = 'File storage not set up properly.';
                 $exMessage = $e->getMessage();
                 $message = "The following error occurred when attempting to "
                     . "set up storage for your Omeka site: $exMessage  "

@@ -1,18 +1,15 @@
-<?php 
+<?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Sets up view script search paths on a per-request basis.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * 
+ * @package Omeka\Controller\Plugin
  */
 class Omeka_Controller_Plugin_ViewScripts extends Zend_Controller_Plugin_Abstract
 {
@@ -155,7 +152,7 @@ class Omeka_Controller_Plugin_ViewScripts extends Zend_Controller_Plugin_Abstrac
             
             // add the scripts from the first module
             $pluginScriptDirs = $this->_pluginMvc->getModuleViewScriptDirs($pluginModuleName);
-            if ($pluginScriptDirs[$themeType]) {
+            if (isset($pluginScriptDirs[$themeType])) {
                 foreach ($pluginScriptDirs[$themeType] as $scriptPath) {
                     $this->_addPathToView($scriptPath);
                 }

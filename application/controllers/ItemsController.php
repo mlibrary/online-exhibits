@@ -1,21 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @subpackage Controllers
- * @author CHNM
- * @see Omeka_Controller_Action
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * @package Omeka\Controller
  */
-class ItemsController extends Omeka_Controller_Action
+class ItemsController extends Omeka_Controller_AbstractActionController
 {
     public $contexts = array(
             'browse' => array('json', 'dcmes-xml', 'rss2', 'omeka-xml', 'omeka-json', 'atom'),
@@ -23,13 +17,10 @@ class ItemsController extends Omeka_Controller_Action
     );
 
     private $_ajaxRequiredActions = array(
-        'element-form',
-        'tag-form',
         'change-type',
     );
 
     private $_methodRequired = array(
-        'element-form' => array('POST'),
         'modify-tags' => array('POST'),
         'power-edit' => array('POST'),
         'change-type' => array('POST'),
@@ -38,7 +29,7 @@ class ItemsController extends Omeka_Controller_Action
 
     public function init() 
     {
-        $this->_modelClass = 'Item';
+        $this->_helper->db->setDefaultModelName('Item');
     }
 
     public function preDispatch()
@@ -58,26 +49,28 @@ class ItemsController extends Omeka_Controller_Action
     }
     
     /**
-     * This shows the advanced search form for items by going to the correct URI.
+     * This shows the search form for items by going to the correct URI.
      * 
      * This form can be loaded as a partial by calling items_search_form().
      * 
      * @return void
      */
-    public function advancedSearchAction()
+    public function searchAction()
     {
         // Only show this form as a partial if it's being pulled via XmlHttpRequest
-        $this->view->isPartial = $this->getRequest()->isXmlHttpRequest();
-        
-        // If this is set to null, use the default items/browse action.
-        $this->view->formActionUri = null;
-        
-        $this->view->formAttributes = array('id'=>'advanced-search-form');
+        if($this->getRequest()->isXmlHttpRequest()) {
+            $this->render('search-form');
+        }
     }
     
+    /**
+     * Gets the element sets for the 'Item' record type.
+     * 
+     * @return array The element sets for the 'Item' record type
+     */
     protected function _getItemElementSets()
     {
-        return $this->getTable('ElementSet')->findForItems();
+        return $this->_helper->db->getTable('ElementSet')->findByRecordType('Item');
     }
     
     /**
@@ -88,70 +81,74 @@ class ItemsController extends Omeka_Controller_Action
     {
         // Get all the element sets that apply to the item.
         $this->view->elementSets = $this->_getItemElementSets();
-        
-        if ($user = $this->getCurrentUser()) {
-            
-            $item = $this->findById();
-            
-            // If the user cannot edit any given item. Check if they can edit 
-            // this specific item
-            if ($this->isAllowed('edit', $item)) {
-                return parent::editAction();    
-            }
+        $pathToConvert = get_option('path_to_convert');
+        if (empty($pathToConvert) && is_allowed('Settings', 'edit')) {
+            $this->_helper->flashMessenger('The path to Image Magick has not been set. No derivative images will be created. If you would like Omeka to create derivative images, please add the path to your settings form.');
         }
-        
-        $this->forbiddenAction();
+        parent::editAction();
     }
     
-    protected function _getAddSuccessMessage($record)
+    protected function _getAddSuccessMessage($item)
     {
-        return __('The item was successfully added!');        
+        $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
+        if ($itemTitle != '') {
+            return __('The item "%s" was successfully added!', $itemTitle);
+        } else {
+            return __('The item #%s was successfully added!', strval($item->id));
+        }        
     }
     
-    protected function _getEditSuccessMessage($record)
+    protected function _getEditSuccessMessage($item)
     {
-        return __('The item was successfully changed!');
+        $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
+        if ($itemTitle != '') {
+            return __('The item "%s" was successfully changed!', $itemTitle);
+        } else {
+            return __('The item #%s was successfully changed!', strval($item->id));
+        }
     }
 
-    protected function  _getDeleteSuccessMessage($record)
+    protected function  _getDeleteSuccessMessage($item)
     {
-        return __('The item was successfully deleted!');
+        $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
+        if ($itemTitle != '') {
+            return __('The item "%s" was successfully deleted!', $itemTitle);
+        } else {
+            return __('The item #%s was successfully deleted!', strval($item->id));
+        }
     }
     
-    protected function _getDeleteConfirmMessage($record)
+    protected function _getDeleteConfirmMessage($item)
     {
-        return __('This will delete the item and its associated metadata. It will '
-             . 'also delete all files and file metadata associated with this '
-             . 'item.');
+        $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
+        if ($itemTitle != '') {        
+            return __('This will delete the item "%s" and its associated metadata. It will '
+                 . 'also delete all files and file metadata associated with this '
+                 . 'item.', $itemTitle);
+        } else {
+            return __('This will delete the item #%s and its associated metadata. It will '
+                 . 'also delete all files and file metadata associated with this '
+                 . 'item.', strval($item->id));
+        }
+    }
+    
+    protected function _getElementMetadata($item, $elementSetName, $elementName) 
+    {
+        $m = new Omeka_View_Helper_Metadata;
+        return strip_formatting($m->metadata($item, array($elementSetName, $elementName)));
     }
     
     public function addAction()
     {
         // Get all the element sets that apply to the item.
         $this->view->elementSets = $this->_getItemElementSets();
-        
+        $pathToConvert = get_option('path_to_convert');
+        if (empty($pathToConvert) && is_allowed('Settings', 'edit')) {
+            $this->_helper->flashMessenger('The path to Image Magick has not been set. No derivative images will be created. If you would like Omeka to create derivative images, please add the path to your settings form.');
+        }
         return parent::addAction();
     }
-    
-    /**
-     * Delete an item.
-     *
-     * Wraps the standard deleteAction in permission checks.
-     */
-    public function deleteAction()
-    {
-        if (($user = $this->getCurrentUser())) {
-            $item = $this->findById();
-            
-            // Permission check
-            if ($this->isAllowed('delete', $item)) {
-                return parent::deleteAction();
-            }
-        }
-        
-        $this->_forward('forbidden');
-    }
-    
+
     /**
      * Finds all tags associated with items (used for tag cloud)
      * 
@@ -160,7 +157,7 @@ class ItemsController extends Omeka_Controller_Action
     public function tagsAction()
     {
         $params = array_merge($this->_getAllParams(), array('type'=>'Item'));
-        $tags = $this->getTable('Tag')->findBy($params);
+        $tags = $this->_helper->db->getTable('Tag')->findBy($params);
         $this->view->assign(compact('tags'));
     }
     
@@ -172,46 +169,51 @@ class ItemsController extends Omeka_Controller_Action
      * @return void
      */
     public function browseAction()
-    {   
-        $results = $this->_helper->searchItems();
-        
-        /** 
-         * Now process the pagination
-         * 
-         */
-        $paginationUrl = $this->getRequest()->getBaseUrl().'/items/browse/';
-
-        //Serve up the pagination
-        $pagination = array('menu'          => null, // This hasn't done anything since $menu was never instantiated in ItemsController::browseAction()
-                            'page'          => $results['page'], 
-                            'per_page'      => $results['per_page'], 
-                            'total_results' => $results['total_results'], 
-                            'link'          => $paginationUrl);
-        
-        Zend_Registry::set('pagination', $pagination);
-        
-        fire_plugin_hook('browse_items', $results['items']);
-        
-        $this->view->assign(array('items'=>$results['items'], 'total_items'=>$results['total_items']));
-    }
-    
-    public function elementFormAction()
     {
-        $elementId = (int)$_POST['element_id'];
-        $itemId  = (int)$_POST['item_id'];
-        
-        // Re-index the element form posts so that they are displayed in the correct order
-        // when one is removed.
-        $_POST['Elements'][$elementId] = array_merge($_POST['Elements'][$elementId]);
+        if (!$this->_getParam('sort_field')) {
+            $this->_setParam('sort_field', 'added');
+            $this->_setParam('sort_dir', 'd');
+        }
 
-        $element = $this->getTable('Element')->find($elementId);
-        try {
-            $item = $this->findById($itemId);
-        } catch (Exception $e) {
-            $item = new Item;
+        //Must be logged in to view items specific to certain users
+        if ($this->_getParam('user') && !$this->_helper->acl->isAllowed('browse', 'Users')) {
+            $this->_helper->flashMessenger('May not browse by specific users.');
+            $this->_setParam('user', null);
         }
         
-        $this->view->assign(compact('element', 'item'));
+        parent::browseAction();
+    }
+
+    /**
+     * Retrieve the number of items to display on any given browse page.
+     * This can be modified as a query parameter provided that a user is
+     * actually logged in.
+     *
+     * @return integer
+     */
+    public function _getBrowseRecordsPerPage()
+    {
+        //Retrieve the number from the options table
+        $options = $this->getFrontController()->getParam('bootstrap')
+                          ->getResource('Options');
+
+        if (is_admin_theme()) {
+            $perPage = (int) $options['per_page_admin'];
+        } else {
+            $perPage = (int) $options['per_page_public'];
+        }
+        
+        // If users are allowed to modify the # of items displayed per page,
+        // then they can pass the 'per_page' query parameter to change that.
+        if ($this->_helper->acl->isAllowed('modifyPerPage', 'Items') && ($queryPerPage = $this->getRequest()->get('per_page'))) {
+            $perPage = $queryPerPage;
+        }
+
+        if ($perPage < 1) {
+            $perPage = null;
+        }
+
+        return $perPage;
     }
     
     ///// AJAX ACTIONS /////
@@ -222,60 +224,14 @@ class ItemsController extends Omeka_Controller_Action
      */
     public function changeTypeAction()
     {
-        if ($id = $_POST['item_id']) {
-            $item = $this->findById($id);
+        if (isset($_POST['item_id'])) {
+            $item = $this->_helper->db->findById($_POST['item_id']);
         } else {
             $item = new Item;
         }
         
         $item->item_type_id = (int) $_POST['type_id'];
         $this->view->assign(compact('item'));
-    }
-    
-    /**
-     * Display the form for tags for a given item.
-     * 
-     * @return void
-     */
-    public function tagFormAction()
-    {
-        $item = $this->findById();
-        $this->view->assign(compact('item'));
-    }
-    
-    /**
-     * Modify the tags for an item (add or remove).  If this is an AJAX request, it will
-     * render the 'tag-list' partial, otherwise it will redirect to the
-     * 'show' action.
-     * 
-     * @return void
-     */
-    public function modifyTagsAction()
-    {
-        $item = $this->findById();
-
-        //Add the tags
-         
-        if (array_key_exists('modify_tags', $_POST) || !empty($_POST['tags'])) {
-            if ($this->isAllowed('tag')) {
-                $currentUser = $this->getInvokeArg('bootstrap')->getResource('Currentuser');
-                $tagsAdded = $item->applyTagString($_POST['tags'], $currentUser->Entity);
-                // Refresh the item.
-                $item = $this->findById();
-            } else {
-                $this->flashError(__('User does not have permission to add tags.'));
-            }
-        }
-        
-        if (!$this->getRequest()->isXmlHttpRequest()) {
-            $itemId = $this->_getParam('id');
-            return $this->redirect->gotoRoute(array('controller' => 'items', 
-                                                    'action'     => 'show', 
-                                                    'id'         => $itemId), 'id');
-        }
-        
-        $this->view->assign(compact('item'));
-        $this->render('tag-list');
     }
     
     ///// END AJAX ACTIONS /////
@@ -296,11 +252,15 @@ class ItemsController extends Omeka_Controller_Action
         
         $itemIds = $this->_getParam('items');
         if (empty($itemIds)) {
-            $this->flashError(__('You must choose some items to batch edit.'));
-            return $this->_helper->redirector->goto('browse', 'items');
+            $this->_helper->flashMessenger(__('You must choose some items to batch edit.'), 'error');
+            $this->_helper->redirector('browse', 'items');
+            return;
         }
 
         $this->view->assign(compact('itemIds'));
+        if ($this->_getParam('submit-batch-delete')) {
+            $this->render('batch-delete');
+        }
     }
     
     /**
@@ -332,48 +292,59 @@ class ItemsController extends Omeka_Controller_Action
             }
 
             $errorMessage = null;
-                        
-            if ($metadata && array_key_exists('public', $metadata) && !$this->isAllowed('makePublic')) {
+            $aclHelper = $this->_helper->acl;
+            
+            if ($metadata && array_key_exists('public', $metadata) && !$aclHelper->isAllowed('makePublic')) {
                 $errorMessage = 
                     __('User is not allowed to modify visibility of items.');
             }
 
-            if ($metadata && array_key_exists('featured', $metadata) && !$this->isAllowed('makeFeatured')) {
+            if ($metadata && array_key_exists('featured', $metadata) && !$aclHelper->isAllowed('makeFeatured')) {
                 $errorMessage = 
                     __('User is not allowed to modify featured status of items.');
             }
 
             if (!$errorMessage) {
                 foreach ($itemIds as $id) {
-                    if ($item = $this->getTable('Item')->find($id)) {
-                        if ($delete && !$this->isAllowed('delete', $item)) {
+                    if ($item = $this->_helper->db->getTable('Item')->find($id)) {
+                        if ($delete && !$aclHelper->isAllowed('delete', $item)) {
                             $errorMessage = __('User is not allowed to delete selected items.');
                             break;
                         }
 
                         // Check to see if anything but 'tag'
-                        if ($metadata && array_diff_key($metadata, array('tags' => '')) && !$this->isAllowed('edit', $item)) {
+                        if ($metadata && array_diff_key($metadata, array('tags' => '')) && !$aclHelper->isAllowed('edit', $item)) {
                             $errorMessage = __('User is not allowed to edit selected items.');
                             break;
                         }
 
-                        if ($metadata && array_key_exists('tags', $metadata) && !$this->isAllowed('tag', $item)) {
+                        if ($metadata && array_key_exists('tags', $metadata) && !$aclHelper->isAllowed('tag', $item)) {
                             $errorMessage = __('User is not allowed to tag selected items.');
                             break;
                         }
+                        
+                        
                         release_object($item);
                     }
                 }
             }
 
-            $errorMessage = apply_filters('items_batch_edit_error', $errorMessage, $metadata, $custom, $itemIds);
+            $errorMessage = apply_filters(
+                'items_batch_edit_error', 
+                $errorMessage, 
+                array(
+                    'metadata' => $metadata, 
+                    'custom' => $custom, 
+                    'item_ids' => $itemIds, 
+                )
+            );
 
             if ($errorMessage) {
-                $this->flashError($errorMessage);
+                $this->_helper->flashMessenger($errorMessage, 'error');
             } else {
                 $dispatcher = Zend_Registry::get('job_dispatcher');
                 $dispatcher->send(
-                    'Item_BatchEditJob', 
+                    'Job_ItemBatchEdit', 
                     array(
                         'itemIds' => $itemIds, 
                         'delete' => $delete, 
@@ -381,10 +352,14 @@ class ItemsController extends Omeka_Controller_Action
                         'custom' => $custom
                     )
                 );
-                $this->flashSuccess(__('The items were successfully changed!'));
-            }
+                if ($delete) {
+                  $message = __('The items were successfully deleted!');
+                } else {
+                  $message = __('The items were successfully changed!');
+                }
+                $this->_helper->flashMessenger($message, 'success');            }
          }
 
-         $this->_helper->redirector->goto('browse', 'items');
+         $this->_helper->redirector('browse', 'items');
     }
 }

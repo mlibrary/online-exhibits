@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Abstract test case class that bootstraps the entire application.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * 
+ * @package Omeka\Test
  */
 abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCase
 {   
@@ -20,12 +20,6 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
      * @var boolean
      */
     protected $_isAdminTest = true;
-
-    /**
-     * Optimize tests by indicating whether the database was modified during 
-     * the test run.  If not, the next test run can skip the Installer.
-     */
-    private static $_dbChanged = true;
     
     /**
      * Bootstrap the application on each test run.
@@ -50,29 +44,12 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
         if ($retVal = parent::__get($property)) {
             return $retVal;
         }
-        if (!isset($this->core)) {
+        if (!isset($this->application)) {
             return;
         }
-        return $this->core->getBootstrap()->getContainer()->{$property};
+        return $this->application->getBootstrap()->getResource($property);
     }
 
-    public function __set($property, $value)
-    {
-        if ($property == '_useAdminViews') {
-            $this->_useAdminViewsWarning();
-        }
-        return parent::__set($property, $value);
-    }
-    
-    private function _useAdminViewsWarning()
-    {
-        trigger_error("Omeka_Test_AppTestCase::\$_useAdminViews is " 
-            . "deprecated since v1.4, please set Omeka_Test_AppTestCase::"
-            . "\$_isAdminTest = false to indicate that a given test should "
-            . "run against the public theme (\$_isAdminTest is " 
-            . "true by default).", E_USER_WARNING);
-    }
-    
     /**
      * Bootstrap the application.
      *
@@ -80,31 +57,27 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
      */
     public function appBootstrap()
     {        
-        $this->core = new Omeka_Core('testing', array(
+        $this->application = new Omeka_Application('testing', array(
             'config' => CONFIG_DIR . '/' . 'application.ini'));
         
         // No idea why we actually need to add the default routes.
         $this->frontController->getRouter()->addDefaultRoutes();
-        $this->frontController->setParam('bootstrap', $this->core->getBootstrap());
+        $this->frontController->setParam('bootstrap', $this->application->getBootstrap());
         $this->getRequest()->setBaseUrl('');
-        // These two properties have equivalent semantic meaning, therefore should
-        // be combined at some future point.
-        if (isset($this->_useAdminViews)) {
-            $this->_useAdminViewsWarning();
-        }
+
         if ($this->_isAdminTest) {
             $this->_setUpThemeBootstrap('admin');
         } else {
             $this->_setUpThemeBootstrap('public');
         }
         
-        $this->setUpBootstrap($this->core->getBootstrap());
-        $this->core->bootstrap();
+        $this->setUpBootstrap($this->application->getBootstrap());
+        $this->application->bootstrap();
     }
     
     /**
      * Subclasses can override this to perform specialized setup on the Omeka
-     * core.
+     * application.
      *
      * @param Zend_Application_Bootstrap $bootstrap
      * @return void
@@ -129,10 +102,12 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
         }    
         if ($this->db instanceof Omeka_Db) {
             Omeka_Test_Resource_Db::setDbAdapter($this->db->getAdapter());
+            $this->db->rollBack();
         }
         Zend_Registry::_unsetInstance();
-        Omeka_Context::resetInstance();
-        Omeka_Controller_Flash::reset();
+
+        unset($this->bootstrap);
+        unset($this->application);
         parent::tearDown();
     }
     
@@ -150,16 +125,7 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
             if (isset($this->request->error_handler)) {
                 throw $this->request->error_handler->exception;
             }
-        }        
-    }
-    
-
-    public static function dbChanged($flag = null)
-    {
-        if ($flag !== null) {
-            self::$_dbChanged = (boolean)$flag;
         }
-        return self::$_dbChanged;
     }
 
     /**
@@ -173,13 +139,12 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
         if (!$user->exists()) {
             throw new InvalidArgumentException("User is not persistent in db.");
         }
-        $bs = $this->core->getBootstrap();
+        $bs = $this->application->getBootstrap();
         $bs->auth->getStorage()->write($user->id);
         $bs->currentUser = $user;
         $bs->getContainer()->currentuser = $user;
-        $aclHelper = Zend_Controller_Action_HelperBroker::getHelper('Acl'); 
-        $aclHelper->setCurrentUser($user); 
-        
+        $aclHelper = Zend_Controller_Action_HelperBroker::getStaticHelper('Acl');
+        $aclHelper->setCurrentUser($user);
     }
     
     /**
@@ -202,7 +167,7 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
             case 'admin':
                 $this->frontController->setParam('admin', true);
                 $this->frontController->registerPlugin(new Omeka_Controller_Plugin_Admin);
-                $this->core->getBootstrap()->setOptions(array(
+                $this->application->getBootstrap()->setOptions(array(
                     'resources' => array(
                         'theme' => array(
                             'basePath' => ADMIN_THEME_DIR,
@@ -212,7 +177,7 @@ abstract class Omeka_Test_AppTestCase extends Zend_Test_PHPUnit_ControllerTestCa
                 ));
                 break;
             case 'public':
-                $this->core->getBootstrap()->setOptions(array(
+                $this->application->getBootstrap()->setOptions(array(
                     'resources' => array(
                         'theme' => array(
                             'basePath' => PUBLIC_THEME_DIR,

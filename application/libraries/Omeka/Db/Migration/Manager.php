@@ -1,20 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Manages database migrations (both upgrades and downgrades).
- *
- * Partially ported from Ruby on Rails.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * 
+ * @package Omeka\Db\Migration
  */
 class Omeka_Db_Migration_Manager
 {
@@ -73,7 +68,7 @@ class Omeka_Db_Migration_Manager
         $db = $this->_db;
         $tableSql = "CREATE TABLE IF NOT EXISTS `$db->prefix" . self::MIGRATION_TABLE_NAME
                 . "` (`version` varchar(16) NOT NULL, UNIQUE KEY `unique_schema_migrations` (`version`))
-                    ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+                    ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $optionSql = "DELETE FROM $db->Option WHERE name = '" . self::ORIG_MIGRATION_OPTION_NAME . "' LIMIT 1";
         $db->query($optionSql);
         $db->query($tableSql);
@@ -142,9 +137,16 @@ class Omeka_Db_Migration_Manager
     public function dbNeedsUpgrade()
     {
         $omekaVersion = get_option(self::VERSION_OPTION_NAME);
-        return !$omekaVersion ||
-            (version_compare($omekaVersion, OMEKA_VERSION, '<')
-            && $this->canUpgrade());
+        if (!$omekaVersion || version_compare($omekaVersion, OMEKA_VERSION, '<')) {
+            if ($this->canUpgrade()) {
+                return true;
+            } else {
+                // This version has no migrations, just update the stored version.
+                $this->finalizeDbUpgrade();
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -165,7 +167,7 @@ class Omeka_Db_Migration_Manager
     public static function getDefault($db = null)
     {
         if (!$db) {
-            $db = Omeka_Context::getInstance()->getDb();
+            $db = Zend_Registry::get('bootstrap')->getResource('Db');
         }
         return new self($db, UPGRADE_DIR);
     }
@@ -236,7 +238,7 @@ class Omeka_Db_Migration_Manager
      * with it.
      *
      * @param string $filename Migration script filename.
-     * @return Omeka_Db_Migration
+     * @return Omeka_Db_Migration_AbstractMigration
      */
     private function _loadMigration($filename)
     {

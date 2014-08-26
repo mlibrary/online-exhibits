@@ -1,17 +1,13 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * 
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
+ * @package Omeka\Form
  */
 class Omeka_Form_Install extends Omeka_Form
 {
@@ -22,8 +18,7 @@ class Omeka_Form_Install extends Omeka_Form
     const DEFAULT_PER_PAGE_ADMIN = 10;
     const DEFAULT_PER_PAGE_PUBLIC = 10;
     const DEFAULT_SHOW_EMPTY_ELEMENTS = true;
-    const DEFAULT_USER_FIRST_NAME = 'Super';
-    const DEFAULT_USER_LAST_NAME = 'User';
+    const DEFAULT_USER_NAME = 'Super User';
         
     public function init()
     {
@@ -33,15 +28,14 @@ class Omeka_Form_Install extends Omeka_Form
             
         $this->addElement('text', 'username', array(
             'label' => __('Username'),
-            'class' => 'textinput',
-            'description' => __('Only alphanumeric characters are allowed.'), 
+            'description' => __('only alphanumeric characters are allowed'), 
             'validators' => array(array('StringLength', false, array(User::USERNAME_MIN_LENGTH, User::USERNAME_MAX_LENGTH)), 'Alnum'), 
             'required' => true
         ));
         
         $this->addElement('password', 'password', array(
             'label' => __('Password'),
-            'description' => __('Must be at least 6 characters.'), 
+            'description' => __('must be at least 6 characters'), 
             'validators' => array(
                 array('validator' => 'NotEmpty', 'options' => array(
                     'messages' => array(
@@ -121,7 +115,7 @@ class Omeka_Form_Install extends Omeka_Form
         
         $this->addElement('text', 'fullsize_constraint', array(
             'label' => __('Fullsize Image Size'),
-            'description' => __('Maximum fullsize image size constraint (in pixels).'), 
+            'description' => __('Maximum fullsize image size constraint (in pixels)'), 
             'value' => self::DEFAULT_FULLSIZE_CONSTRAINT, 
             'validators' => array('Digits'), 
             'required' => true
@@ -129,7 +123,7 @@ class Omeka_Form_Install extends Omeka_Form
         
         $this->addElement('text', 'thumbnail_constraint', array(
             'label' => __('Thumbnail Size'),
-            'description' => __('Maximum thumbnail size constraint (in pixels).'), 
+            'description' => __('Maximum thumbnail size constraint (in pixels)'), 
             'value' => self::DEFAULT_THUMBNAIL_CONSTRAINT, 
             'validators' => array('Digits'), 
             'required' => true
@@ -137,7 +131,7 @@ class Omeka_Form_Install extends Omeka_Form
         
         $this->addElement('text', 'square_thumbnail_constraint', array(
             'label' => __('Square Thumbnail Size'),
-            'description' => __('Maximum square thumbnail size constraint (in pixels).'), 
+            'description' => __('Maximum square thumbnail size constraint (in pixels)'), 
             'value' => self::DEFAULT_SQUARE_THUMBNAIL_CONSTRAINT, 
             'validators' => array('Digits'), 
             'required' => true
@@ -162,11 +156,11 @@ class Omeka_Form_Install extends Omeka_Form
         $this->addElement('checkbox', 'show_empty_elements', array(
             'label' => __('Show Empty Elements'),
             'class' => 'checkbox',
-            'description' => __('Whether metadata elements with no text will be displayed.')
+            'description' => __('Check box to show metadata elements with no text.')
         ));
         
         $this->addElement('text', 'path_to_convert', array(
-            'label' => __('Imagemagick Directory Path')
+            'label' => __('ImageMagick Directory Path')
         ));
         
         $this->addElement('submit', 'install_submit', array(

@@ -1,17 +1,17 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Removes all associations between Entities and Collections.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * 
+ * @package Omeka\Db\Migration
  */
-class detachCollectorsFromEntities extends Omeka_Db_Migration
+class detachCollectorsFromEntities extends Omeka_Db_Migration_AbstractMigration
 {
     
     public function up()
@@ -26,7 +26,7 @@ class detachCollectorsFromEntities extends Omeka_Db_Migration
     
     private function _migrateCollections($db)
     {
-        $db->execBlock(<<<COL
+        $db->queryBlock(<<<COL
 ALTER TABLE `$db->Collection` ADD `added` TIMESTAMP NOT NULL default '0000-00-00 00:00:00';
 ALTER TABLE `$db->Collection` ADD `modified` TIMESTAMP NOT NULL;   
 ALTER TABLE `$db->Collection` ADD `owner_id` INT( 10 ) UNSIGNED NOT NULL;

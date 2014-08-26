@@ -106,10 +106,20 @@ body {
 			.navigation a {text-decoration:none;}
 		
 		/* Pagination Classes */
-		.pagination {}
-			.pagination li {display:inline;padding:6px 8px; background:#ccc; color:#fff;margin-right:1px;}
-			.pagination a { color:#fff; text-decoration:none;}
+		.pagination {
+		/*float: left;*/
+    margin: 0;
+    display: inline;
+    line-height: 21px;
+    list-style-type: none;
+    padding-left: 0;
+		}
+			.pagination li {display:inline-block;padding:6px 8px; background:#ccc;margin-right:5px;}
+			.pagination a {  text-decoration:none;}
 			
+			.pagination > *:last-child {
+    padding-bottom: 0.375em;
+}
 		.next {} 
 		.previous {} 
 	
@@ -189,6 +199,13 @@ body {
 				.exhibit-section-nav li.current a{color:#333;font-style:italic;}
 				.exhibit-section-nav a {padding:0.5em 1em 0.5em; color:#666;text-decoration:none;}
 				.exhibit-section-nav li a.current {border-top:1px solid #ccc;background:#fff;color:#333; font-weight:normal;border-left:1px solid #ccc; border-right:1px solid #ccc; border-bottom:1px solid #fff;}
+		
+		#exhibit-pages {margin-bottom:2em; border-bottom:1px solid #ccc;margin-bottom:1.5em;padding:0.3em; }
+				#exhibit-pages li {padding:0.5em 0;display:block;font-weight:normal;}
+				#exhibit-pages li.current a{color:#333;font-style:italic;}
+				#exhibit-pages a {padding:0.5em 1em 0.5em; color:#666;text-decoration:none;}
+				#exhibit-pages li a.current {border-top:1px solid #ccc;background:#fff;color:#333; font-weight:normal;border-left:1px solid #ccc; border-right:1px solid #ccc; border-bottom:1px solid #fff;}
+		
 		
 		.exhibit-page-nav {overflow:hidden;width:215px;color:#fff;font-weight:normal;}/* Changed by Jianqi */
 			.exhibit-page-nav li {display:inline; color:#fafafa;margin-right:2px;}
@@ -454,7 +471,7 @@ border-radius: 3px; }
 	#previous-item {}
 	
 		/* Search Results */
-		#primary form {padding:10px 0;overflow:hidden;}
+		/*#primary form {padding:10px 0;overflow:hidden;}*/
 		#primary form .field {font-size:1.2em; line-height:1.5em; margin-bottom:1.5em;clear:both;}
 		#primary form .field label {display:block;float:left;margin-right:5px;}		
 		input#featured, input#public  {display:block;float:left;}

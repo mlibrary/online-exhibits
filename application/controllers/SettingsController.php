@@ -1,51 +1,156 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Controllers
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * @package Omeka\Controller
  */
-class SettingsController extends Omeka_Controller_Action
+class SettingsController extends Omeka_Controller_AbstractActionController
 {    
     const DEFAULT_TAG_DELIMITER = ',';
-    const DEFAULT_FULLSIZE_CONSTRAINT = 800;
-    const DEFAULT_THUMBNAIL_CONSTRAINT = 200;
-    const DEFAULT_SQUARE_THUMBNAIL_CONSTRAINT = 200;
-    const DEFAULT_PER_PAGE_ADMIN = 10;
-    const DEFAULT_PER_PAGE_PUBLIC = 10;
         
     public function indexAction() 
     {
-        $this->_forward('edit');
+        $this->_helper->redirector('edit-settings');
     }
     
     public function browseAction() 
     {
-        $this->_forward('edit');
+        $this->_helper->redirector('edit-settings');
     }
     
-    public function editAction() 
+    public function editSettingsAction() 
     {
-        $form = $this->_getForm();
+        require_once APP_DIR . '/forms/GeneralSettings.php';
+        $form = new Omeka_Form_GeneralSettings;
+        $form->setDefaults($this->getInvokeArg('bootstrap')->getResource('Options'));
+        fire_plugin_hook('general_settings_form', array('form' => $form));
+        $form->removeDecorator('Form');
         $this->view->form = $form;
         
-        if (isset($_POST['settings_submit'])) {
+        if ($this->getRequest()->isPost()) {
             if ($form->isValid($_POST)) {
-                $this->_setOptions($form);
-                $this->flashSuccess(__('The general settings have been updated.'));
+                $options = $form->getValues();
+                // Everything except the submit button should correspond to a 
+                // valid option in the database.
+                unset($options['settings_submit']);
+                foreach ($options as $key => $value) {
+                    set_option($key, $value);
+                }
+                $this->_helper->flashMessenger(__('The general settings have been updated.'), 'success');
+                $this->_helper->redirector('edit-settings');
             } else {
-                $this->flashError(__('There were errors found in your form. Please edit and resubmit.'));
+                $this->_helper->flashMessenger(__('There were errors found in your form. Please edit and resubmit.'), 'error');
             }
         }
+    }
+    
+    public function editSecurityAction() {
+        $form = new Omeka_Form_SecuritySettings;
+        $form->removeDecorator('Form');
+        $this->view->form = $form;
+        
+        if ($this->getRequest()->isPost()) {
+            if ($form->isValid($_POST)) {
+                // Any changes to this list should be reflected in the install 
+                // script (and possibly the view functions).
+                $options = array(
+                    Omeka_Validate_File_Extension::WHITELIST_OPTION,
+                    Omeka_Validate_File_MimeType::WHITELIST_OPTION,
+                    File::DISABLE_DEFAULT_VALIDATION_OPTION,
+                    'html_purifier_is_enabled',
+                    'html_purifier_allowed_html_elements',
+                    'html_purifier_allowed_html_attributes',
+                    Omeka_Captcha::PUBLIC_KEY_OPTION,
+                    Omeka_Captcha::PRIVATE_KEY_OPTION
+                );
+                foreach ($form->getValues() as $key => $value) {
+                    if (in_array($key, $options)) {
+                        set_option($key, $value);
+                    }
+                }
+                $this->_helper->flashMessenger(__('The security settings have been updated.'), 'success');
+                $this->_helper->redirector('edit-security');
+            } else {
+                $this->_helper->flashMessenger(__('There were errors found in your form. Please edit and resubmit.'), 'error');
+            }
+        }
+    }
+    
+    public function editSearchAction()
+    {
+        // Customize search record types.
+        if ($this->getRequest()->isPost()) {
+            if (isset($_POST['submit_save_changes'])) {
+                if (isset($_POST['search_record_types'])) {
+                    $option = serialize($_POST['search_record_types']);
+                } else {
+                    $option = serialize(array());
+                }
+                set_option('search_record_types', $option);
+                $this->_helper->flashMessenger(__('You have changed which records are searchable in Omeka. Please re-index the records using the form below.'), 'success');
+            }
+            
+            // Index the records.
+            if (isset($_POST['submit_index_records'])) {
+                Zend_Registry::get('bootstrap')->getResource('jobs')
+                                               ->sendLongRunning('Job_SearchTextIndex');
+                $this->_helper->flashMessenger(__('Indexing records. This may take a while. You may continue administering your site.'), 'success');
+            }
+            $this->_helper->redirector('edit-search');
+        }
+        
+        $this->view->assign('searchRecordTypes', get_search_record_types());
+        $this->view->assign('customSearchRecordTypes', get_custom_search_record_types());
+    }
+    
+    public function editItemTypeElementsAction()
+    {
+        $elementSet = $this->_helper->db->getTable('ElementSet')->findByName(ElementSet::ITEM_TYPE_NAME);
+        $db = $this->_helper->db;
+        
+        // Handle a submitted edit form.
+        if ($this->getRequest()->isPost()) {
+            
+            // Update the elements.
+            try {
+                $elements = $this->getRequest()->getPost('elements');
+                foreach ($elements as $id => $element) {
+                    $elementRecord = $db->getTable('Element')->find($id);
+                    if ($element['delete']) {
+                        $elementRecord->delete();
+                        continue;
+                    }
+                    $elementRecord->description = $element['description'];
+                    $elementRecord->save();
+                }
+                $this->_helper->flashMessenger(__('The item type elements were successfully changed!'), 'success');
+                $this->_helper->redirector('edit-item-type-elements');
+            } catch (Omeka_Validate_Exception $e) {
+                $this->_helper->flashMessenger($e);
+            }
+        }
+        
+        $this->view->element_set = $elementSet;
+    }
+    
+    public function editApiAction()
+    {
+        $keyTable = $this->_helper->db->getTable('Key');
+        
+        // Handle a form submission
+        if ($this->getRequest()->isPost()) {
+            set_option('api_enable', (bool) $_POST['api_enable']);
+            set_option('api_per_page', (int) $_POST['api_per_page']);
+            $this->_helper->flashMessenger(__('The API configuration was successfully changed!'), 'success');
+        }
+        
+        $this->view->api_resources = Omeka_Controller_Plugin_Api::getApiResources();
+        $this->view->keys = $keyTable->findAll();
     }
     
     /**
@@ -63,63 +168,55 @@ class SettingsController extends Omeka_Controller_Action
      */
     public function checkImagemagickAction()
     {
-        $imPath = $this->_getParam('path-to-convert');
         $this->_helper->viewRenderer->setNoRender(true);
-        $isValid = $this->_isValidImageMagickPath($imPath);
-        $this->getResponse()->setBody($isValid 
-                                    ? '<div class="im-success">' . __('Works') . '</div>' 
-                                    : '<div class="im-failure">' . __('Fails') . '</div>');
+        $imPath = $this->_getParam('path-to-convert');
+        $isValid = Omeka_File_Derivative_Image_Creator::isValidImageMagickPath($imPath);
+        $this->getResponse()->setBody(
+            $isValid ? '<div class="success">' . __('The ImageMagick directory path works.') . '</div>' 
+                     : '<div class="error">' . __('The ImageMagick directory path does not work.') . '</div>');
     }
     
-    /**
-     * Determine whether or not the path given to ImageMagick is valid.
-     * 
-     * @param string
-     * @return boolean
-     */
-    private function _isValidImageMagickPath($dirToIm)
+    public function getFileExtensionWhitelistAction()
     {
-        if (!realpath($dirToIm)) {
-            return false;
+        $this->_helper->viewRenderer->setNoRender(true);
+        if ($this->_getParam('default')) {
+            $body = Omeka_Validate_File_Extension::DEFAULT_WHITELIST;
+        } else {
+            $body = get_option(Omeka_Validate_File_Extension::WHITELIST_OPTION);
         }
-        if (!is_dir($dirToIm)) {
-            return false;
-        }        
-        // Append the binary to the given path.
-        $filePath = rtrim($dirToIm, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR
-                  . Omeka_File_Derivative_Image::IMAGEMAGICK_COMMAND;
-        
-        //Make sure the file is executable
-        if (!is_executable($filePath)) {
-            return false;
-        }
-                        
-        // Attempt to run the ImageMagick binary with the version argument
-        // If you try to run it without any arguments, it returns an error code
-        $fullPath = $filePath . ' -version';
-        exec($fullPath, $output, $returnCode);        
-                
-        // A return value of 0 indicates the binary is working correctly.
-        return !(int)$returnCode;
+        $this->getResponse()->setBody($body);
     }
     
-    private function _getForm()
+    public function getFileMimeTypeWhitelistAction()
     {
-        require_once APP_DIR . '/forms/GeneralSettings.php';
-        $form = new Omeka_Form_GeneralSettings;
-        $form->setDefaults($this->getInvokeArg('bootstrap')->getResource('Options'));
-        fire_plugin_hook('general_settings_form', $form);
-        return $form;
+        $this->_helper->viewRenderer->setNoRender(true);
+        if ($this->_getParam('default')) {
+            $body = Omeka_Validate_File_MimeType::DEFAULT_WHITELIST;
+        } else {
+            $body = get_option(Omeka_Validate_File_MimeType::WHITELIST_OPTION);
+        }
+        $this->getResponse()->setBody($body);
     }
     
-    private function _setOptions(Zend_Form $form)
-    {        
-        $options = $form->getValues();
-        // Everything except the submit button should correspond to a valid 
-        // option in the database.
-        unset($options['settings_submit']);
-        foreach ($options as $key => $value) {
-            set_option($key, $value);
+    public function getHtmlPurifierAllowedHtmlElementsAction()
+    {
+        $this->_helper->viewRenderer->setNoRender(true);
+        if ($this->_getParam('default')) {
+            $body = implode(',', Omeka_Filter_HtmlPurifier::getDefaultAllowedHtmlElements());
+        } else {
+            $body = get_option('html_purifier_allowed_html_elements');
         }
+        $this->getResponse()->setBody($body);
+    }
+    
+    public function getHtmlPurifierAllowedHtmlAttributesAction()
+    {
+        $this->_helper->viewRenderer->setNoRender(true);
+        if ($this->_getParam('default')) {
+            $body = implode(',', Omeka_Filter_HtmlPurifier::getDefaultAllowedHtmlAttributes());
+        } else {
+            $body = get_option('html_purifier_allowed_html_attributes');
+        }
+        $this->getResponse()->setBody($body);
     }
 }

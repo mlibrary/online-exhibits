@@ -4,70 +4,34 @@
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
-
-/*add_filter('neatlinetime_display_search_query', 'mlibrary_neatlinetime_display_search_query');
-
-function mlibrary_neatlinetime_display_search_query($neat_line_exhibit)
-{
-		if (function_exists('exhibit_builder_get_exhibit_by_id')) {
-        $exhibit = exhibit_builder_get_exhibit_by_id($neat_line_exhibit);
-        }
-    $slug = $exhibit->slug;
-    $title = $exhibit->title;
-
-  //  $html = '<div id="timeline-exhibit">';
-    $html ='<a href=https://nancymou.www.lib.umich.edu/online-exhibits/exhibits/show/'.$slug.'>'.$title.'</a>';
-    //$html .= '</div>';
-   return $html;
-}*/
-
 add_filter('exhibit_builder_generate_xml', 'mlibrary_exhibit_builder_generate_xml');
 
 function mlibrary_exhibit_builder_generate_xml($xml)
 {
-	//$xml = generate_xml();
-	
 	return $xml;
 }
 
-
-
-
-
 function mlibrary_get_tagline($tagline = null)
 {    
-    if (!$tagline) {
-        
+    if (!$tagline) {        
         $tagline = get_theme_option('Tagline') ? 
         get_theme_option('Tagline') : 
         'Add a tagline for your site in theme options';
-    }
-    
-    return $tagline; 
-    
+    }    
+    return $tagline;     
 }
 
-/*function mlibrary_awkward_gallery(){
-		$awkward_gallery_setting=get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes';
-		if ($awkward_gallery_setting == 'yes'){ mlibrary_display_exhibit_gallery();
-} else{
-	echo '<style>#showcase,.showcase, h2.awkward{display:none; visibility:hidden;}</style>';
-}
-}*/
 
 function mlibrary_display_back_button_item_page($page_type){
-switch ($page_type)
-{
-	case 'exhibit':
-    	echo '<a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a>';
-    	break;
-	case 'item':
-    	echo '<a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a>';
-    	break;
-	case 'gallery':
-    	 echo '<a href="#" onClick ="history.go(-1); return false;">Back to Gallery Page</a>';
-    	 break;
-     }
+	switch ($page_type)
+	{
+			case 'exhibit':
+    			echo '<a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a>';
+		    	break;
+			case 'item':
+    			echo '<a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a>';
+		    	break;
+  }
 }
 
 
@@ -75,25 +39,27 @@ switch ($page_type)
 //extends featured exhibit function to include snippet from description and read more link
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
-    if (function_exists('exhibit_builder_random_featured_exhibit')){
+    /*if (function_exists('exhibit_builder_random_featured_exhibit')){
     $html = '<div id="featured-exhibit">';
-    $featuredExhibit = exhibit_builder_random_featured_exhibit();
+    $featuredExhibit = exhibit_builder_random_featured_exhibit(3);
+   // print_r($featuredExhibit);
     $html .= '<h2>Featured Exhibit</h2>';
     if ($featuredExhibit) {
        $html .= '<h3>' . exhibit_builder_link_to_exhibit($featuredExhibit) . '</h3>';
-       $html .= '<p>' . snippet($featuredExhibit->description, 0, 500,exhibit_builder_link_to_exhibit($featuredExhibit, '<br/>...more')) . '</p>';
+       $html .= '<p>' . snippet($featuredExhibit->description, 0, 300,exhibit_builder_link_to_exhibit($featuredExhibit, '<br/>...more')) . '</p>';
 
     } else {
        $html .= '<p>You have no featured exhibits.</p>';
     }
     $html .= '</div>';
     return $html;
-} } 
+}*/
 
+$exhibits=get_records('Exhibit' , array ('featured'=>true),$num=4);
+return $exhibits;
 
+} 
 
-
-        
 
 
 /**
@@ -106,14 +72,9 @@ function mlibrary_exhibit_builder_display_random_featured_exhibit()
  **/
 function mlibrary_get_stylesheet($styleSheet = null)
 {    
-	
-
-	
 	/* set stylesheet to omeka-mibrary default */
-	$styleSheet = 'omeka-mlibrary';
-    
-    return $styleSheet; 
-    
+	$styleSheet = 'omeka-mlibrary';    
+  return $styleSheet;     
 }
 
 /**
@@ -133,22 +94,8 @@ function mlibrary_get_stylesheet($styleSheet = null)
     return $about; 
     
 }*/
-/**
- * This function returns the number of recent items to display on the homepage for the theme.  
- *
- **/
-/*function mlibrary_get_recent_number($recentItems = null)
-{    
-    if (!$recentItems) {
-        
-        $recentItems = get_theme_option('Recent Items') ? 
-        get_theme_option('Recent Items') : 
-        '5';
-    }
-    
-    return $recentItems; 
-    
-}*/
+
+
 /**
  * This function returns the theme credits settings, displayed in the footer for the theme.  
  *
@@ -168,7 +115,7 @@ function mlibrary_get_stylesheet($styleSheet = null)
 //this could be improved to take into account items that are used multiple times in the same exhibit, which right now causes a redundant link
 // Nancy add group by to prevent the redundant.
 
-function mlibrary_display_items_in_exhibit_page($item)
+/*function mlibrary_display_items_in_exhibit_page($item)
 {
 	//require_once "Exhibit.php"; 
 	//$listofitems = new array();
@@ -181,87 +128,49 @@ function mlibrary_display_items_in_exhibit_page($item)
     $select = $table->getSelect();
 
 return $select;
-}
-
-function mlibrary_link_to_related_exhibits($item) {
-	require_once "Exhibit.php"; 
-	$db = get_db();
-
-	$select = "
-	SELECT e.* FROM {$db->prefix}exhibits e
-	INNER JOIN {$db->prefix}sections s ON s.exhibit_id = e.id
-	INNER JOIN {$db->prefix}section_pages sp on sp.section_id = s.id
-	INNER JOIN {$db->prefix}items_section_pages isp ON isp.page_id = sp.id
-	WHERE isp.item_id = ? group by e.id";
-
-	$exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($item));
-  
-	if(!empty($exhibits)) {
-		echo '<div class="element"><h2>Related Exhibits</h2>';
-		echo '<ul>';
-		foreach($exhibits as $exhibit) {
-			echo '<li>'.exhibit_builder_link_to_exhibit($exhibit).'</li>';
-		}
-		echo '</ul></div>';
-	}
-}
-//this is the function that is actually used on items/show...
-function mlibrary_display_related_exhibits(){
-		$related_exhibits_setting=get_theme_option('Related Exhibits');
-		if ($related_exhibits_setting == 'yes')return mlibrary_link_to_related_exhibits(item('ID'));
-}
-   
-/* function mlibrary_exhibit_image($currentexhibit=null) {
-//$exhibit_image_setting=get_theme_option('Exhibit Image');
-if($currentexhibit==null):
-	 $currentexhibit = get_current_exhibit();
-endif;
-	 
-$item_found=false;
-$items = get_items(array('exhibit' => $currentexhibit['id']));
-		       if ($items!=null)
-        		{
-	  	        	set_items_for_loop($items);
-              
-	  	             while(loop_items()):
-                     if ($item_found!=true){
-        				//get exhibit item		            	
-                  $index = 0;
-			           	while (loop_files_for_item()):
-        		    		$file = get_current_file();
-                   
-        		    		if ($file->hasThumbnail()):                
-    	                		if ($index == 0):
-                        
-//        	               			echo '<img src="'.$file->getWebPath('square_thumbnail').'"/>';
-//        	               			$exhibit_image_setting[0]['image'] = $file->getWebPath('thumbnail');
-  //     	               			  $exhibit_image_setting[0]['title'] = item('Dublin Core','Title');
-       	               			 // $exhibit_image_setting = array('image'=>'https://test.www.lib.umich.edu/online-exhibits/archive/'.$file->getStoragePath('fullsize'),'title'=>item('Dublin Core','Title'));
- $exhibit_image_setting = array('image'=>'/'.$file->getStoragePath('fullsize'),'title'=>item('Dublin Core','Title'));
-       	               			  
-       	               			//         	               			  $exhibit_image_setting = array('image'=>$file->getPath('fullsize'),'title'=>item('Dublin Core','Title'));
-       	               			            	           			$index++;
-                                                          $item_found=true;
-                	    		endif;
-                    		endif;
-		               endwhile;
-                     }
-        		    endwhile;
-              
-        		}
-return $exhibit_image_setting;
 }*/
 
- function mlibrary_exhibit_audio() {
-$exhibit_audio_setting=get_theme_option('Exhibit Audio');
-return $exhibit_audio_setting;
+
+function mlibrary_link_to_related_exhibits($id) {
+	require_once "Exhibit.php"; 
+		$db = get_db();
+		$select = "
+  	  SELECT DISTINCT e.* FROM {$db->prefix}exhibits e
+    	INNER JOIN {$db->prefix}exhibit_pages ep on ep.exhibit_id = e.id
+	    INNER JOIN {$db->prefix}exhibit_page_entries epe ON epe.page_id = ep.id
+  	  WHERE epe.item_id = ?";
+
+    $exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($id));
+		$i= 0;
+		if(!empty($exhibits)) {	
+			echo '<div class="element"><h2>Related Exhibits</h2>';
+			echo '<ul>';
+			foreach($exhibits as $exhibit) {
+				if ($exhibit['title']!='Galleries')
+						echo '<li style="padding-bottom: 5px;">'.link_to_exhibit(null, array(), null, $exhibit).'</li>';//exhibit_builder_link_to_exhibit($exhibit).'</li>';
+				}
+				echo '</ul></div>';
+			}
 }
 
 
- function mlibrary_exhibit_video() {
-$exhibit_video_setting=get_theme_option('Exhibit Video');
+//this is the function that is actually used on items/show...
+function mlibrary_display_related_exhibits(){
+		$related_exhibits_setting = get_theme_option('Related Exhibits');
+		if ($related_exhibits_setting == 'yes') {		
+		   return mlibrary_link_to_related_exhibits(get_current_record('item')->id);
+		}
+}
+   
 
-return $exhibit_video_setting;
+function mlibrary_exhibit_audio() {
+	$exhibit_audio_setting=get_theme_option('Exhibit Audio');
+	return $exhibit_audio_setting;
+}
+
+function mlibrary_exhibit_video() {
+	$exhibit_video_setting=get_theme_option('Exhibit Video');
+	return $exhibit_video_setting;
 }
 
 /**
@@ -272,66 +181,33 @@ return $exhibit_video_setting;
 function mlibrary_header_banner() {
 	$header_banner=get_theme_option('Header Banner');
 	$header_text = get_theme_option('Header Text');
+	
 	if($header_banner){
-		$output = "<h1 class='default' style='background:url(".CURRENT_BASE_URL.'/archive/theme_uploads/'.$header_banner.")'>";
+			$output = "<h1 class='default' style='background:url(".CURRENT_BASE_URL.'/files/theme_uploads/'.$header_banner.")'>";
 	} else {
-		$output = "<h1 class='default'>";
+			$output = "<h1 class='default'>";
 	}
+	
 	if($header_text == 'yes' || !$header_text){
-		$output .= "<span>".html_escape(exhibit('title'))."</span></h1>";
+			$output .= "<span>".html_escape(metadata('exhibit', 'title'))."</span></h1>";
 	} else {
-		$output .= "</h1>";
+			$output .= "</h1>";
 	}
 	return $output;
 }
 
-function mlibrary_pages_in_section() {
-	$pages_setting=get_theme_option('Pages In Section');
-$output="true";
-  //print_r($pages_setting);
-	switch($pages_setting){
-		case "pages_1":
-			$output = "true";
-			break;
-		case "pages_2":
-			$output = "close";
-			break;	
-		case "pages_3":
-			$output = "gallery";
-			break;	
-	}
-	return $output;
-}
- 
- 
-function mlibrary_exhibit_gallery() {
-	$pages_setting=get_theme_option('View Items In Gallery');
-$output="exhibit";	
-switch($pages_setting){
-		case "pages_1":
-			$output = "exhibit";
-			break;
-		case "pages_2":
-			$output = "gallery";
-			break;		
-	}
-	return $output;
-}   
-    
-    
- function mlibrary_light_box(){
-      $lightbox_setting=get_theme_option('Light Box');
+function mlibrary_light_box(){
+  $lightbox_setting=get_theme_option('Light Box');	
 	if ($lightbox_setting == 'fancy'){ 
-    	echo js('fancybox/fancybox-init-config');
+    	echo queue_js_file('fancybox/fancybox-init-config');
     	return $lightbox_setting;
    // echo js('mlibrary_omeka');
    }
    else {
-       echo js('fancybox/fancybox-init-config');
+      echo queue_js_file('fancybox/fancybox-init-config');
    		return 'fancy';
-   }
-   
-    }
+   }   
+}
 
 
 function mlibrary_display_rss($feedUrl, $num = 3) {
@@ -381,277 +257,344 @@ if (!empty($image_object['image'])){
 }*/
 
 
-add_filter('exhibit_builder_exhibit_display_item', 'mlibrary_exhibit_builder_exhibit_display_item');
+// Omeka 2
+add_filter('exhibit_builder_attachment_markup', 'mlibrary_exhibit_builder_attachment_markup');
 
-function mlibrary_exhibit_builder_exhibit_display_item($html, $displayFilesOptions, $linkProperties, $item) {
+function mlibrary_exhibit_builder_attachment_markup($html,$compact) {
 
 $remove[] = "'";
 $remove[] = '"';
 $remove[] = " ";
+$elementids = "";
+$elementvideos_VCM = "";
+$thumnail_image = false;
 
-$exhibitPage = exhibit_builder_get_current_page();
-   if ($exhibitPage->layout!='mlibrary-custom-layout'){     
-     	 if ((item_has_type('Sound', $item)) and ($displayFilesOptions['imageSize']=='thumbnail')){      
-	       $html = exhibit_builder_link_to_exhibit_item("<img src='".img('sound-icon.jpg')."'/>");   
-    	  }
-      	  elseif ((item_has_type('Video', $item)) and ($displayFilesOptions['imageSize']=='thumbnail')) {          
-	        $elementids = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));         
-	        $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));
-	        if (!empty($elementids)){
-    	      foreach ($elementids as $elementid) { 
-        	      $videoid = str_replace($remove, "", $elementid);               
-            	  if ((!empty($videoid)) and ($thumnail_image!=true)){                
-                	$image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
-	                $thumnail_image=true;
-    	          }
-        	  }
-        	}
-        	elseif ($elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true))) {
-        		  $data = $elementvideos_VCM[0];
-							preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
-            	$partnerId = 1038472;         	 
-              $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>'; 
-              $thumnail_image=true;
-        		
-        	}
-	        $html = exhibit_builder_link_to_exhibit_item($image);   
-    	  }         
-   }
-   else {  
-// This layout (custom layout) expect images of files attached to the item. the loop will go through the files. if no files exist then there is no data displayed.
+   $exhibitPage = get_current_record('exhibit_page', false);
+   $imageSize = $compact['fileOptions']['imageSize'];
+ 
+   if ($exhibitPage->layout!='mlibrary-custom-layout') {   
+	    $item = $compact['attachment']['item'];
+      if(!empty($compact['attachment']['item']->getItemType()->name)) 
+      {
+			    	  $item_type = $compact['attachment']['item']->getItemType()->name;			    	   			    	  
+			    	  if ($item_type == 'Sound')
+			    	  {
+			    	  	 // $html = exhibit_builder_link_to_exhibit_item("<img src='".img('sound-icon.jpg')."'/>");   
+			    	  }//if
+		      	  elseif (($item_type =='Video') and ($imageSize=='thumbnail')) 
+		      	  {
+		      	
+		      			   $elementids = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
+         	         $elementvideos_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true)); 
+	                 if (!empty($elementids))
+	                {
+            	        foreach ($elementids as $elementid) 
+            	        { 
+                 	        $videoid = str_replace($remove, "", $elementid);               
+            	            if ((!empty($videoid)) and ($thumnail_image!=true))
+            	            {                
+                           	$image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
+   	                        $thumnail_image=true;
+              	          }
+                  	  }
+                   }//if
+                   elseif (!empty($elementvideos_VCM))
+     			         {
+            	  		 		$data = $elementvideos_VCM[0];            	  		 						    					
+				    						preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);   
+    		          	  	$partnerId = 1038472;         	 
+        		        	  $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>'; 
+            		      	$thumnail_image=true;        		
+              		 }//if		  	
+              		 $html = exhibit_builder_link_to_exhibit_item($image,'',$item);                     	
+    			    }//elseif video        			       
+    	} //$compact['attachment']['item']->getItemType()->name
+   }//$exhibitPage->layout!='mlibrary-custom-layout'
+   else {   
+			   $firstimage='false';
+				// This layout (custom layout) expect images of files attached to the item. the loop will go through the files. if no files exist then there is no data displayed.
    		  // 	$filename = basename($file->archive_filename,'.jpg');	
-
-          	while (loop_files_for_item()):
-
-          		$file = get_current_file();	
+				 $files = $compact['attachment']['item']->Files;
+				 $item = $compact['attachment']['item'];
+				 $displayFilesOptions = $compact['fileOptions'];
+				 set_loop_records('files', $files);//get_current_record($item)->Files);
+				 if(!empty($files)) {
+						foreach(loop('files') as $file):             	
 		          // check to see if it is the first file in first item
-                if (($file->hasThumbnail()) and ($displayFilesOptions['imageorder']==1) and ($firstimage!='true')){
-					$filename = basename($file->archive_filename,'.jpg');	                   	                 	            	        
-					$htmlimage['id'.$file->id]['archive'] = $item->id;   
-					if (!preg_match('~^https?://~i',  item('Dublin Core','Identifier')))
-				    	 $htmlimage['id'.$file->id]['fulltext']='';
-			    	 else
-			    	 	  $htmlimage['id'.$file->id]['fulltext'] = item('Dublin Core','Identifier'); 	
-			   	$htmlimage['id'.$file->id]['creator'] = $displayFilesOptions['creator'];
-        	        $htmlimage['id'.$file->id]['description'] = $displayFilesOptions['description'];
-        		    $htmlimage['id'.$file->id]['title'] = $displayFilesOptions['title'];
-        		    $htmlimage['id'.$file->id]['date'] = $displayFilesOptions['year'];
-        		    $firstimage='true';
-        		    
-	            	if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){   											
-					$htmlimage['id'.$file->id]['image'] = '<div class="zoom id'.$file->id.' exhibit-item"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="100%" HEIGHT="450" ID="theMovie">
-					<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata">
-					<PARAM NAME="MENU" VALUE="FALSE">
-					<PARAM NAME="SRC" VALUE="'.uri('').'themes/mlibrary/javascripts/ZoomifyViewer.swf">
-					<param NAME=wmode VALUE=opaque> 
-					<EMBED FlashVars="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata" SRC="'.uri('').'themes/mlibrary/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="100%" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
-					}
-        		    else{        		                         
-		            $htmlimage['id'.$file->id]['image'] = "\n" . '<div class="fullsize id'.$file->id.' exhibit-item">';   
-        			$htmlimage['id'.$file->id]['image'] .= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem','title' => item('Dublin Core', 'Title'))));
-	                $htmlimage['id'.$file->id]['image'] .= '</div>' . "\n";		            		                
-    	            }            	   
-            	}
-            // all other files should be hide it
-            	else{
-            	
-	            	if ($file->hasThumbnail()):
-	            		$filename = basename($file->archive_filename,'.jpg');	           
-		                   	
-			        	$htmlimage['id'.$file->id]['archive'] = $item->id;        	 
-			        	
-			        	 if (!preg_match('~^https?://~i',  item('Dublin Core','Identifier')))
-			        	 $htmlimage['id'.$file->id]['fulltext']='';
-			        	 else
-			         // print_r(item('Dublin Core','Identifier'));
-			    	 	//  exit;	
-			        	 	 $htmlimage['id'.$file->id]['fulltext'] = item('Dublin Core','Identifier'); 
-		        	     
-		        	     $htmlimage['id'.$file->id]['title'] = $displayFilesOptions['title'];
-		        	     $htmlimage['id'.$file->id]['description'] = $displayFilesOptions['description'];            	     
-		     	         $htmlimage['id'.$file->id]['creator'] = $displayFilesOptions['creator'];
-			        	 $htmlimage['id'.$file->id]['date'] = $displayFilesOptions['year'];
-	            		if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){ 
-							$htmlimage['id'.$file->id]['image'] = '<div class="zoom id'.$file->id.' exhibit-item"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="100%" HEIGHT="450" ID="theMovie">
-							<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata">
-							<PARAM NAME="MENU" VALUE="FALSE">
-							<PARAM NAME="SRC" VALUE="'.uri('').'themes/mlibrary/javascripts/ZoomifyViewer.swf">
-							<param NAME=wmode VALUE=opaque> 
-							<EMBED FlashVars="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata" SRC="'.uri('').'themes/mlibrary/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="100%" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
-							
-							}
-						else{
-	                		
-							$htmlimage['id'.$file->id]['image'] = "\n" . '<div class="fullsize id'.$file->id.' exhibit-item">';   
-					 		$htmlimage['id'.$file->id]['image'] .= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem','title' => item('Dublin Core', 'Title'))));
-							$htmlimage['id'.$file->id]['image'] .= '</div>' . "\n";
-    	    	    	    }		
-	               endif;  	
-            	}            		                                                 	            	                  
-           endwhile;   
+            		if (($file->hasThumbnail()) and ($displayFilesOptions['imageorder']==1) and ($firstimage!='true')){                
+				           	$extension = pathinfo($file->filename, PATHINFO_EXTENSION);
+              		  $filename = basename($file->filename,'.'.$extension);	                  	                 	            	        
+					          $htmlimage['id'.$file->id]['archive'] = $item->id;   
+            				if (!preg_match('~^https?://~i',metadata($item,array('Dublin Core','Identifier')))){
+         		  		    	 $htmlimage['id'.$file->id]['fulltext']='';         		  		    	 
+         		  		  }
+			              else{
+        			      	 	 $htmlimage['id'.$file->id]['fulltext'] = metadata($item,array('Dublin Core','Identifier')); 	
+        			      }
+          			   	$htmlimage['id'.$file->id]['creator'] = $displayFilesOptions['creator'];
+        	          $htmlimage['id'.$file->id]['description'] = $displayFilesOptions['description'];
+        	          $htmlimage['id'.$file->id]['title'] = $displayFilesOptions['title'];
+					        	$htmlimage['id'.$file->id]['date'] = $displayFilesOptions['year'];
+        						$firstimage='true';        						        		    
+     	              if(file_exists('files/zoom_tiles/'.$filename.'_zdata')){      											     	             
+        							$htmlimage['id'.$file->id]['image'] = '<div class="zoom id'.$file->id.' exhibit-item"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="100%" HEIGHT="450" ID="theMovie">
+				        			<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata">
+         							<PARAM NAME="MENU" VALUE="FALSE">
+        							<PARAM NAME="SRC" VALUE="'.url('').'themes/mlibrary/javascripts/ZoomifyViewer.swf">
+        							<param NAME=wmode VALUE=opaque> 
+				        			<EMBED FlashVars="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata" SRC="'.url('').'themes/mlibrary/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="100%" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
+          					}
+        				    else{            				        		                         
+		                    $htmlimage['id'.$file->id]['image'] = "\n" . '<div class="fullsize id'.$file->id.' exhibit-item">';   
+                  			$htmlimage['id'.$file->id]['image'] .= file_markup($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>strip_formatting(metadata($item,array('Dublin Core', 'Title')))),'linkAttributes'=>array('class'=>'fancyitem','title' => strip_formatting(metadata($item,array('Dublin Core', 'Title'))))));
+	                      $htmlimage['id'.$file->id]['image'] .= '</div>' . "\n";		  
+	                 }            	   
+            		}
+		            // all other files should be hide it
+            		else{            	
+    	            	 if ($file->hasThumbnail()):
+	                  			$extension = pathinfo($file->filename, PATHINFO_EXTENSION);
+					          		  $filename = basename($file->filename,'.'.$extension);	                  	                 	            	        
+				  		          	$htmlimage['id'.$file->id]['archive'] = $item->id;        	 				  		          		        	
+        			        	 if (!preg_match('~^https?://~i', metadata($item,array('Dublin Core','Identifier'))))
+			                    	 $htmlimage['id'.$file->id]['fulltext']='';
+        			        	 else
+			                  	 	 $htmlimage['id'.$file->id]['fulltext'] = metadata($item,array('Dublin Core','Identifier'));		        	     
+		        	           $htmlimage['id'.$file->id]['title'] = $displayFilesOptions['title'];
+      		        	     $htmlimage['id'.$file->id]['description'] = $displayFilesOptions['description'];            	     
+		          	         $htmlimage['id'.$file->id]['creator'] = $displayFilesOptions['creator'];
+			                	 $htmlimage['id'.$file->id]['date'] = $displayFilesOptions['year'];
+       	            		if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){ 
+              							$htmlimage['id'.$file->id]['image'] = '<div class="zoom id'.$file->id.' exhibit-item"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="100%" HEIGHT="450" ID="theMovie">
+														<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata">
+														<PARAM NAME="MENU" VALUE="FALSE">
+														<PARAM NAME="SRC" VALUE="'.url('').'themes/mlibrary/javascripts/ZoomifyViewer.swf">
+														<param NAME=wmode VALUE=opaque> 
+														<EMBED FlashVars="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata" SRC="'.url('').'themes/mlibrary/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="100%" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';							
+          							}
+					            	else{	                		
+             	  						 $htmlimage['id'.$file->id]['image'] = "\n" . '<div class="fullsize id'.$file->id.' exhibit-item">';   
+					 		               $htmlimage['id'.$file->id]['image'] .= file_markup($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>strip_formatting(metadata($item,array('Dublin Core', 'Title')))),'linkAttributes'=>array('class'=>'fancyitem','title' => strip_formatting(metadata($item,array('Dublin Core', 'Title'))))));
+              		  				 $htmlimage['id'.$file->id]['image'] .= '</div>' . "\n";
+    	    	    	      }		
+	                 endif;  	
+            		}            		                                                 	            	                  
+	           endforeach;  
+	         }else{
+	         $htmlimage = "";
+	         }
            $html=$htmlimage;    
-   }
- //  $test= array('210'=>array("id"=>210,"harvest time"=>"April", "files"=>array("222"=>array("id"=>222,"filetitle"=>"nancy"))), '216'=>array("id"=>216));
-   // echo '<script type="text/javascript"> var obj ='.json_encode($htmlimage).'</script>';
-    //  echo '<script type="text/javascript"> var items ='.json_encode($test).'</script>';
-//print_r($html);
-  // $html .= $jobject;  
+      }
   return $html;
-//return $html;
 }
 
 add_filter('custom_public_nav_header', 'mlibrary_custom_public_nav_header');
-
 function mlibrary_custom_public_nav_header()
 {        
         $navArray = array('Browse Exhibits' => uri('exhibits'));
-        return public_nav_main($navArray);
-    
+        return public_nav_main($navArray);    
 }
 
 
-add_filter('exhibit_builder_nested_nav','mlibrary_exhibit_builder_nested_nav');
 
-function mlibrary_exhibit_builder_nested_nav($html,$exhibit,$showAllPages){
-	
+add_filter('exhibit_builder_nested_nav','mlibrary_exhibit_builder_nested_nav');
+function mlibrary_exhibit_builder_nested_nav($html,$exhibit,$showAllPages)
+{	
 	  if (!$exhibit) {
         if (!($exhibit = exhibit_builder_get_current_exhibit())) {
             return;
         }    
-    }
-	
+    }	
     $html = '<ul class="exhibit-section-nav">';
     foreach ($exhibit->Sections as $exhibitSection) {
-    if (mlibrary_pages_in_section()=='gallery'){
-        $html .= '<li class="exhibit-nested-section' . (exhibit_builder_is_current_section($exhibitSection) ? ' current' : '') . '"><a class="exhibit-section-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibitSection)) . '">' . html_escape($exhibitSection->title) . '  gallery </a>';
-        }
-        else
-                $html .= '<li class="exhibit-nested-section' . (exhibit_builder_is_current_section($exhibitSection) ? ' current' : '') . '"><a class="exhibit-section-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibitSection)) . '">' . html_escape($exhibitSection->title) . '</a>';
-		if (mlibrary_pages_in_section()!='gallery'){
+		    if (mlibrary_pages_in_section()=='gallery'){
+		        $html .= '<li class="exhibit-nested-section' . (exhibit_builder_is_current_section($exhibitSection) ? ' current' : '') . '"><a class="exhibit-section-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibitSection)) . '">' . html_escape($exhibitSection->title) . '  gallery </a>';
+    	  }
+      	else
+        		$html .= '<li class="exhibit-nested-section' . (exhibit_builder_is_current_section($exhibitSection) ? ' current' : '') . '"><a class="exhibit-section-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $exhibitSection)) . '">' . html_escape($exhibitSection->title) . '</a>';
+	  		if (mlibrary_pages_in_section()!='gallery') {
     	    if ($showAllPages || exhibit_builder_is_current_section($exhibitSection)) {
 	           $html .= exhibit_builder_page_nav($exhibitSection);	        
     	    }
-    	}
-        
-        $html .= '</li>';
+	    	}        
+  	    $html .= '</li>';
     }
     $html .= '</ul>';
     return $html;   
 }
-     
     
+function mlibrary_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) {
+   if (!$exhibitPage) {
+        $exhibitPage = get_current_record('exhibit_page');
+    }
+		$parents = $current_page->getAncestors(); 
+
+		if(($current_page->id == $exhibitPage->id))	
+		    $html = '<li class="current">'
+        	  . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+	          . metadata($exhibitPage, 'title') .'</a>';
+    	elseif (!empty($parents) and ($exhibitPage->id == $parents[0]->id))
+        	$html = '<li class="current">'
+	          . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+    	      . metadata($exhibitPage, 'title') .'</a>';
+    	 else
+    	 	$html = '<li>'
+	          . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+    	      . metadata($exhibitPage, 'title') .'</a>';
+    	      
+    $children = $exhibitPage->getChildPages();
+    if ($children) {
+        $html .= '<ul>';
+        foreach ($children as $child) {
+            $html .= mlibrary_exhibit_builder_page_summary($child,$current_page);
+            release_object($child);
+        }
+        $html .= '</ul>';
+    }
+    $html .= '</li>';
+    return $html;
+}
 
 
-//Nancy
-add_filter('exhibit_builder_display_exhibit_thumbnail_gallery', 'mlibrary_exhibit_builder_display_exhibit_thumbnail_gallery');
+//add_filter('exhibit_builder_page_nav','mlibrary_exhibit_builder_page_nav');   
+/*function mlibrary_exhibit_builder_page_nav($html, $exhibitPage)
+{
+  if (!$exhibitPage) {
+        if (!($exhibitPage = get_current_record('exhibit_page', false))) {
+            return;
+        }
+    }
+     $exhibit = $exhibitPage->getExhibit();
+    $html = '<ul class="exhibit-page-nav navigation" id="secondary-nav">' . "\n";
+    $pagesTrail = $exhibitPage->getAncestors();      
+    $pagesTrail[] = $exhibitPage;    
+    $html .= '<li>';
+    $html .= '<a class="exhibit-title" href="'. html_escape(exhibit_builder_exhibit_uri($exhibit)) . '">';
+    $html .= html_escape($exhibit->title) .'</a></li>' . "\n";
+    foreach ($pagesTrail as $page) {   
+        $linkText = $page->title;
+        $pageExhibit = $page->getExhibit();
+        $pageParent = $page->getParent();
+       // print_r($pageParent);
+        $pageSiblings = ($pageParent ? exhibit_builder_child_pages($pageParent) : $pageExhibit->getTopPages()); 
+        $html .= "<li>\n<ul>\n";
+        foreach ($pageSiblings as $pageSibling) {
+            $html .= '<li' . ($pageSibling->id == $page->id ? ' class="current"' : '') . '>';
+            $html .= '<a class="exhibit-page-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $pageSibling)) . '">';
+            $html .= html_escape($pageSibling->title) . "</a></li>\n";
+        }
+        $html .= "</ul>\n</li>\n";
+    }
+    $html .= '</ul>' . "\n";
+   
+    return $html;
+}*/
 
-function mlibrary_exhibit_builder_display_exhibit_thumbnail_gallery($html, $start, $end, $props, $thumbnailType) {
-
-$remove[] = "'";
-$remove[] = '"';
-$remove[] = " ";
- 
-    $html = '';
-    $exhibitPage = exhibit_builder_get_current_page();
-    
-     if (($exhibitPage->layout!='mlibrary-custom-layout') and ($exhibitPage->layout!='gallery-thumbnails')){
-     	// $html .="first";
-      	for ($i=(int)$start; $i <= (int)$end; $i++) {      
-	        if ((exhibit_builder_use_exhibit_page_item($i)) and (item_has_type('Sound', $item))){                  
-    	       $html .= "\n" . '<div class="exhibit-item">';   
-        	   $html .= exhibit_builder_link_to_exhibit_item("<img src='".img('sound-icon.jpg')."'/>");
-	           $html .= exhibit_builder_exhibit_display_caption($i);
-    	       $html .= '</div>' . "\n";
-        		}
-    	    // create thumbnail for video from youtube
-	        elseif ((exhibit_builder_use_exhibit_page_item($i)) and (item_has_type('Video', $item))){
-        	   $thumnail_image=false;
-	           $html .= "\n" . '<div class="exhibit-item">';              
-    	       $elementids = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));  
-    	       $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));        
-    	       if (!empty($elementids)){
-        	    foreach ($elementids as $elementid) {           
-            	  $videoid = str_replace($remove, "", $elementid);                
-	              if ((!empty($videoid)) and ($thumnail_image!=true)){                
-    	            $image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
-        	        $thumnail_image=true;
-            	  	}
-	            	}
-	            }
-	            elseif ($elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true))) {
-          		  $data = $elementvideos_VCM[0];
-          		  preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
-            	  $partnerId = 1038472;         	 
-                $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                 
-        	  		$thumnail_image=true;        		
-            	}
-           
-	    	       $html .= exhibit_builder_link_to_exhibit_item($image);
-    	    	   $html .= exhibit_builder_exhibit_display_caption($i);
-	    	       $html .= '</div>' . "\n";
-	    	    }
-    	    elseif ((exhibit_builder_use_exhibit_page_item($i)) and (!item_has_type('Sound', $item))){
-    	        $html .= "\n" . '<div class="exhibit-item">';
-        	    $thumbnail = item_image($thumbnailType, $props);
-            	$html .= exhibit_builder_link_to_exhibit_item($thumbnail);
-	            $html .= exhibit_builder_exhibit_display_caption($i);
-    	        $html .= '</div>' . "\n";        
-	        	}
-      	}
-      }// if it is not custom-layout or gallerythumbs
-      elseif ($exhibitPage->layout=='mlibrary-custom-layout'){
+add_filter('exhibit_builder_thumbnail_gallery', 'mlibrary_exhibit_builder_thumbnail_gallery');
+function mlibrary_exhibit_builder_thumbnail_gallery($html,$compact) {
+ $remove[] = "'";
+ $remove[] = '"';
+ $remove[] = " ";
+ $exhibitPage = get_current_record('exhibit_page', false);  
+ $start = $compact['start'];
+ $end = $compact['end'];
+ $props = $compact['props']; 
+ $thumnail_image = false;
+   
+  if ($exhibitPage->layout!='mlibrary-custom-layout')
+  {     
+      for($i=(int)$start; $i <= (int)$end; $i++) 
+      {     	
+      		$attachment = exhibit_builder_page_attachment($i);		      
+      	//	print_r($attachment['item']->id.'<br>');      	
+          if (!empty($attachment)){	                                  
+             if (!empty($attachment['item']->getItemType()->name))
+		             $item_type = $attachment['item']->getItemType()->name;
+		         else
+		             $item_type = "Still Image";
+            	
+						 $item = $attachment['item']; 		   
+    					//	 set_loop_records('files', $attachment['item']->Files); 
+             if (($item) and ($item_type=='Video')){                         	         
+                 $html .= "\n" . '<div class="exhibit-item-video">';  
+  	             $elementids = metadata($item, array('Item Type Metadata', 'Video_embeded_code'),array('no_escape'=>true,'all'=>true));    				
+      	         $elementvideos_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));   	                								 
+            	   if (!empty($elementids))
+            	   {            	   
+          	        foreach ($elementids as $elementid) 
+          	        {           
+              	    		$videoid = str_replace($remove, "", $elementid);                
+			                  if ((!empty($videoid)) and ($thumnail_image!=true))
+			                  {                
+    			                 $image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
+        		      	       $thumnail_image=true;
+            			    	}//if
+  	            	  }//for each
+	                }// if elements
+	                elseif ($elementvideos_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true))) 
+	                {
+          		      	$data = $elementvideos_VCM[0];
+          		      	preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
+	            	      $partnerId = 1038472;         	 
+  	                  $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                                   
+    	      	  		  $thumnail_image=true;        		
+                	}//elementvideos_VCM     
+      	       		$html .= exhibit_builder_link_to_exhibit_item($image,'',$item);
+    	    	  // $html .= exhibit_builder_exhibit_display_caption($i);
+		    	       $html .= '</div>' . "\n";
+	    	      }//type video
+	    	      
+    	      /* elseif (($attachment) and ($item_type=='Sound'))
+    	       {
+      	        $html .= "\n" . '<div class="exhibit-item-sound">';
+          	    $thumbnail = item_image($thumbnailType, $props);
+              	$html .= exhibit_builder_link_to_exhibit_item($thumbnail);
+	              $html .= exhibit_builder_exhibit_display_caption($i);
+    	         $html .= '</div>' . "\n";        
+	         	} //$attachment) and ($item_type=='Sound'*/
+	         	//  		print_r($item_type); 
+      }//if (!empty($attachment))
+   }
+  } //($exhibitPage->layout!='mlibrary-custom-layout')
+  elseif ($exhibitPage->layout=='mlibrary-custom-layout'){
 	      $image_index=0;
 			// start is 1 and end is 12, this is the way set it up in the new layout or other layout that has thumbnail it can be 
 			//changed to something else.
-		 $firstthumbnail=false;    
-	    for ($i=(int)$start; $i <= (int)$end; $i++) {           
-    	//check to see if there is item exist with exhibit_builder_use_exhibit_page_item function
-	      if ((exhibit_builder_use_exhibit_page_item($i)) and ((!item_has_type('Sound', $item)) or (!item_has_type('Video', $item)))){        
-    	      while (loop_files_for_item()): $file=get_current_file();          
-        	  	if ($file->hasThumbnail() and ($firstthumbnail!=true)){
-				  $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';   
-	              $html .= display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkToFile'=>false));
-    	          $html .= '</div>' . "\n";
-        	       $image_index++;
-            	   $firstthumbnail=true;
-	            }          	
-    	        else if ($file->hasThumbnail() and ($firstthumbnail==true)){        	
-	              $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';   
-	              $title = $file->title;
-	             // if (!empty($title))
-	    	       //   $html .= display_file($file, array('imageSize'=>'square_thumbnail', 'linkToFile'=>false));
-	    	      //else
-	    	        //      $html .= display_file($file, array('imageSize'=>'square_thumbnail', 'linkToFile'=>false, 'imgAttributes'=>array('alt' => 'test')));
-	    	   // $html.=$title;
-	    	          $html .= display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkToFile'=>false));
-	    	        // if ($fileTitle = item_file('Dublin Core', 'Title', array(), $file)){
-	    	       //  $html .= item_image('square_thumbnail','',0,$item);
-	    	       
-	    	        // }
-	    	        // else
-	    	        // $html .="nothing";
-        	      $html .= '</div>' . "\n";            
-	               $image_index++;
-    	        }
-        	  endwhile;       
-		     }      
-	    }	
-	  } //end of elseif custom-layout
-  elseif ($exhibitPage->layout=='gallery-thumbnails'){ 
-  	     	for ($i=(int)$start; $i <= (int)$end; $i++) {  
-  	     		if (exhibit_builder_use_exhibit_page_item($i)) {
-  	 			  	 $item = get_current_item($i);
-	        	    //$thumbnail = item_image($thumbnailType, $props);
-    	        	//$html .= exhibit_builder_link_to_exhibit_item($thumbnail,array('linkToFile'=>false));
-    	        	$html .= "\n" . '<div class="exhibit-item">';
-    	        	$html .= display_file($item->Files[0], array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core','Title')),'linkToFile'=>false));
-    	        	$html .= '</div>' . "\n";        
-    	        	}
-	        //    $html .= exhibit_builder_exhibit_display_caption($i);
-	            }
+		    $firstthumbnail=false;    
+	      for ($i=(int)$start; $i <= (int)$end; $i++) 
+	      {           
+    	//check to see if there is item exist with exhibit_builder_use_exhibit_page_item function  
+           	$attachment = exhibit_builder_page_attachment($i);  
+           	if (!empty($attachment))
+           	{	
+             	$item_type = $attachment['item']->getItemType()->name;
+//             	 exhibit_builder_use_attachment($attachment);  
+			    $item = $attachment['item'];    
+			  	set_loop_records('files', $attachment['item']->Files); 
+            	    if (($attachment) and ($item_type!='Sound') or ($item_type!='video'))
+            	    {                	     
+              	       foreach(loop('files') as $file):      
+        	             	if ($file->hasThumbnail() and ($firstthumbnail!=true)){
+          				          $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';   
+	                          //$html .= display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkToFile'=>false));
+	                           $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
+    	                      $html .= '</div>' . "\n";
+                   	        $image_index++;
+                      	    $firstthumbnail=true;
+          	            }          	
+    	                  else if ($file->hasThumbnail() and ($firstthumbnail==true)){        	
+          	                $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';   
+	                          $title = $file->title;
+	                          $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
+	    	                    $html .= '</div>' . "\n";            
+          	                $image_index++;
+    	                 }
+                	     endforeach;       
+         		     }      
+	          }	
+	     }
+	  }
 
-	        
-    }
-   
-    return $html;   
+	 return $html;
 }
+

@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
@@ -12,10 +12,7 @@
  * This will iterate through the plugins root directory and load all plugin.php 
  * files by require()'ing them.
  * 
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * @package Omeka\Plugin\Loader
  */
 class Omeka_Plugin_Loader
 {
@@ -55,8 +52,6 @@ class Omeka_Plugin_Loader
      */
     protected $_plugins = array();
     
-    private $_requireOnce = true;
-    
     /**
      * @param Omeka_Plugin_Broker $broker Plugin broker.
      * @param Omeka_Plugin_Ini $iniReader plugin.ini reader.
@@ -80,6 +75,7 @@ class Omeka_Plugin_Loader
      * @param array $plugins List of Plugin records to load.  
      * @param boolean $force If true, throws exceptions for plugins that cannot
      * be loaded for some reason.
+     * @throws Omeka_Plugin_Loader_Exception
      * @return void
      */
     public function loadPlugins(array $plugins, $force = false)
@@ -95,17 +91,6 @@ class Omeka_Plugin_Loader
             $this->load($plugin, $force);
         }
     }
-
-    /**
-     * Flag to determine whether or not plugin.php should be require'd or 
-     * require_once'd. This flag is true by default.
-     *
-     * @param boolean $flag
-     */
-    public function setRequireOnce($flag)
-    {
-        $this->_requireOnce = $flag;
-    }
     
     /**
      * Register a plugin so that it can be accessed by other plugins (if necessary)
@@ -117,13 +102,14 @@ class Omeka_Plugin_Loader
      * was registered.
      *
      * @param Plugin $plugin Record of plugin to register.
+     * @throws Omeka_Plugin_Loader_Exception
      * @return void
      */
     public function registerPlugin(Plugin $plugin)
     {
         $dirName = $plugin->getDirectoryName();
         if (array_key_exists($dirName, $this->_plugins) && $this->_plugins[$dirName] !== $plugin) {
-            throw new Omeka_Plugin_Loader_Exception("Plugin named '$dirName' has already been loaded/registered.");
+            throw new Omeka_Plugin_Loader_Exception(__("Plugin named '%s' has already been loaded/registered.", $dirName));
         }
         $this->_plugins[$dirName] = $plugin;
     }
@@ -152,6 +138,7 @@ class Omeka_Plugin_Loader
      * @param boolean $force If true, throws exceptions if a plugin can't be 
      * loaded.
      * @param array $pluginsWaitingToLoad Plugins waiting to be loaded
+     * @throws Omeka_Plugin_Loader_Exception
      * @return void
      */
     public function load(Plugin $plugin, $force = false, $pluginsWaitingToLoad = array())
@@ -159,14 +146,11 @@ class Omeka_Plugin_Loader
         $this->registerPlugin($plugin);
         
         $this->_iniReader->load($plugin);
-        if ($plugin->getRequireOnce() === null) {
-            $plugin->setRequireOnce($this->_requireOnce);
-        }
         
         $pluginDirName = $plugin->getDirectoryName();
         if (!$this->_canLoad($plugin, $force)) {
             if ($force) {
-                throw new Omeka_Plugin_Loader_Exception("The $pluginDirName plugin could not be loaded.");
+                throw new Omeka_Plugin_Loader_Exception(__("The %s plugin could not be loaded.", $pluginDirName));
             } else {
                 return;
             }
@@ -187,7 +171,7 @@ class Omeka_Plugin_Loader
                 // If we can't find one of the required plugins, loading should
                 // fail.
                 if ($force) {
-                    throw new Omeka_Plugin_Loader_Exception("The required plugin '$requiredPluginDirName' could not be found.");
+                    throw new Omeka_Plugin_Loader_Exception(__("The required plugin '%s' could not be found.", $requiredPluginDirName));
                 } else {
                     return;
                 }
@@ -260,24 +244,24 @@ class Omeka_Plugin_Loader
         $loadCriteria = array(
             array(
                 'check' => !$this->hasPluginBootstrap($plugin),
-                'exception' => "'$pluginDirName' plugin directory does not contain a 'plugin.php' file."),
+                'exception' => __("'%s' has no valid bootstrap file.", $pluginDirName)),
             array(
                 'check' => !$plugin->isInstalled(),
-                'exception' => "'$pluginDirName' has not been installed."),
+                'exception' => __("'%s' has not been installed.", $pluginDirName)),
             array(
                 'check' => !$plugin->isActive(),
-                'exception' => "'$pluginDirName' has not been activated."),
+                'exception' => __("'%s' has not been activated.", $pluginDirName)),
             array(
                 'check' => !$plugin->meetsOmekaMinimumVersion(),
-                'exception' => "'$pluginDirName' requires a newer version of Omeka."),
+                'exception' => __("'%s' requires a newer version of Omeka.", $pluginDirName)),
             // Cannot upgrade a plugin if we do this check when trying to force
             // the plugin to load.
             array(
                 'check' => $plugin->hasNewVersion(),
-                'exception' => "'$pluginDirName' must be upgraded to the new version before it can be loaded."),
+                'exception' => __("'%s' must be upgraded to the new version before it can be loaded.", $pluginDirName)),
             array(
                 'check' => $plugin->isLoaded(),
-                'exception' => "'$pluginDirName' cannot be loaded twice.")
+                'exception' => __("'%s' cannot be loaded twice.", $pluginDirName))
         );
         
         foreach ($loadCriteria as $criteria) {
@@ -294,9 +278,9 @@ class Omeka_Plugin_Loader
     }
                         
     /**
-     * Return whether a plugin has a plugin.php file.
+     * Check whether a plugin has a bootstrap file.
      * 
-     * @param string|Plugin $pluginDirName Plugin object or directory name.
+     * @param string|Plugin $pluginDirName
      * @return boolean
      */
     public function hasPluginBootstrap($pluginDirName)
@@ -305,20 +289,59 @@ class Omeka_Plugin_Loader
             $pluginDirName = $pluginDirName->getDirectoryName();
         }
         
-        return file_exists($this->getPluginFilePath($pluginDirName));
-    }
+        $pluginClassFilePath = $this->getPluginClassFilePath($pluginDirName);
         
+        // Check if the plugin.php file exists.
+        if (file_exists($this->getPluginFilePath($pluginDirName))) {
+            return true;
+        // Check if the valid plugin class exists.
+        } else if (file_exists($pluginClassFilePath)) {
+            require_once $pluginClassFilePath;
+            if (is_subclass_of($this->getPluginClassName($pluginDirName), 'Omeka_Plugin_AbstractPlugin')) {
+                return true;
+            } else {
+                return false;
+            }
+        // The plugin has no bootstrap.
+        } else {
+            return false;
+        }
+    }
+    
     /**
-     * Returns the path to the plugin.php file
+     * Return the valid plugin class name.
      * 
-     * @param string $pluginDirName Plugin directory name.
+     * @param string $pluginDirName
+     * @return string
+     */
+    public function getPluginClassName($pluginDirName)
+    {
+        return "{$pluginDirName}Plugin";
+    }
+    
+    /**
+     * Return the path to the plugin.php file.
+     * 
+     * @param string $pluginDirName
      * @return string
      */
     public function getPluginFilePath($pluginDirName)
     {
-        return $this->_basePath . '/' . $pluginDirName . '/' . 'plugin.php';
+        return "{$this->_basePath}/$pluginDirName/plugin.php";
     }
-        
+    
+    /**
+     * Return the path to the plugin class file.
+     * 
+     * @param string $pluginDirName
+     * @param string $pluginClassName
+     * @return string
+     */
+    public function getPluginClassFilePath($pluginDirName)
+    {
+        return "{$this->_basePath}/$pluginDirName/{$this->getPluginClassName($pluginDirName)}.php";
+    }
+    
     /**
      * Return a list of all the plugins that have been loaded (or attempted to
      * be loaded) thus far.
@@ -345,25 +368,29 @@ class Omeka_Plugin_Loader
     }
     
     /**
-     * Loads the plugin bootstrap (plugin.php) file for a plugin.
+     * Loads the plugin bootstrap file for a plugin.
      *
-     * @param Plugin $plugin Plugin to bootstrap.
+     * @param Plugin $plugin
      * @return void
      */
     protected function _loadPluginBootstrap(Plugin $plugin)
     {
         $pluginDirName = $plugin->getDirectoryName();
-        
-        // set the current plugin
         $this->_broker->setCurrentPluginDirName($pluginDirName);
-        $path = $this->getPluginFilePath($pluginDirName);
-        if ($plugin->getRequireOnce()) {
-            require_once $path;
+        
+        // Bootstrap plugin.php if it exists.
+        $pluginFilePath = $this->getPluginFilePath($pluginDirName);
+        if (file_exists($pluginFilePath)) {
+            require $pluginFilePath;
+        // Otherwise bootstrap the plugin class.
         } else {
-            require $path;
+            require_once $this->getPluginClassFilePath($pluginDirName);
+            $pluginClassName = $this->getPluginClassName($pluginDirName);
+            $pluginClass = new $pluginClassName;
+            $pluginClass->setUp();
         }
-
-        // set the current plugin back to null
+        
+        // Reset the current plugin.
         $this->_broker->setCurrentPluginDirName(null);
     }
 }

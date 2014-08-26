@@ -1,26 +1,39 @@
-<?php if (has_permission('Settings', 'edit')): ?>
-<ul id="section-nav" class="navigation vertical">
+<?php if (is_allowed('Settings', 'edit')): ?>
+<div id="section-nav">
 <?php
-    $navArray = array();
-
-    $navArray[__('General Settings')] = uri('settings');
-    if (has_permission('Plugins', 'browse')) {
-        $navArray[__('Plugins')] = uri('plugins');
-    }
-    if (has_permission('Themes', 'browse')) {
-        $navArray[__('Themes')] = uri('themes');
-    }
-    if (has_permission('Users','browse')) {
-        $navArray[__('Users')] = uri('users');
-    }
-    if (has_permission('ElementSets', 'browse')) {
-        $navArray[__('Element Sets')] = uri('element-sets');
-    }
-    if (has_permission('Security', 'edit')) {
-        $navArray[__('Security Settings')] = uri('security');
-    }
-
-    echo nav(apply_filters('admin_navigation_settings', $navArray));
+    $navArray = array(
+        array(
+            'label' => __('General'),
+            'uri' => url('settings/edit-settings')
+        ),
+        array(
+            'label' => __('Security'),
+            'uri' => url('settings/edit-security'),
+            'resource' => 'Security',
+            'privilege' => 'edit'
+        ),
+        array(
+            'label' => __('Search'),
+            'uri' => url('settings/edit-search')
+        ),
+        array(
+            'label' => __('Element Sets'),
+            'uri' => url('element-sets'),
+            'resource' => 'ElementSets',
+            'privilege' => 'browse'
+        ),
+        array(
+            'label' => __('Item Type Elements'),
+            'uri' => url('settings/edit-item-type-elements'),
+            'resource' => 'ElementSets',
+            'privilege' => 'browse'
+        ),
+        array(
+            'label' => __('API'),
+            'uri' => url('settings/edit-api')
+        ),
+    );
+    echo nav($navArray, 'admin_navigation_settings');
 ?>
-</ul>
+</div>
 <?php endif ?>

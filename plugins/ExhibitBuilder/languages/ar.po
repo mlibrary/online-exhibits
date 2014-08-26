@@ -1,0 +1,380 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka\n"
+"Report-Msgid-Bugs-To: https://github.com/omeka/Omeka/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2013-03-11 16:55+0000\n"
+"Last-Translator: Ahmadibrahim <ahmadbusiness@hotmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/projects/p/omeka/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+msgid "Gallery Full Left"
+msgstr "أقصى يسار مساحة العرض"
+
+msgid ""
+"Displays a gallery of 8 thumbnails, with a wider left column for 1 full-size"
+" image and text block."
+msgstr "يعرض مساحة عرض تحوي على 8 صور مصغّرة الحجم، ويكون العامود إلى اليسار أوسع يحوي على صورة واحدة كاملة الحجم ووحدة نصية."
+
+msgid "Gallery Full Right"
+msgstr "أقصى يمين مساحة العرض"
+
+msgid ""
+"Displays a gallery of 8 thumbnails, with a wider right column for 1 full-"
+"size image and text block."
+msgstr "يعرض مساحة عرض تحوي على 8 صور مصغّرة الحجم، ويكون العامود إلى اليمين أوسع يحوي على صورة واحدة كاملة الحجم ووحدة نصية."
+
+msgid "Gallery Thumbnails Text Bottom"
+msgstr ""
+
+msgid "Displays a block of text below a gallery of up to 12 items."
+msgstr "يعرض وحدة نصية تحت مساحة عرض تحوي حتى 12 بندًا."
+
+msgid "Gallery Thumbnails Text Top"
+msgstr ""
+
+msgid "Displays a block of text above a gallery of up to 12 items."
+msgstr "يعرض وحدة نصية فوق مساحة عرض تحوي حتى 12 بندًا."
+
+msgid "Gallery Thumbnails"
+msgstr "الصور المصغّرة الحجم في مساحة العرض."
+
+msgid "Displays a gallery of up to 16 items."
+msgstr "يبين مساحة عرض تحوي حتى 16 بندًا."
+
+msgid "Image List Left Thumbs"
+msgstr ""
+
+msgid ""
+"Displays up to 8 thumbnails on the left with up to 8 text blocks on the "
+"right."
+msgstr "يعرض لغاية 8 صورة مصغّرة الحجم إلى جهة اليسار ولغاية 8 وحدات نصية إلى جهة اليمين."
+
+msgid "Image List Left"
+msgstr ""
+
+msgid ""
+"Displays up to 8 full-size images on the left with up to 8 text blocks on "
+"the right."
+msgstr "يعرض لغاية 8 صور بالحجم الكامل إلى جهة اليسار ولغاية 8 وحدات نصية إلى جهة اليمين."
+
+msgid "Image List Right Thumbs"
+msgstr ""
+
+msgid ""
+"Displays up to 8 thumbnails on the right with up to 8 text blocks on the "
+"left."
+msgstr "يعرض لغاية 8 صور مصغّرة الحجم إلى جهة اليمين ولغاية 8 وحدات نصية إلى جهة اليسار."
+
+msgid "Image List Right"
+msgstr ""
+
+msgid ""
+"Displays up to 8 full-size images on the right with up to 8 text blocks on "
+"the left."
+msgstr "يعرض لغاية 8 صور بالحجم الكامل إلى جهة اليمين ولغاية 8 وحدات نصية إلى جهة اليسار."
+
+msgid "Text Image Left"
+msgstr ""
+
+msgid "Displays a full page of text, with a full-size image floated left."
+msgstr "يعرض صفحة نص كاملة، بالإضافة إلى صورة بالحجم الكامل مقلوبة إلى جهة اليسار."
+
+msgid "Text Image Right"
+msgstr ""
+
+msgid "Displays a full page of text, with a full-size image floated right."
+msgstr "يعرض صفحة نص كاملة، بالإضافة إلى صورة بالحجم الكامل مقلوبة إلى جهة اليمين."
+
+msgid "Text"
+msgstr "النص"
+
+msgid "Displays a full page of text without items."
+msgstr "يعرض صفحة نص كاملة من دون بنود."
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "ترتيب المعارض"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "الطريقة الأساسية التي ترغب بحسبها ترتيب لوائح المعارض في صفحة المعارض/التصفّح. الوضعية الأساسية هي \"التاريخ المضاف\"."
+
+#: controllers/ExhibitsController.php:75
+msgid "This item is not used within this exhibit."
+msgstr "هذا البند غير مستخدم ضمن هذا المعرض."
+
+#: controllers/ExhibitsController.php:201
+msgid "You must specifically select a theme in order to configure it."
+msgstr "يجب أن تختار موضوع بشكلٍ محدد لكي تتم تهيئته."
+
+#: functions.php:282
+msgid "exhibits"
+msgstr ""
+
+#: functions.php:296 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "تصفح المعارض"
+
+#: functions.php:312 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8
+#: views/admin/exhibits/page-content-form.php:9
+#: views/admin/exhibits/page-metadata-form.php:8
+msgid "Exhibits"
+msgstr "المعارض"
+
+#: functions.php:469
+msgid "Search by Exhibit"
+msgstr "البحث بحسب المعارض"
+
+#: functions.php:478
+msgid "Exhibit"
+msgstr ""
+
+#: functions.php:479
+msgid "Exhibit Page"
+msgstr ""
+
+#: helpers/ExhibitFunctions.php:242
+msgid "There is no item attached."
+msgstr "لا يوجد أي بند مرفق."
+
+#: helpers/ExhibitFunctions.php:244
+#: views/admin/exhibits/page-content-form.php:95
+msgid "Attach an Item"
+msgstr " إضافة بند"
+
+#: helpers/ExhibitFunctions.php:267
+msgid "Caption"
+msgstr ""
+
+#: helpers/ExhibitFunctions.php:290
+msgid "Select a File"
+msgstr ""
+
+#: helpers/ExhibitFunctions.php:463
+msgid "Featured Exhibit"
+msgstr "المعرض البارز"
+
+#: helpers/ExhibitFunctions.php:468
+msgid "You have no featured exhibits."
+msgstr "لا تتوفر لديكم أي معارض بارزة."
+
+#: models/Exhibit.php:37
+msgid "Exhibits must be given a valid slug."
+msgstr "يجب تعيين رابط Slug صالح للمعارض."
+
+#: models/Exhibit.php:38 models/ExhibitPage.php:31
+msgid "A slug must be 30 characters or less."
+msgstr "يجب أن يكون رابط Slug مؤلفًا من 30 حرفًا أو أقل."
+
+#: models/Exhibit.php:39
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "رابط URL Slug الخاص بكم مستخدمًا أصلاً في معرض آخر. الرجاء اختيار واحدًا آخر."
+
+#: models/Exhibit.php:48
+msgid "An exhibit must be given a title."
+msgstr "يجب وضع عنوان لأي معرض."
+
+#: models/Exhibit.php:52
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "يجب أن يكون العنوان مؤلفًا من 255 حرفًا أو أقل."
+
+#: models/Exhibit.php:56
+msgid "The name of your theme must be 30 characters or less."
+msgstr "يجب أن يكون اسم موضوعك مؤلفًا من 30 حرفًا أو أقل."
+
+#: models/ExhibitPage.php:30
+msgid "A slug must be given for each page of an exhibit."
+msgstr "يجب تعيين رابط Slug لكل صفحة من كل معرض."
+
+#: models/ExhibitPage.php:32
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr ""
+
+#: models/ExhibitPage.php:47
+msgid "A layout must be provided for each exhibit page."
+msgstr "يجب تعيين تصميم لكل صفحة معرض."
+
+#: models/ExhibitPage.php:51
+msgid "Exhibit pages must be given a title."
+msgstr " يجب أن تعطى صفحات المعارض عنوانًا."
+
+#: models/Mixin/Order.php:101
+msgid "Cannot add a child to a record that does not exist yet!"
+msgstr ""
+
+#: models/Mixin/Order.php:105
+#, php-format
+msgid "Child must be an instance of \"%s\""
+msgstr ""
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "إضافة المعرض"
+
+#: views/admin/exhibits/browse.php:8
+msgid "There are no exhibits yet."
+msgstr "لا تتوفر أي معارض حتى الآن."
+
+#: views/admin/exhibits/browse.php:11 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr ""
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "موضوع"
+
+#: views/admin/exhibits/browse.php:59
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "الموضوع العام الحالي"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "البيانات الوصفية الخاصة بالمعرض"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+#: views/admin/exhibits/page-metadata-form.php:25
+msgid "Slug"
+msgstr "رابط Slug"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-metadata-form.php:28
+msgid "No spaces or special characters allowed"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:14
+msgid "Credits"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:61
+msgid "Pages"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:64
+msgid "There are no pages."
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:66
+msgid ""
+"To reorder pages, click and drag the page up or down to the preferred "
+"location."
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:71
+#: views/admin/exhibits/page-metadata-form.php:2
+msgid "Add Page"
+msgstr "صفحة الإضافات"
+
+#: views/admin/exhibits/page-content-form.php:2
+#, php-format
+msgid "Edit Page Content: \"%s\""
+msgstr "تعديل محتوى الصفحة: \"%s\""
+
+#: views/admin/exhibits/page-content-form.php:16
+msgid "Page Layout"
+msgstr "تصميم الصفحة"
+
+#: views/admin/exhibits/page-content-form.php:27
+msgid "Edit Page"
+msgstr "تعديل الصفحة"
+
+#: views/admin/exhibits/page-content-form.php:30
+msgid "Page Content"
+msgstr "محتوى الصفحة"
+
+#: views/admin/exhibits/page-content-form.php:42
+msgid "Save and Add Another Page"
+msgstr "حفظ وإضافة صفحة أخرى"
+
+#: views/admin/exhibits/page-content-form.php:63
+msgid "Remove This Item"
+msgstr "إزالة هذا البند"
+
+#: views/admin/exhibits/page-content-form.php:98
+msgid "Attach Selected Item"
+msgstr "ربط البند المختار"
+
+#: views/admin/exhibits/page-metadata-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr ""
+
+#: views/admin/exhibits/page-metadata-form.php:14
+msgid "Page Metadata"
+msgstr "البيانات الوصفية الخاصة بالصفحة"
+
+#: views/admin/exhibits/page-metadata-form.php:35
+msgid "Layouts"
+msgstr "التصاميم"
+
+#: views/admin/exhibits/page-metadata-form.php:50
+msgid "Layout"
+msgstr ""
+
+#: views/admin/exhibits/page-metadata-form.php:55
+msgid "Choose a layout by selecting a thumbnail on the right."
+msgstr "إختيار إخراج عبر اختيار الصورة المصغرة في جهة اليمين."
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "تصفح المعارض بحسب الإشارات"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "لا توجد أي إشارات لعرضها. يجب أن تضع إشارات على بعض المعارض أولاً."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr ""
+
+#: views/admin/items/browse.php:2
+msgid "Show Search Form"
+msgstr "إبراز استمارة البحث"
+
+#: views/admin/items/browse.php:17
+msgid "add some items"
+msgstr "إضافة بعض البنود"
+
+#: views/admin/items/browse.php:17
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "لا توجد أي بنود للاختيار منها. الرجاء تضييق نطاق البحث أو %s. "
+
+#: views/public/exhibits/browse.php:40
+msgid "There are no exhibits available yet."
+msgstr "لا تتوفر أي معارض حتى الآن."
+
+#: views/shared/exhibit_layouts/gallery-full-left/form.php:4
+#: views/shared/exhibit_layouts/gallery-full-right/form.php:4
+msgid "Primary"
+msgstr "الأساسي"
+
+#: views/shared/exhibit_layouts/gallery-full-left/form.php:11
+#: views/shared/exhibit_layouts/gallery-full-right/form.php:11
+msgid "Secondary"
+msgstr "الثانوي"

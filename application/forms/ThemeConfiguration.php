@@ -1,20 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @subpackage Forms
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * Configuration form for theme options
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Forms
- * @copyright Roy Rosenzweig Center for History and New Media, 2010
+ * Configuration form for theme options.
+ * 
+ * @package Omeka\Form
  */
 class Omeka_Form_ThemeConfiguration extends Omeka_Form
 {
@@ -44,7 +39,7 @@ class Omeka_Form_ThemeConfiguration extends Omeka_Form
         parent::init();
         $themeName = $this->getThemeName();
         
-        $theme = Theme::getAvailable($themeName);
+        $theme = Theme::getTheme($themeName);
         $themeConfigIni = $theme->path . '/config.ini';
 
         if (file_exists($themeConfigIni) && is_readable($themeConfigIni)) {
@@ -55,19 +50,6 @@ class Omeka_Form_ThemeConfiguration extends Omeka_Form
 
             // create an omeka form from the configuration file
             $this->setConfig($configIni);
-            $this->setAction('');
-            $this->setAttrib('enctype', 'multipart/form-data');
-            $this->setAttrib('class', 'theme-configuration');
-
-            // add the 'Save Changes' submit button                      
-            $this->addElement(
-                'submit', 
-                'submit', 
-                array(
-                    'label' => __('Save Changes'),
-                    'ignore' => true
-                )
-            );
 
             if (!($themeConfigValues = $this->getThemeOptions())) {
                 $themeConfigValues = Theme::getOptions($themeName);

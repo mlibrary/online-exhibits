@@ -1,35 +1,21 @@
 <?php
 /**
- * Bootstrap for admin interface.  
- *
- * This is the same as the public interface bootstrap, except it defines an
- * ADMIN constant and sets an 'admin' parameter in the web request to ensure
- * that Omeka loads the correct view scripts (and any other theme-specific
- * behavior).  
- *
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  * @package Omeka
- * @access private
  */
-
-// Flag this as the admin theme. Used by _define_web_root() function in paths.php.
-//Nancy: Make the cookies secure flag on
- ini_set('session.cookie_secure','1');
-
  
+// Flag this as the admin theme.
 define('ADMIN', true);
 
-// Define the directory and web paths.
-include '../paths.php';
+// Bootstrap the application.
+include dirname(dirname(__FILE__)) . '/bootstrap.php';
 
-// Define the admin theme directory path.
-define('THEME_DIR', ADMIN_DIR . '/' . $site['admin_theme']);
-
- 
-$app = new Omeka_Core;
-// Configure the Theme bootstrap resource with the correct paths/URLs.
-$app->getBootstrap()->setOptions(array(
+// Configure, initialize, and run the application.
+$application = new Omeka_Application(APPLICATION_ENV);
+$application->getBootstrap()->setOptions(array(
     'resources' => array(
         'theme' => array(
             'basePath' => THEME_DIR,
@@ -37,14 +23,6 @@ $app->getBootstrap()->setOptions(array(
         )
     )
 ));
-
-// This is used by the global is_admin_theme to detect that this is the admin.
+// Set an admin flag to the front controller.
 Zend_Controller_Front::getInstance()->setParam('admin', true);
-
-
-$app->initialize();
-
-// This plugin allows for all functionality that is specific to the 
-// admin theme.
-$app->getBootstrap()->getResource('FrontController')->registerPlugin(new Omeka_Controller_Plugin_Admin);
-$app->run();
+$application->initialize()->run();

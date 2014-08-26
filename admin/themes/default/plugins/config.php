@@ -1,13 +1,20 @@
 <?php
-$pageTitle = __('Configure the &#8220;%s&#8221; Plugin', $plugin->getDisplayName());
-head(array('title'=>$pageTitle, 'bodyclass'=>'plugins')); ?>
-<h1><?php echo $pageTitle; ?></h1>
-<div id="primary">
-    <?php echo flash(); ?>
-    <form method="post">
+$pageTitle = __('Configure Plugin: %s', $plugin->getDisplayName());
+echo head(array('title' => $pageTitle, 'bodyclass' => 'plugins'));
+echo flash();
+?>
+<form method="post">
+    <section class="seven columns alpha">
         <?php echo $pluginBroker->callHook('config_form', array(), $plugin); ?>
-        <input type="submit" name="install_plugin" value="<?php echo __('Save Changes'); ?>" class="submit" />
-    </form>
-</div>
-
-<?php foot(); ?>
+    </section>
+    <section class="three columns omega">
+        <div id="save" class="panel">
+            <?php
+            echo $this->formSubmit(
+                'install_plugin', __('Save Changes'),
+                array('class' => 'submit big green button'));
+            ?>
+        </div>
+    </section>
+</form>
+<?php echo foot(); ?>

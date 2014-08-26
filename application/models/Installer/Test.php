@@ -1,18 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Installer for test cases that require database access.
  * 
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * @package Omeka\Install
  */
 class Installer_Test extends Installer_Default
 {    
@@ -56,8 +53,8 @@ class Installer_Test extends Installer_Default
     public static function addItem(Omeka_Db $db)
     {
         // Keep the record objects from dying.
-        Omeka_Context::getInstance()->db = $db;
-        $itemBuilder = new ItemBuilder($db);
+        Zend_Registry::get('bootstrap')->getContainer()->db = $db;
+        $itemBuilder = new Builder_Item($db);
         // Item should be public to avoid weird issues with ACL integration 
         // (test must authenticate a user in order to retrieve non-public 
         // items).

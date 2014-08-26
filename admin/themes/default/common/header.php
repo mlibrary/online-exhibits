@@ -2,44 +2,77 @@
 <html lang="<?php echo get_html_lang(); ?>">
 <head>
     <meta charset="utf-8">
-    <title><?php echo __('Omeka Admin'); ?>: <?php echo settings('site_title'); echo isset($title) ? ' | ' . strip_formatting($title) : ''; ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <?php
+    if (isset($title)) {
+        $titleParts[] = strip_formatting($title);
+    }
+    $titleParts[] = option('site_title');
+    $titleParts[] = __('Omeka Admin');
+    ?>
+    <title><?php echo implode(' &middot; ', $titleParts); ?></title>
 
 <?php
-    queue_css('default', 'all');
-    queue_css('jquery-ui', 'screen');
-    queue_js('globals');
+    queue_css_file(array('style', 'skeleton', 'jquery-ui'));
+    queue_css_file('media/960min', 'only screen and (min-width: 960px)');
+    queue_css_file('media/768min', 'only screen and (min-width: 768px) and (max-width: 959px)');
+    queue_css_file('media/767max', 'only screen and (max-width: 767px)');
+    queue_css_file('media/479max', 'only screen and (max-width: 479px)');
+    queue_css_url('https://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Cabin:400,700,400italic,700italic');
+
+    queue_js_file(array('vendor/respond', 'vendor/modernizr'));
+    queue_js_file('vendor/selectivizr', 'javascripts', array('conditional' => '(gte IE 6)&(lte IE 8)'));
+    queue_js_file('globals');
 ?>
 
 <!-- Plugin Stuff -->
-<?php admin_plugin_header(); ?>
+<?php fire_plugin_hook('admin_head', array('view'=>$this)); ?>
 
 <!-- Stylesheets -->
-<?php display_css(); ?>
+<?php echo head_css(); ?>
 
 <!-- JavaScripts -->
-<script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
-<script src="https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
-<?php display_js(); ?>
+<?php echo head_js(); ?>
 
 </head>
+
 <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
-    <div class="hide"><a href="#content"><?php echo __('Skip Navigation'); ?></a></div>
-    <div id="wrap">
-        <div id="header">
-            <div id="site-title"><?php echo link_to_admin_home_page(settings('site_title')); ?></div>
-            
-            <div id="site-info">
-                <?php if (current_user()): ?>
-                    <p id="welcome">
-                        <?php $userLink = '<a href="'.html_escape(uri('users/edit/'.current_user()->id)) .'">'.html_escape(current_user()->first_name) .'</a>'; ?>
-                        <?php echo __('Welcome, %s', $userLink); ?> | <a href="<?php echo html_escape(uri('users/logout'));?>" id="logout"><?php echo __('Log Out'); ?></a></p>
-                <?php endif; ?>
-                <?php if (has_permission('Settings', 'edit')): ?>
-                    <a href="<?php echo html_escape(uri('settings')); ?>" id="settings-link"><?php echo __('Settings'); ?></a>
-                <?php endif; ?>
-                <?php echo link_to_home_page(__('View Public Site'), array('id'=>'public-link')); ?>
-                <?php echo plugin_append_to_admin_site_info(); ?>
-            </div>
-            <?php echo common('primary-nav'); ?>
+
+<header>
+    <div class="container">
+        <div id="site-title" class="two columns">
+            <?php echo link_to_home_page(option('site_title'), array('target' => '_blank')); ?>
         </div>
-        <div id="content"<?php echo isset($content_class) ? ' class="'.$content_class.'"' : ''; ?>>
+
+        <nav>
+            <?php echo common('global-nav'); ?>
+            
+            <ul id="user-nav">
+            <?php if ($user = current_user()): ?>
+                <?php
+                    $name = html_escape($user->name);
+                    if (is_allowed($user, 'edit')) {
+                        $userLink = '<a href="' . html_escape(url('users/edit/' . $user->id)) . '">' . $name . '</a>';
+                    } else {
+                        $userLink = $name;
+                    }
+                ?>
+                <li><?php echo __('Welcome, %s', $userLink); ?></li>
+                <li><a href="<?php echo html_escape(url('users/logout'));?>" id="logout"><?php echo __('Log Out'); ?></a></li>
+            <?php endif; ?>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container container-twelve">
+    <?php echo common('content-nav', array('title' => $title)); ?>
+
+    <div class="subhead">
+        <?php echo search_form(array('show_advanced' => true)); ?>
+        <?php if (isset($title)) : ?>
+            <h1 class="section-title" title="<?php echo html_escape($title); ?>"><?php echo $title ?></h1>
+        <?php endif; ?>
+    </div>
+
+    <div id="content" class="ten columns offset-by-two omega">

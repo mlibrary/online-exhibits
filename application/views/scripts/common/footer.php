@@ -1,22 +1,23 @@
-        </div><!-- end content -->
+        </article>
 
-        <div id="footer">
+        <footer>
 
-            <ul class="navigation">
-                <?php echo public_nav_main(array(__('Home') => uri(''), __('Browse Items') => uri('items'), __('Browse Collections') => uri('collections'))); ?>
-            </ul>
+            <nav id="bottom-nav">
+                <?php echo public_nav_main(); ?>
+            </nav>
 
             <div id="footer-text">
                 <?php echo get_theme_option('Footer Text'); ?>
-                <?php if ((get_theme_option('Display Footer Copyright') == 1) && $copyright = settings('copyright')): ?>
+                <?php if ((get_theme_option('Display Footer Copyright') == 1) && $copyright = option('copyright')): ?>
                     <p><?php echo $copyright; ?></p>
                 <?php endif; ?>
                 <p><?php echo __('Proudly powered by <a href="http://omeka.org">Omeka</a>.'); ?></p>
             </div>
 
-            <?php plugin_footer(); ?>
+            <?php fire_plugin_hook('public_footer', array('view'=>$this)); ?>
 
-        </div><!-- end footer -->
+        </footer>
+
     </div><!-- end wrap -->
 </body>
 </html>

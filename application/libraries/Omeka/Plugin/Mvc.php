@@ -1,18 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Connects plugins with Omeka's model-view-controller system.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009
+ * 
+ * @package Omeka\Plugin
  */
 class Omeka_Plugin_Mvc
 {
@@ -27,6 +24,12 @@ class Omeka_Plugin_Mvc
      * @var array
      */
     protected $_pluginViewDirs = array();
+
+    /**
+     * View helper directories from plugins.
+     * @var array
+     */
+    protected $_pluginHelpersDirs = array();
     
     /**
      * @param string $basePath Plugins directory path.
@@ -91,6 +94,16 @@ class Omeka_Plugin_Mvc
         }
         return $this->_pluginViewDirs;
     }
+
+    /**
+     * Get all the existing plugin view helper dirs, indexed by plugin name.
+     *
+     * @return array
+     */
+    public function getHelpersDirs()
+    {
+        return $this->_pluginHelpersDirs;
+    }
     
     /**
      * Make an entire directory of controllers available to the front
@@ -109,7 +122,7 @@ class Omeka_Plugin_Mvc
         $contrDir = PLUGIN_DIR . '/' . $pluginDirName . '/' . 'controllers';
         Zend_Controller_Front::getInstance()->addControllerDirectory($contrDir, $moduleName);
     }
-    
+
     /**
      * Set up the following directory structure for plugins:
      * 
@@ -137,6 +150,7 @@ class Omeka_Plugin_Mvc
         $adminDir      = $viewsDir . '/admin';
         $publicDir     = $viewsDir . '/public';
         $sharedDir     = $viewsDir . '/shared';
+        $helpersDir     = $viewsDir . '/helpers';
         
         //Add 'models' and 'libraries' directories to the include path
         if (is_dir($modelDir) && !$this->_hasIncludePath($modelDir)) {
@@ -145,6 +159,10 @@ class Omeka_Plugin_Mvc
         
         if (is_dir($librariesDir) && !$this->_hasIncludePath($librariesDir)) {
             set_include_path(get_include_path() . PATH_SEPARATOR . $librariesDir);
+        }
+
+        if (is_dir($helpersDir)) {
+            $this->_pluginHelpersDirs[$pluginDirName] = $helpersDir;
         }
         
         $moduleName = $this->_getModuleName($pluginDirName);

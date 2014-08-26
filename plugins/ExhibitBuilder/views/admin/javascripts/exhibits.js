@@ -6,18 +6,23 @@ Omeka.ExhibitBuilder = function() {
     
     this.paginatedItemsUri = ''; // Used to get a paginated list of items for the item search
     this.itemContainerUri = ''; // Used to get a single item container
-    this.removeItemBackgroundImageUri = ''; // Used to specify the background image for the remove item link
-    
+
     /*
     * Load paginated search
     */
     this.loadPaginatedSearch = function() {
-    	// Make each of the pagination links fire an additional ajax request
-    	jQuery('#pagination a').bind('click', {exhibitBuilder: this}, function(event){    	    
-    	    event.stopPropagation();
-    	    event.data.exhibitBuilder.getItems(jQuery(event.target).attr('href'));
-    	    return false;
-    	});
+        var eb = this;
+        // Make each of the pagination links fire an additional ajax request
+        jQuery('.pagination a, #view-all-items').click(function (event) {
+            event.preventDefault();
+            eb.getItems(jQuery(this).attr('href'));
+        });
+
+        jQuery('.pagination form').submit(function (event) {
+            event.preventDefault();
+            var url = jQuery(this).attr('action') + '?' + jQuery(this).serialize();
+            eb.getItems(url);
+        });
 
         // Setup layout item Containers
         this.setupLayoutItemContainers();
@@ -25,12 +30,12 @@ Omeka.ExhibitBuilder = function() {
         // Setup search item Containers
         this.setupSearchItemContainers();
 
-    	// Make the search form respond with ajax power
-    	jQuery('#search').bind('submit', {exhibitBuilder:this}, function(event){
-    	    event.stopPropagation();
-    	    event.data.exhibitBuilder.searchItems(jQuery('#search'));
-    	    return false;
-    	});
+        // Make the search form respond with ajax power
+        jQuery('#search').bind('submit', {exhibitBuilder:this}, function(event){
+            event.stopPropagation();
+            event.data.exhibitBuilder.searchItems(jQuery('#search'));
+            return false;
+        });
     };
     
     jQuery(document).bind('omeka:loaditems', 
@@ -43,8 +48,8 @@ Omeka.ExhibitBuilder = function() {
     * Setup the item containers located in the main layout
     */
     this.setupLayoutItemContainers = function() {
-    	var exhibitBuilder = this;
-    	var layoutItemContainers = jQuery('#layout-form div.item-select-outer');
+        var exhibitBuilder = this;
+        var layoutItemContainers = jQuery('#layout-form div.item-select-outer');
         jQuery.each(layoutItemContainers, function(index, rawLayoutItemContainer) {
             var layoutItemContainer = jQuery(rawLayoutItemContainer);
             exhibitBuilder.setupLayoutItemContainer(layoutItemContainer);
@@ -59,17 +64,16 @@ Omeka.ExhibitBuilder = function() {
         // Add delete buttons to the layout item container
         this.addDeleteButtonsToLayoutItemContainer(layoutItemContainer);
         
-        // Hide the item id information
-        layoutItemContainer.find('.item_id').hide();
-        
         // Attach Item Dialog Link
-     	layoutItemContainer.find('.attach-item-link').click(function(){
-     	    jQuery(this).parent().addClass('item-targeted');
-     		jQuery('#search-items').dialog('open');
-     		return false;
-     	});
-     	
-     	jQuery(layoutItemContainer).trigger("exhibitbuilder:attachitem");
+        layoutItemContainer.find('.attach-item-link').click(function(){
+            jQuery(this).parent().addClass('item-targeted');
+            jQuery('#search-items').dialog('open');
+            return false;
+        });
+        
+        Omeka.ExhibitBuilder.addNumbers();
+        
+        jQuery(layoutItemContainer).trigger("exhibitbuilder:attachitem");
         
     };
     
@@ -91,16 +95,12 @@ Omeka.ExhibitBuilder = function() {
     this.setupSearchItemContainer = function(searchItemContainer) {
         // Add selection highlighting to the search item container
         this.addSelectionHighlightingToSearchItemContainer(searchItemContainer);
-    
-        // Hide the item id information
-        searchItemContainer.find('.item_id').hide();
-    
     };
     
     /*
     * Use AJAX request to retrieve the list of items that can be used in the exhibit.
     */
-    this.getItems = function(uri, parameters) {		     
+    this.getItems = function(uri, parameters) {          
          
          if (!uri || uri.length == 0) {
              uri = this.paginatedItemsUri;
@@ -125,8 +125,8 @@ Omeka.ExhibitBuilder = function() {
                 //Omeka.Search.activateSearchButtons();
                 
                 if (fireEvents) {
-        	        jQuery(document).trigger("omeka:loaditems");
-        	    }
+                    jQuery(document).trigger("omeka:loaditems");
+                }
            }
          });
     };
@@ -144,7 +144,8 @@ Omeka.ExhibitBuilder = function() {
         jQuery.ajax({
           url: this.paginatedItemsUri,
           data: searchForm.serialize(),
-          method: 'POST',
+          dataType: 'html',
+          method: 'GET',
           complete: function(xhr, textStatus) {
               jQuery('#item-select').html(xhr.responseText);
               jQuery(document).trigger("omeka:loaditems");
@@ -159,15 +160,12 @@ Omeka.ExhibitBuilder = function() {
         // Only add a Remove Item link to the layout item container if it has an item
         if (layoutItemContainer.find('div.item-select-inner').size()) {
             var removeItemLink = jQuery('<a></a>');
-    		removeItemLink.html(this.removeItemText);
-    		removeItemLink.addClass('remove_item delete-item');
-    		removeItemLink.css('cursor', 'pointer');
-    		removeItemLink.prepend('<img src="'+this.removeItemBackgroundImageUri+'" /> ');
-    		
-    		// Put the 'delete' as background to anything with a 'remove_item' class
+            removeItemLink.html(this.removeItemText);
+            removeItemLink.addClass('remove_item delete-item red button');
+            removeItemLink.css('cursor', 'pointer');
+            
+            // Put the 'delete' as background to anything with a 'remove_item' class
             // removeItemLink.css({
-            //     'backgroundImage' : 'url(' + this.removeItemBackgroundImageUri + ')',
-            //     ''
             //     'padding-left': '20px'
             //     });            
 
@@ -196,10 +194,10 @@ Omeka.ExhibitBuilder = function() {
     */
     this.attachSelectedItem = function() {
         var selectedItemContainer = jQuery('.item-selected');
-        var selectedItemId = this.getItemIdFromItemContainer(selectedItemContainer);        		
+        var selectedItemId = selectedItemContainer.data('itemId');
         var targetedItemContainer = jQuery('.item-targeted');
-        var targetedItemOrder = this.getItemOrderFromItemContainer(targetedItemContainer);		
-        this.setItemForItemContainer(targetedItemContainer, selectedItemId, targetedItemOrder);	        
+        var targetedItemOrder = this.getItemOrderFromItemContainer(targetedItemContainer);      
+        this.setItemForItemContainer(targetedItemContainer, selectedItemId, targetedItemOrder);         
     }
     
     /*
@@ -230,19 +228,6 @@ Omeka.ExhibitBuilder = function() {
     };
 
     /*
-    * Get the id of the item (if any) in the item container
-    */
-    this.getItemIdFromItemContainer = function(itemContainer) {
-        // for some weird reason, itemContainer.find('.item_id').first(); does not work, 
-        // so we assume that their is only one item id div in the item container
-        var itemIdDiv = itemContainer.find('.item_id');
-        if (itemIdDiv) {
-            return itemIdDiv.text();
-        }
-        return false;
-    };
-    
-    /*
     * Get the order of the item (if any) in the item container
     */
     this.getItemOrderFromItemContainer = function(itemContainer) {
@@ -255,24 +240,65 @@ Omeka.ExhibitBuilder = function() {
         }
         return false;
     };
-    
-    this.addStyling = function() {
-        jQuery('.order-input').css({'border':'none', 'background':'#fff','color':'#333'});
-    }
 }
 
 Omeka.ExhibitBuilder.wysiwyg = function() {
     Omeka.wysiwyg();
 }
 
-Omeka.ExhibitBuilder.addStyling = function() {
-	jQuery('.order-input').css({'border':'none', 'background':'#fff','color':'#333'});
-	jQuery('.section-list, .page-list').css({'cursor':'move'});
-}
 
 Omeka.ExhibitBuilder.addNumbers = function() {
     jQuery('#layout-form .exhibit-form-element').each(function(i){
         var number = i+1;
-        jQuery(this).append('<div class="exhibit-form-element-number">'+number+'</div>'); 
+        if (jQuery(this).find('.exhibit-form-element-number').length == 0) {
+            jQuery(this).append('<div class="exhibit-form-element-number">'+number+'</div>'); 
+        }
     });
 }
+
+
+/**
+ * Enable drag and drop sorting for elements.
+ */
+Omeka.ExhibitBuilder.enableSorting = function () {
+    jQuery('.sortable').nestedSortable({
+        listType: 'ul',
+        items: 'li.page',
+        handle: '.sortable-item',
+        revert: 200,
+        forcePlaceholderSize: true,
+        forceHelperSize: true,
+        toleranceElement: '> div',
+        placeholder: 'ui-sortable-highlight',
+        containment: 'document',
+        maxLevels: 3
+    });
+};
+
+Omeka.ExhibitBuilder.activateDeleteLinks = function () {
+    jQuery('#page-list .delete-toggle').click(function (event) {
+        event.preventDefault();
+        header = jQuery(this).parent();
+        if (jQuery(this).hasClass('delete-element')) {
+            jQuery(this).removeClass('delete-element').addClass('undo-delete');
+            header.addClass('deleted');
+        } else {
+            jQuery(this).removeClass('undo-delete').addClass('delete-element');
+            header.removeClass('deleted');
+        }
+    });
+};
+
+Omeka.ExhibitBuilder.setUpFormSubmission = function () {
+    jQuery('#exhibit-metadata-form').submit(function (event) {
+        // add ids to li elements so that we can pull out the parent/child relationships
+        var listData = jQuery('#page-list').nestedSortable('serialize');
+        var deletedIds = [];
+        jQuery('#page-list .deleted').each(function () {
+            deletedIds.push(jQuery(this).parent().attr('id').match(/_(.*)/)[1]);
+        });
+        
+        jQuery('#pages-hidden').val(listData);
+        jQuery('#pages-delete-hidden').val(deletedIds.join(','));
+    });
+};

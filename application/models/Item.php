@@ -1,56 +1,110 @@
 <?php 
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @subpackage Models
- * @author CHNM
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * Represents an item and its metadata.
- *
- * @package Omeka
- * @subpackage Models
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * An item and its metadata.
+ * 
+ * @package Omeka\Record
  */
-class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
-{        
+class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
+{
+    /**
+     * The ID for this Item's ItemType, if any.
+     *
+     * @var int
+     */
     public $item_type_id;
+
+    /**
+     * The ID for this Item's Collection, if any.
+     *
+     * @var int
+     */
     public $collection_id;
+
+    /**
+     * Whether this Item is featured.
+     *
+     * @var int
+     */
     public $featured = 0;
-    public $public = 0;    
+
+    /**
+     * Whether this Item is publicly accessible.
+     *
+     * @var int
+     */
+    public $public = 0;
+
+    /**
+     * The date this Item was added.
+     *
+     * @var string
+     */
     public $added;
+
+    /**
+     * The date this Item was last modified.
+     *
+     * @var string
+     */
     public $modified;
-    
-        
-    protected $_related = array('Collection'=>'getCollection', 
-                                'TypeMetadata'=>'getTypeMetadata', 
-                                'Type'=>'getItemType',
-                                'Tags'=>'getTags',
-                                'Files'=>'getFiles',
-                                'Elements'=>'getElements',
-                                'ItemTypeElements'=>'getItemTypeElements',
-                                'ElementTexts'=>'getElementText');
+
+    /**
+     * ID of the User who created this Item.
+     *
+     * @var int
+     */
+    public $owner_id;
+
+    /**
+     * Records related to an Item.
+     *
+     * @var array
+     */
+    protected $_related = array(
+        'Collection' => 'getCollection', 
+        'TypeMetadata' => 'getTypeMetadata', 
+        'Type' => 'getItemType',
+        'Tags' => 'getTags',
+        'Files' => 'getFiles',
+        'Elements' => 'getElements',
+        'ItemTypeElements' => 'getItemTypeElements',
+        'ElementTexts' => 'getAllElementTexts'
+    );
     
     /**
-     * @var array Set of non-persistent File objects to attach to the item.
+     * Set of non-persistent File objects to attach to the item.
+     * 
+     * @var array 
      * @see Item::addFile()  
      */
     private $_files = array();
-    
+
+    /**
+     * Initialize the mixins.
+     */
     protected function _initializeMixins()
     {
-        $this->_mixins[] = new Taggable($this);
-        $this->_mixins[] = new Relatable($this);
-        $this->_mixins[] = new ActsAsElementText($this);
-        $this->_mixins[] = new PublicFeatured($this);
+        $this->_mixins[] = new Mixin_Tag($this);
+        $this->_mixins[] = new Mixin_Owner($this);
+        $this->_mixins[] = new Mixin_ElementText($this);
+        $this->_mixins[] = new Mixin_PublicFeatured($this);
+        $this->_mixins[] = new Mixin_Timestamp($this);
+        $this->_mixins[] = new Mixin_Search($this);
     }
     
     // Accessor methods
         
     /**
-     * @return null|Collection
+     * Get this Item's Collection, if any.
+     * 
+     * @return Collection|null
      */
     public function getCollection()
     {
@@ -59,7 +113,7 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
     
     /**
-     * Retrieve the ItemType record associated with this Item.
+     * Get the ItemType record associated with this Item.
      * 
      * @return ItemType|null
      */
@@ -72,25 +126,17 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
     
     /**
-     * Retrieve the set of File records associated with this Item.
+     * Get the set of File records associated with this Item.
      * 
      * @return array
      */
     public function getFiles()
     {
-        return $this->getTable('File')->findByItem($this->id, null, 'order');
+        return $this->getTable('File')->findByItem($this->id);
     }
     
     /**
-     * @return array Set of ElementText records.
-     */
-    public function getElementText()
-    {
-        return $this->getElementTextRecords();
-    }
-    
-    /**
-     * Retrieve a set of elements associated with the item type of the item.
+     * Get a set of Elements associated with this Item's ItemType.
      *
      * Each one of the Element records that is retrieved should contain all the 
      * element text values associated with it.
@@ -99,150 +145,129 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
      * @return array Element records that are associated with the item type of
      * the item.  This array will be empty if the item does not have an 
      * associated type.
-     */    
-    public function getItemTypeElements()
-    {    
-        /* My hope is that this will retrieve a set of elements, where each
-        element contains an array of all the values for that element */
-        $elements = $this->getTable('Element')->findByItemType($this->item_type_id);
-        
-        return $elements;
-    }
-    
-    /**
-     * Retrieve the User record that represents the creator of this Item.
-     * 
-     * @return User
      */
-    public function getUserWhoCreated()
+    public function getItemTypeElements()
     {
-        $creator = $this->getRelatedEntities('added');
-        
-        if (is_array($creator)) {
-            $creator = current($creator);
+        $elements = $this->getTable('Element')->findByItemType($this->item_type_id);
+
+        $indexedElements = array();
+        foreach ($elements as $element) {
+            $indexedElements[$element->name] = $element;
         }
-        
-        return $creator->User;
+        return $indexedElements;
     }
-        
+
+    /**
+     * Get a property for display.
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function getProperty($property)
+    {
+        switch($property) {
+            case 'item_type_name':
+                if ($type = $this->Type) {
+                    return $type->name;
+                } else {
+                    return null;
+                }
+            case 'collection_name':
+                if ($collection = $this->Collection) {
+                    return strip_formatting(metadata($collection, array('Dublin Core', 'Title')));
+                } else {
+                    return null;
+                }
+            case 'permalink':
+                return record_url($this, null, true);
+            case 'has_files':
+                return (bool) $this->fileCount();
+            case 'file_count':
+                return $this->fileCount();
+            case 'has_thumbnail':
+                return $this->hasThumbnail();
+            case 'citation':
+                return $this->getCitation();
+            default:
+                return parent::getProperty($property);
+        }
+    }
+
     // End accessor methods
     
     // ActiveRecord callbacks
-    
+
     /**
-     * Stop the form submission if we are using the non-JS form to change the 
-     * Item Type or add files.
+     * Before-save hook.
      *
-     * Also, do not allow people to change the public/featured status of an item
-     * unless they have 'makePublic' or 'makeFeatured' permissions.
-     *
-     * @return void
+     * @param array $args
      */
-    protected function beforeSaveForm($post)
-    {        
-        $this->beforeSaveElements($post);
-        
-        if (!empty($post['change_type'])) {
-            return false;
-        }
-        if (!empty($post['add_more_files'])) {
-            return false;
-        }
-        
-        try {
-            $this->_uploadFiles();
-        } catch (Omeka_File_Ingest_InvalidException $e) {
-            $this->addError('File Upload', $e->getMessage());
-        }
-    }
-    
-    /**
-     * Things to do in the beforeSave() hook:
-     * 
-     * Explicitly set the modified timestamp.
-     * 
-     * @return void
-     */
-    protected function beforeSave()
+    protected function beforeSave($args)
     {
-        $this->modified = Zend_Date::now()->toString(self::DATE_FORMAT);
-        $booleanFilter = new Omeka_Filter_Boolean();
-        $this->public = $booleanFilter->filter($this->public);
-        $this->featured = $booleanFilter->filter($this->featured);
-    }
-    
-    /**
-     * Modify the user's tags for this item based on form input.
-     * 
-     * Checks the 'tags' field from the post and applies all the differences in
-     * the list of tags for the current user.
-     * 
-     * @uses Taggable::applyTagString()
-     * @param ArrayObject
-     * @return void
-     */
-    protected function _modifyTagsByForm($post)
-    {
-        // Change the tags (remove some, add some)
-        if (array_key_exists('my-tags-to-add', $post)) {
-            $user = Omeka_Context::getInstance()->getCurrentUser();
-            if ($user) {
-                $this->addTags($post['my-tags-to-add'], $user);
-                $this->deleteTags($post['my-tags-to-delete'], $user);                
-                $this->deleteTags($post['other-tags-to-delete'], $user, $this->userHasPermission('untagOthers'));
-            }
-        }        
-    }
-        
-    /**
-     * Save all metadata for the item that has been received through the form.
-     *
-     * All of these have to run after the Item has been saved, because all 
-     * require that the Item is already persistent in the database.
-     * 
-     * @return void
-     */
-    protected function afterSaveForm($post)
-    {        
-        // Update file order for this item.
-        foreach ($post['order'] as $fileId => $fileOrder) {
+        if ($args['post']) {
+            $post = $args['post'];
             
-            // File order must be an integer or NULL.
-            $fileOrder = (int) $fileOrder;
-            if (!$fileOrder) {
-                $fileOrder = null;
+            $this->beforeSaveElements($post);
+            
+            if (!empty($post['change_type'])) {
+                return false;
             }
             
-            $file = $this->getTable('File')->find($fileId);
-            $file->order = $fileOrder;
-            $file->save();
+            try {
+                $this->_uploadFiles();
+            } catch (Omeka_File_Ingest_InvalidException $e) {
+                $this->addError('File Upload', $e->getMessage());
+            }
         }
-        
-        // Delete files that have been designated by passing an array of IDs 
-        // through the form.
-        if (isset($post['delete_files']) && ($files = $post['delete_files'])) {
-            $this->_deleteFiles($files);
-        }
-        
-        $this->_modifyTagsByForm($post);
     }
     
     /**
-     * Things to do in the afterSave() hook:
-     * 
-     * Save all files that had been associated with the item.
-     * 
-     * @return void
+     * After-save hook.
+     *
+     * @param array $args
      */
-    protected function afterSave()
+    protected function afterSave($args)
     {
+        if (!$this->public) {
+            $this->setSearchTextPrivate();
+        }
+        
         $this->saveFiles();
-    }
+        
+        if ($args['post']) {
+            $post = $args['post'];
             
+            // Update file order for this item.
+            if (isset($post['order'])) {
+                foreach ($post['order'] as $fileId => $fileOrder) {
+                    // File order must be an integer or NULL.
+                    $fileOrder = (int) $fileOrder;
+                    if (!$fileOrder) {
+                        $fileOrder = null;
+                    }
+
+                    $file = $this->getTable('File')->find($fileId);
+                    $file->order = $fileOrder;
+                    $file->save();
+                }
+            }
+            
+            // Delete files that have been designated by passing an array of IDs 
+            // through the form.
+            if (isset($post['delete_files']) && ($files = $post['delete_files'])) {
+                $this->_deleteFiles($files);
+            }
+            
+            // Save/delete the tags.
+            if (array_key_exists('tags-to-add', $post)) {
+                $this->addTags($post['tags-to-add']);
+                $this->deleteTags($post['tags-to-delete']);
+            }
+        }
+    }
+
     /**
      * All of the custom code for deleting an item.
-     *
-     * @return void
      */
     protected function _delete()
     {    
@@ -259,11 +284,10 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
      * 
      * @uses FileTable::findByItem()
      * @param array $fileIds Optional
-     * @return void
      */
     protected function _deleteFiles(array $fileIds = array())
     {           
-        $filesToDelete = $this->getTable('File')->findByItem($this->id, $fileIds);
+        $filesToDelete = $this->getTable('File')->findByItem($this->id, $fileIds, 'id');
         
         foreach ($filesToDelete as $fileRecord) {
             $fileRecord->delete();
@@ -273,24 +297,19 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     /**
      * Iterate through the $_FILES array for files that have been uploaded
      * to Omeka and attach each of those files to this Item.
-     * 
-     * @param string
-     * @return void
      */
     private function _uploadFiles()
     {
-        fire_plugin_hook('before_upload_files', $this);
+        fire_plugin_hook('before_upload_files', array('item' => $this));
         // Tell it to always try the upload, but ignore any errors if any of
         // the files were not actually uploaded (left form fields empty).
         if (!empty($_FILES['file'])) {
-            $files = insert_files_for_item($this, 'Upload', 'file', array('ignoreNoFile'=>true));
+            $files = insert_files_for_item($this, 'Upload', 'file', array('ignoreNoFile' => true));
         }
      }
     
     /**
      * Save all the files that have been associated with this item.
-     * 
-     * @return boolean
      */
     public function saveFiles()
     {
@@ -300,10 +319,10 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
         
         foreach ($this->_files as $key => $file) {
             $file->item_id = $this->id;
-            $file->forceSave();
+            $file->save();
             // Make sure we can't save it twice by mistake.
             unset($this->_files[$key]);
-        }        
+        }
     }
     
     /**
@@ -312,25 +331,29 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
      * @param array Dirty post data
      * @return array Clean post data
      */
-    protected function filterInput($post)
+    protected function filterPostData($post)
     {
-        $options = array('inputNamespace'=>'Omeka_Filter');
-        $filters = array(                         
-                         // Foreign keys
-                         'type_id'       => 'ForeignKey',
-                         'collection_id' => 'ForeignKey',
-                         
-                         // Booleans
-                         'public'   =>'Boolean',
-                         'featured' =>'Boolean');  
+        $options = array('inputNamespace' => 'Omeka_Filter');
+        $filters = array(
+            // Foreign keys
+            'item_type_id'  => 'ForeignKey',
+            'collection_id' => 'ForeignKey',
+
+            // Booleans
+            'public'   =>'Boolean',
+            'featured' =>'Boolean'
+        );  
         $filter = new Zend_Filter_Input($filters, null, $post, $options);
         $post = $filter->getUnescaped();
-        
+
+        $bootstrap = Zend_Registry::get('bootstrap');
+        $acl = $bootstrap->getResource('Acl');
+        $currentUser = $bootstrap->getResource('CurrentUser');
         // check permissions to make public and make featured
-        if (!$this->userHasPermission('makePublic')) {
+        if (!$acl->isAllowed($currentUser, 'Items', 'makePublic')) {
             unset($post['public']);
         }
-        if (!$this->userHasPermission('makeFeatured')) {
+        if (!$acl->isAllowed($currentUser, 'Items', 'makeFeatured')) {
             unset($post['featured']);
         }
         
@@ -338,23 +361,22 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
     
     /**
-     * Whether or not the Item has files associated with it.
+     * Get the number of files assigned to this item.
      * 
-     * @return boolean
+     * @return int
      */
-    public function hasFiles()
+    public function fileCount()
     {
         $db = $this->getDb();
         $sql = "
         SELECT COUNT(f.id) 
         FROM $db->File f 
         WHERE f.item_id = ?";
-        $count = (int) $db->fetchOne($sql, array((int) $this->id));
-        return $count > 0;
+        return (int) $db->fetchOne($sql, array((int) $this->id));
     }
     
     /**
-     * Retrieve the previous Item in the database.
+     * Get the previous Item in the database.
      *
      * @uses ItemTable::findPrevious()
      * @return Item|false
@@ -365,7 +387,7 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
     
     /**
-     * Retrieve the next Item in the database.
+     * Get the next Item in the database.
      * 
      * @uses ItemTable::findNext()
      * @return Item|false
@@ -374,12 +396,12 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     {
         return $this->getDb()->getTable('Item')->findNext($this);
     }
-            
+
     /**
      * Determine whether or not the Item has a File with a thumbnail image
      * (or any derivative image).
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasThumbnail()
     {
@@ -397,6 +419,60 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
     
     /**
+     * Return a valid citation for this item.
+     *
+     * Generally follows Chicago Manual of Style note format for webpages. 
+     * Implementers can use the item_citation filter to return a customized 
+     * citation.
+     *
+     * @return string
+     */
+    function getCitation()
+    {
+        $citation = '';
+        
+        $creators = metadata($this, array('Dublin Core', 'Creator'), array('all' => true));
+        // Strip formatting and remove empty creator elements.
+        $creators = array_filter(array_map('strip_formatting', $creators));
+        if ($creators) {
+            switch (count($creators)) {
+                case 1:
+                    $creator = $creators[0];
+                    break;
+                case 2:
+                    /// Chicago-style item citation: two authors
+                    $creator = __('%1$s and %2$s', $creators[0], $creators[1]);
+                    break;
+                case 3:
+                    /// Chicago-style item citation: three authors
+                    $creator = __('%1$s, %2$s, and %3$s', $creators[0], $creators[1], $creators[2]);
+                    break;
+                default:
+                    /// Chicago-style item citation: more than three authors
+                    $creator = __('%s et al.', $creators[0]);
+            }
+            $citation .= "$creator, ";
+        }
+        
+        $title = strip_formatting(metadata($this, array('Dublin Core', 'Title')));
+        if ($title) {
+            $citation .= "&#8220;$title,&#8221; ";
+        }
+        
+        $siteTitle = strip_formatting(option('site_title'));
+        if ($siteTitle) {
+            $citation .= "<em>$siteTitle</em>, ";
+        }
+        
+        $accessed = format_date(time(), Zend_Date::DATE_LONG);
+        $url = html_escape(record_url($this, null, true));
+        /// Chicago-style item citation: access date and URL
+        $citation .= __('accessed %1$s, %2$s.', $accessed, $url);
+        
+        return apply_filters('item_citation', $citation, array('item' => $this));
+    }
+    
+    /**
      * Associate an unsaved (new) File record with this Item.
      * 
      * These File records will not be persisted in the database until the item
@@ -404,7 +480,6 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
      * 
      * @see Item::saveFiles()
      * @param File $file
-     * @return void
      */
     public function addFile(File $file)
     {
@@ -420,14 +495,27 @@ class Item extends Omeka_Record implements Zend_Acl_Resource_Interface
     }
 
     /**
-     * Required by Zend_Acl_Resource_Interface.
+     * Identify Item records as relating to the Items ACL resource.
      *
-     * Identifies Item records as relating to the Items ACL resource.
+     * Required by Zend_Acl_Resource_Interface.
      *
      * @return string
      */
     public function getResourceId()
     {
         return 'Items';
+    }
+    
+    /**
+     * Validate this item.
+     */
+    protected function _validate() {
+        $db = $this->getDb();
+        if (null !== $this->item_type_id && !$db->getTable('ItemType')->exists($this->item_type_id)) {
+            $this->addError('item_type_id', __('Invalid item type.'));
+        }
+        if (null !== $this->collection_id && !$db->getTable('Collection')->exists($this->collection_id)) {
+            $this->addError('collection_id', __('Invalid collection.'));
+        }
     }
 }

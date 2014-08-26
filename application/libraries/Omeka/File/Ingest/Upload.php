@@ -1,21 +1,18 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
- 
+
 /**
  * This class creates a bridge between the ZF File Transfer HTTP adapter and
  * Omeka's file ingest classes.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * 
+ * @package Omeka\File\Ingest
  */
-class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_Abstract
+class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_AbstractIngest
 {
     /**
      * @var Zend_File_Transfer_Adapter_Http
@@ -39,13 +36,13 @@ class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_Abstract
         $this->_adapter = new Zend_File_Transfer_Adapter_Http($this->_adapterOptions);
         $this->_adapter->setDestination($storage->getTempDir());
         
-        // Add a filter to rename the file to something archive-friendly.
+        // Add a filter to rename the file to something Omeka-friendly.
         $this->_adapter->addFilter(new Omeka_Filter_Filename);
     }
     
     /**
-     * In addition to the default options available for Omeka_File_Ingest_Abstract,
-     * this understands the following options:
+     * In addition to the default options available for 
+     * Omeka_File_Ingest_AbstractIngest, this understands the following options:
      * - 'ignoreNoFile' => boolean False by default.  Whether or not to ignore 
      * - validation errors that occur when an uploaded file is missing.  This 
      * - may occur when a file input is left empty on a form.  
@@ -87,7 +84,7 @@ class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_Abstract
      * 
      * @param array $fileInfo
      * @param string $originalFilename
-     * @return string Path to the file in the archive.
+     * @return string Path to the file in Omeka.
      */
     protected function _transferFile($fileInfo, $originalFilename)
     {
@@ -96,7 +93,7 @@ class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_Abstract
             throw new Omeka_File_Ingest_InvalidException(join("\n\n", $this->_adapter->getMessages()));
         }
 
-        // Return the path to the file as it is listed in the archive.
+        // Return the path to the file as it is listed in Omeka.
         return $this->_adapter->getFileName($fileInfo['form_index']);
     }
         
@@ -129,7 +126,7 @@ class Omeka_File_Ingest_Upload extends Omeka_File_Ingest_Abstract
      * Use the Zend Framework adapter to handle validation instead of the 
      * built-in _validateFile() method.
      * 
-     * @see Omeka_File_Ingest_Abstract::_validateFile()
+     * @see Omeka_File_Ingest_AbstractIngest::_validateFile()
      * @param Zend_Validate_Interface $validator
      * @return void
      */

@@ -1,117 +1,132 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @subpackage Models
- * @author CHNM
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @package Omeka
- * @subpackage Models
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * A user and its metadata.
+ * 
+ * @package Omeka\Record
  */
-class User extends Omeka_Record implements Zend_Acl_Resource_Interface, 
-                                           Zend_Acl_Role_Interface
+class User extends Omeka_Record_AbstractRecord 
+    implements Zend_Acl_Resource_Interface, Zend_Acl_Role_Interface
 {
-
+    /**
+     * This User's username.
+     *
+     * @var string
+     */
     public $username;
     
     /**
-     * @var string This field should never contain the plain-text password.  Always
+     * The hashed password.
+     *
+     * This field should never contain the plain-text password.  Always
      * use setPassword() to change the user password.
+     * 
+     * @var string 
      */
     public $password;
-    public $salt;
-    public $active = '0';
-    public $role;
-    public $entity_id;
-    
-    private $_entity;
-    
-    const USERNAME_MIN_LENGTH = 1;
-    const USERNAME_MAX_LENGTH = 30;
-    const PASSWORD_MIN_LENGTH = 6;
-    
-    const INVALID_EMAIL_ERROR_MSG = "That email address is not valid.  A valid email address is required.";
-    const CLAIMED_EMAIL_ERROR_MSG = "That email address has already been claimed by a different user. Please notify an administrator if you feel this has been done in error.";
-        
-    protected $_related = array('Entity'=>'getEntity');
-    
-    public function getEntity()
-    {
-        if (!$this->_entity) {
-            if (!$this->exists() || empty($this->entity_id)) {
-                $entity =  new Entity($this->getDb());
-            } else {
-                $entity = $this->getTable('Entity')->find((int) $this->entity_id);
-            } 
-            $this->_entity = $entity;
-        }
-        return $this->_entity;
-    }
-    
+
     /**
-     * Overrides parent::__get() to transparently get properties from the Entity
-     * associated with this user.
-     */
-    public function __get($property)
-    {
-        $entity = $this->getEntity();
-        if (!($entity instanceof Entity)) {
-            throw new Omeka_Record_Exception(__("No Entity record available."));
-        }
-        if (isset($entity->$property)) {
-            return $entity->$property;
-        } else {
-            return parent::__get($property);
-        }
-    }
-    
-    protected function beforeSave()
-    {
-        if (!$this->Entity) {
-            throw new Omeka_Record_Exception(__("No Entity record is available when saving this User."));
-        }
-        $this->Entity->save();
-        $this->entity_id = $this->Entity->id;
-    }
-    
-    protected function beforeSaveForm($post)
-    {
-        if (!$this->processEntity($post)) {
-            return false;
-        }
-        
-        // Permissions check to see if whoever is trying to change role to a super-user
-        if (!empty($post['role'])) {
-            $acl = Omeka_Context::getInstance()->getAcl();
-            $currentUser = Omeka_Context::getInstance()->getCurrentUser();
-            if ($post['role'] == 'super' && !$acl->isAllowed($currentUser, 'Users', 'makeSuperUser')) {
-                throw new Omeka_Validator_Exception( __('User may not change permissions to super-user') );
-            }
-            if (!$acl->isAllowed($currentUser, $this, 'change-role')) {
-                throw new Omeka_Validator_Exception(__('User may not change roles.'));
-            }
-        } 
-                
-        // If the User is not persistent we need to create a placeholder password
-        if (!$this->exists()) {
-            $this->setPassword($this->generatePassword(8));
-        }        
-        
-        return true;
-    }
-    
-    /**
-     * @duplication Mostly duplicated in Item::filterInput()
+     * The salt for the hashed password.
      *
-     * @return void
+     * @var string
      */
-    protected function filterInput($post)
+    public $salt;
+
+    /**
+     * Whether this user is active and can log in.
+     *
+     * @var int
+     */
+    public $active = 0;
+
+    /**
+     * This user's role.
+     *
+     * @var string
+     */
+    public $role;
+
+    /**
+     * This user's full or display name.
+     *
+     * @var string
+     */
+    public $name;
+
+    /**
+     * This user's email address.
+     *
+     * @var string
+     */
+    public $email;
+
+    /**
+     * Minimum username length.
+     */
+    const USERNAME_MIN_LENGTH = 1;
+
+    /**
+     * Maximum username length.
+     */
+    const USERNAME_MAX_LENGTH = 30;
+
+    /**
+     * Minimum password length.
+     */
+    const PASSWORD_MIN_LENGTH = 6;
+
+    /**
+     * Error message for an invalid email address.
+     */
+    const INVALID_EMAIL_ERROR_MSG = "That email address is not valid.  A valid email address is required.";
+
+    /**
+     * Error message for an already-taken email address.
+     */
+    const CLAIMED_EMAIL_ERROR_MSG = "That email address has already been claimed by a different user. Please notify an administrator if you feel this has been done in error.";
+
+    /**
+     * Before-save hook.
+     *
+     * Check the current user's privileges to change user roles before saving.
+     */
+    protected function beforeSave($args)
     {
-        $options = array('inputNamespace'=>'Omeka_Filter');
+        if ($args['post']) {
+            $post = $args['post'];
+            
+            // Permissions check to see if whoever is trying to change role to a super-user
+            if (!empty($post['role'])) {
+                $bootstrap = Zend_Registry::get('bootstrap');
+                $acl = $bootstrap->getResource('Acl');
+                $currentUser = $bootstrap->getResource('CurrentUser');
+                if ($post['role'] == 'super' && !$acl->isAllowed($currentUser, 'Users', 'makeSuperUser')) {
+                    $this->addError('role', __('User may not change permissions to super-user'));
+                }
+                if (!$acl->isAllowed($currentUser, $this, 'change-role')) {
+                    $this->addError('role', __('User may not change roles.'));
+                }
+            }
+        }
+    }
+
+    /**
+     * Filter form POST input.
+     *
+     * Transform usernames to lowercase alphanumeric.
+     *
+     * @param array $post
+     * @return array Cleaned POST data.
+     */
+    protected function filterPostData($post)
+    {
+        $options = array('inputNamespace' => 'Omeka_Filter');
         
         // Alphanumeric with no whitespace allowed, lowercase
         $username_filter = array(new Zend_Filter_Alnum(false), 'StringToLower');
@@ -127,8 +142,13 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
                 
         return $post;
     }
-    
-    public function setFromPost($post)
+
+    /**
+     * Set data from POST to the record.
+     *
+     * Removes the 'password' and 'salt' entries, if passed.
+     */
+    public function setPostData($post)
     {
         // potential security hole
         if (isset($post['password'])) {
@@ -137,38 +157,25 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
         if (array_key_exists('salt', $post)) {
             unset($post['salt']);
         }
-        return parent::setFromPost($post);
+        return parent::setPostData($post);
     }
-    
+
+    /**
+     * Validate this User.
+     */
     protected function _validate()
     {
-        // Validate the entity of the user. This requires special validation 
-        // within this class b/c the entities themselves have no particular 
-        // validation.
-        if ($entity = $this->Entity) {
+        if (!trim($this->name)) {
+            $this->addError('name', __('Real Name is required.'));
+        }
             
-            // Either need first and last name (or institution name) to validate.
-            if (trim($entity->institution) == '') {
-                if (trim($entity->first_name) == '' && trim($entity->last_name) == '') {
-                    $this->addError('institution', __('If a first name and last name are not provided, then an institution name is required.'));
-                } else {
-                    if (trim($entity->first_name) == '') {
-                        $this->addError('first_name', __('A first name is required.'));
-                    }
-                    if (trim($entity->last_name) == '') {
-                        $this->addError('last_name', __('A last name is required.')); 
-                    }
-                }
-            }
+        if (!Zend_Validate::is($this->email, 'EmailAddress')) {
+            $this->addError('email', __(self::INVALID_EMAIL_ERROR_MSG));
+        }
             
-            if (!Zend_Validate::is($entity->email, 'EmailAddress')) {
-                $this->addError('email', __(self::INVALID_EMAIL_ERROR_MSG));
-            }
-            
-            if (!$this->emailIsUnique($entity->email)) {
-                $this->addError('email', __(self::CLAIMED_EMAIL_ERROR_MSG));            
-            }                 
-        }    
+        if (!$this->fieldIsUnique('email')) {
+            $this->addError('email', __(self::CLAIMED_EMAIL_ERROR_MSG));            
+        }
         
         //Validate the role
         if (trim($this->role) == '') {
@@ -184,32 +191,11 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
             $this->addError('username', __("'%s' is already in use. Please choose another username.", $this->username));
         }
     }
-    
-    /**
-     * This will check the set of IDs for users that have a specific email address.  
-     * If it is greater than 1, or if the 
-     *
-     * @return bool
-     */
-    private function emailIsUnique($email)
-    {
-        $db = $this->getDb();
-        $sql = "
-        SELECT u.id 
-        FROM $db->User u 
-        INNER JOIN $db->Entity e 
-        ON e.id = u.entity_id 
-        WHERE e.email = ?";
-        
-        $id = $db->query($sql, array($email))->fetchAll();
-        
-        // Either there is nothing stored in the DB yet, or there is only one 
-        // and it belongs to this one
-        return (!count($id) or ((count($id) == 1) && ($id[0]['id'] == $this->id)));
-    }
             
     /**
-     * Upgrade the hashed password.  Does nothing if the user/password is 
+     * Upgrade the hashed password.
+     *
+     * Does nothing if the user/password is 
      * incorrect, or if same has been upgraded already.
      * 
      * @since 1.3
@@ -227,70 +213,32 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
             return false;
         }
         $user->setPassword($password);
-        $user->forceSave();
+        $user->save();
         return true;
     }
-    
-    protected function processEntity(&$post)
-    {    
-        $entity = $this->Entity;
-        
-        //If the entity is new, then determine whether it is an institution or a person
-        if (empty($entity)) {
-            $entity = new Entity;
-        }
-        
-        //The new email address is fully legit, so set the entity to the new info                
-        $entityKeys = array('first_name', 'last_name', 'institution', 'email');
 
-        foreach ($entityKeys as $key) {
-            if (array_key_exists($key, $post)) {
-                $entity[$key] = $post[$key];
-                unset($post[$key]);
-            }
-        }
-        
-        $this->Entity = $entity;
-                        
-        return true;
-    }
-    
-    protected function afterDelete()
-    {
-        if ($this->entity_id) {
-            $this->Entity->delete();
-        }
-    }
-    
-    /* Generate password. (i.e. jachudru, cupheki) */
-    // http://www.zend.com/codex.php?id=215&single=1
-    protected function generatePassword($length) 
-    {
-        $vowels = array('a', 'e', 'i', 'o', 'u', '1', '2', '3', '4', '5', '6');
-        $cons = array('b', 'c', 'd', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 
-                      'r', 's', 't', 'u', 'v', 'w', 'tr', 'cr', 'br', 'fr', 
-                      'th', 'dr', 'ch', 'ph', 'wr', 'st', 'sp', 'sw', 'pr', 
-                      'sl', 'cl');
-        
-        $num_vowels = count($vowels);
-        $num_cons   = count($cons);
-        
-        $password = '';
-        while (strlen($password) < $length){
-            $password .= $cons[mt_rand(0, $num_cons - 1)] . $vowels[mt_rand(0, $num_vowels - 1)];
-        }
-        $this->setPassword($password);
-        return $password;
-    }      
-    
+    /**
+     * Get this User's role.
+     *
+     * Required by Zend_Acl_Role_Interface.
+     *
+     * @return string
+     */
     public function getRoleId()
     {
         if (!$this->role) {
-            die("Should not be using a non-existent user role.");
+            throw new RuntimeException(__('The user must be assigned a role.'));
         }
         return $this->role;
-    }  
-    
+    }
+
+    /**
+     * Get the Resource ID for the User model.
+     *
+     * Required by Zend_Acl_Resource_Interface.
+     *
+     * @return string
+     */
     public function getResourceId()
     {
         return 'Users';
@@ -302,8 +250,16 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
     public function generateSalt()
     {
         $this->salt = substr(md5(mt_rand()), 0, 16);
-    }   
-    
+    }
+
+    /**
+     * Set a new password for the user.
+     *
+     * Always use this method to set a password, do not directly set the
+     * password or salt properties.
+     *
+     * @param string $password Plain-text password.
+     */
     public function setPassword($password)
     {
         if ($this->salt === null) {
@@ -311,10 +267,15 @@ class User extends Omeka_Record implements Zend_Acl_Resource_Interface,
         }
         $this->password = $this->hashPassword($password);
     }
-    
+
+    /**
+     * SHA-1 hash the given password with the current salt.
+     *
+     * @param string $password Plain-text password.
+     * @return string Salted and hashed password.
+     */
     public function hashPassword($password)
     {
-        assert('$this->salt !== null');
         return sha1($this->salt . $password);
     }
 }

@@ -1,15 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Encapsulates testing functionality for Omeka plugins.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * 
+ * @package Omeka\Test\Helper
  */
 class Omeka_Test_Helper_Plugin
 {
@@ -61,14 +61,15 @@ class Omeka_Test_Helper_Plugin
     public function initialize($pluginName = null)
     {
         $this->_defineResponseContexts();
-
+        $bootstrap = Zend_Registry::get('bootstrap');
+        
         $this->pluginBroker->callHook('initialize', array(), $pluginName);
-        $this->pluginBroker->callHook('define_acl', array(Omeka_Context::getInstance()->acl), $pluginName);
-        $this->pluginBroker->callHook('define_routes', array(Omeka_Context::getInstance()->router), $pluginName);
+        $this->pluginBroker->callHook('define_acl', array('acl' => $bootstrap->getResource('Acl')), $pluginName);
+        $this->pluginBroker->callHook('define_routes', array('router' => $bootstrap->getResource('Router')), $pluginName);
     }
 
     /**
-     * Run the define_response_contexts filter.
+     * Run the response_contexts filter.
      *
      * @return void
      */
@@ -80,8 +81,8 @@ class Omeka_Test_Helper_Plugin
 
         $contexts->setContextParam('output');
 
-        $contextArray = Omeka_Core_Resource_Frontcontroller::getDefaultResponseContexts();
-        $contextArray = $this->pluginBroker->applyFilters('define_response_contexts', $contextArray);
+        $contextArray = Omeka_Application_Resource_Helpers::getDefaultResponseContexts();
+        $contextArray = $this->pluginBroker->applyFilters('response_contexts', $contextArray);
 
         $contexts->addContexts($contextArray);
     }
@@ -119,7 +120,7 @@ class Omeka_Test_Helper_Plugin
     /**
      * Set the ACL for the helper to use.
      *
-     * @param Omeka_Acl $acl
+     * @param Zend_Acl $acl
      */
     public function setAcl($acl)
     {
@@ -155,11 +156,11 @@ class Omeka_Test_Helper_Plugin
             case 'pluginIniReader':
                 return $this->pluginIniReader = Zend_Registry::get('plugin_ini_reader');
             case 'pluginBroker':
-                return $this->pluginBroker = Omeka_Context::getInstance()->pluginbroker;
+                return $this->pluginBroker = Zend_Registry::get('bootstrap')->getResource('PluginBroker');
             case 'acl':
-                return $this->acl = Omeka_Context::getInstance()->acl;
+                return $this->acl = Zend_Registry::get('bootstrap')->getResource('Acl');
             case 'router':
-                return $this->router = Omeka_Context::getInstance()->router;
+                return $this->router = Zend_Registry::get('bootstrap')->getResource('Router');
             default:
                 return null;
         }

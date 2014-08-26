@@ -1,44 +1,74 @@
-<?php head(array('title' => html_escape('Summary of ' . exhibit('title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
+<?php echo head(array('title' => html_escape('Summary of ' . metadata('exhibit','title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
 <div id="primary">
  <?php echo mlibrary_header_banner(); ?>
-  <?php echo js('JwPlayer/jwplayer');?>
+  <?php echo queue_js_file('JwPlayer/jwplayer');?>
   
 
-<?php if (mlibrary_exhibit_gallery()!='gallery'){?>
+<?php //if (mlibrary_exhibit_gallery()!='gallery'){?>
 	<div class="exhibit-overview active">
 		<?php echo link_to_exhibit('Introduction'); ?>
 	</div>	
-	<?php echo exhibit_builder_nested_nav(null,mlibrary_pages_in_section());
+	<?php //echo exhibit_builder_nested_nav(null,mlibrary_pages_in_section());?>	
 
-}else{?>
-	<div class="exhibit-overview active">
-		<?php echo link_to_exhibit('Introduction'); ?>
-	</div>	
-	<?php echo exhibit_builder_nested_nav(null,mlibrary_pages_in_section()); 
-	}?>
-	
-	<?php //print_r(abs_uri());
-	//(exhibit_builder_exhibit_uri(get_current_exhibit()));
-	?>
-	
+    <!--<ul class="exhibit-section-nav">-->
+       <ul id="exhibit-pages">
+       
+        <?php //set_exhibit_pages_for_loop_by_parent_page();
+        set_exhibit_pages_for_loop_by_exhibit(); 
+        $i=0;?>
+        <?php foreach (loop('exhibit_page') as $exhibitPage): ?>
+        <?php    //echo exhibit_builder_page_trail($exhibitPage); 
+        echo exhibit_builder_page_summary($exhibitPage);
+             // $html = html_escape($exhibitPage->title);
+             // $html .=$i++.'<br>';
+             // $html.= exhibit_builder_child_page_nav($exhibitPage).'<br>';
+             // echo $html;
+       ?>
+        <?php endforeach; ?>
+       
+        </ul>
+        
+<!--    </ul>-->
 
+<?php // }else{?>
+	<!--<div class="exhibit-overview active">
+		<?php// echo link_to_exhibit('Introduction'); ?>
+	</div>	-->
+	<?php //echo exhibit_builder_nested_nav(null,mlibrary_pages_in_section()); 
+
+//	}?>
+	
 <div id="summary-view">
-
 <?php //echo '<img src=https://dev.www.lib.umich.edu/exhibits/archive/theme_uploads/'.deco_exhibit_image().'/>'; ?>
-<?php if (mlibrary_exhibit_gallery()!='gallery'){?>
+<?php //if (mlibrary_exhibit_gallery()!='gallery'){?>
 <div id="sharethis">
 <span>Share this Exhibit!</span>
 <div class="g-plusone" data-size="medium"></div>
 <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
-<div class="twitter-share"><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo exhibit('title'); ?>' at the MLibary Online Exhibits!">Tweet</a></div>
+<div class="twitter-share"><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!">Tweet</a></div>
 </div>
+
 <div class="exhibit_image">
+<?php   
+			$exhibitimage = array(); 
+			 $exhibit_record = get_current_record('exhibit', false); 
+			$theme_options_array = $exhibit_record->getThemeOptions();
+			
+			$theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($exhibit_record['id']); 
+				$Exhibit_image = $theme_options_array['exhibitimage'];  
+				
+//			$exhibit_record_theme = exhibit_builder_theme_options($exhibit_record);			
+		if ($Exhibit_image)         
+    	echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+		else
+			echo('<div><img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/></div>');  ?>
+			
 
 <?php  
 	
 	// if video, show video, else show exhibit image and possible sound
 	
-	if (mlibrary_exhibit_video()){
+	/*if (mlibrary_exhibit_video()){
 		$Exhibit_video = mlibrary_exhibit_video();                  
 		echo('<iframe src="http://www.youtube.com/embed/'.$Exhibit_video.'?theme=light" frameborder="0" width="100%" height="300px"></iframe>');
 	} else {
@@ -77,28 +107,19 @@
 		
 		echo '<div>'.$htmlscript.'</div>';        
 	
-	}
+	}*/
 ?>               
    
 </div>
 
 <div id="summary-sidebar">
 <!-- <h2 class="desc">Description</h2> -->
-<?php echo exhibit('description'); ?>
-<h2 class="credits"><span>Curated by</span> <?php echo html_escape(exhibit('credits')); ?></h2> 
+<?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
+<h2 class="credits"><span>Curated by</span> <?php echo html_escape(metadata('exhibit','credits')); ?></h2> 
 </div>
-<?php }?>
-
-<div id="exhibit-sections">	
-	<?php set_exhibit_sections_for_loop_by_exhibit(get_current_exhibit()); ?>
-	<!-- <h2>Sections</h2> -->
-	<?php while(loop_exhibit_sections()): ?>
-	<?php if (exhibit_builder_section_has_pages()): ?>
-    <h3><a href="<?php echo exhibit_builder_exhibit_uri(get_current_exhibit(), get_current_exhibit_section()); ?>"><?php echo html_escape(exhibit_section('title')); ?></a></h3>
-	<?php echo exhibit_section('description'); ?>
-	<?php endif; ?>
-	<?php endwhile; ?>
-</div>
+<?php //}?>
  </div>
+ 
+ 
 </div>
-<?php foot(); ?>
+<?php echo foot(); ?>

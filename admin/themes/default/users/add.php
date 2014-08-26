@@ -1,10 +1,11 @@
 <?php
-$pageTitle = __('Add New User');
-head(array('title'=>$pageTitle, 'content_class' => 'vertical-nav', 'bodyclass'=>'users primary'));?>
-<h1><?php echo $pageTitle; ?></h1>
+echo head(array('title' => __('Add New User'), 'bodyclass' => 'users'));
+echo flash();
+?>
+<section class="seven columns alpha">
+    <p class='explanation'>* <?php echo __('required field'); ?></p>
+    <?php echo $this->form; ?>
+    <?php fire_plugin_hook('admin_users_form', array('form' => $form, 'view' => $this)); ?>
+</section>
 
-<?php common('settings-nav'); ?>
-<div id="primary">
-<?php echo $this->form; ?>
-</div>
-<?php foot();?>
+<?php echo foot();?>

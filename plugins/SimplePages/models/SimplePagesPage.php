@@ -1,27 +1,21 @@
 <?php
 /**
- * @version $Id$
- * @copyright Center for History and New Media, 2008
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package SimplePages
+ * Simple Pages
+ *
+ * @copyright Copyright 2008-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
-
-// Require the Simple Pages table class.
-require_once 'SimplePagesPageTable.php';
 
 /**
  * The Simple Pages page record class.
  *
  * @package SimplePages
- * @author CHNM
- * @copyright Center for History and New Media, 2008
  */
-class SimplePagesPage extends Omeka_Record
+class SimplePagesPage extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
     public $modified_by_user_id;
     public $created_by_user_id;
     public $is_published = 0;
-    public $add_to_public_nav = 0;
     public $title;
     public $slug;
     public $text = null;
@@ -30,6 +24,12 @@ class SimplePagesPage extends Omeka_Record
     public $order = 0;
     public $parent_id = 0;
     public $template = '';
+    public $use_tiny_mce = 0;
+    
+    protected function _initializeMixins()
+    {
+        $this->_mixins[] = new Mixin_Search($this);
+    }
     
     /**
      * Get the modified by user object.
@@ -49,20 +49,6 @@ class SimplePagesPage extends Omeka_Record
     public function getCreatedByUser()
     {
         return $this->getTable('User')->find($this->created_by_user_id);
-    }
-
-    /**
-     * Prepare certain variables for validation.
-     */
-    protected function beforeValidate()
-    {
-        $this->title = trim($this->title);
-        // Generate the page slug.
-        $this->slug = $this->_generateSlug($this->slug);
-        // If the resulting slug is empty, generate it from the page title.
-        if (empty($this->slug)) {
-            $this->slug = $this->_generateSlug($this->title);
-        }
     }
     
     /**
@@ -106,8 +92,16 @@ class SimplePagesPage extends Omeka_Record
     /**
      * Prepare special variables before saving the form.
      */
-    protected function beforeSave()
+    protected function beforeSave($args)
     {
+        $this->title = trim($this->title);
+        // Generate the page slug.
+        $this->slug = $this->_generateSlug($this->slug);
+        // If the resulting slug is empty, generate it from the page title.
+        if (empty($this->slug)) {
+            $this->slug = $this->_generateSlug($this->title);
+        }
+        
         if ($this->order == '') {
             $this->order = 0;
         }
@@ -118,6 +112,16 @@ class SimplePagesPage extends Omeka_Record
         
         $this->modified_by_user_id = current_user()->id;
         $this->updated = date('Y-m-d H:i:s');        
+    }
+    
+    protected function afterSave($args)
+    {
+        if (!$this->is_published) {
+            $this->setSearchTextPrivate();
+        }
+        $this->setSearchTextTitle($this->title);
+        $this->addSearchText($this->title);
+        $this->addSearchText($this->text);
     }
     
     /**
@@ -166,5 +170,30 @@ class SimplePagesPage extends Omeka_Record
     public function getChildren()
     {
         return $this->getTable('SimplePagesPage')->findChildrenPages($this->id);
+    }
+    
+    public function getRecordUrl($action = 'show')
+    {
+        if ('show' == $action) {
+            return public_url($this->slug);
+        }
+        return array('module' => 'simple-pages', 'controller' => 'index', 
+                     'action' => $action, 'id' => $this->id);
+    }
+    
+    public function getProperty($property)
+    {
+        switch($property) {
+            case 'created_username':
+                return $this->getCreatedByUser()->username;
+            case 'modified_username':
+                return $this->getModifiedByUser()->username;
+            default:
+                return parent::getProperty($property);
+        }
+    }
+    public function getResourceId()
+    {
+	return 'SimplePages_Page';
     }
 }

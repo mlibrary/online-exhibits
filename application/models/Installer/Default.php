@@ -1,21 +1,18 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * The default installer, which extracts values from the installer form to 
  * create the default Omeka installation.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * 
+ * @package Omeka\Install
  */
-class Installer_Default implements InstallerInterface
+class Installer_Default implements Installer_InstallerInterface
 {
     const DEFAULT_USER_ACTIVE = true;
     const DEFAULT_USER_ROLE = 'super';
@@ -53,10 +50,14 @@ class Installer_Default implements InstallerInterface
 
     public function install()
     {
+        $this->getDb()->beginTransaction();
+
         $this->_createSchema();
         $this->_createUser();
         $this->_setupMigrations();
-        $this->_addOptions();   
+        $this->_addOptions();
+
+        $this->getDb()->commit();
     }
     
     protected function _getValue($fieldName)
@@ -81,8 +82,7 @@ class Installer_Default implements InstallerInterface
         $userTask->setUsername($this->_getValue('username'));
         $userTask->setPassword($this->_getValue('password'));
         $userTask->setEmail($this->_getValue('super_email'));
-        $userTask->setFirstName(Omeka_Form_Install::DEFAULT_USER_FIRST_NAME);
-        $userTask->setLastName(Omeka_Form_Install::DEFAULT_USER_LAST_NAME);
+        $userTask->setName(Omeka_Form_Install::DEFAULT_USER_NAME);
         $userTask->setIsActive(Installer_Default::DEFAULT_USER_ACTIVE);
         $userTask->setRole(Installer_Default::DEFAULT_USER_ROLE);
         $userTask->install($this->_db);
@@ -117,7 +117,14 @@ class Installer_Default implements InstallerInterface
             File::DISABLE_DEFAULT_VALIDATION_OPTION         => (string)!extension_loaded('fileinfo'),
             Omeka_Db_Migration_Manager::VERSION_OPTION_NAME => OMEKA_VERSION,
             'display_system_info'           => true, 
+            'html_purifier_is_enabled' => 1,
+            'html_purifier_allowed_html_elements' => implode(',', Omeka_Filter_HtmlPurifier::getDefaultAllowedHtmlElements()),
+            'html_purifier_allowed_html_attributes' => implode(',', Omeka_Filter_HtmlPurifier::getDefaultAllowedHtmlAttributes()),
             'tag_delimiter'                 => ',',
+            Omeka_Navigation::PUBLIC_NAVIGATION_MAIN_OPTION_NAME => Omeka_Navigation::getNavigationOptionValueForInstall(Omeka_Navigation::PUBLIC_NAVIGATION_MAIN_OPTION_NAME),
+            'search_record_types' => serialize(get_search_record_types()), 
+            'api_enable' => false, 
+            'api_per_page' => 50, 
         ));
         $task->install($this->_db);
     }

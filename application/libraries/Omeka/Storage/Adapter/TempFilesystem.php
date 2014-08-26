@@ -1,8 +1,9 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
@@ -12,32 +13,11 @@
  * created during its lifetime are removed.
  *
  * Used primarily by the test framework.
- *
- * @package Omeka
+ * 
+ * @package Omeka\Storage\Adapter
  */
 class Omeka_Storage_Adapter_TempFilesystem extends Omeka_Storage_Adapter_Filesystem
 {
-    private $_storageDir;
-
-    private $_files = array();
-
-    public function __construct(array $options = array())
-    {
-        $this->_storageDir = sys_get_temp_dir() . '/archive' . mt_rand();
-        mkdir($this->_storageDir);
-        $webDir = '/'; // CLI tests don't care whether the URL is valid.
-        parent::__construct(array(
-            'localDir' => $this->_storageDir,
-            'webDir' => $webDir,
-        ));
-    }
-
-    public function __destruct()
-    {
-        exec("rm -rf " . escapeshellarg($this->_storageDir));
-    }
-
-
     /**
      * No need to perform this check.
      */
@@ -77,7 +57,7 @@ class Omeka_Storage_Adapter_TempFilesystem extends Omeka_Storage_Adapter_Filesys
 
     private function _mkdir($filepath)
     {
-        $absPath = $this->_storageDir . '/' . $filepath;
+        $absPath = $this->_localDir . '/' . $filepath;
         // Meant to stub out filesystem behavior, prevent failure due to 
         // missing subdirectories.
         if (!is_dir(dirname($absPath))) {

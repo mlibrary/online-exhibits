@@ -1,114 +1,93 @@
 <?php
 $pageTitle = __('Dashboard');
-head(array('bodyclass'=>'index primary-secondary', 'title'=>$pageTitle)); ?>
-<h1><?php echo $pageTitle;; ?></h1>
-    <div id="primary">
-        
-        <?php // Retrieve the latest version of Omeka by pinging the Omeka server. ?>
-       
-        <?php if (has_permission('Upgrade', 'index') and has_permission('Settings', 'edit')):
-              $latestVersion = get_latest_omeka_version();
-                  if ($latestVersion and version_compare(OMEKA_VERSION, $latestVersion, '<')): ?>
-                    <div class="success">
-                        <?php echo __('A new version of Omeka is available for download.'); ?>
-                        <a href="http://omeka.org/download/"><?php echo __('Upgrade to %s', $latestVersion); ?></a>
-                    </div>
-        <?php       endif; 
-              endif; ?>
-        <?php echo flash(); ?>    
-            <div id="getting-started">
-                <h2><?php echo __('Getting Started with Omeka'); ?></h2>
-                <dl>
-                    <dt class="items"><?php echo link_to('items', null, __('Items')); ?></dt>
-                    <dd class="items">
-                        <ul>
-                            <li><a class="add" href="<?php echo html_escape(uri('items/add')); ?>"><?php echo __('Add a new item to your archive'); ?></a></li>
-                            <li><a class="browse" href="<?php echo html_escape(uri('items/browse')); ?>"><?php echo __('Browse your items'); ?></a></li>
-                            
-                        </ul>
-                        <p><?php echo __('Manage items in your archive: add, edit, and delete items.'); ?></p>
-                    </dd>
-                
-                <?php if(has_permission('Collections','browse')): ?>
-                    <dt class="collections"><?php echo link_to('collections', null, __('Collections')); ?></dt>
-                    <dd class="collections">
-                        <ul>
-                            <li><a class="add-collection" href="<?php echo html_escape(uri('collections/add')); ?>"><?php echo __('Add a collection to group items'); ?></a></li>
-                            <li><a class="browse" href="<?php echo html_escape(uri('collections/browse')); ?>"><?php echo __('Browse your collections'); ?></a></li>
-                            
-                        </ul>
-                        <p><?php echo __('Manage collections in your archive: add, edit, and delete collections.'); ?></p>
-                    </dd>
-                
-                <?php endif; ?>
-                
-                <?php if(has_permission('Users','browse')): ?>
-                    <dt class="users"><a href="<?php echo html_escape(uri('users/browse')); ?>"><?php echo __('Users'); ?></a></dt>
-                    <dd class="users">
-                        <ul>
-                            <li><a class="browse-users" href="<?php echo html_escape(uri('users/browse')); ?>"><?php echo __('Browse Users'); ?></a></li>
-                            <?php if (has_permission('Users', 'add')): ?>
-                            <li><a class="add-user" href="<?php echo html_escape(uri('users/add')); ?>"><?php echo __('Add a User'); ?></a></li>
-                            <?php endif; ?>
-                        </ul>
-                        <p><?php echo __('Manage users of various levels: from researcher to super.'); ?></p>
-                    </dd>
-                <?php endif; ?>
-                
-                <?php if(has_permission('Settings', 'edit')): ?>
-                    <dt class="site-settings"><a href="<?php echo html_escape(uri('settings')); ?>"><?php echo __('Settings'); ?></a></dt>
-                    <dd class="site-settings">
-                        <ul>
-                            <li><a class="editsettings" href="<?php echo html_escape(uri('settings')); ?>"><?php echo __('Edit General Settings'); ?></a></li>
-                            <li><a class="managethemes" href="<?php echo html_escape(uri('themes')); ?>"><?php echo __('Manage Themes'); ?></a></li>
-                            <li><a class="manageplugins" href="<?php echo html_escape(uri('plugins')); ?>"><?php echo __('Manage Plugins'); ?></a></li>
-                        </ul>
-                        <p><?php echo __('Manage your general settings for the site, including title, description, and themes.'); ?></p>
-                    </dd>
-            <?php endif; ?>
-            <?php fire_plugin_hook('admin_append_to_dashboard_primary'); ?>
-            </dl>
-            </div>
-        </div>
-        
-        <div id="secondary">
-            <div id="site-meta" class="info-panel">
-                <h2><?php echo __('Site Overview'); ?></h2>
-                <p>
-                <?php 
-                /**
-                 * $siteTitle = settings('site_title');
-                 * total_items()
-                 * total_collections()
-                 * total_tags()
-                 * total_users()
-                 */
-                echo __('<em>%1$s</em> contains %2$s items, in %3$s collections, tagged with %4$s keywords. There are %5$s users.', settings('site_title'), total_items(), total_collections(), total_tags(), total_users()); ?></p>
-            </div>
-            <div id="recent-items" class="info-panel">
-                <h2><?php echo __('Recent Items'); ?></h2>
-                <?php set_items_for_loop(recent_items('5')); ?>
-                <?php if(!has_items_for_loop()):?>
-                    <p><?php echo __('There are no items to display.'); ?></p>   
-                <?php else: ?>
+echo head(array('bodyclass'=>'index primary-secondary', 'title'=>$pageTitle)); ?>
+    
+<?php $stats = array(
+    array(link_to('items', null, total_records('Item')), __('items')),
+    array(link_to('collections', null, total_records('Collection')), __('collections')),
+    array(link_to('tags', null, total_records('Tag')), __('tags'))
+); ?>
+<?php if (is_allowed('Plugins', 'edit')):
+    $stats[] = array(link_to('plugins', null, total_records('Plugin')), __('plugins'));
+endif; ?>
+<?php if (is_allowed('Users', 'edit')):
+    $stats[] = array(link_to('users', null, total_records('User')), __('users'));
+endif; ?>
+<?php if (is_allowed('Themes', 'edit')):
+    $themeName = Theme::getTheme(Theme::getCurrentThemeName('public'))->title;
+    $stats[] = array(link_to('themes', null, $themeName), __('theme'));
+endif; ?>
+<?php $stats = apply_filters('admin_dashboard_stats', $stats, array('view' => $this)); ?>
+
+<?php // Retrieve the latest version of Omeka by pinging the Omeka server. ?>
+<?php $userRole = current_user()->role; ?>
+<?php if ($userRole == 'super' || $userRole == 'admin'): ?>
+<?php $latestVersion = latest_omeka_version(); ?>
+      <?php if ($latestVersion and version_compare(OMEKA_VERSION, $latestVersion, '<')): ?>
+            <div id="flash">
                 <ul>
-                    <?php $key = 0; ?>
-                    <?php while(loop_items()): ?>
-                        <li class="<?php echo is_odd($key++) ? 'even' : 'odd'; ?>">
-                            <?php echo link_to_item();?>
-                        </li>   
-                    <?php endwhile; ?>
+                    <li class="success"><?php echo __('A new version of Omeka is available for download.'); ?>
+                    <a href="http://omeka.org/download/"><?php echo __('Upgrade to %s', $latestVersion); ?></a>
+                    </li>
                 </ul>
-                
-                <p id="view-all-items"><a href="<?php echo html_escape(uri('items/browse')); ?>"><?php echo __('View All Items'); ?></a></p>
-                <?php endif; ?>
             </div>
-            
-            <div id="tag-cloud" class="info-panel">
-                <h2><?php echo __('Recent Tags'); ?></h2>
-                <?php echo tag_cloud(recent_tags(), uri('items/browse/')); ?>
-            </div>
-            
-            <?php fire_plugin_hook('admin_append_to_dashboard_secondary'); ?>
-        </div>
-<?php foot(); ?>
+      <?php endif; ?>
+<?php endif; ?>
+
+<section id="stats">
+    <?php foreach ($stats as $statInfo): ?>
+    <p><span class="number"><?php echo $statInfo[0]; ?></span><br><?php echo $statInfo[1]; ?></p>
+    <?php endforeach; ?>
+</section>
+
+<?php $panels = array(); ?>
+
+<?php ob_start(); ?>
+<h2><?php echo __('Recent Items'); ?></h2>
+<?php
+    set_loop_records('items', get_recent_items(5));
+    foreach (loop('items') as $item):
+?>
+    <div class="recent-row">
+        <p class="recent"><?php echo link_to_item(); ?></p>
+        <?php if (is_allowed($item, 'edit')): ?>
+        <p class="dash-edit"><?php echo link_to_item(__('Edit'), array(), 'edit'); ?></p>
+        <?php endif; ?>
+    </div>
+<?php endforeach; ?>
+    <?php if (is_allowed('Items', 'add')): ?>
+    <div class="add-new-link"><p><a class="add-new" href="<?php echo html_escape(url('items/add')); ?>"><?php echo __('Add a new item'); ?></a></p></div>
+    <?php endif; ?>
+<?php $panels[] = ob_get_clean(); ?>
+
+<?php ob_start(); ?>
+<h2><?php echo __('Recent Collections'); ?></h2>
+<?php
+    $collections = get_recent_collections(5);
+    set_loop_records('collections', $collections);
+    foreach (loop('collections') as $collection):
+?>
+    <div class="recent-row">
+        <p class="recent"><?php echo link_to_collection(); ?></p>
+        <?php if (is_allowed($collection, 'edit')): ?>
+        <p class="dash-edit"><?php echo link_to_collection(__('Edit'), array(), 'edit'); ?></p>
+        <?php endif; ?>
+    </div>
+<?php endforeach; ?>
+    <?php if (is_allowed('Collections', 'add')): ?>
+    <div class="add-new-link"><p><a class="add-collection" href="<?php echo html_escape(url('collections/add')); ?>"><?php echo __('Add a new collection'); ?></a></p></div>
+    <?php endif; ?>
+<?php $panels[] = ob_get_clean(); ?>
+
+<?php $panels = apply_filters('admin_dashboard_panels', $panels, array('view' => $this)); ?>
+<?php for ($i = 0; $i < count($panels); $i++): ?>
+<section class="five columns <?php echo ($i & 1) ? 'omega' : 'alpha'; ?>">
+    <div class="panel">
+        <?php echo $panels[$i]; ?>
+    </div>
+</section>
+<?php endfor; ?>
+
+<?php fire_plugin_hook('admin_dashboard', array('view' => $this)); ?>
+
+<?php echo foot(); ?>

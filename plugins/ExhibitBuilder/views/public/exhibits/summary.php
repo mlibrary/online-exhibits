@@ -1,23 +1,30 @@
-<?php head(array('title' => html_escape('Summary of ' . exhibit('title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
+<?php echo head(array('title' => metadata('exhibit', 'title'), 'bodyclass'=>'exhibits summary')); ?>
+
+<h1><?php echo metadata('exhibit', 'title'); ?></h1>
+<?php echo exhibit_builder_page_nav(); ?>
+
 <div id="primary">
-<h1><?php echo html_escape(exhibit('title')); ?></h1>
-<?php echo exhibit_builder_section_nav(); ?>
-
-<h2><?php echo __('Description'); ?></h2>
-<?php echo exhibit('description'); ?>
-
-<h2><?php echo __('Credits'); ?></h2>
-<p><?php echo html_escape(exhibit('credits')); ?></p>
-
-<div id="exhibit-sections">	
-	<?php set_exhibit_sections_for_loop_by_exhibit(get_current_exhibit()); ?>
-	<h2><?php echo __('Sections'); ?></h2>
-	<?php while(loop_exhibit_sections()): ?>
-	<?php if (exhibit_builder_section_has_pages()): ?>
-    <h3><a href="<?php echo exhibit_builder_exhibit_uri(get_current_exhibit(), get_current_exhibit_section()); ?>"><?php echo html_escape(exhibit_section('title')); ?></a></h3>
-	<?php echo exhibit_section('description'); ?>
-	<?php endif; ?>
-	<?php endwhile; ?>
+<?php if ($exhibitDescription = metadata('exhibit', 'description', array('no_escape' => true))): ?>
+<div class="exhibit-description">
+    <?php echo $exhibitDescription; ?>
 </div>
+<?php endif; ?>
+
+<?php if (($exhibitCredits = metadata('exhibit', 'credits'))): ?>
+<div class="exhibit-credits">
+    <h3><?php echo __('Credits'); ?></h3>
+    <p><?php echo $exhibitCredits; ?></p>
 </div>
-<?php foot(); ?>
+<?php endif; ?>
+</div>
+
+<nav id="exhibit-pages">
+    <ul>
+        <?php set_exhibit_pages_for_loop_by_exhibit(); ?>
+        <?php foreach (loop('exhibit_page') as $exhibitPage): ?>
+        <?php echo exhibit_builder_page_summary($exhibitPage); ?>
+        <?php endforeach; ?>
+    </ul>
+</nav>
+
+<?php echo foot(); ?>

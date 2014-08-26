@@ -1,30 +1,53 @@
 <?php
 /**
- * ExhibitPageEntry class
- * 
- * @version $Id$
- * @copyright Center for History and New Media, 2007-20009
+ * @copyright Roy Rosenzweig Center for History and New Media, 2007-2012
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @author CHNM
- **/
-
-require_once 'ExhibitPageEntryTable.php';
-
-class ExhibitPageEntry extends Omeka_Record
+ * @package ExhibitBuilder
+ */
+ 
+/**
+ * ExhibitPageEntry model.
+ * 
+ * @package ExhibitBuilder
+ */
+class ExhibitPageEntry extends Omeka_Record_AbstractRecord
 {
     public $item_id;
     public $page_id;
+    public $file_id;
     public $text;
     public $caption;
     public $order;
     
-    protected $_related = array('Item'=>'getItem');
-
+    protected $_related = array(
+        'Item' => 'getItem',
+        'File' => 'getFile'
+    );
+    
+    public function afterSave($args)
+    {
+        // Build the page's search text.
+        $page = $this->getPage();
+        $text = "{$page->title} ";
+        foreach ($page->ExhibitPageEntry as $entry) {
+            $text .= "{$entry->text} {$entry->caption} ";
+        }
+        Mixin_Search::saveSearchText('ExhibitPage', $page->id, $text, $page->title, $page->getExhibit()->public);
+    }
+    
     protected function getItem()
     {
         if ($this->item_id) {
             return $this->getTable('Item')->find($this->item_id);
+        }
+    }
+
+    protected function getFile()
+    {
+        if ($this->file_id) {
+            return $this->getTable('File')->find($this->file_id);
+        } else {
+            return null;
         }
     }
     
@@ -47,8 +70,8 @@ class ExhibitPageEntry extends Omeka_Record
         }
     }
     
-	protected function getPage()
-	{
-		return $this->getTable('ExhibitPage')->find($this->page_id);
-	}   
+    protected function getPage()
+    {
+        return $this->getTable('ExhibitPage')->find($this->page_id);
+    }   
 }

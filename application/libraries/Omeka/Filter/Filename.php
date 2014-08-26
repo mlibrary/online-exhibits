@@ -1,15 +1,15 @@
-<?php 
+<?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * Rename a file to make it suitable for inclusion in the Omeka archive.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * Rename a file to make it suitable for inclusion in the Omeka repository.
+ * 
+ * @package Omeka\Filter
  */
 class Omeka_Filter_Filename implements Zend_Filter_Interface
 {
@@ -24,7 +24,7 @@ class Omeka_Filter_Filename implements Zend_Filter_Interface
     {
         $filename = basename($value);
         $directory = dirname($value);
-        $newFilename = $this->renameFileForArchive($filename);
+        $newFilename = $this->renameFile($filename);
         
         $targetPath = $directory . '/' . $newFilename;
         $result = rename($value, $targetPath);
@@ -33,62 +33,12 @@ class Omeka_Filter_Filename implements Zend_Filter_Interface
     }
     
     /**
-     * Strip out whitespace, non-printable characters, extra . characters, and 
-     * convert all spaces to dashes.  This is applied to every file that is uploaded
-     * to Omeka so that there will be no problems with funky characters in filenames.  
-     * 
-     * @deprecated Filenames are now MD5 hashes, this method should not be used.
-     * @param string $name
-     * @return string
-     */
-    public function sanitizeFilename($name)
-    {
-        //Strip whitespace
-        $name = trim($name);
-        
-        /*    Remove all but last .
-            I wish there was an easier way of doing this */
-        if(substr_count($name,'.') > 1) {
-            $array = explode('.',$name);
-            if(count($array) > 2) {
-                $last = array_pop($array);
-                $first = join('', $array);
-                $name = array();
-                if(!empty($first)) {
-                    $name = $first;
-                }
-                if(!empty($last)) {
-                    $name .= '.'.$last;
-                }
-            }
-        }
-        
-        //Strip out invalid characters
-        $invalid = array('"','*','/',':','<','>','?','|',"'",'&',';','#','\\');
-        $name = str_replace($invalid, '', $name);
-        
-        //Strip out non-printable characters
-        for ($i = 0; $i < 32; $i++) { 
-            $nonPrintable[$i] = chr($i);
-        }
-        $name = str_replace($nonPrintable, '', $name);
-        
-        //Convert to lowercase (avoid corrupting UTF-8)
-        $name = strtolower($name);
-        
-        //Convert remaining spaces to hyphens
-        $name = str_replace(' ', '-', $name);
-        
-        return $name;
-    }
-    
-    /**
-     * Creates a new, random filename for storage in the archive.
+     * Creates a new, random filename for storage in Omeka.
      * 
      * @param string $name
      * @return string
      */
-    public function renameFileForArchive($name) 
+    public function renameFile($name) 
     {
         $extension = strrchr($name, '.');
         $basename = md5(mt_rand() + microtime(true));        

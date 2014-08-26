@@ -1,24 +1,19 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Controllers
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * @package Omeka\Controller
  */
-class ElementSetsController extends Omeka_Controller_Action
+class ElementSetsController extends Omeka_Controller_AbstractActionController
 {
     public function init()
     {
-        $this->_modelClass = 'ElementSet';
+        $this->_helper->db->setDefaultModelName('ElementSet');
     }
     
     protected function _getDeleteConfirmMessage($record)
@@ -28,7 +23,7 @@ class ElementSetsController extends Omeka_Controller_Action
              . 'to this element set.');
     }
     /**
-     * Can't add or edit element sets via the admin interface, so disable these
+     * Can't add element sets via the admin interface, so disable these
      * actions from being POST'ed to.
      * 
      * @return void
@@ -40,6 +35,45 @@ class ElementSetsController extends Omeka_Controller_Action
     
     public function editAction()
     {
-        throw new Omeka_Controller_Exception_403();
+        $elementSet = $this->_helper->db->findById();
+        $db = $this->_helper->db;
+        
+        // Do not process the item type element set.
+        if (ElementSet::ITEM_TYPE_NAME == $elementSet->name) {
+             throw new Omeka_Controller_Exception_403();
+        }
+        
+        // Handle a submitted edit form.
+        if ($this->getRequest()->isPost()) {
+            
+            // Delete existing element order to prevent duplicate indices.
+            $db->getDb()->update(
+                $db->getDb()->Element, 
+                array('order' => null), 
+                array('element_set_id = ?' => $this->getRequest()->getParam('id'))
+            );
+            
+            // Update the elements.
+            try {
+                $elements = $this->getRequest()->getPost('elements');
+                foreach ($elements as $id => $element) {
+                    $elementRecord = $db->getTable('Element')->find($id);
+                    $elementRecord->comment = trim($element['comment']);
+                    $elementRecord->order = $element['order'] ? $element['order'] : null;
+                    $elementRecord->save();
+                }
+                $this->_helper->flashMessenger(__('The element set was successfully changed!'), 'success');
+                $this->_helper->redirector('index');
+            } catch (Omeka_Validate_Exception $e) {
+                $this->_helper->flashMessenger($e);
+            }
+        }
+        
+        $this->view->element_set = $elementSet;
+    }
+    
+    protected function _redirectAfterEdit($record)
+    {
+        $this->_helper->redirector('index');
     }
 }

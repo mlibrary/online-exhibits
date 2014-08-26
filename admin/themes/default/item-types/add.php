@@ -1,14 +1,17 @@
 <?php 
 $pageTitle = __('Add Item Type');
-head(array('title'=>$pageTitle,'bodyclass'=>'item-types')); ?>
-<h1><?php echo $pageTitle; ?></h1>
+echo head(array('title'=>$pageTitle,'bodyclass'=>'item-types'));
+echo flash();
+?>
 
-<div id="primary">
-    <form method="post" action="">
-        <?php include 'form.php';?>
-        <div>
-            <input type="submit" name="submit" class="submit" id="submit" value="<?php echo __('Add Item Type'); ?>" />
+<form method="post" action="">
+    <?php include 'form.php'; ?>
+    <section class="three columns omega">
+        <div id="save" class="panel">
+            <?php echo $form->getElement(Omeka_Form_ItemTypes::SUBMIT_ADD_ELEMENT_ID); ?>
+            <?php fire_plugin_hook("admin_item_types_panel_buttons", array('view'=>$this, 'record'=>$item_type)); ?>
+            <?php fire_plugin_hook("admin_item_types_panel_fields", array('view'=>$this, 'record'=>$item_type)); ?>            
         </div>
-    </form>
-</div>
-<?php foot(); ?>
+    </section>
+</form>
+<?php echo foot(); ?>

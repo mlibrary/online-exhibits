@@ -254,14 +254,9 @@ class Zend_View_Helper_Gravatar extends Zend_View_Helper_HtmlElement
      */
     public function getSecure()
     {
-      /*  if ($this->_options['secure'] === null) {
+        if ($this->_options['secure'] === null) {
             return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
-        }*/
-        
-          if ($this->_options['secure'] === null) {
-            return (isset($_SERVER['REMOTE_USER']) && (!empty($_SERVER['REMOTE_USER'])));
         }
-        
         return $this->_options['secure'];
     }
 

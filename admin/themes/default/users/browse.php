@@ -1,69 +1,80 @@
 <?php
-$pageTitle = __('Browse Users');
-head(array('title'=>$pageTitle, 'content_class' => 'vertical-nav', 'bodyclass'=>'users primary'));?>
-<h1><?php echo $pageTitle; ?> <?php echo __('(%s total)', $total_records); ?></h1>
-<?php if (has_permission('Users', 'add')): ?>
-    <p id="add-user" class="add-button"><?php echo link_to('users', 'add', __('Add a User'), array('class'=>'add-user')); ?></p>    
+$pageTitle = __('Browse Users') . ' ' . __('(%s total)', $total_results);
+echo head(array('title'=>$pageTitle, 'bodyclass'=>'users'));
+echo flash();
+?>
+
+<?php if (is_allowed('Users', 'add')): ?>
+    <?php echo link_to('users', 'add', __('Add a User'), array('class'=>'small green button')); ?>
 <?php endif; ?>
-<?php common('settings-nav'); ?>
-<div id="primary">
-<?php echo flash(); ?>
-<form action="<?php echo html_escape(current_uri()); ?>" id="sort-users-form" method="get" accept-charset="utf-8">
-    <fieldset>
-        <p><?php echo __('Search Users'); ?>:</p>
-        <?php echo $this->formSelect('role', @$_GET['role'], array(), 
-            array(''=>__('Select Role')) + get_user_roles()); ?>
-        <?php echo $this->formSelect('active', @$_GET['active'], array(),
-            array(''=>__('Select Status'),  '1'=>__('Active'), '0'=>__('Inactive'))); ?>
-        <?php echo $this->formSelect('sort', @$_GET['sort'], array(),
-            array(  ''=>__('Sort By'), 
-                    'first_name'=>__('First Name'),
-                    'last_name'=>__('Last Name'),
-                    'institution'=>__('Institution Name'),
-                    'role'=>__('Role'),
-                    'username'=>__('Username'))); ?>
-        <?php echo $this->formSelect('sortOrder', @$_GET['sortOrder'], array(),
-            array( ''=>__('Sort Order'),
-                   'asc'=>__('Ascending'),
-                   'desc'=>__('Descending'))); ?>
-                   <input type="submit" class="submit-form" name="submit" value="<?php echo __('Search'); ?>" />
-                   
-    </fieldset>
+
+<?php if(isset($_GET['search'])):?>
+<div id='search-filters'>
+    <ul>
+        <li>
+        <?php switch($_GET['search-type']) {
+                        case "name":
+                            echo __("Name") . ': ';
+                        break;
+                        case "username":
+                            echo __("Username") . ': ';
+                        break;
+                        case "email":
+                            echo __("Email") . ': ';
+                        break;
+                    }
+        ?>
+        <?php echo html_escape($_GET['search']); ?>
+        </li>
+    </ul>
+
+</div>
+<?php endif; ?>
+
+<form id='search-users' method='GET'>
+<button><?php echo __('Search users'); ?></button><input type='text' name='search'/>
+<input type='radio' name='search-type' value='username' checked='checked' /><span><?php echo __('Usernames'); ?></span>
+<input type='radio' name='search-type' value='name' /><span><?php echo __('Real names'); ?></span>
+<input type='radio' name='search-type' value='email' /><span><?php echo __('Email addresses'); ?></span>
+
 </form>
 
-<div class="pagination"><?php echo pagination_links(); ?></div>
+<?php echo pagination_links(); ?>
 <table id="users">
     <thead>
         <tr>
-            <th><?php echo __('Username') ?></th>
-            <th><?php echo __('Real Name'); ?></th>
-            <th><?php echo __('Email'); ?></th>
-            <th><?php echo __('Role'); ?></th>
-            <?php if (has_permission('Users', 'edit')): ?>
-            <th><?php echo __('Edit'); ?></th>            
-            <?php endif; ?>
-            <?php if (has_permission('Users', 'delete')): ?>
-            <th><?php echo __('Delete'); ?></th>          
-            <?php endif; ?>
+        <?php $sortLinks = array(
+                __('Username') => 'username',
+                __('Real Name') => 'name',
+                __('Email') => 'email',
+                __('Role') => 'role'
+                );
+        ?>
+        <?php echo browse_sort_links($sortLinks,  array('link_tag' => 'th scope="col"', 'list_tag' => '')); ?>
         </tr>
     </thead>
     <tbody>
     <?php foreach( $users as $key => $user ): ?>
-        <tr class="<?php if (current_user()->id == $user->id) echo 'current-user '; ?><?php if($key%2==1) echo 'even'; else echo 'odd'; ?>">
-            <td><?php echo html_escape($user->username);?></td>
-            <td><?php echo html_escape($user->first_name); ?> <?php echo html_escape($user->last_name); ?></td>
+        <tr class="<?php if (current_user()->id == $user->id) echo 'current-user '; ?><?php if($key%2==1) echo 'even'; else echo 'odd'; ?><?php if(!$user->active): ?> inactive<?php endif; ?>">
+            <td>
+            <?php echo html_escape($user->username); ?> <?php if(!$user->active): ?>(<?php echo __('inactive'); ?>)<?php endif; ?>
+            <ul class="action-links group">
+                <?php if (is_allowed($user, 'edit')): ?>
+                <li><?php echo link_to($user, 'edit', __('Edit'), array('class'=>'edit')); ?></li>
+                <?php endif; ?>
+                <?php if (is_allowed($user, 'delete')): ?>
+                <li><?php echo link_to($user, 'delete-confirm', __('Delete'), array('class'=>'delete')); ?></li>
+                <?php endif; ?>
+            </ul>
+            <?php fire_plugin_hook('admin_users_browse_each', array('user' => $user, 'view' => $this)); ?>
+           </td>
+            <td><?php echo html_escape($user->name); ?></td>
             <td><?php echo html_escape($user->email); ?></td>
             <td><span class="<?php echo html_escape($user->role); ?>"><?php echo html_escape(__(Inflector::humanize($user->role))); ?></span></td>
-            <?php if (has_permission($user, 'edit')): ?>
-            <td><?php echo link_to($user, 'edit', __('Edit'), array('class'=>'edit')); ?></td>
-            <?php endif; ?>     
-            <?php if (has_permission($user, 'delete')): ?>
-            <td><?php echo delete_button($user); ?></td>
-            <?php endif; ?>
         </tr>
     <?php endforeach; ?>
-</tbody>
+    </tbody>
 </table>
-<div class="pagination"><?php echo pagination_links(); ?></div>
-</div>
-<?php foot();?>
+<?php echo pagination_links(); ?>
+<?php fire_plugin_hook('admin_users_browse', array('users' => $users, 'view' => $this)); ?>
+<?php echo foot();?>

@@ -1,6 +1,6 @@
 <?php
 $pageTitle = __('User Activation');
-head(array('title' => $pageTitle), $header);
+echo head(array('title' => $pageTitle), $header);
 ?>
 <h1><?php echo $pageTitle; ?></h1>
 
@@ -10,13 +10,13 @@ head(array('title' => $pageTitle), $header);
 <form method="post">
     <fieldset>
     <div class="field">
-    <?php echo label('new_password1', __('Create a Password')); ?>
+    <?php echo $this->formLabel('new_password1', __('Create a Password')); ?>
         <div class="inputs">
             <input type="password" name="new_password1" id="new_password1" class="textinput" />
         </div>
     </div>
     <div class="field">
-        <?php echo label('new_password2', __('Re-type the Password')); ?>        
+        <?php echo $this->formLabel('new_password2', __('Re-type the Password')); ?>        
         <div class="inputs">
             <input type="password" name="new_password2" id="new_password2" class="textinput" />
         </div>
@@ -27,4 +27,4 @@ head(array('title' => $pageTitle), $header);
     </div>
 </form>
 
-<?php foot(array(), $footer); ?>
+<?php echo foot(array(), $footer); ?>
