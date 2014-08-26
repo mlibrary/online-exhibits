@@ -1,6 +1,7 @@
 /db.ini
 /files-dev
+!/files-dev/.htaccess
 /files
 /application/logs/errors.log
 /application/logs/
-
+!/application/logs/.htaccess
