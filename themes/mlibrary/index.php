@@ -6,7 +6,7 @@
 	<div id="greeting" >
     	<h1>Online Exhibits</h1>
     	<h2>collected. curated. <span>celebrated.</span></h2>
-	    <p>explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>! Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.</p>
+	    <p>explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>! Brought to you by the <a href="http://www.lib.umich.edu/">University of Michigan Library</a>.</p>
     	<ul>
 
     		<li class="browse-icon">
