@@ -115,9 +115,9 @@ class SettingsController extends Omeka_Controller_Action
     private function _setOptions(Zend_Form $form)
     {        
         $options = $form->getValues();
-        // Everything except the submit button should correspond to a valid 
+        // Everything except the CSRF hash should correspond to a valid 
         // option in the database.
-        unset($options['settings_submit']);
+        unset($options['settings_csrf']);
         foreach ($options as $key => $value) {
             set_option($key, $value);
         }

@@ -181,10 +181,10 @@ class UsersController extends Omeka_Controller_Action
         
         if (!$this->getRequest()->isPost()) {
             return;
-         }
+        }
 
         if (!$form->isValid($_POST)) {
-            $this->flashError(__('There was an invalid entry on the form. Please try again.'));            
+            $this->_helper->flashMessenger(__('There was an invalid entry on the form. Please try again.'), 'error');
             return;
         }
  

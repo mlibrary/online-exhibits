@@ -43,6 +43,7 @@ head(array('title'=>$pageTitle, 'content_class' => 'vertical-nav', 'bodyclass'=>
     <div>
         <input type="submit" name="submit" class="submit" id="submit" value="<?php echo __('Switch Theme'); ?>" />
     </div>
+<?php echo $csrf; ?>
 </form>
 
 <p class="managethemes"><?php echo __('Add new themes by downloading them from the <a href="http://omeka.org/add-ons/themes/">Omeka Theme Directory</a>, or <a href="http://omeka.org/codex/Theme_Writing_Best_Practices">design your own</a>!'); ?></p>
