@@ -19,8 +19,10 @@
  function cosign_define_acl($args){
   $acl = $args['acl'];
 	require_once dirname(__FILE__).'/GroupCosignAssertion.php';	
-	$acl->allow(null, 'ExhibitBuilder_Exhibits', array('edit','delete'),
+	$acl->allow(null, 'ExhibitBuilder_Exhibits', array('show','edit','delete'),
 		     new GroupCosignAssertion);
+		  //   print_r($acl);
+		    // exit;
 	$acl->allow('contributor', 'Items', array('makePublic'));
  }
  
@@ -233,7 +235,7 @@ return $Exhibit_image;
  
    if((isset($_SERVER['REMOTE_USER']))) {
       if($_SERVER['REMOTE_USER'] == 'musolffm') {
-        if(strpos($_SERVER['HTTP_USER_AGENT'],"Internet Explorer") !== false) {
+        if(strpos($_SERVER['HTTP_USER_AGENT'],"MSIE") !== false) {
            $_SERVER['REMOTE_USER'] = 'user1';
            $_SERVER['ORIGINAL_USER'] = 'musolffm';
          }
