@@ -69,19 +69,21 @@ class ThemesController extends Omeka_Controller_Action
         $themeOptions = Theme::getOptions($themeName);
         
         // get the configuration form        
-        $form = new Omeka_Form_ThemeConfiguration(array('themeName' => $themeName));
+        $form = new Omeka_Form_ThemeConfiguration(array('themeName' => $themeName));        
+        		// process the form if posted
+		        if ($this->getRequest()->isPost()) {
+    		      	  $configHelper = new Omeka_Controller_Action_Helper_ThemeConfiguration;
+    		       	  
+	        		    	if (($newOptions = $configHelper->processForm($form, $_POST, $themeOptions))) {
+            		    		Theme::setOptions($themeName, $newOptions);
+		               			$this->flashSuccess(__('The theme settings were successfully saved!'));
+    		            		$this->redirect->goto('browse');
+  	    	      	  	}            
+  	      		    	else {
+  	      		   		 	$this->flashError(__('You have an error.'));
+  	      		    	}
+             }
                 
-        // process the form if posted
-        if ($this->getRequest()->isPost()) {
-            $configHelper = new Omeka_Controller_Action_Helper_ThemeConfiguration;
-
-            if (($newOptions = $configHelper->processForm($form, $_POST, $themeOptions))) {
-                Theme::setOptions($themeName, $newOptions);
-                $this->flashSuccess(__('The theme settings were successfully saved!'));
-                $this->redirect->goto('browse');
-            }
-        }
-        
         $this->view->configForm = $form;
         $this->view->theme = $theme;
     }

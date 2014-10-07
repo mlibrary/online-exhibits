@@ -53,6 +53,11 @@ class ItemTypesController extends Omeka_Controller_Action
     public function addAction()
     {
         $itemType = new ItemType();
+        $form = new Omeka_Form_Csrf(array('hashName' => 'itemtype_csrf'));
+  		  $this->view->csrf = $form->getElement('itemtype_csrf')
+      ->removeDecorator('Fieldtag')
+      ->removeDecorator('InputsTag');
+  
         try {
             if ($itemType->saveForm($_POST)) {
                 $this->flashSuccess(__('The item type "%s" was successfully added!  You may now add elements to your new item type.', $itemType->name));
@@ -67,7 +72,11 @@ class ItemTypesController extends Omeka_Controller_Action
     public function editAction()
     {
         $itemType = $this->findById();
-
+				$form = new Omeka_Form_Csrf(array('hashName' => 'itemtype_csrf'));
+		    $this->view->csrf = $form->getElement('itemtype_csrf')
+    		  ->removeDecorator('Fieldtag')
+		      ->removeDecorator('InputsTag');
+  
 
         $elementsToSave = array(); // set the default elements to save
         $elementsToAdd = array(); // sets the defaul elements to add

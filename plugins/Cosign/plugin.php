@@ -11,13 +11,14 @@
 
 function loginf($loginform){
 
-/*if(isset($_SERVER['REMOTE_USER'])) {
+if(isset($_SERVER['REMOTE_USER'])) {
   if($_SERVER['REMOTE_USER'] == 'nancymou') {
     if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") !== false) {
-      $_SERVER['REMOTE_USER'] = 'moconway';
+      $_SERVER['REMOTE_USER'] = 'juvamcomcastnet';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
     }
-   if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
+    }}
+/*   if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
       $_SERVER['REMOTE_USER']='jlausch';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
     }
@@ -69,6 +70,19 @@ function login($authAdapter,$loginForm) {
 
  }
 
+
+/* if ($cosign_authenticated->isValid()) {
+      $auth = Zend_Auth::getInstance();
+      if ($auth->hasIdentity()) {
+        //print_r($cosign_authenticated); exit;
+      }
+      else {
+        $auth->getStorage()->write($cosign_authenticated->getIdentity());
+      }
+    }*/
+
+
+
   function addToWhitelist($adminWhiteList){   	
 	   array_push($adminWhiteList,array('controller' => 'cosign', 'action' => 'forgot-password'));
 	   return $adminWhiteList;	   
@@ -76,7 +90,22 @@ function login($authAdapter,$loginForm) {
 
   function cosign_initialize(){
 	   $front = Zend_Controller_Front::getInstance();
-       Zend_Controller_Front::getInstance()->registerPlugin(new CosignControllerPlugin);    
+     $front->registerPlugin(new CosignControllerPlugin); 
+    /* if(isset($_SERVER['REMOTE_USER'])) {
+      ini_set('session.cookie_secure', '1');
+     $username = $_SERVER['REMOTE_USER'];
+     $pwd = '';
+      $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
+      $user_auth = $authAdapter->authenticate();
+    //  print_r($user_auth->getIdentity());
+     // exit;
+      Omeka_Context::getInstance()->currentuser = $user_auth->getIdentity();
+     // print_r(Omeka_Context::getInstance()->currentuser);
+      
+      //exit;
+     } */  
+     
+       
   }
 
 
@@ -92,6 +121,7 @@ function login($authAdapter,$loginForm) {
 
         // Omeka needs the user ID (not username)
         $omeka_user = get_db()->getTable('User')->findBySql("username = ?", array($this->omeka_userid), true);
+       
         if ($omeka_user) {
         	$id = $omeka_user->id;
         	$correctResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $id,array("good job"));

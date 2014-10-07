@@ -24,7 +24,11 @@ class CollectionsController extends Omeka_Controller_Action
         
     public function init()
     {
-        $this->_modelClass = 'Collection';        
+        $this->_modelClass = 'Collection';       
+        $form = new Omeka_Form_Csrf(array('hashName' => 'collection_csrf'));
+   			$this->view->csrf = $form->getElement('collection_csrf')
+        ->removeDecorator('Fieldtag')
+        ->removeDecorator('InputsTag');   
     }
     
     protected function _getAddSuccessMessage($record)

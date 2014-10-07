@@ -36,6 +36,7 @@
 <input type="submit" name="submit" class="submit" value="<?php echo __('Save Changes'); ?>" id="file_edit" />
 </fieldset>
 
+<?php echo $csrf;?>
 </form>
 </div>
 <?php foot(); ?>

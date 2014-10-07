@@ -30,6 +30,7 @@ jQuery(document).bind('omeka:elementformload', function () {
 </script>
 
 <?php echo flash(); ?>
+<?php echo $csrf; ?>
 
 <div id="public-featured">
     <?php if ( has_permission('Items', 'makePublic') ): ?>

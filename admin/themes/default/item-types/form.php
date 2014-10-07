@@ -1,4 +1,5 @@
 <?php echo js('item-types'); ?>
+<?php echo $csrf;?>
 <script type="text/javascript" charset="utf-8">
 //<![CDATA[
 jQuery(document).ready(function () {

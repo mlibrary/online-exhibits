@@ -19,6 +19,7 @@ class Omlibrary_OmlibraryController extends UsersController {
 
   public function addAction() {
     $user = new User();
+   // $form = $this->_getUserForm($user);
 
     $form = new Omeka_Form_Csrf(array('hashName' => 'user_csrf'));
     $this->view->csrf = $form->getElement('user_csrf')

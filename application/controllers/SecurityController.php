@@ -37,14 +37,21 @@ class SecurityController extends Omeka_Controller_Action
         );
         
         //process the form
-        if ($this->getRequest()->isPost() && $this->view->form->isValid($_POST)) {
+        if ($this->getRequest()->isPost()){
+        
+        if ($this->view->form->isValid($_POST)) {
             foreach ($this->view->form->getValues() as $key => $value) {
                 if (in_array($key, $options)) {
                     set_option($key, $value);
                 }
             }          
             $this->flashSuccess(__("The security settings have been updated."));
-        }        
+        	}
+        	else {
+  	      			$this->flashError(__('You have an error.'));
+  	      	}
+        }
+                
     }
     
     public function getFileExtensionWhitelistAction()

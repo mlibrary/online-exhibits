@@ -211,6 +211,8 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_Action
      **/
     protected function processExhibitForm($exhibit, $actionName)
     {
+   	
+  
         try {
             $retVal = $exhibit->saveForm($_POST);
             if ($retVal) {

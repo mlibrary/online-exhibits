@@ -42,23 +42,30 @@ class PluginsController extends Omeka_Controller_Action
         }
         
         $this->view->pluginBroker = $this->_pluginBroker;
-        
+        $form = new Omeka_Form_Csrf(array('hashName' => 'plugin_csrf'));
+		
         // If we have no config form hook, forget it.
         if (!$this->_pluginBroker->getHook($plugin, 'config_form') 
          || !$this->_pluginBroker->getHook($plugin, 'config')) {
             throw new RuntimeException(__('Error in configuring plugin named "%s". Missing config and/or config_form hook(s).', $plugin->getDisplayName()));
         }
         
-        if ($this->getRequest()->isPost()) {
+       
             try {
-                $this->_pluginBroker->callHook('config', array($_POST), $plugin);
-                $this->flashSuccess(__('The %s plugin was successfully configured!', $plugin->getDisplayName()));
-                $this->redirect->goto('browse'); 
+	             if ($this->getRequest()->isPost() && $form->isValid($_POST)) {
+  	              $this->_pluginBroker->callHook('config', array($_POST), $plugin);
+    	            $this->flashSuccess(__('The %s plugin was successfully configured!', $plugin->getDisplayName()));
+      	          $this->redirect->goto('browse'); 
+      	          }
             } catch (Omeka_Validator_Exception $e) {
                 $this->flashValidationErrors($e);
             }
-        }
+        
         $this->view->plugin = $plugin;
+        $this->view->csrf = $form->getElement('plugin_csrf')
+  		    	  ->removeDecorator('Fieldtag')
+      				->removeDecorator('InputsTag');
+       
     }
     
     public function installAction()
@@ -174,6 +181,7 @@ class PluginsController extends Omeka_Controller_Action
     {
         // Get a list of all plugins currently processed by the system.      
         $installedPlugins = $this->_pluginLoader->getPlugins();
+        $form = new Omeka_Form_Csrf(array('hashName' => 'plugin_browse_csrf'));
         $pluginFactory = new Omeka_Plugin_Factory(PLUGIN_DIR);
         $newPlugins = $pluginFactory->getNewPlugins($installedPlugins);
         $this->_pluginLoader->loadPlugins($newPlugins);
@@ -185,6 +193,10 @@ class PluginsController extends Omeka_Controller_Action
         $config = Omeka_Context::getInstance()->getConfig('basic');
 
         $this->view->assign(array('plugins'=>$allPlugins, 'loader'=>$this->_pluginLoader));
+         $this->view->csrf = $form->getElement('plugin_browse_csrf')
+  		    	  ->removeDecorator('Fieldtag')
+      				->removeDecorator('InputsTag');
+       
     }
     
     /**
@@ -195,6 +207,12 @@ class PluginsController extends Omeka_Controller_Action
     public function uninstallAction()
     {
         $plugin = $this->_getPluginByName();
+        $form = new Omeka_Form_Csrf(array('hashName' => 'uninstall_plugin_csrf'));
+        $csrf = $form->getElement('uninstall_plugin_csrf')
+      ->removeDecorator('Fieldtag')
+      ->removeDecorator('InputsTag');
+  
+   
         if (!$plugin) {
             return $this->_helper->redirector->goto('browse');
         }
@@ -216,15 +234,17 @@ class PluginsController extends Omeka_Controller_Action
             // plugin, if it exists.
             $message = get_specific_plugin_hook_output($plugin, 'admin_append_to_plugin_uninstall_message');
             
-            $this->view->assign(compact('plugin', 'message'));
+            $this->view->assign(compact('plugin', 'message','csrf'));
             $this->render('confirm-uninstall');
         
         } else {
             
             // Attempt to uninstall the plugin.
             try {
-                $this->_pluginInstaller->uninstall($plugin);
-                $this->flashSuccess(__("The %s plugin was successfully uninstalled!", $plugin->getDirectoryName()));
+            		if ($csrf->isValid($_POST)){
+	                $this->_pluginInstaller->uninstall($plugin);
+  	              $this->flashSuccess(__("The %s plugin was successfully uninstalled!", $plugin->getDirectoryName()));
+                }
             } catch (Exception $e) {
                 $this->flashError(__("The following error occurred while uninstalling the %s plugin: ", $plugin->getDirectoryName()) . $e->getMessage());
                 $this->redirect->goto('browse');

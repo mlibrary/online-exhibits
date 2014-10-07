@@ -88,7 +88,12 @@ class ItemsController extends Omeka_Controller_Action
     {
         // Get all the element sets that apply to the item.
         $this->view->elementSets = $this->_getItemElementSets();
-        
+       
+        $form = new Omeka_Form_Csrf(array('hashName' => 'items_csrf'));
+  		  $this->view->csrf = $form->getElement('items_csrf')
+    	  ->removeDecorator('Fieldtag')
+    	  ->removeDecorator('InputsTag');
+  
         if ($user = $this->getCurrentUser()) {
             
             $item = $this->findById();
@@ -129,6 +134,11 @@ class ItemsController extends Omeka_Controller_Action
     {
         // Get all the element sets that apply to the item.
         $this->view->elementSets = $this->_getItemElementSets();
+        $form = new Omeka_Form_Csrf(array('hashName' => 'items_csrf'));
+  		  $this->view->csrf = $form->getElement('items_csrf')
+    	  ->removeDecorator('Fieldtag')
+    	  ->removeDecorator('InputsTag');
+  
         
         return parent::addAction();
     }

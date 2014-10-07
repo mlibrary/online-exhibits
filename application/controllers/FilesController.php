@@ -54,13 +54,19 @@ class FilesController extends Omeka_Controller_Action
     // Should not browse files by themselves
     public function browseAction() {}
     
-    public function addAction() {}
+    public function addAction() {
+    }
     
     public function editAction()
     {
         // Get element sets assigned to "All" and "File" record types.
         $elementSets = $this->getTable('ElementSet')->findByRecordType('File');
         
+        $form = new Omeka_Form_Csrf(array('hashName' => 'file_csrf'));
+      	$this->view->csrf = $form->getElement('file_csrf')
+        ->removeDecorator('Fieldtag')
+        ->removeDecorator('InputsTag');
+      
         // Remove legacy file element sets that will most likely be phased out 
         // in later versions.
         foreach ($elementSets as $key => $elementSet) {
