@@ -246,12 +246,17 @@ foreach($elementInfos as $elementInfo) {
              	if ($elementName=='Identifier'){
 					 echo '<h2> View Source </h2>';
 					 }
-                foreach($elementTexts as $elementText) {
-             	   if ($elementName=='Identifier')
-                    	echo "<div class='element-text'><a href=".$elementText.">".$elementText. "</a></div>";
-              	  else
-                      echo '<h2>' .$elementText . '</h2>';
+                
+                foreach($elementTexts as $elementText) {  
+            		 $array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");		  					 
+             	   if (($elementName=='Identifier') and (in_array($item->id, $array_items)))                	    
+               	     echo '<div class="element-text">'.$elementText.'</div>';                                   	 
+                 else if (($elementName=='Identifier') and (stristr($elementText, 'http')))
+                    	 echo "<div class='element-text'><a href=".$elementText.">".$elementText. "</a></div>";
+                  else
+                     echo '<div>' .$elementText . '</div>';  
                 }
+             	  
                 echo '</div>';
             }
        
