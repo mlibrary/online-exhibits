@@ -11,21 +11,18 @@
 
 function loginf($loginform){
 
-if(isset($_SERVER['REMOTE_USER'])) {
-  if($_SERVER['REMOTE_USER'] == 'nancymou') {
-    if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") !== false) {
+//if(isset($_SERVER['REMOTE_USER'])) {
+  //if($_SERVER['REMOTE_USER'] == 'nancymou') {
+   /* if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") !== false) {
       $_SERVER['REMOTE_USER'] = 'juvamcomcastnet';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
-    }
-    }}
-/*   if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
-      $_SERVER['REMOTE_USER']='jlausch';
+    }*/
+    //}}
+  /*if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") !== false) {
+      $_SERVER['REMOTE_USER']='juvamcomcastnet';
       $_SERVER['ORIGINAL_USER'] = 'nancymou';
-    }
-  }
-} */ 
- 
-
+    }*/
+  //}
   if((isset($_SERVER['REMOTE_USER']))) {
 	  $_POST['username']= $_SERVER['REMOTE_USER'];
 	  $_POST['password']='dd';
@@ -56,32 +53,19 @@ function login($authAdapter,$loginForm) {
   
   }
 }  */
-
+//print_r("I am in login screen");
+//exit;
     if(isset($_SERVER['REMOTE_USER'])) {
         $username = $_SERVER['REMOTE_USER'];
         $pwd = '';
         $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
-        return $authAdapter; 
-    }
+        return $authAdapter;
+		}
     else {
-       $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits/admin/';
-       header('location: '.$redirected_url);  
-    }
-
+   		     $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits/admin/';
+      		 header('location: '.$redirected_url);  
+    		}
  }
-
-
-/* if ($cosign_authenticated->isValid()) {
-      $auth = Zend_Auth::getInstance();
-      if ($auth->hasIdentity()) {
-        //print_r($cosign_authenticated); exit;
-      }
-      else {
-        $auth->getStorage()->write($cosign_authenticated->getIdentity());
-      }
-    }*/
-
-
 
   function addToWhitelist($adminWhiteList){   	
 	   array_push($adminWhiteList,array('controller' => 'cosign', 'action' => 'forgot-password'));
@@ -89,23 +73,49 @@ function login($authAdapter,$loginForm) {
   }
 
   function cosign_initialize(){
+ 
 	   $front = Zend_Controller_Front::getInstance();
-     $front->registerPlugin(new CosignControllerPlugin); 
-    /* if(isset($_SERVER['REMOTE_USER'])) {
-      ini_set('session.cookie_secure', '1');
-     $username = $_SERVER['REMOTE_USER'];
-     $pwd = '';
-      $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
-      $user_auth = $authAdapter->authenticate();
-    //  print_r($user_auth->getIdentity());
-     // exit;
-      Omeka_Context::getInstance()->currentuser = $user_auth->getIdentity();
-     // print_r(Omeka_Context::getInstance()->currentuser);
-      
-      //exit;
-     } */  
-     
-       
+     $front->registerPlugin(new CosignControllerPlugin);
+     /*if (isset($_SERVER['REMOTE_USER'])) {
+    	  ini_set('session.cookie_secure', '1');
+		    $cosign = new Omeka_Auth_Adapter_Cosign($_SERVER['REMOTE_USER'],'');
+		   	$auth = Zend_Auth::getInstance();
+		   //	$auth->setStorage(new Zend_Auth_Storage_Session('someNamespace'));
+		   	$cosign_authenticated = $auth->authenticate($cosign);
+		    if ($cosign_authenticated->isValid()) {
+    			
+			      if ($auth->hasIdentity()) {      	
+      			    Omeka_Context::getInstance()->currentuser = $cosign_authenticated->getIdentity();
+      			    $auth->getStorage()->write($cosign_authenticated->getIdentity());
+      			      
+			      }
+      			else {
+      			    print_r("I do not have identity");
+      		  }
+
+		  	}
+ 		 }*/
+ 
+   //  print_r("I am in initialize");
+     /*if(isset($_SERVER['REMOTE_USER'])) 
+     {
+       ini_set('session.cookie_secure', '1');
+       $auth = Zend_Auth::getInstance();
+       $username = $_SERVER['REMOTE_USER'];
+       $pwd = '';
+       $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
+       $user_auth_result = $auth->authenticate($authAdapter);
+       if ($user_auth_result->isValid()) {
+       		 print_r("I am valid");
+      		 $auth->getStorage()->write($user_auth_result->getIdentity());
+       }
+       else{
+     				  foreach ($user_auth_result->getMessages() as $message) {
+      				  echo "$message\n";
+   				}
+	//        Omeka_Context::getInstance()->currentuser = $cosign_authenticated->getIdentity();
+        }
+     }*/     
   }
 
 
@@ -115,6 +125,7 @@ function login($authAdapter,$loginForm) {
 	
 	public function __construct($username,$password) {
 		$this->omeka_userid = $username;
+		
 	}
 		
 	public function authenticate() {
@@ -124,7 +135,7 @@ function login($authAdapter,$loginForm) {
        
         if ($omeka_user) {
         	$id = $omeka_user->id;
-        	$correctResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $id,array("good job"));
+        	$correctResult = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $omeka_user->id,array("good job"));
         	return $correctResult;	
         }
         else {

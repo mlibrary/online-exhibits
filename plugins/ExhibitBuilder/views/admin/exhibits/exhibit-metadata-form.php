@@ -368,6 +368,7 @@ if ($xml = file_get_contents($url))
             </p>
           
         </fieldset>
+        <?php echo $csrf;?>
         
     </form>     
 </div>
