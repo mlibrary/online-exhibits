@@ -181,12 +181,22 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_Action
     public function addAction()
     {       
         $exhibit = new Exhibit;
+        $form = new Omeka_Form_Csrf(array('hashName' => 'Exhibit_csrf'));
+  		  $this->view->csrf = $form->getElement('Exhibit_csrf')
+    	  ->removeDecorator('Fieldtag')
+    	  ->removeDecorator('InputsTag');
+    	  
         return $this->processExhibitForm($exhibit, 'Add');
     }
 
     public function editAction()
     {   
         $exhibit = $this->findById();
+        $form = new Omeka_Form_Csrf(array('hashName' => 'Exhibit_csrf'));
+  		  $this->view->csrf = $form->getElement('Exhibit_csrf')
+    	  ->removeDecorator('Fieldtag')
+    	  ->removeDecorator('InputsTag');
+    	  
         if (!exhibit_builder_user_can_edit($exhibit)) {
             throw new Omeka_Controller_Exception_403;
         }
@@ -211,7 +221,7 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_Action
      **/
     protected function processExhibitForm($exhibit, $actionName)
     {
-        try {
+   	    try {
             $retVal = $exhibit->saveForm($_POST);
             if ($retVal) {
                 if (array_key_exists('add_section',$_POST)) {

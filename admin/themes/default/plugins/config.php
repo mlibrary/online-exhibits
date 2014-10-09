@@ -7,6 +7,7 @@ head(array('title'=>$pageTitle, 'bodyclass'=>'plugins')); ?>
     <form method="post">
         <?php echo $pluginBroker->callHook('config_form', array(), $plugin); ?>
         <input type="submit" name="install_plugin" value="<?php echo __('Save Changes'); ?>" class="submit" />
+        <?php echo $csrf; ?>
     </form>
 </div>
 

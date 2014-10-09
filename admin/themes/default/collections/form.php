@@ -1,5 +1,5 @@
 <?php echo flash(); ?>
-
+<?php echo $csrf;?>
 <fieldset id="editcollection">
     <h2><?php echo __('Collection Details'); ?> <span id="required-note">* <?php echo __('Required Fields'); ?></span></h2>
 

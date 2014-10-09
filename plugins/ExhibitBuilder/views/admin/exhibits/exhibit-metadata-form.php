@@ -212,6 +212,7 @@ if ($xml = file_get_contents($url))
 
 <?php echo flash();?>
 
+
     <form id="exhibit-metadata-form" method="post" class="exhibit-builder">
 
         <fieldset>
@@ -367,6 +368,7 @@ if ($xml = file_get_contents($url))
             </p>
           
         </fieldset>
+        <?php echo $csrf;?>
         
     </form>     
 </div>

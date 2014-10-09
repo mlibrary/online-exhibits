@@ -285,7 +285,7 @@ function link_to_home_page($text = null, $props = array())
 {
     if (!$text) {
         $text = settings('site_title');
-    }
+    }    
     $uri = WEB_ROOT;
     return '<a href="' . html_escape($uri) . '" '._tag_attributes($props).'>' . $text . "</a>\n";
 }

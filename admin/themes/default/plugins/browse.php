@@ -22,6 +22,7 @@ head(array('title'=>$pageTitle, 'content_class' => 'vertical-nav', 'bodyclass'=>
 <?php endif; ?>
 
 <p class="manageplugins"><?php echo __('Add new plugins by downloading them from the <a href="http://omeka.org/add-ons/plugins/">Omeka Plugins Directory</a>, or <a href="http://omeka.org/codex/Plugin_Writing_Best_Practices">write your own</a>!'); ?></p>
+<?php echo $csrf; ?>
 </div>
 
 <?php foot(); ?>

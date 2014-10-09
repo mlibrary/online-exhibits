@@ -14,6 +14,7 @@ head(array('title'=>$pageTitle, 'bodyclass'=>'plugins')); ?>
         <input type="hidden" name="name" value="<?php echo html_escape($plugin->getDirectoryName()); ?>" />
 
         <p id="uninstall-confirm"><input type="submit" class="uninstall submit" name="uninstall-confirm" class="foo" value="<?php echo __('Uninstall'); ?>" /> <span><?php echo __('or'); ?> <?php echo link_to('plugins', 'browse', __('Cancel')); ?></span></p>
+        <?php echo $csrf; ?>
     </form>
 </div>
 

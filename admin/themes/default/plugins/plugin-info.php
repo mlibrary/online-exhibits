@@ -87,6 +87,7 @@
                         <button name="upgrade" type="submit" class="upgrade"<?php if ($cannotLoad): ?> disabled="disabled"<?php endif; ?>><?php echo __('Upgrade'); ?></button>
                         <input type="hidden" name="name" value="<?php echo html_escape($pluginDirName); ?>" />
                     </div>
+                 
                 </form>
             <?php endif; ?>
         <?php else: ?>
@@ -97,6 +98,7 @@
                         <button name="<?php echo $activateOrDeactivate; ?>" type="submit" class="<?php echo $activateOrDeactivate; ?>"<?php if ($cannotLoad): ?> disabled="disabled"<?php endif; ?>><?php echo ($plugin->isActive()) ? __('Deactivate') : __('Activate'); ?></button>
                         <input type="hidden" name="name" value="<?php echo html_escape($pluginDirName); ?>" />
                     </div>
+                
                 </form>                
             <?php endif; ?>
             <?php if (has_permission('Plugins', 'uninstall')): ?>
@@ -107,6 +109,7 @@
                         <button name="uninstall" type="submit" class="uninstall"<?php if ($cannotLoad): ?> disabled="disabled"<?php endif; ?>><?php echo __('Uninstall'); ?></button>
                         <input type="hidden" name="name" value="<?php echo html_escape($pluginDirName); ?>" />
                     </div>
+                   
                 </form>
             <?php endif; ?>
         <?php endif; ?>
@@ -117,6 +120,7 @@
                     <button name="install" type="submit" class="install"<?php if ($cannotLoad): ?> disabled="disabled"<?php endif; ?>><?php echo __('Install'); ?></button>
                     <input type="hidden" name="name" value="<?php echo html_escape($pluginDirName); ?>" />
                 </div>
+                <?php echo $csrf; ?>
         </form> 
     <?php endif; ?>
 <?php endif; ?>
