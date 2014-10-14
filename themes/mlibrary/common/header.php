@@ -31,7 +31,7 @@
 
   <!-- this hides the slideshow divs from users who do not have javascript enabled so they don't see a big mess -->
   <noscript>
-    <style>#showcase,.showcase, h2.awkward{display:none; visibility:hidden;}</style>
+    <style> #showcase,.showcase, h2.awkward { display:none; visibility:hidden; } </style>
   </noscript>
 </head>
 
@@ -44,36 +44,33 @@
 
     <div id="logo">
       <a href="http://lib.umich.edu/">
-        <img src="<?php echo img('mlibrary_logo.jpg','images/layout'); ?>" width="102px" height="24px" alt="mlibrary" />
+        <img src="<?php echo img('square_mlibrary.png','images/layout'); ?>" width="61" height="60" alt="mlibrary" />
       </a>
       <a href="http://lib.umich.edu/online-exhibits/">
-        <img src="<?php echo img('online-exhibits.jpg','images/layout'); ?>" width="102px" height="24px" alt="online exhibits" />
+        <img src="<?php echo img('online-exhibits.png','images/layout'); ?>" width="286" height="33" alt="online exhibits" />
       </a>
     </div>
 
     <div id="primary-nav">
-      <ul class="navigation">
-        <?php
-          echo nav(array(
-            array(
-              'label' => 'Home',
-              'uri' => url(''),
-              'class' => 'nav-home'
-            ),
-            array(
-              'label' => 'Browse',
-              'uri' => url('exhibits'),
-              'class' => 'nav-browse'
-            ),
-            array(
-              'label' => 'Item Archive',
-              'uri' => url('items'),
-              'class' => 'nav-items'
-            )
-          ));
-        ?>
-        <li class="umLogo no-tab"><a href="http://www.umich.edu"><img src="<?php echo img('umLogo.gif','images/layout'); ?>" alt="University of Michigan" width="143" height="18"/></a>
-      </ul>
+      <?php
+        echo nav(array(
+          array(
+            'label' => 'Home',
+            'uri' => url(''),
+            'class' => 'nav-home'
+          ),
+          array(
+            'label' => 'Browse',
+            'uri' => url('exhibits'),
+            'class' => 'nav-browse'
+          ),
+          array(
+            'label' => 'Item Archive',
+            'uri' => url('items'),
+            'class' => 'nav-items'
+          )
+        ));
+      ?>
   </div>
 
   <div id="content">
