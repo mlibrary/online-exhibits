@@ -258,7 +258,7 @@ if (($fullsizeimage!=true) and (($audio_file==true) || ($item_type=='Sound')))
     	             	else if (($elementName=='Identifier') and (stristr($elementText, 'http') || stristr($elementText, 'https') || stristr($elementText, 'www')))
       	              	     echo "<div class='element-text'><a href=".$elementText.">".$elementText. "</a></div>";
         	        else
-          	   	     echo '<div>' .$elementText . '</div>';  
+          	   	     echo "<div class='element-text'>" .$elementText . "</div>";  
                 }
                 echo '</div>';
             }
