@@ -335,9 +335,10 @@ function mlibrary_exhibit_builder_thumbnail_gallery($html,$compact) {
  $end = $compact['end'];
  $props = $compact['props']; 
  $thumnail_image = false;
-   
+ $html='';
+  
   if ($exhibitPage->layout!='mlibrary-custom-layout'){     
-      for($i=(int)$start; $i <= (int)$end; $i++) {     	
+      for($i=(int)$start; $i <= (int)$end; $i++) {   
       		$attachment = exhibit_builder_page_attachment($i);		      
           if (!empty($attachment)) {	                                  
              if (!empty($attachment['item']->getItemType()->name))
@@ -345,34 +346,48 @@ function mlibrary_exhibit_builder_thumbnail_gallery($html,$compact) {
 		         else
 		             $item_type = "Still Image";
             	
-						 $item = $attachment['item']; 		   
-             if (($item) and ($item_type=='Video')){                         	         
+				//		 $item = $attachment['item']; 		   
+					
+             if (($attachment['item']) and ($item_type=='Video')){  
+             
+              	$image = '';           	         
                  $html .= "\n" . '<div class="exhibit-item-video">';  
-  	             $elementids = metadata($item, array('Item Type Metadata', 'Video_embeded_code'),array('no_escape'=>true,'all'=>true));    				
-      	         $elementvideos_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));   	                								 
+  	             $elementids = metadata($attachment['item'], array('Item Type Metadata', 'Video_embeded_code'),array('no_escape'=>true,'all'=>true));    				  	            
+      	         $elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));   	                								       	                	    
             	   if (!empty($elementids))
-            	   {            	   
+            	   {              	                  	   
           	        foreach ($elementids as $elementid) 
-          	        {           
-              	    		$videoid = str_replace($remove, "", $elementid);                
+          	        {                     	     
+              	    		$videoid = str_replace($remove, "", $elementid);                	    
 			                  if ((!empty($videoid)) and ($thumnail_image!=true))
 			                  {                
     			                 $image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
-        		      	       $thumnail_image=true;
+    			                  
+        		      	     //  $thumnail_image=true;
             			    	}//if
   	            	  }//for each
 	                }// if elements
-	                elseif ($elementvideos_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true))) 
-	                {
+	                elseif ($elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true))) 
+	                {	            	                     
           		      	$data = $elementvideos_VCM[0];
           		      	preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
 	            	      $partnerId = 1038472;         	 
-  	                  $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                                   
-    	      	  		  $thumnail_image=true;        		
+  	                  $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                                     	                 
+    	      	  		//  $thumnail_image=true;      	      	  		      		
                 	}//elementvideos_VCM     
-      	       		$html .= exhibit_builder_link_to_exhibit_item($image,'',$item);    	    	
-		    	       $html .= '</div>' . "\n";
+      	       		$html .= exhibit_builder_link_to_exhibit_item($image,'',$attachment['item']);    
+      	       		$html .= exhibit_builder_attachment_caption($attachment);	    	
+		    	        $html .= '</div>' . "\n";
 	    	      }//type video	    	          	      
+	    	      else { //still image
+	    	      			 $html .= "\n" . '<div class="exhibit-item">';
+					           if ($attachment['file']) {		        
+			               		 $thumbnail = file_image('square_thumbnail',array('class'=>'permalink'), $attachment['file']);
+		      			          $html .= exhibit_builder_link_to_exhibit_item($thumbnail, array(), $attachment['item']);
+            					}
+					            $html .= exhibit_builder_attachment_caption($attachment);
+          						$html .= '</div>' . "\n";
+	    	     }
       }//if (!empty($attachment))
    }
   } //($exhibitPage->layout!='mlibrary-custom-layout')
