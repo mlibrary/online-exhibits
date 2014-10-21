@@ -180,8 +180,8 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
      foreach ($elementids_youtube_video as $elementid_youtube_video) { 
      			$videoid = str_replace($remove, "", $elementid_youtube_video);               
 					if ((!empty($videoid)) and ($thumnail_image!=true)) {                
-							$video_thumnail_image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
-							$thumnail_image=true;
+						$video_thumnail_image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:400px; height:200px'/>";             
+						$thumnail_image=true;
 					}
 		 }
   }//if
@@ -189,7 +189,7 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
      $data = $elementvideos_kultura_VCM[0];            	  		 						    					
 		 preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);   
      $partnerId = 1038472;         	 
-     $video_thumnail_image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>'; 
+     $video_thumnail_image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100"/>'; 
      $thumnail_image=true;        		
   }//if		  	
   $html = exhibit_builder_link_to_exhibit_item($video_thumnail_image,'',$item);                     	
@@ -256,7 +256,7 @@ function mlibrary_exhibit_builder_attachment_markup($html,$compact) {
 			    	  if ($item_type == 'Sound'){
 			    	  	 // $html = exhibit_builder_link_to_exhibit_item("<img src='".img('sound-icon.jpg')."'/>");   
 			    	  }//if
-		      	  elseif (($item_type =='Video') and ($imageSize=='thumbnail')){		  		      	
+		      	  elseif (($item_type =='Video')) {// and ($imageSize=='thumbnail')){		  		      	
 					      	 $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);   					      	  			      			  
     			    }//elseif video        			       
     	} 
@@ -335,51 +335,41 @@ function mlibrary_exhibit_builder_thumbnail_gallery($html,$compact) {
  $end = $compact['end'];
  $props = $compact['props']; 
  $thumnail_image = false;
- $html='';
-  
-  if ($exhibitPage->layout!='mlibrary-custom-layout'){     
-      for($i=(int)$start; $i <= (int)$end; $i++) {   
-      		$attachment = exhibit_builder_page_attachment($i);		      
-          if (!empty($attachment)) {	                                  
-             if (!empty($attachment['item']->getItemType()->name))
-		             $item_type = $attachment['item']->getItemType()->name;
-		         else
-		             $item_type = "Still Image";
-            	
-				//		 $item = $attachment['item']; 		   
-					
-             if (($attachment['item']) and ($item_type=='Video')){  
-             
+ $html='';  
+ if ($exhibitPage->layout!='mlibrary-custom-layout') {     
+   for($i=(int)$start; $i <= (int)$end; $i++) {   
+      $attachment = exhibit_builder_page_attachment($i);		      
+        if (!empty($attachment)) {	                                  
+          if (!empty($attachment['item']->getItemType()->name))
+		        $item_type = $attachment['item']->getItemType()->name;
+		      else
+		        $item_type = "Still Image";            	
+            if (($attachment['item']) && ($item_type=='Video')){  
               	$image = '';           	         
-                 $html .= "\n" . '<div class="exhibit-item-video">';  
-  	             $elementids = metadata($attachment['item'], array('Item Type Metadata', 'Video_embeded_code'),array('no_escape'=>true,'all'=>true));    				  	            
-      	         $elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));   	                								       	                	    
-            	   if (!empty($elementids))
-            	   {              	                  	   
-          	        foreach ($elementids as $elementid) 
-          	        {                     	     
-              	    		$videoid = str_replace($remove, "", $elementid);                	    
-			                  if ((!empty($videoid)) and ($thumnail_image!=true))
-			                  {                
-    			                 $image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:128px'/>";             
-    			                  
+                $html .= "\n" . '<div class="exhibit-item">';  
+  	            $elementids = metadata($attachment['item'], array('Item Type Metadata', 'Video_embeded_code'),array('no_escape'=>true,'all'=>true));    				  	            
+      	        $elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));   	                								       	                	    
+            	  if (!empty($elementids)) {              	                  	   
+          	      foreach ($elementids  as $elementid) {                     	     
+              	    $videoid = str_replace($remove, "", $elementid);                	    
+			                if ((!empty($videoid)) && ($thumnail_image!=true)) {                
+    			                 $image = '<img class="permalink" src="http://i4.ytimg.com/vi/'.$videoid.'/default.jpg" style="width:200px; height:152px"/>';             
         		      	     //  $thumnail_image=true;
-            			    	}//if
-  	            	  }//for each
-	                }// if elements
-	                elseif ($elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true))) 
-	                {	            	                     
-          		      	$data = $elementvideos_VCM[0];
-          		      	preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
-	            	      $partnerId = 1038472;         	 
-  	                  $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:128px"/>';                                     	                 
+            			    }//if
+  	            	}//for each
+	              }// if elements
+	              elseif ($elementvideos_VCM = metadata($attachment['item'], array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true))) {	            	                     
+          		    $data = $elementvideos_VCM[0];
+          		    preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);          	     
+	            	  $partnerId = 1038472;         	 
+  	              $image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/200/height/200/type/1/quality/100" style="width:200px; height:152px"/>';                                     	                 
     	      	  		//  $thumnail_image=true;      	      	  		      		
-                	}//elementvideos_VCM     
-      	       		$html .= exhibit_builder_link_to_exhibit_item($image,'',$attachment['item']);    
-      	       		$html .= exhibit_builder_attachment_caption($attachment);	    	
-		    	        $html .= '</div>' . "\n";
-	    	      }//type video	    	          	      
-	    	      else { //still image
+                }//elementvideos_VCM     
+      	       	$html .= exhibit_builder_link_to_exhibit_item($image,'',$attachment['item']);    
+      	       	$html .= exhibit_builder_attachment_caption($attachment);	    	
+		    	      $html .= '</div>' . "\n";
+	    	    }//type video	    	          	      
+	    	    else { //still image
 	    	      			 $html .= "\n" . '<div class="exhibit-item">';
 					           if ($attachment['file']) {		        
 			               		 $thumbnail = file_image('square_thumbnail',array('class'=>'permalink'), $attachment['file']);
@@ -392,44 +382,42 @@ function mlibrary_exhibit_builder_thumbnail_gallery($html,$compact) {
    }
   } //($exhibitPage->layout!='mlibrary-custom-layout')
   elseif ($exhibitPage->layout=='mlibrary-custom-layout'){
-	      $image_index=0;
-			// start is 1 and end is 12, this is the way set it up in the new layout or other layout that has thumbnail it can be 
-			//changed to something else.
-		    $firstthumbnail=false;    
-	      for ($i=(int)$start; $i <= (int)$end; $i++) 
-	      {           
-    	//check to see if there is item exist with exhibit_builder_use_exhibit_page_item function  
-           	$attachment = exhibit_builder_page_attachment($i);  
-           	if (!empty($attachment))
-           	{	
-             	$item_type = $attachment['item']->getItemType()->name;
-//             	 exhibit_builder_use_attachment($attachment);  
-			    $item = $attachment['item'];    
-			  	set_loop_records('files', $attachment['item']->Files); 
-            	    if (($attachment) and ($item_type!='Sound') or ($item_type!='video'))
-            	    {                	     
-              	       foreach(loop('files') as $file):      
-        	             	if ($file->hasThumbnail() and ($firstthumbnail!=true)){
-          				          $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';   
-	                          //$html .= display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkToFile'=>false));
-	                           $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
-    	                      $html .= '</div>' . "\n";
-                   	        $image_index++;
-                      	    $firstthumbnail=true;
-          	            }          	
-    	                  else if ($file->hasThumbnail() and ($firstthumbnail==true)){        	
-          	                $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';   
-	                          $title = $file->title;
-	                          $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
-	    	                    $html .= '</div>' . "\n";            
-          	                $image_index++;
-    	                 }
-                	     endforeach;       
-         		     }      
-	          }	
-	     }
-	  }
-
-	 return $html;
+  //This layout dose not support thumbnail image of youtube video or kultura video
+  $image_index=0;
+  // start is 1 and end is 12, this is the way set it up in the new layout or other layout that has thumbnail it can be 
+	//changed to something else.
+  $firstthumbnail=false;    
+  for ($i=(int)$start; $i <= (int)$end; $i++) 
+  {           
+  	//check to see if there is item exist with exhibit_builder_use_exhibit_page_item function  
+	  $attachment = exhibit_builder_page_attachment($i);  
+  	if (!empty($attachment))
+	  {	
+  	  $item_type = $attachment['item']->getItemType()->name;    
+    	$item = $attachment['item'];    
+	    set_loop_records('files', $attachment['item']->Files); 
+  	  if (($attachment) and ($item_type!='Sound') or ($item_type!='video'))
+    	{                	     
+      	foreach(loop('files') as $file):      
+      		if ($file->hasThumbnail() and ($firstthumbnail!=true)) {
+          	$html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';   	              
+	          $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
+  	        $html .= '</div>' . "\n";
+    	      $image_index++;
+      	    $firstthumbnail=true;
+        	}          	
+	    	  elseif ($file->hasThumbnail() && ($firstthumbnail==true)) {        	
+  	        $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';   
+	  	      $title = $file->title;
+	    	    $html .= file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),'linkToFile'=>false));
+	    		  $html .= '</div>' . "\n";            
+          	$image_index++;
+	    	  }
+  	    endforeach;       
+    	}      
+	 }	
+ }
+}
+return $html;
 }
 
