@@ -134,14 +134,13 @@ body {
   font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
   font-size: 11px; /* Fallback for IE, straight pixel value prevents user scaling on some browsers */
   font-size: 68.75%; /* 0.6875 = 11 / 16 */
-  background: transparent url(../images/layout/bg-white2.gif) repeat-x;
-  /* Adjusts the font-size of text on the pages   NOTE: origional scalings were made based on Deco's 10px base unit*/
 }
 
-#wrap {
+.wrap {
   position: relative;
   width: 960px; /* Enlarge Deco's default width */
   z-index: 500;
+  margin: 0 auto;
 }
 
 #exhibit.show .exhibit-text a[href] {
@@ -151,7 +150,6 @@ body {
   -webkit-transition: color 0.3s ease-in-out;
      -moz-transition: color 0.3s ease-in-out;
        -o-transition: color 0.3s ease-in-out;
-  /*text-transform: lowercase;*/
           transition: color 0.3s ease-in-out;
 }
 
@@ -159,21 +157,13 @@ body {
   color: #4976A7;
 }
 
-div#logo {
-  padding-top: 1em;
+#content {
+  background-color: #96A7B7;
 }
 
-#content {
-  margin: 0 0 0 0; /****TOP MARGIN** 70px = off the masthead bar, 0 = align to color bar, 30px = inbetween offset */
-  padding-top: 30px;
-  border: none;
-  border-bottom: 1px solid white;
-  -webkit-border-radius: 0;
-     -moz-border-radius: 0;
-          border-radius: 0;
-  -webkit-box-shadow: 0 0 3px #666, 0 5px 8px rgba(0,0,0,0.4), 0 -2px 3px rgba(0,0,0,0.2);
-     -moz-box-shadow: 0 0 3px #666, 0 5px 8px rgba(0,0,0,0.4), 0 -2px 3px rgba(0,0,0,0.2);
-          box-shadow: 0 0 3px #666, 0 5px 8px rgba(0,0,0,0.4), 0 -2px 3px rgba(0,0,0,0.2);
+#content .wrap {
+  padding: 18px;
+  border-top: 0.3em solid #D3D3D3;
 }
 
 /*=HOME PAGE */
@@ -185,10 +175,6 @@ body#home #content h1 {
   overflow: hidden;
   white-space: nowrap;
   text-indent: 100%;
-}
-
-body#home #content {
-  background: url(../images/layout/home-bg.gif) repeat-x top #F3F3F3;
 }
 
 body#home #primary {
@@ -309,12 +295,14 @@ body#home #showcase .showcase-thumbnail-wrapper {
 body#home #showcase .showcase-thumbnail,
 body#home #showcase .showcase-thumbnail.active + .showcase-thumbnail.active {
   opacity: 0.5;
+
   filter: alpha(opacity=50);
 }
 
 body#home #showcase .showcase-thumbnail.active,
 body#home #showcase .showcase-thumbnail:hover {
   opacity: 1;
+
   filter: alpha(opacity=100);
 }
 
@@ -463,7 +451,7 @@ body#home #legacy-exhibits h3 {
 
 /*=BROWSE EXHIBITS */
 
-#content {
+#content .wrap {
   min-height: 700px; /* TEMP - adjust for lack of content */
 }
 
@@ -563,14 +551,6 @@ body#home #legacy-exhibits h3 {
   background-color: #F3F3F3;
 
   filter: alpha(opacity = 100);
-}
-
-#exhibit.browse #content,
-#exhibit.tags #content,
-#items.browse #content,
-#items.tags #content,
-#timelines.browse #content {
-  background: url(../images/layout/browse-bg.gif) repeat-x top #F3F3F3;
 }
 
 #exhibit.browse #content h1,
@@ -1144,11 +1124,6 @@ exhibit-page-nav li a:link {
 a.download-file {
   display: block;
   width: 100%;
-}
-
-#exhibit.show #content,
-#exhibit.summary #content {
-  background: white url(../images/layout/exhibit-nav-bg.gif) repeat-y;
 }
 
 .exhibit-section-nav {
@@ -1776,4 +1751,77 @@ body.error404 #recent-exhibits ul li.item a:hover {
 #content h1.header02,
 #content h1.header03 {
   background-image: url('../images/layout/headers/default01.png');
+}
+
+
+
+/*=HEADER */
+
+#logo,
+#primary-nav {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.5em;
+}
+
+#logo {
+  width: 45%;
+  padding: 0 7px;
+}
+
+#logo a {
+  display: block;
+  float: left;
+  height: 60px;
+  padding: 15px 7px;
+  line-height: 105px;
+}
+
+#logo a:focus {
+  outline: 0;
+}
+
+#logo a:focus img {
+  outline: 0.15em solid #999;
+}
+
+#logo img {
+  padding: 5px;
+}
+
+#primary-nav {
+  width: 52%;
+  text-align: right;
+}
+
+#primary-nav ul {
+  margin: 35px 0;
+}
+
+#primary-nav li {
+  display: inline-block;
+  margin: 0 0.2em;
+}
+
+#primary-nav a {
+  padding: 0.4em 0.5em 0.3em 0.5em;
+  font-weight: bold;
+  color: #244C7E;
+  border-left: 0.2em solid transparent;
+  text-shadow: 1px 1px rgba(255, 255, 255, 0.75);
+}
+
+#primary-nav .active a {
+  border-left: 0.2em solid #9AB0CD;
+  background-color: #C6D4E5;
+}
+
+#primary-nav a:focus,
+#primary-nav a:hover {
+  background-color: #E0EBF9;
+}
+
+#primary-nav .active a:hover,
+#primary-nav .active a:focus {
+  border-left: 0.2em solid #C2D1EA;
 }

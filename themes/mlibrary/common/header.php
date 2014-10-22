@@ -40,7 +40,7 @@
   echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass));
 ?>
 
-  <div id="wrap">
+  <div class="wrap">
 
     <div id="logo">
       <a href="http://lib.umich.edu/">
@@ -71,6 +71,7 @@
           )
         ));
       ?>
+    </div>
   </div>
-
   <div id="content">
+    <div class="wrap">

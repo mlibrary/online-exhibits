@@ -24,6 +24,7 @@ body {
   position: relative;
   font: 62.5% "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #333;
+  background-color: #F6F6F6;
 }
 
 /* -- Headings -- */
@@ -663,9 +664,13 @@ body#exhibit.summary #primary p {
 }
 
 /* == Wrap == */
-#wrap {
+.wrap {
   width: 882px;
   margin: 0 auto;
+}
+
+#content .wrap {
+  background-color: #FFF;
 }
 
 /* == Header == */
@@ -766,31 +771,6 @@ ul#secondary-nav.navigation {
 
 /* == Content == */
 /* Structure */
-#content {
-  margin-top: 30px;
-  /* Jianqi's Edit */
-  /*margin-left:230px;
-	width: 613px;
-	position: relative; */
-  /* End of Jianqi's Edit */
-  padding: 18px;
-  overflow: hidden;
-  zoom: 1;
-  border: 1px solid #FFF;
-  border-top-width: 0;
-  -moz-border-radius-topleft: 3px;
-  border-top-left-radius: 3px;
-  -moz-border-radius-topright: 3px;
-  border-top-right-radius: 3px;
-  -moz-border-radius-bottomright: 0;
-  border-bottom-right-radius: 0;
-  -moz-border-radius-bottomleft: 0;
-  border-bottom-left-radius: 0;
-  background: #FFF;
-  -webkit-box-shadow: 0 0 3px #333;
-     -moz-box-shadow: 0 0 3px #333;
-          box-shadow: 0 0 3px #333;
-}
 
 #secondary-nav {
   margin-bottom: 2em;
@@ -1083,25 +1063,25 @@ body.contribution label {
   font-size: 9pt;
 }
 
-body.contribution div#wrap div#content div#primary form fieldset#contribution-confirm-submit div.inputs label {
+body.contribution div.wrap div#content div#primary form fieldset#contribution-confirm-submit div.inputs label {
   float: none;
   width: auto;
 }
 
-body.contribution div#wrap div#content div#primary form fieldset#contribution-confirm-submit div.inputs label {
+body.contribution div.wrap div#content div#primary form fieldset#contribution-confirm-submit div.inputs label {
   float: none;
   width: auto;
 }
 
-body.contribution div#wrap div#content div#primary form fieldset#contribution-confirm-submit p {
+body.contribution div.wrap div#content div#primary form fieldset#contribution-confirm-submit p {
   margin: 15px 0 0;
 }
 
-body.contribution div#wrap div#content div#primary form fieldset#contribution-confirm-submit input#form-submit.submitinput {
+body.contribution div.wrap div#content div#primary form fieldset#contribution-confirm-submit input#form-submit.submitinput {
   margin-top: 15px;
 }
 
-body.contribution div#wrap div#content div#primary form fieldset#contribution-contributor-metadata legend {
+body.contribution div.wrap div#content div#primary form fieldset#contribution-contributor-metadata legend {
   padding: 3px 0;
   font-size: 2em;
   color: #555;
