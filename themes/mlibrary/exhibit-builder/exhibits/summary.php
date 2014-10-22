@@ -8,8 +8,6 @@
 	<div class="exhibit-overview active">
 		<?php echo link_to_exhibit('Introduction'); ?>
 	</div>	
-	<?php //echo exhibit_builder_nested_nav(null,mlibrary_pages_in_section());?>	
-
     <!--<ul class="exhibit-section-nav">-->
        <ul id="exhibit-pages">
        

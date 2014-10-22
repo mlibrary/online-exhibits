@@ -26,23 +26,23 @@
                   <?php //get_image_attached_to_exhibits is built in the mlibrary plugin to get the image attached to each Exhibit.
                   $Exhibit_image='';
                   $Exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
-//                  print_r($Exhibit_image['image_title'].$feature_exhibit->id);
-                // print_r($Exhibit_image);
-                  if (!empty($Exhibit_image)):?>
-		                  <div class="showcase-slide">
-    	              	<?php //Both exhibit_builder_exhibit_uri and exhibit_builder_link_to_exhibit used from Exhibit_builder helper function
+                  if (!empty($Exhibit_image)):?>            
+		                  <div class="showcase-slide">	
+    	              	<?php //Both exhibit_builder_exhibit_uri and exhibit_builder_link_to_exhibit used from Exhibit_builder helper function    	              
 		  	                	echo '<a href="'.exhibit_builder_exhibit_uri($feature_exhibit).'"><img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" /></a>';
         	                echo '<div class="showcase-caption">';
           	              echo '<h4>'.exhibit_builder_link_to_exhibit($feature_exhibit).'</h4>';
 	          	            echo '</div>';//SHOWCASE-CAPTION?>
               	     	   <div class="showcase-thumbnail active" style="width:100px;">
                 		      <?php if (!empty($Exhibit_image))
-    	            	                 echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" width="44" height="44" />';
+                		      {
+		                		      	     echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" width="44" height="44" />';
+    	            	      }
                     	          else
-      	              	             //echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
-                      	</div><!-- SHOWCASE-THUMBNAIL-->
-	  			          <?php echo '</div>'; // SHOW-CASE SLIDE
-	  			       endif;
+      	              	             echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
+                      	</div><!-- SHOWCASE-THUMBNAIL-->    			    	
+	  			          <?php echo '</div>'; // SHOW-CASE SLIDE			        
+	  			       endif;   
                   endforeach;
                //   exit;
               endif;?>
@@ -55,41 +55,29 @@
 		$first_exhibit='false';
         set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
         if (has_loop_records('exhibits')): ?>
-        <ul class="exhibits-list">
-        <?php foreach (loop('exhibits') as $exhibits): ?>
-        <li class="exhibits <?php if ($first_exhibit=='false') echo 'first';  ?>">
-        <?php $first_exhibit='true';?>
-         <h3><?php echo link_to_exhibit(); ?></h3>
-             <?php $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
-             if (!empty($Exhibit_image))
-            	   echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
-             else
-                 echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
-            <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))): ?>
-                   <p class="exhibits-description"><?php echo $exhibitDescription; ?></p>
-            <?php endif; ?>
-            	<?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>
-        </li>
-        <?php endforeach; ?>
-        </ul>
+        		<ul class="exhibits-list">
+		        <?php foreach (loop('exhibits') as $exhibits): ?>
+    					    <li class="exhibits <?php if ($first_exhibit=='false') echo 'first';  ?>">
+					  		  <?php $first_exhibit='true';?>
+				        	<h3><?php echo link_to_exhibit(); ?></h3>
+		          		<?php $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
+      				    if (!empty($Exhibit_image))
+			            	   echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+      		        else
+          			       echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?> 
+                           
+			            <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))): ?>
+      			             <p class="exhibits-description"><?php echo $exhibitDescription; ?></p>
+			            <?php endif; ?>			
+            
+      			      <?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>			
+				          </li>
+	          <?php endforeach; ?>
+  	        </ul>
         <?php endif; ?>
         <div class="button-wrap"><div class="button"><a href="<?php echo url('exhibits'); ?>">Browse All Exhibits</a></div></div>
 </div>
-
-<!--<div id="legacy-exhibits">
-<h2> Looking for an older exhibit?</h2>
-<p> The University of Michigan Library frequently puts on exhibits based on its rich and unique collections. Some had even been online before this website was site was around! Check them out below!</p>
-<ul>
-<li><a href="http://www.lib.umich.edu/exhibits/diversity-desert/">Diversity in the Desert</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/divine-sky-artistry-astronomical-maps/">Divine Sky: The Artistry of Astronomical Maps</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/enchanting-ruin-tintern-abbey-romantic-tourism-wales/">Enchanting Ruin: Tintern Abbey and Romantic Tourism in Wales</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/special-collections-library/galileo-manuscript">The Galileo Manuscript</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/netherlandic-treasures/">Netherlandic Treasures</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/st-petersburg/">St. Petersburg: Window on the West - Window on the East</a></li>
-<li><a href="http://www.lib.umich.edu/exhibits/writing-graeco-roman-egypt/">Writing in Graeco-Roman Egypt</a></li>
-</ul>
-<!--</div>-->
-
+ 
  <!-- Start Awkward Gallery load/config -->
 <script type="text/javascript">
 jQuery.noConflict();
