@@ -1,5 +1,5 @@
-<?php echo head(array('bodyid'=>'home')); ?>    
-            <!--About-->       
+<?php echo head(array('bodyid'=>'home')); ?>
+            <!--About-->
 	<!-- Featured Item -->
 <div id="primary">
 	<div id="greeting" >
@@ -8,26 +8,14 @@
 	    <p>explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>! Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.</p>
     	<ul>
     		<li class="browse-icon">
-    		<a href="<?php echo url('exhibits'); ?>"><img src="<?php echo img('icon-browse.gif','images/layout') ?>" alt="browse icon" width="20" heigh="20"/></a>
-    		<a href="<?php echo url('exhibits'); ?>">browse</a> all the exhibits to find what inspires you! 
+    		  <a href="<?php echo url('exhibits'); ?>">browse</a> all the exhibits to find what inspires you!
         </li>
-    		
-		    <!--<li class="galleries-icon">
-		    <a href="<?php echo url('exhibits/show/galleries'); ?>"><img src="<?php echo img('icon-galleries.gif','images/layout') ?>" alt="galleries icon" width="20" heigh="20"/></a>    		
-		    prefer all the images in one place? check out the <a href="<?php echo url('exhibits/show/galleries'); ?>">galleries</a>! 
-        </li>-->
-		    
+
     		<li class="items-icon">
-    		<a href="<?php echo url('items'); ?>"><img src="<?php echo img('icon-archive.gif','images/layout') ?>" alt="archive icon" width="20" heigh="20"/></a>
-    		flip through the <a href="<?php echo url('items'); ?>">archive</a> to see the full listing of items! 
+    		  flip through the <a href="<?php echo url('items'); ?>">archive</a> to see the full listing of items!
         </li>
-        
-        <!--<li class="timeline-icon">
-    		<a href="<?php echo url('neatline-time/timelines'); ?>"><img src="<?php echo img('icon-archive.gif','images/layout') ?>" alt="archive icon" width="20" heigh="20"/></a>
-    		flip through the <a href="<?php echo url('neatline-time/timelines'); ?>">Time Line</a> to see the full listing of time lines! 
-        </li> -->   
     	</ul>
-	</div><!-- end greeting -->	    
+	</div><!-- end greeting -->
   <!-- Featured Exhibits -->
   <h3 id="featured-title"><span>Featured</span> Exhibits</h3>
   <div id="showcase" class="showcase">
@@ -40,9 +28,9 @@
                   $Exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
 //                  print_r($Exhibit_image['image_title'].$feature_exhibit->id);
                 // print_r($Exhibit_image);
-                  if (!empty($Exhibit_image)):?>            
-		                  <div class="showcase-slide">	
-    	              	<?php //Both exhibit_builder_exhibit_uri and exhibit_builder_link_to_exhibit used from Exhibit_builder helper function    	              
+                  if (!empty($Exhibit_image)):?>
+		                  <div class="showcase-slide">
+    	              	<?php //Both exhibit_builder_exhibit_uri and exhibit_builder_link_to_exhibit used from Exhibit_builder helper function
 		  	                	echo '<a href="'.exhibit_builder_exhibit_uri($feature_exhibit).'"><img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" /></a>';
         	                echo '<div class="showcase-caption">';
           	              echo '<h4>'.exhibit_builder_link_to_exhibit($feature_exhibit).'</h4>';
@@ -52,18 +40,18 @@
     	            	                 echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" width="44" height="44" />';
                     	          else
       	              	             //echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
-                      	</div><!-- SHOWCASE-THUMBNAIL-->    			    	
-	  			          <?php echo '</div>'; // SHOW-CASE SLIDE			        
-	  			       endif;   
+                      	</div><!-- SHOWCASE-THUMBNAIL-->
+	  			          <?php echo '</div>'; // SHOW-CASE SLIDE
+	  			       endif;
                   endforeach;
                //   exit;
-              endif;?>			
+              endif;?>
 </div><!-- end showcase -->
 </div><!-- primary-->
 
 <h3> Recent Exhibits </h3>
-<div id="recent-exhibits"> 
-<?php   
+<div id="recent-exhibits">
+<?php
 		$first_exhibit='false';
         set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
         if (has_loop_records('exhibits')): ?>
@@ -76,18 +64,18 @@
              if (!empty($Exhibit_image))
             	   echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
              else
-                 echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>           
+                 echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
             <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))): ?>
                    <p class="exhibits-description"><?php echo $exhibitDescription; ?></p>
-            <?php endif; ?>			
-            	<?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>			
+            <?php endif; ?>
+            	<?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>
         </li>
         <?php endforeach; ?>
         </ul>
         <?php endif; ?>
         <div class="button-wrap"><div class="button"><a href="<?php echo url('exhibits'); ?>">Browse All Exhibits</a></div></div>
 </div>
- 
+
 <!--<div id="legacy-exhibits">
 <h2> Looking for an older exhibit?</h2>
 <p> The University of Michigan Library frequently puts on exhibits based on its rich and unique collections. Some had even been online before this website was site was around! Check them out below!</p>
@@ -101,7 +89,7 @@
 <li><a href="http://www.lib.umich.edu/exhibits/writing-graeco-roman-egypt/">Writing in Graeco-Roman Egypt</a></li>
 </ul>
 <!--</div>-->
-    
+
  <!-- Start Awkward Gallery load/config -->
 <script type="text/javascript">
 jQuery.noConflict();
@@ -120,7 +108,7 @@ jQuery(document).ready(function()
 		tooltip_icon_height:	32,
 		tooltip_offsetx:		18,
 		tooltip_offsety:		0,
-		arrows:					true, 
+		arrows:					true,
 		buttons:				false,
 		btn_numbers:			true,
 		keybord_keys:			true,
@@ -137,6 +125,6 @@ jQuery(document).ready(function()
 });
 </script>
 <!-- end Awkward Gallery load/config -->
-   
-    
+
+
 <?php echo foot(); ?>
