@@ -1818,10 +1818,11 @@ body.error404 #recent-exhibits ul li.item a:hover {
 
 #primary-nav a:focus,
 #primary-nav a:hover {
-  background-color: #E0EBF9;
+  background-color: #C6D4E5;
 }
 
 #primary-nav .active a:hover,
 #primary-nav .active a:focus {
   border-left: 0.2em solid #C2D1EA;
+  background-color: #E0EBF9;
 }
