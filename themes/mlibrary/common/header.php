@@ -21,7 +21,6 @@
 
     queue_js_file('fancybox/source/jquery.fancybox');
     queue_js_file('video-js/video');
-    queue_js_file('jquery.aw-showcase');
 
     fire_plugin_hook('public_head', array('view'=>$this));
     echo auto_discovery_link_tags();
