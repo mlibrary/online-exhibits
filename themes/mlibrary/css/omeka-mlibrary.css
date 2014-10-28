@@ -131,7 +131,7 @@ html {
 }
 
 body {
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   font-size: 11px; /* Fallback for IE, straight pixel value prevents user scaling on some browsers */
   font-size: 68.75%; /* 0.6875 = 11 / 16 */
 }
@@ -163,10 +163,19 @@ body {
 
 #content .wrap {
   padding: 18px;
-  border-top: 0.3em solid #D3D3D3;
+  border-top: 3px solid #D3D3D3;
 }
 
 /*=HOME PAGE */
+
+#home #primary {
+  position: relative;
+}
+
+#home-header-wrap {
+  position: relative;
+  padding-bottom: 2em;
+}
 
 body#home #content h1 {
   height: 1px;
@@ -177,16 +186,9 @@ body#home #content h1 {
   text-indent: 100%;
 }
 
-body#home #primary {
-  float: none;
-  width: 100%;
-  height: 400px;
-}
-
 body#home #greeting {
-  float: left;
-  width: 48%;
-  padding-top: 1em;
+  width: 46%;
+  padding: 1em 0 3em 1%;
 }
 
 body#home #content #primary #greeting h2 {
@@ -194,6 +196,7 @@ body#home #content #primary #greeting h2 {
   font-size: 3em;
   color: #777;
   border: 0;
+  line-height: 1em;
 }
 
 body#home #greeting h2 span {
@@ -264,7 +267,10 @@ body#home #content h3 {
 }
 
 body#home #recent-exhibits {
-  margin-top: 1.5em;
+  margin: 0 -18px;
+  padding: 0 18px;
+  border-top: 3px solid #D3D3D3;
+  background-color: #EEE;
 }
 
 body#home #recent-exhibits .exhibits {
@@ -312,6 +318,98 @@ body#home #legacy-exhibits h3 {
   font-weight: bold;
   border: 0;
   background: transparent;
+}
+
+#recent-exhibits .full-width-item {
+  padding: 1em 18px;
+  margin-left: -18px;
+}
+
+/*= FEATURED EXHIBIT */
+
+
+
+#featured-exhibit-wrap {
+  position: absolute;
+  top: -21px;
+  bottom: -3px;
+  left: 478px;
+  right: -18px;
+  background-color: #595959;
+  text-align: center;
+}
+
+body#home #content #primary #featured-exhibit-wrap h2 {
+  color: #FFF;
+  background-color: #444;
+  text-align: left;
+  height: 15%;
+  font-size: 2.2em;
+  padding-left: 0.5em;
+  text-shadow: -0.1em 0.1em 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Pseudo Element to help with vertical centering */
+#featured-exhibit-wrap h2:before {
+  content: " ";
+  display: inline-block;
+  height: 105%; /* Greater than 100% because "Featured Exhibit" has no descenders */
+  width: 1%;
+  vertical-align: middle;
+}
+
+#featured-exhibit-wrap .figure-wrap {
+  text-align: center;
+  height: 85%;
+}
+
+/* Pseudo Element to help with vertical centering */
+#featured-exhibit-wrap .figure-wrap:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+}
+#featured-exhibit-wrap figure {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  position: relative;
+  background-color: #333;
+  max-height: 100%;
+}
+
+#featured-exhibit-wrap .portrait figure {
+  position: static;
+}
+
+#featured-exhibit-wrap .landscape figure {
+  width: 100%;
+}
+
+#featured-exhibit-wrap .no-image figure {
+  width: 100%;
+  height: 100%;
+}
+
+#featured-exhibit-wrap figcaption {
+  position: absolute;
+  bottom: 0;
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #FFF;
+  left: 0;
+  right: 0;
+  padding: 1em;
+  text-align: left;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
+  font-size: 1.5em;
+}
+
+#featured-exhibit-wrap img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /*=BROWSE EXHIBITS */
@@ -364,7 +462,7 @@ body#home #legacy-exhibits h3 {
   margin: 0;
   padding: 8px 20px;
   zoom: 1;
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial,sans-serif;
   font-size: 80%;
   color: black;
   text-align: right;
@@ -633,7 +731,7 @@ body#home #recent-exhibits .tags a {
 #exhibit.summary #primary h2.credits {
   margin: 0.5em 0;
   padding-bottom: 3px;
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   font-size: 100%;
   text-align: left;
 }
@@ -651,7 +749,7 @@ body#home #recent-exhibits .tags a {
 
 #exhibit-sections h3 a,
 #items.browse .item h2 a {
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   color: #324F7D;
   -webkit-transition: color 0.3s ease-in-out;
      -moz-transition: color 0.3s ease-in-out;
@@ -1084,11 +1182,11 @@ body#items #content > h1 {
 #timelines #content h1,
 body#home #content #primary h2,
 body.error404 h1 {
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   font-weight: bold;
   color: #555;
   letter-spacing: 1px;
-  text-shadow: 0.09em 0.09em 0 rgba(0,0,0,0.2);
+  text-shadow: -0.09em 0.09em 0 rgba(0,0,0,0.2);
 }
 
 body#items.show .fullsize img {
@@ -1100,7 +1198,7 @@ body#items.show .fullsize img {
 #sidebar .element h2 {
   padding-right: 0.5em;
   padding-bottom: 10px;
-  font-family: "Myriad Pro", Arial, Helvetica, Tahoma, sans-serif;
+  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   font-size: 130%;
   font-weight: bold;
   color: #424B53;
@@ -1546,8 +1644,8 @@ body.error404 #recent-exhibits ul li.item a:hover {
   font-weight: bold;
   color: #244C7E;
   border-left: 0.2em solid transparent;
-  text-shadow: 1px 1px #FFF;
-  text-shadow: 1px 1px rgba(255, 255, 255, 0.75);
+  text-shadow: -0.1em 0.1em #FFF;
+  text-shadow: -0.1em 0.1em rgba(255, 255, 255, 0.75);
 }
 
 #primary-nav .active a {
