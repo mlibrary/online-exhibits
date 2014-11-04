@@ -4,7 +4,7 @@
     <h1>Online Exhibits</h1>
     <h2>Collected, Curated, <span>Celebrated.</span></h2>
     <p>
-      Explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>!.
+      Explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>!
     </p>
 
     <p>
