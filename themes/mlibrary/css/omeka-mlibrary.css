@@ -309,11 +309,10 @@ body#home #legacy-exhibits h3 {
 
 #featured-exhibit-wrap {
   position: absolute;
-  top: -21px;
+  top: -3px;
   bottom: -3px;
-  left: 478px;
-  right: -18px;
-  background-color: #595959;
+  left: 460px;
+  right: 0;
   text-align: center;
 }
 
@@ -337,32 +336,40 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #featured-exhibit-wrap .figure-wrap {
+  display: block;
   text-align: center;
   height: 85%;
+  background-color: #595959;
+  color: #000;
+  font-size: 3em;
 }
 
-/* Pseudo Element to help with vertical centering */
-#featured-exhibit-wrap .figure-wrap:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
-  vertical-align: middle;
-}
 #featured-exhibit-wrap figure {
-  display: inline-block;
   vertical-align: middle;
   margin: 0;
   position: relative;
   background-color: #333;
   max-height: 100%;
+  overflow: hidden;
 }
 
 #featured-exhibit-wrap .portrait figure {
   position: static;
+  display: block;
+  height: 100%;
 }
 
 #featured-exhibit-wrap .landscape figure {
   width: 100%;
+  display: inline-block;
+}
+
+/* Pseudo Element to help with vertical centering */
+#featured-exhibit-wrap .landscape:before {
+  content: '';
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }
 
 #featured-exhibit-wrap .no-image figure {
@@ -375,16 +382,31 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   bottom: 0;
   background-color: #000;
   background-color: rgba(0, 0, 0, 0.6);
-  color: #FFF;
   left: 0;
   right: 0;
   padding: 1em;
   text-align: left;
-  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
-  font-size: 1.5em;
+  font-size: 0.5em;
+}
+
+#featured-exhibit-wrap figcaption span {
+  border-bottom: 0.1em solid transparent;
+  padding-bottom: 0.1em;
+  color: #FFF;
+  line-height: 1.5em;
+}
+
+#featured-exhibit-wrap a:hover figcaption span {
+  border-bottom-color: #FFF;
 }
 
 #featured-exhibit-wrap img {
+  /*display: block;*/
+  max-width: 100%;
+  max-height: 100%;
+}
+
+
   display: block;
   max-width: 100%;
   max-height: 100%;
