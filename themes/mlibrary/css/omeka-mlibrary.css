@@ -126,10 +126,6 @@ body#home #recent-exhibits p.description {
 
 /*=MAIN LAYOUT */
 
-html {
-  background: url(../images/layout/bg-repeat-simple.jpg) center;
-}
-
 body {
   font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
   font-size: 11px; /* Fallback for IE, straight pixel value prevents user scaling on some browsers */
@@ -1557,23 +1553,20 @@ body.error404 div.errorPreview h2 {
   border-bottom: 1px solid #DDD;
 }
 
-body.error404 #recent-items ul li.item,
-body.error404 #recent-exhibits ul li.item {
+body.error404 #recent-items ul li.item {
   margin: 0;
   line-height: 1.5;
   border-top: 1px solid white;
   border-bottom: 1px solid #DADADA;
 }
 
-body.error404 #recent-items ul li.item a,
-body.error404 #recent-exhibits ul li.item a {
+body.error404 #recent-items ul li.item a {
   display: block;
   padding: 0.6em 0;
   text-decoration: none;
 }
 
-body.error404 #recent-items ul li.item a:hover,
-body.error404 #recent-exhibits ul li.item a:hover {
+body.error404 #recent-items ul li.item a:hover {
   color: #5A99DE;
 }
 
