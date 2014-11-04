@@ -164,6 +164,11 @@ body {
 
 /*=HOME PAGE */
 
+#home #content .wrap {
+  padding: 0;
+  width: 960px;
+}
+
 #home #primary {
   position: relative;
 }
@@ -183,8 +188,8 @@ body#home #content h1 {
 }
 
 body#home #greeting {
-  width: 46%;
-  padding: 1em 0 3em 1%;
+  width: 410px;
+  padding: 5em 0 6em 30px;
 }
 
 body#home #content #primary #greeting h2 {
@@ -205,7 +210,7 @@ body#home #greeting h2 span {
 
 body#home #greeting p {
   font-size: 1.6em;
-  margin-bottom: 1em;
+  margin: 0.5em 0 0 0;
   color: #5F5F5F;
 }
 
@@ -239,27 +244,6 @@ body#home #greeting ul li img {
 
 body#home #greeting ul li a {
   font-weight: bold;
-}
-
-body#home #content h3 {
-  width: 12em;
-  margin: 0;
-  padding: 0.6em 0;
-  font-family: inherit;
-  font-size: 1.5em;
-  line-height: 1.5em;
-  text-align: center;
-  letter-spacing: 0.08em;
-  text-transform: none;
-  border: 0;
-  border-bottom: 0;
-  -webkit-border-top-left-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-          border-top-left-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-topright: 4px;
-          border-top-right-radius: 4px;
-  background: #F3F3F3;
 }
 
 body#home #recent-exhibits {
@@ -322,8 +306,6 @@ body#home #legacy-exhibits h3 {
 }
 
 /*= FEATURED EXHIBIT */
-
-
 
 #featured-exhibit-wrap {
   position: absolute;
