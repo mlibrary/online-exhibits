@@ -67,22 +67,32 @@
     if (has_loop_records('exhibits')):
       foreach (loop('exhibits') as $exhibits):
   ?>
-        <article class="exhibits">
+        <article class="cf">
+          <div class="exhibit-body">
           <h3><?php echo link_to_exhibit(); ?></h3>
+
+          <div class="img-wrap">
+              <?php
+                $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
+                if (!empty($Exhibit_image)) {
+                  echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+                } else {
+                  echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
+                }
+              ?>
+            </div>
+
+            <?php
+              if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))) {
+                echo '<p class="exhibit-description">' . $exhibitDescription . '</p>';
+              }
+            ?>
+          </div>
+
           <?php
-            $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
-            if (!empty($Exhibit_image)) {
-              echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
-            } else {
-              echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
-            }
+            $tags = str_replace(';', '', tag_string($exhibits,url('exhibits/browse')));
+            if (!empty($tags)) { echo '<div class="tags"> <h4>Tags</h4> ' . $tags . '</div>'; }
           ?>
-
-          <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))): ?>
-            <p class="exhibits-description"><?php echo $exhibitDescription; ?></p>
-          <?php endif; ?>
-
-          <?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>
         </article>
       <?php endforeach; ?>
   <?php endif; ?>
