@@ -46,16 +46,15 @@
           } else {
             $wrap_class = 'no-image';
             $figure_style = '';
+            $img_src = '';
           }
 
-          echo  // '<a href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
-                '<div class="figure-wrap ' . $wrap_class . '">' .
+          echo  '<a class="figure-wrap ' . $wrap_class . '" href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
                   '<figure' . $figure_style . '>' .
                     '<img src="' . $img_src . '" alt="" />' .
-                    '<figcaption>' . $feature_exhibit->title . '</figcaption>' .
+                    '<figcaption><span>' . $feature_exhibit->title . '</span></figcaption>' .
                   '</figure>' .
-                '</div>';
-                // '</a>';
+                '</a';
         }
       ?>
   </section>
