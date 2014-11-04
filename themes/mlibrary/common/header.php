@@ -21,6 +21,7 @@
 
     queue_js_file('fancybox/source/jquery.fancybox');
     queue_js_file('video-js/video');
+    queue_js_file('html5shiv-printshiv.min', 'javascripts', array('conditional' => '(lt IE 9)'));
 
     fire_plugin_hook('public_head', array('view'=>$this));
     echo auto_discovery_link_tags();
@@ -28,10 +29,10 @@
     echo head_js();
   ?>
 
-  <!-- this hides the slideshow divs from users who do not have javascript enabled so they don't see a big mess -->
-  <noscript>
-    <style> #showcase,.showcase, h2.awkward { display:none; visibility:hidden; } </style>
-  </noscript>
+  <!--[if lt IE 9]>
+    <script src="javascripts/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+
 </head>
 
 <?php
