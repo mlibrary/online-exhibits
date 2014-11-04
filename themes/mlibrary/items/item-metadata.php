@@ -1,6 +1,4 @@
 <div class="element-set">
-   <!-- <h2><?php //echo html_escape($setName); ?></h2> -->
-    
     <?php foreach ($elementsInSet as $info):      
         $elementName = $info['elementName'];
         $elementRecord = $info['element'];    
