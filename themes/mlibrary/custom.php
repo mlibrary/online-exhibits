@@ -42,7 +42,8 @@ function mlibrary_display_back_button_item_page($page_type){
 **/
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
-		$exhibits=get_records('Exhibit' , array ('featured'=>true),$num=4);
+		$exhibits = get_records('Exhibit' , array ('featured'=>true),$num=4);
+		shuffle($exhibits);
 		return $exhibits;
 } 
 

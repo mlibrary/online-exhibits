@@ -25,9 +25,7 @@
       <?php
         if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')) {
           $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
-          // shuffle($feature_exhibits);
-          // $feature_exhibit = array_pop($feature_exhibits);
-          $feature_exhibit = $feature_exhibits[1];
+          $feature_exhibit = array_pop($feature_exhibits);
           $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
           $image_size = getimagesize(WEB_FILES . $exhibit_image['image_name']);
 
