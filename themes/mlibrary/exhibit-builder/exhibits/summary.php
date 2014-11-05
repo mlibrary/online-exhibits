@@ -11,7 +11,6 @@
   <ul id="exhibit-pages">
     <?php
       set_exhibit_pages_for_loop_by_exhibit();
-      $i=0;
       foreach (loop('exhibit_page') as $exhibitPage) {
         echo exhibit_builder_page_summary($exhibitPage);
       }
