@@ -8,7 +8,6 @@
 
 <div id="sharethis">
 <span>Share this Item!</span>
-<div class="g-plusone" data-size="medium"></div>
 <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
 <div class="twitter-share"><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('item',array('Dublin Core', 'Title')); ?>' at the MLibary Online Exhibits! <?php echo metadata('item',array('Dublin Core','Title')); ?>">Tweet</a></div>
 </div>

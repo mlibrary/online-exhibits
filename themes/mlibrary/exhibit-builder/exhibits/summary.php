@@ -21,7 +21,6 @@
 
     <div id="sharethis">
       <span>Share this Exhibit!</span>
-      <div class="g-plusone" data-size="medium"></div>
       <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
       <div class="twitter-share">
         <a href="https://twitter.com/share"
