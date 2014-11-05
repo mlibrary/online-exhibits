@@ -11,12 +11,12 @@
   );
 ?>
 
-<div id="primary">
+<div id="primary" class="cf">
 
   <?php echo mlibrary_header_banner(); ?>
 
-  <div id="nav-container">
-   <div class="exhibit-overview">
+  <nav class="exhibit-navigation">
+    <div class="exhibit-overview">
       <?php echo link_to_exhibit('Introduction'); ?>
     </div>
 
@@ -25,11 +25,11 @@
         $exhibit_page = get_current_record('exhibit_page', false);
         set_exhibit_pages_for_loop_by_exhibit();
         foreach (loop('exhibit_page') as $exhibitPage) {
-          echo mlibrary_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
+           echo mlibrary_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
         }
       ?>
     </ul>
-  </div>
+  </nav>
 
   <h2>
     <?php

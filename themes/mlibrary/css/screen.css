@@ -422,27 +422,6 @@ body#items.show #myomeka-tags {
   font-weight: 400;
 }
 
-.exhibit-section-nav li.current a {
-  font-style: italic;
-  color: #333;
-}
-
-.exhibit-section-nav a {
-  padding: 0.5em 1em;
-  color: #666;
-  text-decoration: none;
-}
-
-.exhibit-section-nav li a.current {
-  font-weight: 400;
-  color: #333;
-  border-top: 1px solid #CCC;
-  border-right: 1px solid #CCC;
-  border-bottom: 1px solid #FFF;
-  border-left: 1px solid #CCC;
-  background: #FFF;
-}
-
 #exhibit-pages {
   margin-bottom: 2em;
   padding: 0.3em;
@@ -455,14 +434,8 @@ body#items.show #myomeka-tags {
   font-weight: 400;
 }
 
-#exhibit-pages li.current a {
-  font-style: italic;
-  color: #333;
-}
-
 #exhibit-pages a {
   padding: 0.5em 1em;
-  color: #666;
   text-decoration: none;
 }
 

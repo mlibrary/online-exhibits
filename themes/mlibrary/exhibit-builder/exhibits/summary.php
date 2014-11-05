@@ -1,21 +1,23 @@
 <?php echo head(array('title' => html_escape('Summary of ' . metadata('exhibit','title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
 
-<div id="primary">
+<div id="primary" class="cf">
 
- <?php echo mlibrary_header_banner(); ?>
+  <?php echo mlibrary_header_banner(); ?>
 
-  <div class="exhibit-overview active">
-    <?php echo link_to_exhibit('Introduction'); ?>
-  </div>
+  <nav class="exhibit-navigation">
+    <div class="exhibit-overview active">
+      <?php echo link_to_exhibit('Introduction'); ?>
+    </div>
 
-  <ul id="exhibit-pages">
-    <?php
-      set_exhibit_pages_for_loop_by_exhibit();
-      foreach (loop('exhibit_page') as $exhibitPage) {
-        echo exhibit_builder_page_summary($exhibitPage);
-      }
-    ?>
-  </ul>
+    <ul id="exhibit-pages">
+      <?php
+        set_exhibit_pages_for_loop_by_exhibit();
+        foreach (loop('exhibit_page') as $exhibitPage) {
+          echo exhibit_builder_page_summary($exhibitPage);
+        }
+      ?>
+    </ul>
+  </nav>
 
   <div id="summary-view">
 
