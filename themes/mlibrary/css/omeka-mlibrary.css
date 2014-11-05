@@ -157,7 +157,7 @@ body {
 
 #content .wrap {
   padding: 18px;
-  border-top: 3px solid #D3D3D3;
+  border-top: 4px solid #D3D3D3;
 }
 
 /*=HOME PAGE */
@@ -248,8 +248,8 @@ body#home #greeting ul li a {
 
 #featured-exhibit-wrap {
   position: absolute;
-  top: -3px;
-  bottom: -3px;
+  top: -4px;
+  bottom: -4px;
   left: 460px;
   right: 0;
   text-align: center;
@@ -262,7 +262,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   height: 15%;
   font-size: 2.2em;
   padding-left: 0.5em;
-  text-shadow: -0.1em 0.1em 0 rgba(0, 0, 0, 0.5);
+  text-shadow: -2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
 /* Pseudo Element to help with vertical centering */
@@ -353,7 +353,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #recent-exhibits > * {
-  border-bottom: 3px solid #D3D3D3;
+  border-bottom: 4px solid #D3D3D3;
 }
 
 #recent-exhibits h2 {
@@ -362,8 +362,8 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   font-size: 3em;
   line-height: 2.2em;
   color: #666;
-  border-top: 3px solid #D3D3D3;
-  text-shadow: -0.09em 0.09em 0 rgba(0,0,0,0.1);
+  border-top: 4px solid #D3D3D3;
+  text-shadow: -2px 2px 0 rgba(0,0,0,0.1);
 }
 
 #recent-exhibits article {
