@@ -3,8 +3,6 @@
 <div id="primary">
 
  <?php echo mlibrary_header_banner(); ?>
-  <?php echo queue_js_file('JwPlayer/jwplayer');?>
-  
 
   <div class="exhibit-overview active">
     <?php echo link_to_exhibit('Introduction'); ?>

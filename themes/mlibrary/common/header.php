@@ -22,6 +22,7 @@
     queue_js_file('fancybox/source/jquery.fancybox');
     queue_js_file('video-js/video');
     queue_js_file('html5shiv-printshiv.min', 'javascripts', array('conditional' => '(lt IE 9)'));
+    queue_js_file('JwPlayer/jwplayer');
 
     fire_plugin_hook('public_head', array('view'=>$this));
     echo auto_discovery_link_tags();
