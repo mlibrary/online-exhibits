@@ -23,9 +23,9 @@
       <span>Share this Exhibit!</span>
       <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
       <div class="twitter-share">
-        <a href="https://twitter.com/share"
-           class="twitter-share-button"
-           data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+        <a  href="https://twitter.com/share"
+            class="twitter-share-button"
+            data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
           Tweet
         </a>
       </div>

@@ -440,22 +440,29 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   min-height: 700px; /* TEMP - adjust for lack of content */
 }
 
+#exhibit.show #primary,
+#exhibit.summary #primary {
+  margin-top: 186px;
+  position: relative;
+}
+
 #content h1 {
   padding-bottom: 1em;
 }
 
 #exhibit.summary h1,
 #exhibit.show h1 {
-  position: relative;
-  width: 960px;
-  height: 182px;
-  top: -1px;
+  position: absolute;
+  height: 200px;
+  top: -204px;
   left: -18px;
+  right: -18px;
   margin-bottom: 1.5em;
   padding: 0;
-  border-bottom: 6px solid #DFD69B;
+  border-bottom: 4px solid #D3D3D3;
   background-repeat: no-repeat;
-  background-position: top left;
+  background-position: left top;
+  background-size: cover;
 }
 
 #exhibit.summary h1 a,
@@ -477,20 +484,23 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 #content h1.header01 span,
 #content h1.header03 span,
 #content h1.header02 span {
-  display: inline-block;
-  position: relative;
-  top: 100px;
-  left: 10px;
-  margin: 0;
-  padding: 8px 20px;
-  zoom: 1;
-  font-family: "Myriad Pro", Helvetica, Tahoma, Arial,sans-serif;
-  font-size: 80%;
-  color: black;
-  text-align: right;
-  white-space: pre-wrap;
-  background-color: white;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+display: inline-block;
+position: absolute;
+bottom: 25px;
+left: 35px;
+max-width: 800px;
+margin: 0;
+padding: 8px 20px;
+font-family: "Myriad Pro",Helvetica,Tahoma,Arial,sans-serif;
+font-size: 70%;
+color: #000;
+white-space: pre-wrap;
+background-color: #FFF;
+box-shadow: -4px 4px #333;
+box-shadow: -4px 4px rgba(0, 0, 0, 0.5);
+font-weight: bold;
+border: 1px solid #CCC;
+text-align: left;
 }
 
 #secondary-nav {
@@ -1206,7 +1216,7 @@ body.error404 h1 {
   font-weight: bold;
   color: #555;
   letter-spacing: 1px;
-  text-shadow: -0.09em 0.09em 0 rgba(0,0,0,0.2);
+  text-shadow: -3px 3px 0 rgba(0,0,0,0.2);
 }
 
 body#items.show .fullsize img {
@@ -1661,8 +1671,8 @@ body.error404 #recent-items ul li.item a:hover {
   font-weight: bold;
   color: #244C7E;
   border-left: 0.2em solid transparent;
-  text-shadow: -0.1em 0.1em #FFF;
-  text-shadow: -0.1em 0.1em rgba(255, 255, 255, 0.75);
+  text-shadow: -0.05em 0.05em #FFF;
+  text-shadow: -0.05em 0.05em rgba(255, 255, 255, 0.75);
 }
 
 #primary-nav .active a {
