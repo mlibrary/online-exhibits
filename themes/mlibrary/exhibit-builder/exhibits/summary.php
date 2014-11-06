@@ -1,6 +1,6 @@
 <?php echo head(array('title' => html_escape('Summary of ' . metadata('exhibit','title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
 
-<div id="primary" class="cf">
+<div id="primary">
 
   <?php echo mlibrary_header_banner(); ?>
 
@@ -19,17 +19,19 @@
     </ul>
   </nav>
 
-  <div id="summary-view">
+  <section id="summary-view" class="exhibit-content cf">
 
-    <div id="sharethis">
-      <span>Share this Exhibit!</span>
-      <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
-      <div class="twitter-share">
-        <a  href="https://twitter.com/share"
-            class="twitter-share-button"
-            data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
-          Tweet
-        </a>
+    <div class="sharethis-wrap">
+      <div id="sharethis">
+        <span>Share this Exhibit!</span>
+        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
+        <div class="twitter-share">
+          <a  href="https://twitter.com/share"
+              class="twitter-share-button"
+              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+            Tweet
+          </a>
+        </div>
       </div>
     </div>
 
@@ -53,7 +55,7 @@
       <h2 class="credits"><span>Curated by</span> <?php echo html_escape(metadata('exhibit','credits')); ?></h2>
     </div>
 
-  </div>
+  </section>
 
 </div>
 

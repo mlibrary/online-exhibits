@@ -16,7 +16,6 @@
   text-align: right;
   border-width: 0.063em;
   border-style: solid;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
 
 #timelines.browse #times .time .timeline-description {
@@ -65,7 +64,6 @@
 .exhibit-item img {
   max-width: 75%;
   border: 1px solid #EDEDED;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .gallery-thumbnail img {
@@ -157,7 +155,7 @@ body {
 
 #content .wrap {
   padding: 18px;
-  border-top: 4px solid #D3D3D3;
+  border-top: 4px solid #CCC;
 }
 
 /*=HOME PAGE */
@@ -353,7 +351,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #recent-exhibits > * {
-  border-bottom: 4px solid #D3D3D3;
+  border-bottom: 4px solid #CCC;
 }
 
 #recent-exhibits h2 {
@@ -362,7 +360,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   font-size: 3em;
   line-height: 2.2em;
   color: #666;
-  border-top: 4px solid #D3D3D3;
+  border-top: 4px solid #CCC;
   text-shadow: -2px 2px 0 rgba(0,0,0,0.1);
 }
 
@@ -459,7 +457,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   right: -18px;
   margin-bottom: 1.5em;
   padding: 0;
-  border-bottom: 4px solid #D3D3D3;
+  border-bottom: 4px solid #CCC;
   background-repeat: no-repeat;
   background-position: left top;
   background-size: cover;
@@ -701,10 +699,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 /*=EXHIBIT SUMMARY */
 
-#summary-view {
-  padding-top: 1.5em;
-}
-
 #exhibit.summary .exhibit_image,
 #exhibit.summary #summary-sidebar {
   float: right;
@@ -733,18 +727,16 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin-bottom: 0.8em;
 }
 
-#exhibits .exhibit_image ing {
+#exhibits .exhibit_image img {
   max-width: 262px;
   max-height: 262px;
   border: 1px solid #EDEDED;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 #exhibit.summary .exhibit_image img {
   max-width: 100%;
   max-height: 300px;
   border: 1px solid #EDEDED;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 #exhibit.summary #exhibit-sections {
@@ -794,19 +786,17 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 /*=SHARE THIS*/
 
+.sharethis-wrap {
+  margin: -1.5em -18px 1em 0;
+  text-align: right;
+}
+
 #sharethis {
-  position: absolute;
-  height: 26px;
-  top: -42px;
-  right: -18px;
-  padding: 3px 18px;
-  -webkit-border-top-left-radius: 8px;
-  -moz-border-radius-topleft: 8px;
-          border-top-left-radius: 8px;
-  -webkit-border-bottom-left-radius: 8px;
-  -moz-border-radius-bottomleft: 8px;
-          border-bottom-left-radius: 8px;
-  background-color: #ECECEC;
+  background-color: #CCC;
+  padding: 1em;
+  display: inline-block;
+  position: relative;
+  z-index: 500;
 }
 
 body#items #sharethis {
@@ -816,21 +806,16 @@ body#items #sharethis {
   right: -50%;
 }
 
-#sharethis span {
-  display: inline-block;
-  height: 26px;
-  padding-right: 3em;
-  font-size: 1em;
+#sharethis > span {
+  padding-right: 1em;
+  font-size: 1.1em;
   vertical-align: middle;
 }
 
-#sharethis div {
+#sharethis div,
+#sharethis iframe {
   display: inline-block;
-  top: -5px;
-  padding: 3px;
-  zoom: 1;
-  line-height: 26px;
-  *display: inline;
+  vertical-align: middle;
 }
 
 /*=EXHIBIT NAVIGATION */
@@ -913,12 +898,9 @@ body#items #sharethis {
   width: auto;
 }
 
-#content #nav-container + h2,
-#content #nav-container + h2 + div,
-#summary-view {
-  float: right;
-  width: 662px;
-  padding-right: 18px;
+.exhibit-content {
+  margin-left: 285px;
+  padding-top: 1.5em;
 }
 
 #exhibit.summary #exhibit-sections p {
@@ -997,7 +979,6 @@ body#exhibit.show .exhibit-text p a[href] {
 
 .exhibit-item .download-file img {
   border: 1px solid #EDEDED;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .gallery-full-right .secondary img,
@@ -1008,7 +989,6 @@ body.item #item-images .square_thumbnail img,
 .gallery-narrative .secondary img {
   margin-right: 10px;
   border: 1px solid #EDEDED;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 body#exhibit.show .exhibit-text p {
@@ -1270,10 +1250,6 @@ body.item #item-images {
   text-align: center;
 }
 
-.show div.fullsize img {
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 20px rgba(40,0,40,0.2);
-}
-
 body.item #item-images .fullsize img:hover {
   zoom: 1;
   opacity: 0.9;
@@ -1450,7 +1426,6 @@ body.item #item-images .current img {
   letter-spacing: 1px;
   background: url(../images/layout/button_cap.jpg) no-repeat top right;
   background-color: red;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   text-shadow: 0 1px 0 rgba(0,0,0,0.3);
 }
 

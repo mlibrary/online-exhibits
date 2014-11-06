@@ -11,7 +11,7 @@
   );
 ?>
 
-<div id="primary" class="cf">
+<div id="primary">
 
   <?php echo mlibrary_header_banner(); ?>
 
@@ -31,21 +31,38 @@
     </ul>
   </nav>
 
-  <h2>
-    <?php
-      set_current_record('exhibit_page', $exhibit_page);
-      echo metadata('exhibit_page', 'title');
-    ?>
-  </h2>
+  <section class="exhibit-content cf">
 
-  <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
+    <div class="sharethis-wrap">
+      <div id="sharethis">
+        <span>Share this Exhibit!</span>
+        <div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div>
+        <div class="twitter-share">
+          <a  href="https://twitter.com/share"
+              class="twitter-share-button"
+              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+            Tweet
+          </a>
+        </div>
+      </div>
+    </div>
 
-  <div id="exhibit-page-navigation">
-    <?php
-      echo exhibit_builder_link_to_previous_page("Previous Page");
-      echo exhibit_builder_link_to_next_page("Next Page");
-    ?>
-  </div>
+    <h2>
+      <?php
+        set_current_record('exhibit_page', $exhibit_page);
+        echo metadata('exhibit_page', 'title');
+      ?>
+    </h2>
+
+    <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
+
+    <div id="exhibit-page-navigation">
+      <?php
+        echo exhibit_builder_link_to_previous_page("Previous Page");
+        echo exhibit_builder_link_to_next_page("Next Page");
+      ?>
+    </div>
+  </section>
 
 </div>
 <?php echo foot(); ?>
