@@ -10,7 +10,14 @@
     </div>
 
 <?php echo flash(); ?>
-<?php $theme = $exhibit->theme ? Theme::getTheme($exhibit->theme) : null; ?>
-<?php echo common('exhibit-metadata-form', array('exhibit' => $exhibit, 'theme' => $theme), 'exhibits'); ?>
+<?php //$theme = $exhibit->theme ? Theme::getTheme($exhibit->theme) : null; ?>
+<?php //echo common('exhibit-metadata-form', array('exhibit' => $exhibit, 'theme' => $theme), 'exhibits'); ?>
+
+<?php
+		$theme = $exhibit->theme ? Theme::getTheme($exhibit->theme) : null;
+		$formArgs = array('exhibit' => $exhibit, 'theme' => $theme);
+		$formArgs['csrf'] = isset($csrf) ? $csrf : '';
+		echo common('exhibit-metadata-form', $formArgs, 'exhibits');
+?>
 
 <?php echo foot(); ?>

@@ -51,3 +51,5 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     </div>
 
 </section>
+
+<?php echo $csrf; ?>

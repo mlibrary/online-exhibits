@@ -15,4 +15,5 @@
         endfor;
     ?>
 </div>
+ <?php echo $csrf; ?>
 </fieldset>

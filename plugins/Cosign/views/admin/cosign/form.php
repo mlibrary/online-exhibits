@@ -80,3 +80,5 @@
 </div>
 </fieldset>
 
+
+<?php print $csrf; ?>

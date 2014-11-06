@@ -229,6 +229,8 @@ if ($xml = file_get_contents($url))
         </div>
     </fieldset>
     </div>
+    <?php echo $csrf; ?>
+    
     <div id="save" class="three columns omega panel">
         <?php echo $this->formSubmit('save_exhibit', __('Save Changes including delete pages'), array('class'=>'submit big green button')); ?>
         <?php if ($exhibit->exists()): ?>

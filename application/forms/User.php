@@ -142,6 +142,10 @@ class Omeka_Form_User extends Omeka_Form
         $this->addElement('submit', 'submit', array(
             'label' => $this->_submitButtonText
         ));
+        
+        $this->addElement('hash', 'user_csrf', array(
+					 'timeout' => 3600
+				 ));
     }
     
     public function setHasRoleElement($flag)

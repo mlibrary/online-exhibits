@@ -37,3 +37,5 @@ jQuery(document).bind('omeka:elementformload', function (event) {
     </div>
     <?php fire_plugin_hook('admin_collections_form', array('collection' => $collection, 'view' => $this)); ?>
 </section>
+
+<?php echo $csrf; ?>

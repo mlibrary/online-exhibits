@@ -12,6 +12,8 @@
  */
 class ExhibitBuilder_ExhibitsController extends Omeka_Controller_AbstractActionController
 {
+	  protected $_autoCsrfProtection = true;
+	  
     public function init()
     {
         $this->_helper->db->setDefaultModelName('Exhibit');
@@ -337,9 +339,22 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_AbstractActionC
 
     protected function processPageForm($exhibitPage, $actionName, $exhibit = null)
     {
+   			 if (class_exists('Omeka_Form_SessionCsrf')) {
+				     $csrf = new Omeka_Form_SessionCsrf;
+				 } else {
+						 $csrf = '';
+				 }
+				 
         $this->view->assign(compact('exhibit', 'actionName'));
         $this->view->exhibit_page = $exhibitPage;
+        $this->view->csrf = $csrf;
+        
         if ($this->getRequest()->isPost()) {
+        	if (!($csrf === '' || $csrf->isValid($_POST))) {
+								$this->_helper->_flashMessenger(__('There was an error on the Exhibit form. Please try again.'), 'error');
+								return;
+					 	}
+					 
             $exhibitPage->setPostData($_POST);
             try {
                 $success = $exhibitPage->save();

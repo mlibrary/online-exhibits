@@ -84,6 +84,10 @@ class Omeka_Form_SecuritySettings extends Omeka_Form
             'cols' => 50, 
             'rows' => 5
         ));
+        
+         $this->addElement('hash', 'security_csrf', array(
+					 'timeout' => 3600
+				 ));
 
         $this->addDisplayGroup(
             array(
@@ -100,7 +104,7 @@ class Omeka_Form_SecuritySettings extends Omeka_Form
                 Omeka_Captcha::PRIVATE_KEY_OPTION,
             ),
             'captcha', array('legend' => __('Captcha'))
-        );
+        );        
 
         $this->addDisplayGroup(
             array(

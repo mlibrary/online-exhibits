@@ -45,6 +45,7 @@ $title = __('Edit Page Content: "%s"', metadata('exhibit_page', 'title', array('
             <?php endif; ?>
         </div>
     </div>
+      <?php echo $csrf; ?>
 </form>
 <?php //This item-select div must be outside the <form> tag for this page, b/c IE7 can't handle nested form tags. ?>
 <div id="search-items" style="display:none;">

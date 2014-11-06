@@ -155,6 +155,8 @@ class Omeka_Controllers_HtmlPurifierTest extends Omeka_Test_AppTestCase
         $elementsArray[strval($titleElement->id)] = array(array('text' => $dirtyHtml, 'html' => 1));
         $post['Elements'] = $elementsArray;
         
+        $csrf = new Omeka_Form_Element_SessionCsrfToken('csrf_token');
+				$post['csrf_token'] = $csrf->getToken();
         return $post;
     }
 }

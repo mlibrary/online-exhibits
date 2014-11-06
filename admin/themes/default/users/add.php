@@ -7,5 +7,5 @@ echo flash();
     <?php echo $this->form; ?>
     <?php fire_plugin_hook('admin_users_form', array('form' => $form, 'view' => $this)); ?>
 </section>
-
+<?php //echo $this->form->getElement('user_csrf'); ?>
 <?php echo foot();?>

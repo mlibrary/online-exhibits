@@ -55,7 +55,9 @@ class Omeka_Controller_CollectionsControllerTest extends Omeka_Test_AppTestCase
         $user = $this->_getDefaultUser();
         $this->_authenticateUser($user);
         
-        $this->request->setPost(array('Elements' => array()));
+      	$csrf = new Omeka_Form_Element_SessionCsrfToken('csrf_token');
+			 	$this->request->setPost(array('Elements' => array(), 'csrf_token' => $csrf->getToken()));
+        
         $this->request->setMethod('post');
         $this->dispatch('collections/add');
         $this->assertRedirect();
@@ -84,7 +86,9 @@ class Omeka_Controller_CollectionsControllerTest extends Omeka_Test_AppTestCase
         $collection->owner_id = $user->id + 1;
         $collection->save();
         
-        $this->request->setPost(array('Elements' => array()));
+     	  $csrf = new Omeka_Form_Element_SessionCsrfToken('csrf_token');
+			  $this->request->setPost(array('Elements' => array(), 'csrf_token' => $csrf->getToken()));
+			  
         $this->request->setMethod('post');
         $this->dispatch('collections/edit/' . $collection->id);
         $this->assertRedirect();

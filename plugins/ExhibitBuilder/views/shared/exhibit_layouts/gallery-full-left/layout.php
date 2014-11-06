@@ -14,4 +14,5 @@
     <div class="secondary gallery">
         <?php echo exhibit_builder_thumbnail_gallery(2, 9, array('class'=>'permalink')); ?>
     </div>
+    
 </div>
