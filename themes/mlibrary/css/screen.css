@@ -20,10 +20,19 @@ Grid: 846px wide, 12 columns at 54px each, 11 gutters at 18px each.
 */
 
 /* == Generic == */
+html {
+  height: 100%;
+}
+
 body {
   position: relative;
+  min-height: 100%;
   font: 62.5% "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #333;
+  background-color: #96A7B7;
+}
+
+body > header {
   background-color: #F6F6F6;
 }
 
@@ -959,7 +968,6 @@ a.download-file {
 }
 
 /* Search Results */
-/*#primary form {padding:10px 0;overflow:hidden;}*/
 #primary form .field {
   clear: both;
   margin-bottom: 1.5em;

@@ -23,8 +23,8 @@
     <a  href="https://twitter.com/share"
         class="twitter-share-button"
         data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
-      Tweet
-    </a>
+        Tweet   
+   </a>
   </div>
 </div>
 
