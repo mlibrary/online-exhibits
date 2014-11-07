@@ -13,6 +13,8 @@
   <script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
 
   <?php
+    fire_plugin_hook('public_head', array('view'=>$this));
+
     queue_css_file('screen');
     queue_css_file('jquery.fancybox');
     queue_css_file('video-js');
@@ -26,7 +28,6 @@
     queue_js_file('fancybox/source/fancybox-init-config');
     queue_js_file('mdcollapse');
 
-    fire_plugin_hook('public_head', array('view'=>$this));
     echo auto_discovery_link_tags();
     echo head_css();
     echo head_js();
