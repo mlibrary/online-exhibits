@@ -54,7 +54,9 @@
       ?>
     </h2>
 
-    <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
+    <div class="exhibit-body-wrap">
+      <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
+    </div>
 
     <div id="exhibit-page-navigation">
       <?php

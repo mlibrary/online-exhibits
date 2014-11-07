@@ -704,6 +704,10 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 /*=EXHIBIT SUMMARY */
 
+.exhibit-body-wrap {
+  overflow: hidden;
+}
+
 #exhibit.summary .exhibit_image,
 #exhibit.summary #summary-sidebar {
   float: right;
@@ -796,19 +800,16 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   text-align: right;
 }
 
+#items .sharethis-wrap {
+  margin-top: -18px;
+}
+
 #sharethis {
   background-color: #CCC;
   padding: 1em;
   display: inline-block;
   position: relative;
   z-index: 500;
-}
-
-body#items #sharethis {
-  position: relative;
-  width: 50%;
-  top: -70px;
-  right: -50%;
 }
 
 #sharethis > span {
@@ -1019,60 +1020,25 @@ body#exhibit.show .exhibit-text p {
 }
 
 #exhibit-page-navigation {
-  clear: right;
-  width: auto;
-  margin-left: 238px; /* match sidebar */
-  padding-top: 1em;
-  border-top: 1px dotted #EDEDED;
-}
-
-#exhibit-page-navigation a,
-.item-pagination a {
-  width: auto;
-  padding: 7px 10px;
-  font-size: 120%;
-  color: #345477;
-  -webkit-transition: color 0.3s ease-in-out;
-     -moz-transition: color 0.3s ease-in-out;
-       -o-transition: color 0.3s ease-in-out;
-          transition: color 0.3s ease-in-out;
-  text-decoration: none;
-  text-transform: lowercase;
-}
-
-#exhibit-page-navigation a.next-page {
-  float: right;
-}
-
-.gallery-thumbnails + #exhibit-page-navigation a {
-  margin-left: 0;
-}
-
-#items.show .item-pagination {
   clear: none;
-  width: 570px;
-  border: none;
+  overflow: hidden;
 }
 
-.item-pagination a {
-  width: 40%;
-  font-size: 100%;
-}
-
-.item-pagination #next-item a:after {
-  content: "  \2192";
-}
-
-.item-pagination #previous-item a:before {
-  content: "\2190  ";
+#exhibit-page-navigation a {
+  font-size: 1.3em;
+  text-decoration: none;
+  padding: 0.5em 1em;
+  background-color: #666;
+  color: #FFF;
+  display: inline-block;
 }
 
 #exhibit-page-navigation a:hover,
-.item-pagination a:hover {
-  color: #4976A7;
+#exhibit-page-navigation a:focus {
+  outline: 0.2em solid #333;
 }
 
-#exhibit-page-navigation a + a {
+#exhibit-page-navigation .next-page {
   float: right;
 }
 
@@ -1197,31 +1163,6 @@ body.show.item #sidebar {
   padding-bottom: 5px;
 }
 
-#sidebar > a,
-#exhibit-page-navigation a,
-#timeline-exhibit a {
-  position: relative;
-  left: 0;
-  /* Animated Link */
-  padding: 5px 15px 5px 25px;
-  overflow: visible;
-  font-size: 1em;
-  font-weight: bold;
-  line-height: 1;
-  -webkit-transition: all 0.5s ease-out;
-     -moz-transition: all 0.5s ease-out;
-      -ms-transition: all 0.5s ease-out;
-       -o-transition: all 0.5s ease-out;
-          transition: all 0.5s ease-out;
-  text-decoration: none;
-  text-transform: uppercase;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 5px;
-  background-color: #F3F3F3;
-  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
-}
-
 #sidebar > a:before {
   position: absolute;
   width: 0;
@@ -1232,20 +1173,6 @@ body.show.item #sidebar {
   border-top: 5px solid transparent;
   border-right: 5px solid #686868;
   border-bottom: 5px solid transparent;
-}
-
-#sidebar > a:hover,
-#exhibit-page-navigation a.previous-page:hover {
-  left: -20px;
-  color: inherit;
-  background-color: #DFD69B;
-}
-
-#exhibit-page-navigation a.next-page:hover {
-  left: 20px;
-  z-index: 5000;
-  color: inherit;
-  background-color: #DFD69B;
 }
 
 /* => Centering the Image */
@@ -1413,31 +1340,18 @@ body.item #item-images .current img {
   line-height: 20px;
 }
 
-.button {
-  height: 20px;
-  line-height: 20px;
-  background: url(../images/layout/button.jpg) no-repeat top left;
-}
-
 .button a {
-  display: block;
-  font-size: 11px;
-  font-weight: bold;
-  color: white;
-  line-height: 1.9;
-  text-align: center;
+  font-size: 1.3em;
   text-decoration: none;
-  letter-spacing: 1px;
-  background: url(../images/layout/button_cap.jpg) no-repeat top right;
-  background-color: red;
-  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+  padding: 0.5em 1em;
+  background-color: #666;
+  color: #FFF;
+  display: inline-block;
 }
 
-.button:hover {
-  font-weight: bold;
-  opacity: 0.8;
-
-  filter: alpha(opacity=80);
+.button a:hover,
+.button a:focus {
+  outline: 0.2em solid #333;
 }
 
 /*=404 */

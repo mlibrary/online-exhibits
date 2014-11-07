@@ -7,26 +7,29 @@
           'bodyclass' => 'show item'
           )
         );
-  echo '<h1>' . $item_title . '</h1>';
 ?>
 
-<div id="sharethis">
-  <span>Share this Exhibit!</span>
-  <div class="fb-like" 
-  		 data-send="false" 
-  		 data-layout="button_count" 
-  		 data-show-faces="false" 
-  		 data-font="arial">
-  </div>
-  		 
-  <div class="twitter-share">
-    <a  href="https://twitter.com/share"
-        class="twitter-share-button"
-        data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
-        Tweet   
-   </a>
+<div class="sharethis-wrap">
+  <div id="sharethis">
+    <span>Share this item!</span>
+    <div class="fb-like"
+         data-send="false"
+         data-layout="button_count"
+         data-show-faces="false"
+         data-font="arial">
+    </div>
+
+    <div class="twitter-share">
+      <a  href="https://twitter.com/share"
+          class="twitter-share-button"
+          data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+          Tweet
+     </a>
+    </div>
   </div>
 </div>
+
+<h1><?php echo $item_title; ?></h1>
 
 <script type="text/javascript">
   jQuery.noConflict();
@@ -63,18 +66,18 @@
 <div id="primary">
   <?php
     if(!empty($item->getItemType()->name))
-			 $item_type = $item->getItemType()->name;
+       $item_type = $item->getItemType()->name;
     else
-  		 $item_type ='Image';
-  		 
+       $item_type ='Image';
+
     $html_thumnailsize_image = "";
     $html_fullsize_image = "";
-    
+
     if (!isset($exhibit->theme))
-		   $theme_name= 'mlibrary';
+       $theme_name= 'mlibrary';
     else
-	     $theme_name= $exhibit->theme;
-	     
+       $theme_name= $exhibit->theme;
+
     $image_index = 0;
     $audio = array(
               'application/ogg',
@@ -100,131 +103,131 @@
             );
 
     set_loop_records('files', get_current_record('item')->Files);
-    
+
     if ($item_type != 'Video') {
-  		  // Either image or sound
-    		//start the loop of item files
-    		$fullsizeimage = false;
-    		foreach(loop('files') as $file):
-      		$mime = $file['mime_type'];
-		      $image_index++;
-    		  if (in_array($mime, $audio))
-    		  $audio_file=true;    
-    		  
-      		$extension = pathinfo($file->filename, PATHINFO_EXTENSION);
-      		$filename = basename($file->filename, '.' . $extension);
+        // Either image or sound
+        //start the loop of item files
+        $fullsizeimage = false;
+        foreach(loop('files') as $file):
+          $mime = $file['mime_type'];
+          $image_index++;
+          if (in_array($mime, $audio))
+          $audio_file=true;
 
-		      if ($file->hasThumbnail()) {
-    			  	if ($fullsizeimage == false) {
-        					$file_metadata = '<div class="file-metadata img'.$image_index.'">'.strip_formatting(metadata('file',array('Dublin Core', 'Title')))."</div>";
-				        	$html_thumnailsize_image = file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata('item', array('Dublin Core', 'Title'))).' '.'image'.' '.$image_index),'linkToFile'=>false),array('class' => 'square_thumbnail img'.$image_index ));
-				        	if(file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
-        					  	$html_fullsize_image =  '<div class="zoom img' . $image_index . ' swf-zoom">
-						              <OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-            		          CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
-                		      WIDTH="750"
-                    		  HEIGHT="450"
-		                      ID="theMovie">
-    					            <PARAM NAME="FlashVars" VALUE="zoomifyImagePath=' . url('') . 'files/zoom_tiles/' . $filename . '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0">
-              					  <PARAM NAME="MENU" VALUE="FALSE">
-					                <PARAM NAME="SRC" VALUE="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf">
-          					      <PARAM NAME=wmode VALUE=opaque>
-					                <EMBED  FlashVars="zoomifyImagePath=' .
-          			                url('') . 'files/zoom_tiles/' . $filename .
-                		      	    '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0"
-                    			  	  SRC="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf"
-				                        wmode=opaque MENU="false"
-        				                PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
-                				        WIDTH="550"
-                        				HEIGHT="450"
-				                        NAME="theMovie">
-        					        </EMBED>
-						              </OBJECT>
-				            </div>';
-        			 } else {
-				               $html_fullsize_image = file_markup($file,
-																				 array(
-																				'imageSize' => 'fullsize',
-																				'imgAttributes' => array(
-												                'alt' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
-												                ),
-													              'linkAttributes' => array(
-												                'rel' => 'group-fancy-image',
-												                'class' => 'fancyitem',
-												                'title' => strip_formatting(
-												                 metadata('item', array('Dublin Core', 'Title')))
-                												 )
-           															 ),
-														            array(
-												              	'class' => 'fullsize img' . $image_index,
-													              'id' => 'item-image')
-          															);      
-											}
-				            	$fullsizeimage = true;
-					            $json_fullsize['img'.$image_index] = $html_fullsize_image;
-      		} else {
-				        $file_metadata .= '<div class="file-metadata img' . $image_index . '" style="display:none">' .
-        	    			                strip_formatting(metadata('file', array('Dublin Core', 'Title'))) .
-          		      		          "</div>";
-				        $html_thumnailsize_image .= file_markup(
-        			  $file,array(
-					            'imageSize' => 'square_thumbnail',
-          					  'imgAttributes ' => array(
-				              'alt' => strip_formatting(
-        			        metadata('item', array('Dublin Core', 'Title'))) . ' ' . 'image' . ' ' . $image_index
-					            ),
-          					  'linkToFile' => false
-						          ),
-						          array('class' => 'square_thumbnail img' . $image_index )
-							        );
+          $extension = pathinfo($file->filename, PATHINFO_EXTENSION);
+          $filename = basename($file->filename, '.' . $extension);
 
-				        if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
-        					  $json_fullsize['img'.$image_index] = '<div class="zoom img'.$image_index.' swf-zoom"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="750" HEIGHT="450" ID="theMovie">
-					          <PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata&zoomifyToolbar=1&zoomifyNavWindow=0">
-          					<PARAM NAME="MENU" VALUE="FALSE">
-          					<PARAM NAME="SRC" VALUE="'.url('').'themes/'.$theme_name.'/javascripts/ZoomifyViewer.swf">
-         					  <param NAME=wmode VALUE=opaque>
-					          <EMBED FlashVars="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata&zoomifyToolbar=1&zoomifyNavWindow=0" SRC="'.url('').'themes/'.$theme_name.
-          					'/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
-				        } else {
-        					  $html_fullsize_image .= file_markup($file,
-																            array('imageSize' => 'fullsize',
-																		              'imgAttributes'=> array(
-								'alt' => strip_formatting(metadata('item', array('Dublin Core', 'Title')))
-              		),
-              	'linkAttributes' => array(
+          if ($file->hasThumbnail()) {
+              if ($fullsizeimage == false) {
+                  $file_metadata = '<div class="file-metadata img'.$image_index.'">'.strip_formatting(metadata('file',array('Dublin Core', 'Title')))."</div>";
+                  $html_thumnailsize_image = file_markup($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>strip_formatting(metadata('item', array('Dublin Core', 'Title'))).' '.'image'.' '.$image_index),'linkToFile'=>false),array('class' => 'square_thumbnail img'.$image_index ));
+                  if(file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+                      $html_fullsize_image =  '<div class="zoom img' . $image_index . ' swf-zoom">
+                          <OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+                          CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
+                          WIDTH="750"
+                          HEIGHT="450"
+                          ID="theMovie">
+                          <PARAM NAME="FlashVars" VALUE="zoomifyImagePath=' . url('') . 'files/zoom_tiles/' . $filename . '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0">
+                          <PARAM NAME="MENU" VALUE="FALSE">
+                          <PARAM NAME="SRC" VALUE="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf">
+                          <PARAM NAME=wmode VALUE=opaque>
+                          <EMBED  FlashVars="zoomifyImagePath=' .
+                                url('') . 'files/zoom_tiles/' . $filename .
+                                '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0"
+                                SRC="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf"
+                                wmode=opaque MENU="false"
+                                PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
+                                WIDTH="550"
+                                HEIGHT="450"
+                                NAME="theMovie">
+                          </EMBED>
+                          </OBJECT>
+                    </div>';
+               } else {
+                       $html_fullsize_image = file_markup($file,
+                                         array(
+                                        'imageSize' => 'fullsize',
+                                        'imgAttributes' => array(
+                                        'alt' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
+                                        ),
+                                        'linkAttributes' => array(
+                                        'rel' => 'group-fancy-image',
+                                        'class' => 'fancyitem',
+                                        'title' => strip_formatting(
+                                         metadata('item', array('Dublin Core', 'Title')))
+                                         )
+                                          ),
+                                        array(
+                                        'class' => 'fullsize img' . $image_index,
+                                        'id' => 'item-image')
+                                        );
+                      }
+                      $fullsizeimage = true;
+                      $json_fullsize['img'.$image_index] = $html_fullsize_image;
+          } else {
+                $file_metadata .= '<div class="file-metadata img' . $image_index . '" style="display:none">' .
+                                    strip_formatting(metadata('file', array('Dublin Core', 'Title'))) .
+                                  "</div>";
+                $html_thumnailsize_image .= file_markup(
+                $file,array(
+                      'imageSize' => 'square_thumbnail',
+                      'imgAttributes ' => array(
+                      'alt' => strip_formatting(
+                      metadata('item', array('Dublin Core', 'Title'))) . ' ' . 'image' . ' ' . $image_index
+                      ),
+                      'linkToFile' => false
+                      ),
+                      array('class' => 'square_thumbnail img' . $image_index )
+                      );
+
+                if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+                    $json_fullsize['img'.$image_index] = '<div class="zoom img'.$image_index.' swf-zoom"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="750" HEIGHT="450" ID="theMovie">
+                    <PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata&zoomifyToolbar=1&zoomifyNavWindow=0">
+                    <PARAM NAME="MENU" VALUE="FALSE">
+                    <PARAM NAME="SRC" VALUE="'.url('').'themes/'.$theme_name.'/javascripts/ZoomifyViewer.swf">
+                     <param NAME=wmode VALUE=opaque>
+                    <EMBED FlashVars="zoomifyImagePath='.url('').'files/zoom_tiles/'.$filename.'_zdata&zoomifyToolbar=1&zoomifyNavWindow=0" SRC="'.url('').'themes/'.$theme_name.
+                    '/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
+                } else {
+                    $html_fullsize_image .= file_markup($file,
+                                            array('imageSize' => 'fullsize',
+                                                  'imgAttributes'=> array(
+                'alt' => strip_formatting(metadata('item', array('Dublin Core', 'Title')))
+                  ),
+                'linkAttributes' => array(
                 'rel' => 'group-fancy-image',
                 'class'=> 'fancyitem',
                 'title' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
-  		            )
-      			      ),
-	          		  array(
-			              'style' => 'display:none',
-      			        'class' => 'fullsize img' . $image_index,
-            			  'id' => 'item-image'
-			            )
-      				    );
-          				$json_fullsize['img'.$image_index] = file_markup(
-			            $file,
-      			      array(
-            				  'imageSize' => 'fullsize',
-				              'imgAttributes' => array(
-        			        'alt' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
-              				),
-				              'linkAttributes' => array(
-        			        'rel' => 'group-fancy-image',
-              			  'class' => 'fancyitem',
-			                'title' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
-      			        )
-            			),
-			            array(
-      			        'class' => 'fullsize img' . $image_index,
-            			  'id' => 'item-image'
-			            )
-      		    );
-        		  }//zoom         
-		          }// else fullsizeimage is true     
-         } // file has a thumbnail    
+                  )
+                  ),
+                  array(
+                    'style' => 'display:none',
+                    'class' => 'fullsize img' . $image_index,
+                    'id' => 'item-image'
+                  )
+                  );
+                  $json_fullsize['img'.$image_index] = file_markup(
+                  $file,
+                  array(
+                      'imageSize' => 'fullsize',
+                      'imgAttributes' => array(
+                      'alt' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
+                      ),
+                      'linkAttributes' => array(
+                      'rel' => 'group-fancy-image',
+                      'class' => 'fancyitem',
+                      'title' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
+                    )
+                  ),
+                  array(
+                    'class' => 'fullsize img' . $image_index,
+                    'id' => 'item-image'
+                  )
+              );
+              }//zoom
+              }// else fullsizeimage is true
+         } // file has a thumbnail
  endforeach;
  if (!empty($json_fullsize)) {
       echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>';
@@ -282,7 +285,7 @@
       }// end elseif (!empty($elementvideos))
       echo '</div>';
     } // if itemtype=video
-   
+
   echo '<div id="sidebar">';
   $elementInfos = array(
                     array('Dublin Core', 'Creator'),
@@ -303,15 +306,15 @@
         }
 
         foreach($elementTexts as $elementText) {
-          if ($elementName=='Identifier') 
+          if ($elementName=='Identifier')
              echo "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
-          else 
+          else
              echo '<h2>' .$elementText . '</h2>';
-        }      
+        }
         echo '</div>';
     }
   } //end foreach
-    
+
       if (metadata('item', 'Collection Name')):
         $Collection = get_collection_for_item();
         $title = metadata($Collection, array('Dublin Core', 'Title')); ?>
