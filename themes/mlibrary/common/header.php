@@ -80,4 +80,4 @@
   </header>
 
   <div id="content">
-    <div class="wrap cf">
+    <div class="wrap">

@@ -654,6 +654,14 @@ body#exhibit.summary #primary p {
   background-color: #FFF;
 }
 
+#home .wrap {
+  background-color: transparent;
+}
+
+#home #primary {
+  background-color: #FFF;
+}
+
 /* == Header == */
 #header {
   margin: 10px 0;

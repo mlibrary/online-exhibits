@@ -354,6 +354,11 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   border-bottom: 4px solid #CCC;
 }
 
+#recent-exhibits .button-wrap {
+  text-align: center;
+  padding: 2em 0;
+}
+
 #recent-exhibits h2 {
   padding: 0 30px;
   font-weight: normal;
@@ -1374,8 +1379,7 @@ body.item #item-images .current img {
 
 /*=MDCollapse */
 
-.md-wrap,
-.button-wrap {
+.md-wrap {
   position: relative;
   padding: 5px 15px;
   overflow: visible;
