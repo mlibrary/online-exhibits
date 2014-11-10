@@ -27,6 +27,7 @@
     queue_js_file('JwPlayer/jwplayer');
     queue_js_file('fancybox/source/fancybox-init-config');
     queue_js_file('mdcollapse');
+    queue_js_file('jquery.aw-showcase.min');
 
     echo auto_discovery_link_tags();
     echo head_css();

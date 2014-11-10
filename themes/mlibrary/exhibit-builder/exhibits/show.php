@@ -55,13 +55,13 @@
 
     <div class="exhibit-body-wrap">
       <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
-    </div>
 
-    <div id="exhibit-page-navigation">
-      <?php
-        echo exhibit_builder_link_to_previous_page("Previous Page");
-        echo exhibit_builder_link_to_next_page("Next Page");
-      ?>
+      <div id="exhibit-page-navigation">
+        <?php
+          echo exhibit_builder_link_to_previous_page("Previous Page");
+          echo exhibit_builder_link_to_next_page("Next Page");
+        ?>
+      </div>
     </div>
   </section>
 
