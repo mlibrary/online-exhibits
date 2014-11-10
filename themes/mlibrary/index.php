@@ -26,9 +26,13 @@
           $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
           $feature_exhibit = array_pop($feature_exhibits);
           $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
-          var_dump(getimagesize(WEB_FILES . $exhibit_image['image_name']));
-          echo '<p>' . $exhibit_image['image_name'] . '</p>';
-          $image_size = getimagesize(WEB_FILES . $exhibit_image['image_name']);
+          $image_size = getimagesize(
+            str_replace(
+              'https://',
+              'http://',
+              WEB_FILES . $exhibit_image['image_name']
+            )
+          );
 
           // If we successfully got the image size...
           if ($image_size) {
