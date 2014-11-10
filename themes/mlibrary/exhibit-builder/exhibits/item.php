@@ -58,38 +58,6 @@
 
 <h1><?php echo $item_title; ?></h1>
 
-<script type="text/javascript">
-  jQuery.noConflict();
-  jQuery(document).ready(function() {
-    jQuery("#showcase").awShowcase({
-      width:                650,
-      height:               450,
-      auto:                 true,
-      interval:             6500,
-      continuous:           true,
-      loading:              true,
-      tooltip_width:        200,
-      tooltip_icon_width:   32,
-      tooltip_icon_height:  32,
-      tooltip_offsetx:      18,
-      tooltip_offsety:      0,
-      arrows:               false,
-      buttons:              true,
-      btn_numbers:          true,
-      keybord_keys:         true,
-      mousetrace:           false,
-      pauseonover:          true,
-      transition:           'vslide',
-      transition_speed:     0,
-      show_caption:         'onload',
-      thumbnails:           false,
-      thumbnails_position:  'outside-last',
-      thumbnails_direction: 'horizontal',
-      thumbnails_slidex:    0
-    });
-  });
-</script>
-
 <div id="primary">
   <?php
     if(!empty($item->getItemType()->name)) {
@@ -348,6 +316,36 @@ if (metadata('item', 'has tags')): ?>
 </div> <!--// end primary-->
 
 <script type="text/javascript">
+  jQuery.noConflict();
+  jQuery(document).ready(function() {
+    jQuery("#showcase").awShowcase({
+      width:                650,
+      height:               450,
+      auto:                 true,
+      interval:             6500,
+      continuous:           true,
+      loading:              true,
+      tooltip_width:        200,
+      tooltip_icon_width:   32,
+      tooltip_icon_height:  32,
+      tooltip_offsetx:      18,
+      tooltip_offsety:      0,
+      arrows:               false,
+      buttons:              true,
+      btn_numbers:          true,
+      keybord_keys:         true,
+      mousetrace:           false,
+      pauseonover:          true,
+      transition:           'vslide',
+      transition_speed:     0,
+      show_caption:         'onload',
+      thumbnails:           false,
+      thumbnails_position:  'outside-last',
+      thumbnails_direction: 'horizontal',
+      thumbnails_slidex:    0
+    });
+  });
+
   jQuery(".element-set").mdcollapse(1,'div');
   jQuery("#item-images").data('curimg','img1');
   jQuery(".square_thumbnail").click(function(e)
