@@ -8,6 +8,18 @@
 
  **/
 
+/* A class used for hiding */
+.element-invisible {
+  position: absolute !important;
+  clip: rect(1px .1px 1px 1px) !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
 .pagination input[type="text"] {
   width: 35px;
   margin-right: 1px;
@@ -86,22 +98,6 @@
   width: 40%;
   margin: 0 4%;
   zoom: 1;
-}
-
-#exhibit.browse #exhibits img {
-  float: left;
-  height: 100px;
-  padding: 7px;
-}
-
-#exhibit.browse .exhibit > p.description {
-  float: left;
-  width: 600px;
-  padding: 10px;
-}
-
-#exhibit.browse .exhibit > p.tags {
-  clear: both;
 }
 
 /*= NICOLAS GALLAGHER 's micro-clearfix */
@@ -346,84 +342,113 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 /*=RECENT EXHIBITS */
 
-#recent-exhibits {
-  background-color: #EEE;
+#exhibit.browse #primary {
+  font-size: 1em;
 }
 
-#recent-exhibits > * {
+.pretty-list {
+  background-color: #EEE;
+  margin-left: -18px;
+  width: 996px;
+  margin-bottom: -4em;
+}
+
+#home .pretty-list {
+  margin: 0;
+  width: auto;
+}
+
+.pretty-list > * {
   border-bottom: 4px solid #CCC;
 }
 
-#recent-exhibits .button-wrap {
+.pretty-list .button-wrap {
   text-align: center;
   padding: 2em 0;
 }
 
-#recent-exhibits h2 {
+.pretty-list .item-list-heading {
   padding: 0 30px;
   font-weight: normal;
   font-size: 3em;
   line-height: 2.2em;
   color: #666;
-  border-top: 4px solid #CCC;
   text-shadow: -2px 2px 0 rgba(0,0,0,0.1);
 }
 
-#recent-exhibits article {
+.pretty-list > *:first-child {
+  border-top: 4px solid #CCC;
+}
+
+.pretty-list .pagination {
+  display: block;
+  text-align: center;
+  padding: 1em;
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.pretty-list article {
   min-height: 180px;
   padding: 20px 30px;
   overflow: hidden;
   position: relative;
 }
 
-#recent-exhibits .exhibit-body,
-#recent-exhibits .tags {
+.pretty-list .item-body,
+.pretty-list .tags {
   display: inline-block;
   vertical-align: top;
 }
 
-#recent-exhibits .exhibit-body {
+.pretty-list .item-body {
   width: 51%;
   margin: 0 3% 0 22%;
-  font-size: 1.3em;
+  font-size: 1.4em;
   color: #555;
 }
 
-#recent-exhibits h4,
-#recent-exhibits .tags a {
+.pretty-list .tags-heading,
+.pretty-list .tags a {
   color: #6A6A6A;
 }
 
-#recent-exhibits h3,
-#recent-exhibits h4 {
+.pretty-list .item-heading,
+.pretty-list .tags-heading {
   margin: 0;
   font-weight: normal;
+  font-size: 1.3em;
 }
 
-#recent-exhibits h3 a {
+.pretty-list .item-heading {
+  font-size: 1.4em;
+  line-height: 1.5em;
+}
+
+.pretty-list .item-heading a {
   border-bottom: 0.05em solid #999;
   padding-bottom: 0.1em;
 }
 
-#recent-exhibits h3 a:hover {
+.pretty-list .item-heading a:hover {
   border-bottom-color: transparent;
 }
 
-#recent-exhibits .tags {
+.pretty-list .tags {
   width: 21%;
   font-size: 1.35em;
 }
 
-#recent-exhibits .tags a {
+.pretty-list .tags a {
   display: block;
   margin-top: 0.5em;
 }
 
-#recent-exhibits .exhibit-description {
+.pretty-list .item-description {
   margin: 0.7em 0 0 0;
 }
 
-#recent-exhibits .img-wrap {
+.pretty-list .img-wrap {
   text-align: right;
   height: 180px;
   width: 18%;
@@ -432,7 +457,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   top: 20px;
 }
 
-#recent-exhibits img {
+.pretty-list img {
   max-width: 100%;
   max-height: 100%;
 }
@@ -451,6 +476,11 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #content h1 {
   padding-bottom: 1em;
+}
+
+.browse #content h1 {
+  margin-bottom: 18px;
+  padding: 0;
 }
 
 #exhibit.summary h1,
@@ -551,25 +581,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   filter: alpha(opacity = 100);
 }
 
-#exhibit.browse #content h1,
-#exhibit.tags #content h1,
-#items.browse #content h1,
-#items.tags #content h1,
-#timelines.browse #content h1 {
-  padding-bottom: 1.5em;
-}
-
-#exhibit.browse #primary {
-  float: left;
-  margin-right: 30px;
-}
-
-#exhibit.browse #secondary {
-  position: relative;
-  float: left;
-  width: 460px;
-}
-
 #featured-ribbon {
   position: absolute;
   width: 180px;
@@ -577,49 +588,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   bottom: 18px;
   margin-left: 140px;
   background: url(../images/layout/featured-ribbon.png) no-repeat;
-}
-
-#exhibit.browse #exhibits {
-  min-height: 538px;
-}
-
-#exhibit.browse #exhibits .exhibit {
-  margin: 0;
-  padding: 2em 0;
-  border: none;
-  background: url(../images/layout/browse-border.gif) top repeat-x;
-}
-
-#exhibit.browse #exhibits .first {
-  background: none;
-}
-
-#exhibit.browse #exhibits .pagination {
-  margin-top: 18px;
-}
-
-#exhibit.browse #exhibits .pagination li.pagination_current {
-  color: #666666;
-  border-radius: 10px;
-  background: white;
-}
-
-#exhibit.browse #exhibits .exhibit .tags {
-  clear: both;
-  min-height: 11px;
-  margin: 10px 0 0 0;
-  padding: 0 0 0 20px;
-  color: #F3F3F3;
-  color: transparent;
-  background: url(../images/layout/tag-dark.gif) no-repeat left;
-}
-
-#exhibit.browse #exhibits .exhibit .tags a {
-  padding: 0 0.5em;
-  font-size: 90%;
-  color: #9B9B9B;
-  text-decoration: none;
-  text-transform: lowercase;
 }
 
 /*=BROWSE ITEM */
@@ -1068,7 +1036,7 @@ body.error404 h1 {
   font-weight: bold;
   color: #555;
   letter-spacing: 1px;
-  text-shadow: -3px 3px 0 rgba(0,0,0,0.2);
+  text-shadow: -2px 2px 0 rgba(0,0,0,0.15);
 }
 
 body#items.show .fullsize img {
@@ -1259,7 +1227,7 @@ body.item #item-images .square_thumbnail img {
   float: none;
   width: 40px;
   height: 40px;
-  margin: 6px 10px;
+  margin: 10px 15px;
   zoom: 1;
   -webkit-transition: opacity 0.3s ease-in-out;
      -moz-transition: opacity 0.3s ease-in-out;
@@ -1465,8 +1433,8 @@ body.error404 #recent-items ul li.item a:hover {
   font-weight: bold;
   color: #244C7E;
   border-left: 0.2em solid transparent;
-  text-shadow: -0.05em 0.05em #FFF;
-  text-shadow: -0.05em 0.05em rgba(255, 255, 255, 0.75);
+  text-shadow: -1px 1px #FFF;
+  text-shadow: -1px 1px rgba(255, 255, 255, 0.6);
 }
 
 #primary-nav .active a {
@@ -1476,10 +1444,10 @@ body.error404 #recent-items ul li.item a:hover {
 
 #primary-nav a:focus,
 #primary-nav a:hover {
-  -webkit-transition: background-color 0.15s 0.1s, border-color 0.15s 0.1s;
-     -moz-transition: background-color 0.15s 0.1s, border-color 0.15s 0.1s;
-       -o-transition: background-color 0.15s 0.1s, border-color 0.15s 0.1s;
-          transition: background-color 0.15s 0.1s, border-color 0.15s 0.1s;
+  -webkit-transition: background-color 0.1s 0.05s, border-color 0.1s 0.05s;
+     -moz-transition: background-color 0.1s 0.05s, border-color 0.1s 0.05s;
+       -o-transition: background-color 0.1s 0.05s, border-color 0.1s 0.05s;
+          transition: background-color 0.1s 0.05s, border-color 0.1s 0.05s;
   background-color: #C6D4E5;
 }
 

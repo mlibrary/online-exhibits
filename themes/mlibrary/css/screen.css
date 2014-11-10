@@ -175,7 +175,7 @@ a:active {
 .pagination li {
   display: inline-block;
   margin-right: 5px;
-  padding: 6px 8px;
+  padding: 8px 15px;
   background: #CCC;
 }
 
