@@ -93,21 +93,22 @@
 <div id="primary">
   <?php
     if(!empty($item->getItemType()->name)) {
-       $item_type = $item->getItemType()->name;
-    }
+			 $item_type = $item->getItemType()->name;
+		}
     else {
-       $item_type ='Image';
-    }
+  		 $item_type ='Image';
+  	}
 
     $html_thumnailsize_image = "";
     $html_fullsize_image = "";
 
     if (!isset($exhibit->theme)) {
-       $theme_name= 'mlibrary';
-    }
+		   $theme_name= 'mlibrary';
+		}
     else {
-       $theme_name= $exhibit->theme;
-    }
+	     $theme_name= $exhibit->theme;
+	  }
+
     $image_index = 0;
     $audio = array(
               'application/ogg',
@@ -311,7 +312,7 @@ foreach($elementInfos as $elementInfo) {
       if ($elementName=='Identifier')
           echo "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
       else
-          echo '<h2>' .$elementText . '</h2>';
+          echo '<h2>' . $elementText . '</h2>';
     }
   echo '</div>';
  }
