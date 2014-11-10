@@ -1227,7 +1227,7 @@ body.item #item-images .square_thumbnail img {
   float: none;
   width: 40px;
   height: 40px;
-  margin: 10px 15px;
+  margin: 6px 10px;
   zoom: 1;
   -webkit-transition: opacity 0.3s ease-in-out;
      -moz-transition: opacity 0.3s ease-in-out;
