@@ -1,118 +1,105 @@
 <?php echo head(array('bodyid'=>'home')); ?>
-            <!--About-->
-	<!-- Featured Item -->
 <div id="primary">
-	<div id="greeting" >
-    	<h1>Online Exhibits</h1>
-    	<h2>collected. curated. <span>celebrated.</span></h2>
-	    <p>explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>! Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.</p>
-    	<ul>
-    		<li class="browse-icon">
-    		  <a href="<?php echo url('exhibits'); ?>">browse</a> all the exhibits to find what inspires you!
-        </li>
+  <section id="greeting" >
+    <h1>Online Exhibits</h1>
+    <h2>Collected, Curated, <span>Celebrated.</span></h2>
+    <p>
+      Explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>!
+    </p>
 
-    		<li class="items-icon">
-    		  flip through the <a href="<?php echo url('items'); ?>">archive</a> to see the full listing of items!
-        </li>
-    	</ul>
-	</div><!-- end greeting -->
-  <!-- Featured Exhibits -->
-  <h3 id="featured-title"><span>Featured</span> Exhibits</h3>
-  <div id="showcase" class="showcase">
-         <?php if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')):
-                   // get feature exhibits, limit to 4 exhibits
-                  $feature_exhibits =  mlibrary_exhibit_builder_display_random_featured_exhibit();
-                  foreach (loop('exhibit',$feature_exhibits) as $feature_exhibit):?>
-                  <?php //get_image_attached_to_exhibits is built in the mlibrary plugin to get the image attached to each Exhibit.
-                  $Exhibit_image='';
-                  $Exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
-                  if (!empty($Exhibit_image)):?>            
-		                  <div class="showcase-slide">	
-    	              	<?php //Both exhibit_builder_exhibit_uri and exhibit_builder_link_to_exhibit used from Exhibit_builder helper function    	              
-		  	                	echo '<a href="'.exhibit_builder_exhibit_uri($feature_exhibit).'"><img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" /></a>';
-        	                echo '<div class="showcase-caption">';
-          	              echo '<h4>'.exhibit_builder_link_to_exhibit($feature_exhibit).'</h4>';
-	          	            echo '</div>';//SHOWCASE-CAPTION?>
-              	     	   <div class="showcase-thumbnail active" style="width:100px;">
-                		      <?php if (!empty($Exhibit_image))
-                		      {
-		                		      	     echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" width="44" height="44" />';
-    	            	      }
-                    	          else
-      	              	             echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?>
-                      	</div><!-- SHOWCASE-THUMBNAIL-->    			    	
-	  			          <?php echo '</div>'; // SHOW-CASE SLIDE			        
-	  			       endif;   
-                  endforeach;
-               //   exit;
-              endif;?>
-</div><!-- end showcase -->
-</div><!-- primary-->
+    <p>
+      <a href="<?php echo url('exhibits'); ?>">Browse</a> all the exhibits to find what inspires you!
+    </p>
 
-<h3> Recent Exhibits </h3>
-<div id="recent-exhibits">
-<?php
-		$first_exhibit='false';
-        set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
-        if (has_loop_records('exhibits')): ?>
-        		<ul class="exhibits-list">
-		        <?php foreach (loop('exhibits') as $exhibits): ?>
-    					    <li class="exhibits <?php if ($first_exhibit=='false') echo 'first';  ?>">
-					  		  <?php $first_exhibit='true';?>
-				        	<h3><?php echo link_to_exhibit(); ?></h3>
-		          		<?php $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
-      				    if (!empty($Exhibit_image))
-			            	   echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
-      		        else
-          			       echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');  ?> 
-                           
-			            <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))): ?>
-      			             <p class="exhibits-description"><?php echo $exhibitDescription; ?></p>
-			            <?php endif; ?>			
-            
-      			      <?php echo '<p class="tags">'.tag_string($exhibits,url('exhibits/browse')).'</p>';?>			
-				          </li>
-	          <?php endforeach; ?>
-  	        </ul>
-        <?php endif; ?>
-        <div class="button-wrap"><div class="button"><a href="<?php echo url('exhibits'); ?>">Browse All Exhibits</a></div></div>
+    <p>
+      Flip through the <a href="<?php echo url('items'); ?>">archive</a> to see the full listing of items!
+    </p>
+
+    <p>
+      Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.
+    </p>
+  </section>
+  
+  <section id="featured-exhibit-wrap">
+    <h2>Featured Exhibits</h2>
+      <?php
+        if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')) {
+          $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
+          $feature_exhibit = array_pop($feature_exhibits);
+          $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
+          $image_size = getimagesize(WEB_FILES . $exhibit_image['image_name']);
+
+          // If we successfully got the image size...
+          if ($image_size) {
+            $img_src = WEB_FILES . $exhibit_image['image_name'];
+
+            // Adjust the styling based on the aspect ratio of the image...
+            if (($image_size[0] / $image_size[1]) > 1.6) {
+              $wrap_class = 'landscape';
+              $figure_style = ' style="height: ' . ($image_size[1] / $image_size[0]) * 500 . 'px;" ';
+            } else {
+              $wrap_class = 'portrait';
+              $figure_style = '';
+            }
+
+          // ...if we didn't get an image...
+          } else {
+            $wrap_class = 'no-image';
+            $figure_style = '';
+            $img_src = '';
+          }
+
+          echo  '<a class="figure-wrap ' . $wrap_class . '" href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
+                  '<figure' . $figure_style . '>' .
+                    '<img src="' . $img_src . '" alt="" />' .
+                    '<figcaption><span>' . $feature_exhibit->title . '</span></figcaption>' .
+                  '</figure>' .
+                '</a';
+        }
+      ?>
+  </section>
 </div>
- 
- <!-- Start Awkward Gallery load/config -->
-<script type="text/javascript">
-jQuery.noConflict();
-jQuery(document).ready(function()
-{
-	jQuery("#showcase").awShowcase(
-	{
-		width:					475,
-		height:					393,
-		auto:					false,
-		interval:				6500,
-		continuous:				false,
-		loading:				true,
-		tooltip_width:			200,
-		tooltip_icon_width:		32,
-		tooltip_icon_height:	32,
-		tooltip_offsetx:		18,
-		tooltip_offsety:		0,
-		arrows:					true,
-		buttons:				false,
-		btn_numbers:			true,
-		keybord_keys:			true,
-		mousetrace:				false,
-		pauseonover:			true,
-		transition:				'fade', /* vslide/hslide/fade */
-		transition_speed:		250,
-		show_caption:			'onload', /* onload/onhover/show */
-		thumbnails:				true,
-		thumbnails_position:	'inside-last', /* outside-last/outside-first/inside-last/inside-first */
-		thumbnails_direction:	'horizontal', /* vertical/horizontal */
-		thumbnails_slidex:		0 /* 0 = auto / 1 = slide one thumbnail / 2 = slide two thumbnails / etc. */
-	});
-});
-</script>
-<!-- end Awkward Gallery load/config -->
+<section id="recent-exhibits">
+  <h2> Recent Exhibits </h2>
+  <?php
+    set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
+    if (has_loop_records('exhibits')):
+      foreach (loop('exhibits') as $exhibits):
+  ?>
+        <article class="cf">
+          <div class="exhibit-body">
+          <h3><?php echo link_to_exhibit(); ?></h3>
 
+          <div class="img-wrap">
+              <?php
+                $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
+                if (!empty($Exhibit_image)) {
+                  echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+                } else {
+                  echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
+                }
+              ?>
+            </div>
 
+            <?php
+              if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))) {
+                echo '<p class="exhibit-description">' . $exhibitDescription . '</p>';
+              }
+            ?>
+          </div>
+
+          <?php
+            $tags = str_replace(';', '', tag_string($exhibits,url('exhibits/browse')));
+            if (!empty($tags)) { echo '<div class="tags"> <h4>Tags</h4> ' . $tags . '</div>'; }
+          ?>
+        </article>
+      <?php endforeach; ?>
+  <?php endif; ?>
+
+  <div class="button-wrap">
+    <div class="button">
+      <a href="<?php echo url('exhibits'); ?>">Browse All Exhibits</a>
+    </div>
+  </div>
+</section>
 <?php echo foot(); ?>

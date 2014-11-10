@@ -1,7 +1,7 @@
 ﻿</div><!-- end content -->
 <footer>
-	<div id="footer-content" class="center-div">
-     	<?php if($footerText = get_theme_option('Footer Text')): ?>
+        <div id="footer-content" class="center-div">
+        <?php if($footerText = get_theme_option('Footer Text')): ?>
            <div id="custom-footer-text">
                <p><?php echo get_theme_option('Footer Text'); ?></p>
            </div>
@@ -15,23 +15,21 @@
   </div><!-- end footer-content -->
   <?php fire_plugin_hook('public_footer', array('view'=>$this)); ?>
 </footer>
-	</div> <!--wrap-->
-  
+        </div> <!--wrap-->
+
 <!-- Share Button Javascripts -->
 <!-- the following social network scripts only load on the summary and item pages -->
 
-	<?php if($GLOBALS['bodyclass'] == 'summary' || 'show item'){
-		//Google Plus
-		$output = '<script type="text/javascript">(function() {var po = document.createElement("script"); po.type = "text/javascript"; po.async = true;po.src = "https://apis.google.com/js/plusone.js";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(po, s);})();</script>';
-		//Facebook
-		$output .= '<div id="fb-root"></div><script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-	  fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script>';
-		//Twitter
-		$output.= '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
-		
-		echo $output;
-	}?>	
-	<script type="text/javascript">
+        <?php if($GLOBALS['bodyclass'] == 'summary' || 'show item'){
+                //Facebook
+                $output = '<div id="fb-root"></div><script>(function(d, s, id) {var js, fjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id;js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+          fjs.parentNode.insertBefore(js, fjs);}(document, "script", "facebook-jssdk"));</script>';
+                //Twitter
+                $output.= '<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>';
+
+                echo $output;
+        }?>
+        <script type="text/javascript">
     var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-1341620-8']);
         _gaq.push(['_trackPageview']);
@@ -42,6 +40,6 @@
          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
          })();         
   </script>
-    
+
 </body>
 </html>
