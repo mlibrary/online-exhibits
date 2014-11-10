@@ -25,7 +25,7 @@ echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits 
     </nav>
 <?php echo pagination_links(); ?>
 
- <div id="exhibits">
+   <div id="exhibits">
     <?php
         $exhibitCount = 0;
         $first_exhibit='false';?>

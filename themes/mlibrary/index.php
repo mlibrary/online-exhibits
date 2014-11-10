@@ -19,7 +19,6 @@
       Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.
     </p>
   </section>
-  
   <section id="featured-exhibit-wrap">
     <h2>Featured Exhibits</h2>
       <?php

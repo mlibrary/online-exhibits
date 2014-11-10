@@ -30,7 +30,7 @@
       ?>
     </ul>
   </nav>
-  
+
  <section class="exhibit-content cf">
     <div class="sharethis-wrap">
       <div id="sharethis">
@@ -67,4 +67,3 @@
 
 </div>
 <?php echo foot(); ?>
-                                                                                                                                                                   70,1          Bot
