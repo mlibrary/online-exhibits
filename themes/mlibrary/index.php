@@ -61,7 +61,7 @@
 </div>
 
 <section id="recent-exhibits">
-  <h2 class=""> Recent Exhibits </h2>
+  <h2> Recent Exhibits </h2>
   <?php
     set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
     if (has_loop_records('exhibits')):
