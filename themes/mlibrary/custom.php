@@ -128,7 +128,7 @@ function mlibrary_header_banner() {
 			$output = "<h1 class='default'>";
 	}
 	if($header_text == 'yes' || !$header_text){
-			$output .= "<span>".html_escape(metadata('exhibit', 'title'))."</span></h1>";
+			$output .= "<span>" . metadata('exhibit', 'title') . "</span></h1>";
 	} else {
 			$output .= "</h1>";
 	}
