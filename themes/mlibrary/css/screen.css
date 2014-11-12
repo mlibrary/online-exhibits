@@ -255,9 +255,10 @@ a:active {
 }
 
 body#items.show .square_thumbnail img {
-  float: left;
-  width: 54px;
-  height: 54px;
+  display: inline-block;
+  vertical-align: top;
+  width: 8em;
+  height: 8em;
   margin-right: 18px;
 }
 

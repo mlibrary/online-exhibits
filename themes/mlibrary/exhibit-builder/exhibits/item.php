@@ -56,6 +56,8 @@
   </div>
 </div>
 
+<?php mlibrary_display_back_button_item_page('exhibit'); ?>
+
 <h1><?php echo $item_title; ?></h1>
 
 <div id="primary">
@@ -302,7 +304,6 @@ if (metadata('item', 'has tags')): ?>
     </div>
 <?php endif;
  mlibrary_display_related_exhibits($item->id);
- mlibrary_display_back_button_item_page('exhibit');
 ?>
 </div> <!-- end sidebar-->
 
@@ -346,7 +347,6 @@ if (metadata('item', 'has tags')): ?>
     });
   });
 
-  jQuery(".element-set").mdcollapse(1,'div');
   jQuery("#item-images").data('curimg','img1');
   jQuery(".square_thumbnail").click(function(e)
   {

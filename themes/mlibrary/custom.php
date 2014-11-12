@@ -28,10 +28,10 @@ function mlibrary_display_back_button_item_page($page_type){
 	switch ($page_type)
 	{
 	case 'exhibit':
-		echo '<a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a>';
+		echo '<div class="button"><a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a></div>';
 		break;
 	case 'item':
-		echo '<a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a>';
+		echo '<div class="button"><a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a></div>';
 		break;
   }
 }
