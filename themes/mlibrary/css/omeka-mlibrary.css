@@ -190,6 +190,7 @@ body#home #content #primary #greeting h2 {
   color: #777;
   border: 0;
   line-height: 1em;
+  text-shadow: -2px 2px #CCC;
 }
 
 body#home #greeting h2 span {
@@ -254,9 +255,9 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   background-color: #444;
   text-align: left;
   height: 15%;
-  font-size: 2.2em;
+  font-size: 2.3em;
   padding-left: 0.5em;
-  text-shadow: -2px 2px 0 rgba(0, 0, 0, 0.5);
+  text-shadow: -2px 2px 0 #333;
 }
 
 /* Pseudo Element to help with vertical centering */
@@ -369,11 +370,10 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 .pretty-list .item-list-heading {
   padding: 0 30px;
-  font-weight: normal;
   font-size: 3em;
   line-height: 2.2em;
   color: #666;
-  text-shadow: -2px 2px 0 rgba(0,0,0,0.1);
+  text-shadow: -2px 2px 0 #CCC;
 }
 
 .pretty-list > *:first-child {
@@ -424,7 +424,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 .pretty-list .item-heading,
 .pretty-list .tags-heading {
   margin: 0;
-  font-weight: normal;
   font-size: 1.3em;
 }
 
@@ -496,7 +495,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #content h1 {
-  padding-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .browse #content h1 {
