@@ -60,14 +60,12 @@ h2 {
 h3 {
   margin: 0 0 1.2em;
   font-size: 1.5em;
-  font-weight: lighter;
   line-height: 1.2em;
 }
 
 h4 {
   margin-bottom: 1.5em;
   font-size: 1.2em;
-  font-weight: lighter;
   line-height: 1.5em;
 }
 
@@ -396,10 +394,6 @@ body#items.show #myomeka-tags {
   border-bottom: 1px dotted #CCC;
 }
 
-.exhibit-tags {
-  font-weight: lighter;
-}
-
 .exhibit-item-caption {
   clear: both;
   max-width: 350px;
@@ -607,7 +601,6 @@ body#exhibit.summary #primary p {
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
   font-size: 2em;
   font-weight: 400;
-  font-weight: lighter;
   line-height: 1.2em;
   letter-spacing: 0.2em;
   opacity: 0.9;
