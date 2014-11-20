@@ -92,11 +92,256 @@ function mlibrary_link_to_related_exhibits($id) {
 /**
 * This is the function that is actually used on items/show...
 **/
-function mlibrary_display_related_exhibits(){
+function mlibrary_display_related_exhibits($item){
 	$related_exhibits_setting = get_theme_option('Related Exhibits');
 	if ($related_exhibits_setting == 'yes') {
 		return mlibrary_link_to_related_exhibits(get_current_record('item')->id);
 	}
+}
+
+
+//Return a zoomed image object.
+function mlibrary_zoom_fullsize_image($image_index=0, $filename = Null, $theme_name = Null) {
+  $image_object = '<div class="zoom img' . $image_index . ' swf-zoom">
+	<OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
+   CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
+   WIDTH="750"
+   HEIGHT="450"
+   ID="theMovie">
+   <PARAM NAME="FlashVars" VALUE="zoomifyImagePath=' . url('') . 'files/zoom_tiles/' .
+   $filename . '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0">
+   <PARAM NAME="MENU" VALUE="FALSE">
+   <PARAM NAME="SRC" VALUE="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf">
+   <PARAM NAME=wmode VALUE=opaque>
+	 <EMBED  FlashVars="zoomifyImagePath=' .
+     url('') . 'files/zoom_tiles/' . $filename .
+     '_zdata&zoomifyX=0.0&zoomifyY=0.0&zoomifyZoom=-1&zoomifyToolbar=1&zoomifyNavWindow=0"
+     SRC="' . url('') . 'themes/' . $theme_name . '/javascripts/ZoomifyViewer.swf"
+	   wmode=opaque MENU="false"
+     PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
+     WIDTH="550"
+     HEIGHT="450"
+	   NAME="theMovie">
+   </EMBED>
+	</OBJECT>
+  </div>';
+	return $image_object;
+}
+
+function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name){
+	set_loop_records('files', get_current_record('item')->Files);
+ 	// removed the if condition from here
+  // Either image or sound
+  //start the loop of item files
+  $fullsizeimage = false;
+  foreach(loop('files') as $file):
+ 	  $mime = $file['mime_type'];
+		$image_index++;
+    if (in_array($mime, $audio)) {
+    	 $audio_file=true;
+    }
+	  $extension = pathinfo($file->filename, PATHINFO_EXTENSION);
+    $filename = basename($file->filename, '.' . $extension);
+	  if ($file->hasThumbnail()) {
+       if ($fullsizeimage == false) {
+          $file_metadata = '<div class="file-metadata img'.$image_index.'">'
+          .strip_formatting(metadata('file',array('Dublin Core', 'Title')))."</div>";
+		      $html_thumnailsize_image = file_markup($file, array(
+		        'imageSize'=>'square_thumbnail',
+		        'imgAttributes'=>array(
+		                       'alt'=>strip_formatting(metadata('item',
+		                                                array('Dublin Core', 'Title'))).
+            		                                    ' '.'image'.' '.$image_index),
+		        'linkToFile'=>false),array(
+		                            'class' => 'square_thumbnail img'.$image_index
+		                            )
+		        );
+
+       		 if(file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+           $html_fullsize_image = mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
+           } else {
+              			$html_fullsize_image = file_markup($file,array(
+				                                   'imageSize' => 'fullsize',
+                                 					 'imgAttributes' => array(
+                              						 'alt' => strip_formatting(metadata('item',array(
+                              						 'Dublin Core', 'Title')))),
+                          								 'linkAttributes' => array(
+       								                     'rel' => 'group-fancy-image',
+      			            				      		 'class' => 'fancyitem',
+			                  						       'title' => strip_formatting(
+												                              metadata('item', array(
+												                              'Dublin Core', 'Title'))))),array(
+												              	              'class' => 'fullsize img' . $image_index,
+            													                'id' => 'item-image')
+          													 );
+		        }
+  		     $fullsizeimage = true;
+      		 $json_fullsize['img'.$image_index] = $html_fullsize_image;
+           } else {
+            		 $file_metadata .= '<div class="file-metadata img' .
+            		 $image_index . '" style="display:none">' .
+                       strip_formatting(metadata('file', array(
+                       									'Dublin Core', 'Title'))) .
+									                       "</div>";
+				         $html_thumnailsize_image .= file_markup($file,array(
+                 									          'imageSize' => 'square_thumbnail',
+									                          'imgAttributes ' => array(
+							                              'alt' => strip_formatting(metadata('item', array(
+							                                                'Dublin Core', 'Title'))) .
+                                                              ' ' . 'image' . ' ' .
+                                                              $image_index),
+                          					        'linkToFile' => false),array(
+                          					        'class' => 'square_thumbnail img' .
+                          					         $image_index )
+							        											);
+
+								if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+       					$json_fullsize['img'.$image_index] = mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
+								} else {
+				        $html_fullsize_image .= file_markup($file, array(
+																       'imageSize' => 'fullsize',
+																			 'imgAttributes'=> array(
+														  				 'alt' => strip_formatting(metadata('item', array(
+														  				 'Dublin Core', 'Title')))),
+														           'linkAttributes' => array(
+														           'rel' => 'group-fancy-image',
+													             'class'=> 'fancyitem',
+													             'title' => strip_formatting(metadata(
+                                       'item', array('Dublin Core', 'Title'))))),
+                                        array(
+                                        'style' => 'display:none',
+                                        'class' => 'fullsize img' . $image_index,
+                                        'id' => 'item-image'
+                                       )
+                                   );
+					    $json_fullsize['img'.$image_index] = file_markup($file, array(
+          																			'imageSize' => 'fullsize',
+																							  'imgAttributes' => array(
+																		        		'alt' => strip_formatting(metadata(
+																		        		'item',array('Dublin Core', 'Title')))),
+																						    'linkAttributes' => array(
+																	        			'rel' => 'group-fancy-image',
+																	              'class' => 'fancyitem',
+																				        'title' => strip_formatting(metadata(
+																				        'item',array('Dublin Core', 'Title'))))
+			        																	), array(
+																	      			     'class' => 'fullsize img' . $image_index,
+																	            		 'id' => 'item-image'
+																				           )
+																						    );
+					  }//zoom
+			 }// else fullsizeimage is true
+			} // file has a thumbnail
+endforeach;
+ if (!empty($json_fullsize)) {
+   echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>';
+   echo'<div id="item-images">';
+   echo '<div id="fsize_images">'.$html_fullsize_image.'</div>';
+   echo $file_metadata;
+   echo $html_thumnailsize_image;
+ } // json
+}
+
+
+function mlibrary_display_video(){
+	$elementvideos = metadata(
+      'item',
+      array('Item Type Metadata', 'Video_embeded_code'),
+      array('no_escape' => true, 'all' => true)
+  );
+
+  $elementtitles = metadata(
+      'item',
+      array('Item Type Metadata', 'video_title'),
+      array('no_escape'=>true,'all'=>true)
+  );
+
+  //Kultura video
+  $elementvideos_VCM = metadata(
+      'item',
+      array('Item Type Metadata', 'video_embeded_code_VCM'),
+      array('no_escape' => true, 'all' => true)
+  );
+
+  if (!empty($elementvideos_VCM)) {
+      $html_video = '<div id="showcase" class="showcase">';
+      foreach($elementvideos_VCM as $i => $elementvideo_VCM ) {
+        $html_video .='<div>' .
+        $elementvideo_VCM .
+        '<div class="showcase-caption">
+          <h3>' . $elementtitles[$i] . '</h3>
+         </div>
+         </div>';
+      }//end of foreach
+      $html_video .='</div>';
+  } elseif (!empty($elementvideos)) {
+      $html_video ='<div id="showcase" class="showcase">';
+      foreach($elementvideos as $i => $elementvideo ) {
+      $html_video .='<div>
+              <iframe src="http://www.youtube.com/embed/' . $elementvideo . '" frameborder="0" width="650" height="400"></iframe>
+              <div class="showcase-caption">
+               <h3>' . $elementtitles[$i] . '</h3>
+              </div>
+            </div>';
+      }// end of foreach
+      $html_video .='</div>';
+  }// end elseif (!empty($elementvideos))
+  return $html_video;
+} // if itemtype=video
+
+
+function mlibrary_metadata_sideinfo($item, $html){
+ get_current_record('item');
+
+ $elementInfos = array(
+  array('Dublin Core', 'Creator'),
+  array('Dublin Core', 'Date'),
+  array('Dublin Core', 'Identifier'),
+ );
+
+ foreach($elementInfos as $elementInfo) {
+   $elementSetName = $elementInfo[0];
+   $elementName = $elementInfo[1];
+   $elementTexts = metadata(
+   'item',
+    array($elementSetName, $elementName),
+    array('no_escape'=>true,'all'=>true)
+    );
+
+    if (!empty($elementTexts)) {
+      $html .='<div id="dublin-core-'.strtolower($elementName).'"class="element">';
+
+      if ($elementName=='Identifier') {
+         $html .='<h2> View Source </h2>';
+      }
+
+      foreach($elementTexts as $elementText) {
+        if ($elementName=='Identifier')
+          $html .= "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
+        else
+          $html .='<h2>' .$elementText . '</h2>';
+      }
+
+      $html .='</div>';
+   }
+ } //end foreach
+
+ if (metadata('item', 'Collection Name')):
+   $Collection = get_collection_for_item();
+   $title = metadata($Collection, array('Dublin Core', 'Title'));
+   $html .= '<div id="collection" class="element"><h2>Collection</h2><div class="element-text">
+   <p>';
+   $html .= $title;
+   $html .= '</p></div></div>';
+ endif;
+
+ if (metadata('item', 'has tags')):
+   $html .= '<div id="item-tags" class="element"> <h2>Tags</h2><div class="element-text">';
+   $html .= tag_string('item');
+   $html .= '</div></div>';
+ endif;
+
+return $html;
 }
 
 /**
