@@ -26,7 +26,13 @@
           $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
           $feature_exhibit = array_pop($feature_exhibits);
           $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
-          $image_size = getimagesize(WEB_FILES . $exhibit_image['image_name']);
+          $image_size = getimagesize(
+            str_replace(
+              'https://',
+              'http://',
+              WEB_FILES . $exhibit_image['image_name']
+            )
+          );
 
           // If we successfully got the image size...
           if ($image_size) {
@@ -58,18 +64,19 @@
       ?>
   </section>
 </div>
-<section id="recent-exhibits">
-  <h2> Recent Exhibits </h2>
+
+<section id="recent-exhibits" class="pretty-list">
+  <h2 class="item-list-heading"> Recent Exhibits </h2>
   <?php
     set_loop_records('exhibits', exhibit_builder_recent_exhibits(4));
     if (has_loop_records('exhibits')):
       foreach (loop('exhibits') as $exhibits):
   ?>
         <article class="cf">
-          <div class="exhibit-body">
-          <h3><?php echo link_to_exhibit(); ?></h3>
+          <div class="item-body">
+            <h3 class="item-heading"><?php echo link_to_exhibit(); ?></h3>
 
-          <div class="img-wrap">
+            <div class="img-wrap">
               <?php
                 $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
                 if (!empty($Exhibit_image)) {
@@ -82,14 +89,14 @@
 
             <?php
               if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))) {
-                echo '<p class="exhibit-description">' . $exhibitDescription . '</p>';
+                echo '<p class="item-description">' . $exhibitDescription . '</p>';
               }
             ?>
           </div>
 
           <?php
             $tags = str_replace(';', '', tag_string($exhibits,url('exhibits/browse')));
-            if (!empty($tags)) { echo '<div class="tags"> <h4>Tags</h4> ' . $tags . '</div>'; }
+            if (!empty($tags)) { echo '<div class="tags"> <h4 class="tags-heading">Tags</h4> ' . $tags . '</div>'; }
           ?>
         </article>
       <?php endforeach; ?>
@@ -101,4 +108,5 @@
     </div>
   </div>
 </section>
+
 <?php echo foot(); ?>

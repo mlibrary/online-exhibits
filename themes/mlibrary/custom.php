@@ -28,10 +28,10 @@ function mlibrary_display_back_button_item_page($page_type){
 	switch ($page_type)
 	{
 	case 'exhibit':
-		echo '<a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a>';
+		echo '<div class="button"><a href="#" onClick ="history.go(-1); return false;">Back to Exhibit Page</a></div>';
 		break;
 	case 'item':
-		echo '<a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a>';
+		echo '<div class="button"><a href="#" onClick ="history.go(-1); return false;">Back to Item Archive Page</a></div>';
 		break;
   }
 }
@@ -373,7 +373,7 @@ function mlibrary_header_banner() {
 			$output = "<h1 class='default'>";
 	}
 	if($header_text == 'yes' || !$header_text){
-			$output .= "<span>".metadata('exhibit', 'title')."</span></h1>";
+			$output .= "<span>" . metadata('exhibit', 'title') . "</span></h1>";
 	} else {
 			$output .= "</h1>";
 	}
