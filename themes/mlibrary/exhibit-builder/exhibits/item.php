@@ -10,27 +10,30 @@
     )
   );
 
-  echo '<h1>' . $item_title . '</h1>';
 ?>
 
-<div id="sharethis">
-  <span>Share this Exhibit!</span>
-  <div class="fb-like"
-       data-send="false"
-       data-layout="button_count"
-       data-show-faces="false"
-       data-font="arial">
-  </div>
-  <div class="twitter-share">
-    <a  href="https://twitter.com/share"
-        class="twitter-share-button"
-        data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
-      Tweet
-    </a>
+<div class="sharethis-wrap">
+  <div id="sharethis">
+    <span>Share this Exhibit!</span>
+    <div class="fb-like"
+         data-send="false"
+         data-layout="button_count"
+         data-show-faces="false"
+         data-font="arial">
+    </div>
+    <div class="twitter-share">
+      <a  href="https://twitter.com/share"
+          class="twitter-share-button"
+          data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+        Tweet
+      </a>
+    </div>
   </div>
 </div>
 
-<?php mlibrary_display_back_button_item_page('exhibit'); ?>
+<div class="exhibit-item-back-button">
+  <?php mlibrary_display_back_button_item_page('exhibit'); ?>
+</div>
 
 <h1><?php echo $item_title; ?></h1>
 
@@ -79,8 +82,7 @@
 
     echo '<div id="sidebar">' . mlibrary_metadata_sideinfo('item') . '</div>';
 
-    mlibrary_display_related_exhibits('item'); // mlibrary_display_related_exhibits($item->id);
-    mlibrary_display_back_button_item_page('exhibit');
+    mlibrary_display_related_exhibits('item');
   ?>
 
   <div id="item-metadata">

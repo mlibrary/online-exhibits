@@ -9,9 +9,13 @@
       'bodyclass' => 'show item'
     )
   );
-
-  echo '<h1>' . $item_title . '</h1>';
 ?>
+
+<div class="item-back-button">
+  <?php mlibrary_display_back_button_item_page('exhibit'); ?>
+</div>
+
+<?php echo '<h1>' . $item_title . '</h1>'; ?>
 
 <div id="primary">
   <?php
@@ -57,8 +61,6 @@
     }
 
     echo '<div id="sidebar">' . mlibrary_metadata_sideinfo('item') . '</div>';
-
-    mlibrary_display_back_button_item_page('item');
   ?>
 
   <div id="item-metadata">
