@@ -291,58 +291,57 @@ function mlibrary_display_video(){
 } // if itemtype=video
 
 
-function mlibrary_metadata_sideinfo($item, $html){
- get_current_record('item');
+function mlibrary_metadata_sideinfo($item){
+  $html = '';
+  get_current_record('item');
 
- $elementInfos = array(
-  array('Dublin Core', 'Creator'),
-  array('Dublin Core', 'Date'),
-  array('Dublin Core', 'Identifier'),
- );
+  $elementInfos = array(
+    array('Dublin Core', 'Creator'),
+    array('Dublin Core', 'Date'),
+    array('Dublin Core', 'Identifier'),
+  );
 
- foreach($elementInfos as $elementInfo) {
-   $elementSetName = $elementInfo[0];
-   $elementName = $elementInfo[1];
-   $elementTexts = metadata(
-   'item',
-    array($elementSetName, $elementName),
-    array('no_escape'=>true,'all'=>true)
+  foreach($elementInfos as $elementInfo) {
+    $elementSetName = $elementInfo[0];
+    $elementName = $elementInfo[1];
+    $elementTexts = metadata(
+      'item',
+      array($elementSetName, $elementName),
+      array('no_escape' => true, 'all' => true)
     );
 
     if (!empty($elementTexts)) {
-      $html .='<div id="dublin-core-'.strtolower($elementName).'"class="element">';
+      $html .=' <div id="dublin-core-' . strtolower($elementName) .'"class="element">';
 
-      if ($elementName=='Identifier') {
-         $html .='<h2> View Source </h2>';
+      if ($elementName == 'Identifier') {
+        $html .= '<h2> View Source </h2>';
       }
 
       foreach($elementTexts as $elementText) {
-        if ($elementName=='Identifier')
+        if ($elementName == 'Identifier') {
           $html .= "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
-        else
-          $html .='<h2>' .$elementText . '</h2>';
+        } else {
+          $html .= '<h2>' . $elementText . '</h2>';
+        }
       }
 
-      $html .='</div>';
-   }
- } //end foreach
+      $html .= '</div>';
+    }
+  } //end foreach
 
- if (metadata('item', 'Collection Name')):
-   $Collection = get_collection_for_item();
-   $title = metadata($Collection, array('Dublin Core', 'Title'));
-   $html .= '<div id="collection" class="element"><h2>Collection</h2><div class="element-text">
-   <p>';
-   $html .= $title;
-   $html .= '</p></div></div>';
- endif;
+  if (metadata('item', 'Collection Name')) {
+    $Collection = get_collection_for_item();
+    $title = metadata($Collection, array('Dublin Core', 'Title'));
+    $html .= '<div id="collection" class="element"><h2>Collection</h2><div class="element-text"><p>' .
+      $title .
+      '</p></div></div>';
+  }
 
- if (metadata('item', 'has tags')):
-   $html .= '<div id="item-tags" class="element"> <h2>Tags</h2><div class="element-text">';
-   $html .= tag_string('item');
-   $html .= '</div></div>';
- endif;
+  if (metadata('item', 'has tags')) {
+    $html .= '<div id="item-tags" class="element"> <h2>Tags</h2><div class="element-text">' . tag_string('item') . '</div></div>';
+  }
 
-return $html;
+  return $html;
 }
 
 /**
