@@ -233,13 +233,14 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
 			 }// else fullsizeimage is true
 			} // file has a thumbnail
 endforeach;
- if (!empty($json_fullsize)) {
-   echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>';
-   echo'<div id="item-images">';
-   echo '<div id="fsize_images">'.$html_fullsize_image.'</div>';
-   echo $file_metadata;
-   echo $html_thumnailsize_image;
- } // json
+  if (!empty($json_fullsize)) {
+    echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>' .
+      '<div id="item-images">' .
+        '<div id="fsize_images">' . $html_fullsize_image . '</div>' .
+        $file_metadata .
+        $html_thumnailsize_image .
+      '</div>';
+  } // json
 }
 
 
