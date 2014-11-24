@@ -83,7 +83,6 @@
 
 <script type="text/javascript">
   jQuery(function(){
-    jQuery(".element-set").mdcollapse(1,'div');
     jQuery("#item-images").data('curimg','img1');
 
     jQuery(".square_thumbnail").click(function(e){
