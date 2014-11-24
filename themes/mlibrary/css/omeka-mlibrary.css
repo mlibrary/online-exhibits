@@ -152,6 +152,7 @@ body {
 #content .wrap {
   padding: 18px;
   border-top: 4px solid #CCC;
+  overflow: hidden;
 }
 
 /*=HOME PAGE */
