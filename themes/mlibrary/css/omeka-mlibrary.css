@@ -962,10 +962,9 @@ body#exhibit.show .exhibit-text p {
 
 #items #item-metadata,
 #items #sidebar {
-  padding: 1em 2% 2em 2%;
+  padding: 0 2% 2em 2%;
   background-color: #EEE;
   font-size: 1.2em;
-  margin-top: 2em;
 }
 
 #items #item-metadata {
@@ -977,8 +976,30 @@ body#exhibit.show .exhibit-text p {
   float: right;
 }
 
-#items .button {
-  margin: -30px 0 2em 0
+#items h1 {
+  font-size: 2.6em;
+  text-align: center;
+}
+
+#items .item-back-button {
+  margin: 0 0 2.5em 0;
+}
+
+#items .exhibit-item-back-button {
+  margin: 0 0 2.5em 0;
+}
+
+#items #item-images {
+  text-align: center;
+  margin-bottom: 4em;
+}
+
+#items #fsize_images {
+  margin-bottom: 1em;
+}
+
+#items .square_thumbnail {
+  display: inline-block;
 }
 
 /*=JQuery Loupe - zoom in on images  */
