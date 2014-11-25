@@ -31,7 +31,7 @@
   </div>
 </div>
 
-<div class="exhibit-item-back-button">
+<div class="button exhibit-item-back-button">
   <?php mlibrary_display_back_button_item_page('exhibit'); ?>
 </div>
 
