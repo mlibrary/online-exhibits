@@ -80,7 +80,7 @@
       echo mlibrary_display_video('item');
     }
 
-    echo '<div id="sidebar">' . mlibrary_metadata_sideinfo('item') . '</div>';
+    echo mlibrary_metadata_sideinfo('item');
 
     mlibrary_display_related_exhibits('item');
   ?>

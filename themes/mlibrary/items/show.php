@@ -12,7 +12,7 @@
 ?>
 
 <div class="button item-back-button">
-  <?php mlibrary_display_back_button_item_page('exhibit'); ?>
+  <?php mlibrary_display_back_button_item_page('item'); ?>
 </div>
 
 <?php echo '<h1>' . $item_title . '</h1>'; ?>
@@ -23,8 +23,8 @@
     $fullsizeimage = "";
     $image_index = 0;
     $audio_file = false;
-    $item_type = (!empty($item->getItemType()->name)) ? $item->getItemType()->name : 'Image';
-    $theme_name = (!isset($exhibit->theme)) ? 'mlibrary' : $exhibit->theme;
+    $item_type = (empty($item->getItemType()->name)) ? 'Image' : $item->getItemType()->name ;
+    $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary';
 
     $audio = array(
       'application/ogg',
@@ -60,7 +60,7 @@
       echo mlibrary_display_video('item');
     }
 
-    echo '<div id="sidebar">' . mlibrary_metadata_sideinfo('item') . '</div>';
+    echo mlibrary_metadata_sideinfo('item');
   ?>
 
   <div id="item-metadata">
