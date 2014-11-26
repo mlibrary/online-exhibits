@@ -964,15 +964,14 @@ body#exhibit.show .exhibit-text p {
 #items #sidebar {
   padding: 2em 3%;
   background-color: #EEE;
-  font-size: 1.2em;
 }
 
 #items #item-metadata {
-  margin-right: 40%;
+  margin-right: 35%;
 }
 
 #items #sidebar {
-  width: 30%;
+  width: 22%;
   float: right;
 }
 
@@ -1007,21 +1006,22 @@ body#exhibit.show .exhibit-text p {
 }
 
 .record-metadata-list dt {
-  font-size: 1.3em;
+  font-size: 1.5em;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
 }
 
 .record-metadata-list dd {
-  font-size: 1.1em;
-  margin-left: 0.5em;
+  font-size: 1.4em;
+  margin: 0.3em 0 0 0.5em;
+  line-height: 1.4em;
 }
 
 .record-metadata-list * + dt {
   margin-top: 1em;
 }
 
-.record-metadata-list * + dd {
-  margin-top: 0.2em;
+.record-metadata-list dd a {
+  display: block;
 }
 
 /*=JQuery Loupe - zoom in on images  */
@@ -1088,7 +1088,7 @@ body#exhibit.show .exhibit-text p {
 .button a {
   font-size: 1.3em;
   text-decoration: none;
-  padding: 0.5em 1em;
+  padding: 0.6em 1em 0.5em 1em;
   background-color: #666;
   color: #FFF;
   display: inline-block;
