@@ -310,37 +310,31 @@ function mlibrary_metadata_sideinfo($item){
     );
 
     if (!empty($elementTexts)) {
-      $html .=' <div id="dublin-core-' . strtolower($elementName) .'"class="element">';
-
-      if ($elementName == 'Identifier') {
-        $html .= '<h2> View Source </h2>';
-      }
+        $name = ($elementName == 'Identifier') ? 'Source' : $elementName;
+        $html .= '<dt>' . $name . '</dt>';
 
       foreach($elementTexts as $elementText) {
-        if ($elementName == 'Identifier') {
-          $html .= "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
-        } else {
-          $html .= '<h2>' . $elementText . '</h2>';
-        }
+        $data = ($elementName == 'Identifier') ? '<a href="' . $elementText . '">View Source</a>' : $elementText;
+        $html .= '<dd>' . $data . '</dd>';
       }
-
-      $html .= '</div>';
     }
-  } //end foreach
+  }
 
   if (metadata('item', 'Collection Name')) {
     $Collection = get_collection_for_item();
     $title = metadata($Collection, array('Dublin Core', 'Title'));
-    $html .= '<div id="collection" class="element"><h2>Collection</h2><div class="element-text"><p>' .
-      $title .
-      '</p></div></div>';
+    $html .= '<dt>Collection</dt> <dd>' .
+               $title .
+             '</dd>';
   }
 
   if (metadata('item', 'has tags')) {
-    $html .= '<div id="item-tags" class="element"> <h2>Tags</h2><div class="element-text">' . tag_string('item') . '</div></div>';
+    $html .= '<dt>Tags</dt> <dd>' .
+               str_replace(';', '', tag_string('item')) .
+             '</dd>';
   }
 
-  return $html;
+  return '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
 }
 
 /**
