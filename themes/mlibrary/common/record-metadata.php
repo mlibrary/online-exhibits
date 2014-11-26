@@ -11,6 +11,12 @@ foreach ($elementsForDisplay as $setName => $setElements) {
         $field = '<dt>' . html_escape(__($elementName)) . '</dt>';
 
         foreach ($elementInfo['texts'] as $text) {
+          if ($elementName == 'Source'
+              && filter_var($text, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
+            if (!preg_match('/^https?:\/\//', $text)) { $text = 'http://' . $text; }
+            $text = '<a href="' . $text . '">View Item Source</a>';
+          }
+
           $field .= '<dd>' . $text . '</dd>';
         }
 
