@@ -962,7 +962,7 @@ body#exhibit.show .exhibit-text p {
 
 #items #item-metadata,
 #items #sidebar {
-  padding: 0 2% 2em 2%;
+  padding: 2em 3%;
   background-color: #EEE;
   font-size: 1.2em;
 }
@@ -1000,6 +1000,28 @@ body#exhibit.show .exhibit-text p {
 
 #items .square_thumbnail {
   display: inline-block;
+}
+
+.record-metadata-list {
+  margin: 0;
+}
+
+.record-metadata-list dt {
+  font-size: 1.3em;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+}
+
+.record-metadata-list dd {
+  font-size: 1.1em;
+  margin-left: 0.5em;
+}
+
+.record-metadata-list * + dt {
+  margin-top: 1em;
+}
+
+.record-metadata-list * + dd {
+  margin-top: 0.2em;
 }
 
 /*=JQuery Loupe - zoom in on images  */
