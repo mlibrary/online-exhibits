@@ -75,7 +75,8 @@
 
 .exhibit-item img {
   max-width: 75%;
-  border: 1px solid #EDEDED;
+  border: 2px solid #CCC;
+  box-shadow: none;
 }
 
 .gallery-thumbnail img {
@@ -90,7 +91,6 @@
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
-  background-color: #F3F3F3;
 }
 
 #tab li {
@@ -98,6 +98,34 @@
   width: 40%;
   margin: 0 4%;
   zoom: 1;
+}
+
+.FileCaption {
+  text-align: center;
+}
+
+.Metadata #creator,
+.Metadata #date {
+  margin: 0.8em 0 0 4em;
+  font-weight: normal;
+  position: relative;
+  line-height: 1.3em;
+}
+
+.Metadata #date:before {
+  content: "from ";
+}
+
+.Metadata #creator:before,
+.Metadata #date:before {
+   color: inherit;
+  position: absolute;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 90%;
+  position: absolute;
+  right: 100%;
+  padding-right: 0.5em;
 }
 
 /*= NICOLAS GALLAGHER 's micro-clearfix */
@@ -1097,6 +1125,10 @@ body#exhibit.show .exhibit-text p {
 .button a:hover,
 .button a:focus {
   outline: 0.2em solid #333;
+}
+
+#tab .button a {
+  font-size: 1em;
 }
 
 /*=404 */
