@@ -380,7 +380,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   background-color: #EEE;
   margin-left: -18px;
   width: 996px;
-  margin-bottom: -4em;
 }
 
 #home .pretty-list {
@@ -511,7 +510,27 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin-left: 0.5em;
 }
 
-/*=BROWSE EXHIBITS */
+#exhibit.browse h1,
+#items.browse h1 {
+  background-color: #fff;
+  padding: 1em;
+  margin: 0;
+}
+
+#exhibit.browse .wrap,
+#items.browse .wrap {
+  background-color: transparent;
+  width: 995px;
+  padding: 0;
+}
+
+#exhibit.browse .pretty-list,
+#items.browse .pretty-list {
+  margin-left: 0;
+  width: auto;
+}
+
+/*BROWSE EXHIBITS */
 
 #content .wrap {
   min-height: 700px; /* TEMP - adjust for lack of content */
@@ -525,11 +544,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #content h1 {
   margin-bottom: 1em;
-}
-
-.browse #content h1 {
-  margin-bottom: 18px;
-  padding: 0;
 }
 
 #exhibit.summary h1,
@@ -574,7 +588,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin: 0;
   padding: 8px 20px;
   font-family: "Myriad Pro",Helvetica,Tahoma,Arial,sans-serif;
-  font-size: 70%;
+  font-size: 60%;
   color: #000;
   white-space: pre-wrap;
   background-color: #FFF;
@@ -903,6 +917,10 @@ body#exhibit.show .exhibit-text p a[href] {
   filter: alpha(opacity = 90);
 }
 
+#exhibit.show h2 {
+  margin: 1em 0;
+}
+
 .exhibit-item-caption {
   font-style: inherit;
   color: #777;
@@ -979,6 +997,10 @@ body#exhibit.show .exhibit-text p {
   float: right;
 }
 
+.image-text-group {
+  margin-top: 2em;
+}
+
 /* CUSTOM LAYOUT SETTINGS */
 
 .gallery-full-left .secondary .exhibit-text {
@@ -1003,7 +1025,7 @@ body#exhibit.show .exhibit-text p {
   float: right;
 }
 
-#items h1 {
+#items.show h1 {
   font-size: 2.6em;
   text-align: center;
 }
@@ -1034,13 +1056,14 @@ body#exhibit.show .exhibit-text p {
 }
 
 .record-metadata-list dt {
-  font-size: 1.5em;
+  font-size: 1.6em;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-style: italic;
 }
 
 .record-metadata-list dd {
   font-size: 1.4em;
-  margin: 0.3em 0 0 0.5em;
+  margin: 0.5em 0 0 0.7em;
   line-height: 1.4em;
 }
 
@@ -1116,7 +1139,7 @@ body#exhibit.show .exhibit-text p {
 .button a {
   font-size: 1.3em;
   text-decoration: none;
-  padding: 0.6em 1em 0.5em 1em;
+  padding: 0.4em 1em 0.3em 1em;
   background-color: #666;
   color: #FFF;
   display: inline-block;
@@ -1181,6 +1204,14 @@ body.error404 #recent-items ul li.item a:hover {
   margin: 0 auto;
   padding: 18px;
   border: none;
+}
+
+#footer-content {
+  margin: 0 auto;
+  padding: 1em;
+  width: 900px;
+  text-align: center;
+  font-size: 1.2em;
 }
 
 #content h1.header01,
