@@ -1071,7 +1071,7 @@ body#exhibit.show .exhibit-text p {
   margin-top: 1em;
 }
 
-.record-metadata-list dd a {
+.record-metadata-list .tags a {
   display: block;
 }
 

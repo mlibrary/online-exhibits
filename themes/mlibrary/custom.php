@@ -329,7 +329,7 @@ function mlibrary_metadata_sideinfo($item){
   }
 
   if (metadata('item', 'has tags')) {
-    $html .= '<dt>Tags</dt> <dd>' .
+    $html .= '<dt>Tags</dt> <dd class="tags">' .
                str_replace(';', '', tag_string('item')) .
              '</dd>';
   }
