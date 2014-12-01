@@ -74,11 +74,11 @@
   <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item)); ?>
 
   <ul class="item-pagination navigation">
-    <li id="previous-item" class="previous">
-      <?php echo link_to_previous_item_show('Previous Item in Items archive');?>
+    <li id="previous-item" class="button">
+      <?php echo link_to_previous_item_show('Previous Item');?>
     </li>
-    <li id="next-item" class="next">
-      <?php echo link_to_next_item_show('Next Item in Items archive'); ?>
+    <li id="next-item" class="next button">
+      <?php echo link_to_next_item_show('Next Item'); ?>
     </li>
   </ul>
 </div> <!--// end primary-->
