@@ -75,7 +75,8 @@
 
 .exhibit-item img {
   max-width: 75%;
-  border: 1px solid #EDEDED;
+  border: 2px solid #CCC;
+  box-shadow: none;
 }
 
 .gallery-thumbnail img {
@@ -90,7 +91,6 @@
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
-  background-color: #F3F3F3;
 }
 
 #tab li {
@@ -98,6 +98,34 @@
   width: 40%;
   margin: 0 4%;
   zoom: 1;
+}
+
+.FileCaption {
+  text-align: center;
+}
+
+.Metadata #creator,
+.Metadata #date {
+  margin: 0.8em 0 0 4em;
+  font-weight: normal;
+  position: relative;
+  line-height: 1.3em;
+}
+
+.Metadata #date:before {
+  content: "from ";
+}
+
+.Metadata #creator:before,
+.Metadata #date:before {
+   color: inherit;
+  position: absolute;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 90%;
+  position: absolute;
+  right: 100%;
+  padding-right: 0.5em;
 }
 
 /*= NICOLAS GALLAGHER 's micro-clearfix */
@@ -152,6 +180,7 @@ body {
 #content .wrap {
   padding: 18px;
   border-top: 4px solid #CCC;
+  overflow: hidden;
 }
 
 /*=HOME PAGE */
@@ -351,7 +380,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   background-color: #EEE;
   margin-left: -18px;
   width: 996px;
-  margin-bottom: -4em;
 }
 
 #home .pretty-list {
@@ -482,7 +510,27 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin-left: 0.5em;
 }
 
-/*=BROWSE EXHIBITS */
+#exhibit.browse h1,
+#items.browse h1 {
+  background-color: #fff;
+  padding: 1em;
+  margin: 0;
+}
+
+#exhibit.browse .wrap,
+#items.browse .wrap {
+  background-color: transparent;
+  width: 995px;
+  padding: 0;
+}
+
+#exhibit.browse .pretty-list,
+#items.browse .pretty-list {
+  margin-left: 0;
+  width: auto;
+}
+
+/*BROWSE EXHIBITS */
 
 #content .wrap {
   min-height: 700px; /* TEMP - adjust for lack of content */
@@ -496,11 +544,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #content h1 {
   margin-bottom: 1em;
-}
-
-.browse #content h1 {
-  margin-bottom: 18px;
-  padding: 0;
 }
 
 #exhibit.summary h1,
@@ -545,7 +588,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin: 0;
   padding: 8px 20px;
   font-family: "Myriad Pro",Helvetica,Tahoma,Arial,sans-serif;
-  font-size: 70%;
+  font-size: 60%;
   color: #000;
   white-space: pre-wrap;
   background-color: #FFF;
@@ -874,6 +917,10 @@ body#exhibit.show .exhibit-text p a[href] {
   filter: alpha(opacity = 90);
 }
 
+#exhibit.show h2 {
+  margin: 1em 0;
+}
+
 .exhibit-item-caption {
   font-style: inherit;
   color: #777;
@@ -950,6 +997,10 @@ body#exhibit.show .exhibit-text p {
   float: right;
 }
 
+.image-text-group {
+  margin-top: 2em;
+}
+
 /* CUSTOM LAYOUT SETTINGS */
 
 .gallery-full-left .secondary .exhibit-text {
@@ -961,23 +1012,67 @@ body#exhibit.show .exhibit-text p {
 
 #items #item-metadata,
 #items #sidebar {
-  padding: 1em 2% 2em 2%;
+  padding: 3%;
   background-color: #EEE;
-  font-size: 1.2em;
-  margin-top: 2em;
 }
 
 #items #item-metadata {
-  margin-right: 40%;
+  margin-right: 35%;
 }
 
 #items #sidebar {
-  width: 30%;
+  width: 22%;
   float: right;
 }
 
-#items .button {
-  margin: -30px 0 2em 0
+#items.show h1 {
+  font-size: 2.6em;
+  text-align: center;
+}
+
+#items .item-back-button {
+  margin: 0 0 2.5em 0;
+}
+
+#items .exhibit-item-back-button {
+  margin: 0 0 2.5em 0;
+}
+
+#items #item-images {
+  text-align: center;
+  margin-bottom: 4em;
+}
+
+#items #fsize_images {
+  margin-bottom: 1em;
+}
+
+#items .square_thumbnail {
+  display: inline-block;
+}
+
+.record-metadata-list {
+  margin: 0;
+}
+
+.record-metadata-list dt {
+  font-size: 1.6em;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-style: italic;
+}
+
+.record-metadata-list dd {
+  font-size: 1.4em;
+  margin: 0.5em 0 0 0.7em;
+  line-height: 1.4em;
+}
+
+.record-metadata-list * + dt {
+  margin-top: 1em;
+}
+
+.record-metadata-list .tags a {
+  display: block;
 }
 
 /*=JQuery Loupe - zoom in on images  */
@@ -1044,7 +1139,7 @@ body#exhibit.show .exhibit-text p {
 .button a {
   font-size: 1.3em;
   text-decoration: none;
-  padding: 0.5em 1em;
+  padding: 0.4em 1em 0.3em 1em;
   background-color: #666;
   color: #FFF;
   display: inline-block;
@@ -1053,6 +1148,10 @@ body#exhibit.show .exhibit-text p {
 .button a:hover,
 .button a:focus {
   outline: 0.2em solid #333;
+}
+
+#tab .button a {
+  font-size: 1em;
 }
 
 /*=404 */
@@ -1105,6 +1204,14 @@ body.error404 #recent-items ul li.item a:hover {
   margin: 0 auto;
   padding: 18px;
   border: none;
+}
+
+#footer-content {
+  margin: 0 auto;
+  padding: 1em;
+  width: 900px;
+  text-align: center;
+  font-size: 1.2em;
 }
 
 #content h1.header01,

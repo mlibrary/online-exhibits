@@ -234,14 +234,15 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
   } // file has a thumbnail
   endforeach;
   if (!empty($json_fullsize)) {
-   echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>';
-   echo'<div id="item-images">';
-   echo '<div id="fsize_images">'.$html_fullsize_image.'</div>';
-   echo $file_metadata;
-   echo $html_thumnailsize_image;
+   echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>' .
+        '<div id="item-images"> <div id="fsize_images">' .
+            $html_fullsize_image .
+          '</div>' .
+          $file_metadata .
+          $html_thumnailsize_image .
+        '</div>';
   } // json
  }
-
 
 function mlibrary_display_video() {
  $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
@@ -289,58 +290,51 @@ function mlibrary_display_video() {
 } // if itemtype=video
 
 
-function mlibrary_metadata_sideinfo($item, $html) {
- get_current_record('item');
+function mlibrary_metadata_sideinfo($item){
+  $html = '';
+  get_current_record('item');
 
- $elementInfos = array(
-  array('Dublin Core', 'Creator'),
-  array('Dublin Core', 'Date'),
-  array('Dublin Core', 'Identifier'),
- );
+  $elementInfos = array(
+    array('Dublin Core', 'Creator'),
+    array('Dublin Core', 'Date'),
+    array('Dublin Core', 'Identifier'),
+  );
 
- foreach($elementInfos as $elementInfo) {
-  $elementSetName = $elementInfo[0];
-  $elementName = $elementInfo[1];
-  $elementTexts = metadata('item',array($elementSetName, $elementName),array(
-                                                                      'no_escape'=>true,
-                                                                      'all'=>true
-                                                                      )
-                 );
- 
-  if (!empty($elementTexts)) {
-   $html .='<div id="dublin-core-'.strtolower($elementName).'"class="element">';
+  foreach($elementInfos as $elementInfo) {
+    $elementSetName = $elementInfo[0];
+    $elementName = $elementInfo[1];
+    $elementTexts = metadata(
+      'item',
+      array($elementSetName, $elementName),
+      array('no_escape' => true, 'all' => true)
+    );
 
-   if ($elementName=='Identifier') {
-     $html .='<h2> View Source </h2>';
-   }
+    if (!empty($elementTexts)) {
+        $name = ($elementName == 'Identifier') ? 'Source' : $elementName;
+        $html .= '<dt>' . $name . '</dt>';
 
-   foreach($elementTexts as $elementText) {
-     if ($elementName=='Identifier')
-       $html .= "<div class='element-text'><a href=" . $elementText . ">" . $elementText . "</a></div>";
-     else
-       $html .='<h2>' .$elementText . '</h2>';
-   }
-  
-   $html .='</div>';
- }
- } //end foreach
+      foreach($elementTexts as $elementText) {
+        $data = ($elementName == 'Identifier') ? '<a href="' . $elementText . '">View Source</a>' : $elementText;
+        $html .= '<dd>' . $data . '</dd>';
+      }
+    }
+  }
 
- if (metadata('item', 'Collection Name')):
-   $Collection = get_collection_for_item();
-   $title = metadata($Collection, array('Dublin Core', 'Title'));
-   $html .= '<div id="collection" class="element"><h2>Collection</h2><div class="element-text">
-   <p>';
-   $html .= $title;
-   $html .= '</p></div></div>';
- endif;
+  if (metadata('item', 'Collection Name')) {
+    $Collection = get_collection_for_item();
+    $title = metadata($Collection, array('Dublin Core', 'Title'));
+    $html .= '<dt>Collection</dt> <dd>' .
+               $title .
+             '</dd>';
+  }
 
- if (metadata('item', 'has tags')):
-   $html .= '<div id="item-tags" class="element"> <h2>Tags</h2><div class="element-text">';
-   $html .= tag_string('item');
-   $html .= '</div></div>';
- endif;
+  if (metadata('item', 'has tags')) {
+    $html .= '<dt>Tags</dt> <dd class="tags">' .
+               str_replace(';', '', tag_string('item')) .
+             '</dd>';
+  }
 
-return $html;
+  return '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
 }
 
 /**
