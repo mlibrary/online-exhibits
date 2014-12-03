@@ -48,10 +48,10 @@
 
       <div id="logo">
         <a href="http://lib.umich.edu/">
-          <img src="<?php echo img('square_mlibrary.png','images/layout'); ?>" width="61" height="60" alt="mlibrary" />
+          <img src="<?php echo img('square_mlibrary.png','images/layout'); ?>" width="61" height="60" alt="University of Michigan Library" />
         </a>
         <a href="http://lib.umich.edu/online-exhibits/">
-          <img src="<?php echo img('online-exhibits.png','images/layout'); ?>" width="286" height="33" alt="online exhibits" />
+          <img src="<?php echo img('online-exhibits.png','images/layout'); ?>" width="286" height="33" alt="Online Exhibits" />
         </a>
       </div>
 
