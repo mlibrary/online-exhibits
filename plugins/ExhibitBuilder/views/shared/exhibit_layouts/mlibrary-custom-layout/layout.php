@@ -5,8 +5,8 @@
 	$itemsobj = array();
 	$json_fullsize='';
 	?>
-<?php echo '<div class="FileCaption">';?>
-            </div>
+<?php echo '<h3 class="FileCaption">';?>
+            </h3>
 <?php echo '<div class="fullsizeitemimage">';?>	
 	<?php for ($i=(int)$start; $i <= (int)$end; $i++) { ?>
     <?php    $item_array = exhibit_builder_page_attachment($i);
