@@ -53,7 +53,7 @@
         $img_src = '';
       }
 
-      echo '<section id="featured-exhibit-wrap"> <h2>Featured Exhibits</h2>' .
+      echo '<section id="featured-exhibit-wrap"> <h2>Featured Exhibit</h2>' .
               '<a class="figure-wrap ' . $wrap_class . '" href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
                '<figure' . $figure_style . '>' .
                  '<img src="' . $img_src . '" alt="" />' .
