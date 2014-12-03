@@ -710,21 +710,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   border-top: 1px dotted  #CCC;
 }
 
-#exhibit.summary #primary h2.credits {
-  margin: 0.5em 0;
-  padding-bottom: 3px;
-  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
-  font-size: 100%;
-  text-align: left;
-}
-
-#primary h2.credits span {
-  padding-right: 0.4em;
-  font-weight: bold;
-  font-style: italic;
-  color: #A8B7CC;
-}
-
 #exhibit-sections h3 {
   margin: 0.3em 0;
 }

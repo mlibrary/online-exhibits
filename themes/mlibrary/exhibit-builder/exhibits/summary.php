@@ -5,6 +5,8 @@
   <?php echo mlibrary_header_banner(); ?>
 
   <nav class="exhibit-navigation">
+    <h2 class="element-invisible">Exhibit Navigation</h2>
+
     <div class="exhibit-overview active">
       <?php echo link_to_exhibit('Introduction'); ?>
     </div>
@@ -35,6 +37,8 @@
       </div>
     </div>
 
+    <h2 class="element-invisible">Exhibit Summary</h2>
+
     <div class="exhibit_image">
       <?php
         $exhibit_record = get_current_record('exhibit', false);
@@ -52,7 +56,7 @@
 
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
-      <h2 class="credits"><span>Curated by</span> <?php echo html_escape(metadata('exhibit','credits')); ?></h2>
+      <p class="credits">Curated by <?php echo html_escape(metadata('exhibit','credits')); ?></p>
     </div>
 
   </section>
