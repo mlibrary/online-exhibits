@@ -179,7 +179,6 @@ body {
 
 #content .wrap {
   padding: 18px;
-  border-top: 4px solid #CCC;
   overflow: hidden;
 }
 
@@ -192,6 +191,7 @@ body {
 
 #home #primary {
   position: relative;
+  border-top: 4px solid #CCC;
 }
 
 #home-header-wrap {
