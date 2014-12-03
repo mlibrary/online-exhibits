@@ -106,14 +106,14 @@
 
 .Metadata #creator,
 .Metadata #date {
-  margin: 0.8em 0 0 4em;
+  margin: 0.8em 0 0.8em 4em;
   font-weight: normal;
   position: relative;
   line-height: 1.3em;
 }
 
 .Metadata #date:before {
-  content: "from ";
+  content: "date ";
 }
 
 .Metadata #creator:before,
