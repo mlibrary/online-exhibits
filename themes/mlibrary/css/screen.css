@@ -414,6 +414,7 @@ body#items.show #myomeka-tags {
 #exhibit-pages a {
   padding: 0.5em 1em;
   text-decoration: none;
+  line-height: 1.3em;
 }
 
 #exhibit-pages li a.current {
