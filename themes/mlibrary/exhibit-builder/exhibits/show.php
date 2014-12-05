@@ -16,6 +16,8 @@
   <?php echo mlibrary_header_banner(); ?>
 
   <nav class="exhibit-navigation">
+    <h2 class="element-invisible">Exhibit Navigation</h2>
+
     <div class="exhibit-overview">
       <?php echo link_to_exhibit('Introduction'); ?>
     </div>

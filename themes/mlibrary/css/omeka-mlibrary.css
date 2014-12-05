@@ -106,14 +106,14 @@
 
 .Metadata #creator,
 .Metadata #date {
-  margin: 0.8em 0 0 4em;
+  margin: 0.8em 0 0.8em 4em;
   font-weight: normal;
   position: relative;
   line-height: 1.3em;
 }
 
 .Metadata #date:before {
-  content: "from ";
+  content: "date ";
 }
 
 .Metadata #creator:before,
@@ -179,7 +179,6 @@ body {
 
 #content .wrap {
   padding: 18px;
-  border-top: 4px solid #CCC;
   overflow: hidden;
 }
 
@@ -192,6 +191,7 @@ body {
 
 #home #primary {
   position: relative;
+  border-top: 4px solid #CCC;
 }
 
 #home-header-wrap {
@@ -708,21 +708,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   clear: both;
   padding-top: 1em;
   border-top: 1px dotted  #CCC;
-}
-
-#exhibit.summary #primary h2.credits {
-  margin: 0.5em 0;
-  padding-bottom: 3px;
-  font-family: "Myriad Pro", Helvetica, Tahoma, Arial, sans-serif;
-  font-size: 100%;
-  text-align: left;
-}
-
-#primary h2.credits span {
-  padding-right: 0.4em;
-  font-weight: bold;
-  font-style: italic;
-  color: #A8B7CC;
 }
 
 #exhibit-sections h3 {

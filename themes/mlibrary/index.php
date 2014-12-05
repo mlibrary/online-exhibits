@@ -1,7 +1,7 @@
 <?php echo head(array('bodyid'=>'home')); ?>
 <div id="primary">
+  <h1>Online Exhibits</h1>
   <section id="greeting" >
-    <h1>Online Exhibits</h1>
     <h2>Collected, Curated, <span>Celebrated.</span></h2>
     <p>
       Explore and discover inspiring collections of <strong>art</strong>, <strong>literature</strong>, <strong>culture</strong>, and <strong>history</strong>!
@@ -19,50 +19,50 @@
       Brought to you by the <a href="http://www.lib.umich.edu">University of Michigan Library</a>.
     </p>
   </section>
-  <section id="featured-exhibit-wrap">
-    <h2>Featured Exhibits</h2>
-      <?php
-        if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')) {
-          $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
-          $feature_exhibit = array_pop($feature_exhibits);
-          $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
-          $image_size = getimagesize(
-            str_replace(
-              'https://',
-              'http://',
-              WEB_FILES . $exhibit_image['image_name']
-            )
-          );
+  <?php
+    if (get_theme_option('Display Featured Exhibit')
+         && function_exists('exhibit_builder_display_random_featured_exhibit')) {
+      $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
+      $feature_exhibit = array_pop($feature_exhibits);
+      $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
+      $image_size = getimagesize(
+        str_replace(
+          'https://',
+          'http://',
+          WEB_FILES . $exhibit_image['image_name']
+        )
+      );
 
-          // If we successfully got the image size...
-          if ($image_size) {
-            $img_src = WEB_FILES . $exhibit_image['image_name'];
+      // If we successfully got the image size...
+      if ($image_size) {
+        $img_src = WEB_FILES . $exhibit_image['image_name'];
 
-            // Adjust the styling based on the aspect ratio of the image...
-            if (($image_size[0] / $image_size[1]) > 1.6) {
-              $wrap_class = 'landscape';
-              $figure_style = ' style="height: ' . ($image_size[1] / $image_size[0]) * 500 . 'px;" ';
-            } else {
-              $wrap_class = 'portrait';
-              $figure_style = '';
-            }
-
-          // ...if we didn't get an image...
-          } else {
-            $wrap_class = 'no-image';
-            $figure_style = '';
-            $img_src = '';
-          }
-
-          echo  '<a class="figure-wrap ' . $wrap_class . '" href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
-                  '<figure' . $figure_style . '>' .
-                    '<img src="' . $img_src . '" alt="" />' .
-                    '<figcaption><span>' . $feature_exhibit->title . '</span></figcaption>' .
-                  '</figure>' .
-                '</a';
+        // Adjust the styling based on the aspect ratio of the image...
+        if (($image_size[0] / $image_size[1]) > 1.6) {
+          $wrap_class = 'landscape';
+          $figure_style = ' style="height: ' . ($image_size[1] / $image_size[0]) * 500 . 'px;" ';
+        } else {
+          $wrap_class = 'portrait';
+          $figure_style = '';
         }
-      ?>
-  </section>
+
+      // ...if we didn't get an image...
+      } else {
+        $wrap_class = 'no-image';
+        $figure_style = '';
+        $img_src = '';
+      }
+
+      echo '<section id="featured-exhibit-wrap"> <h2>Featured Exhibit</h2>' .
+              '<a class="figure-wrap ' . $wrap_class . '" href="' . exhibit_builder_exhibit_uri($feature_exhibit) . '">' .
+               '<figure' . $figure_style . '>' .
+                 '<img src="' . $img_src . '" alt="" />' .
+                 '<figcaption><span>' . $feature_exhibit->title . '</span></figcaption>' .
+               '</figure>' .
+             '</a>' .
+           '</section>';
+    }
+  ?>
 </div>
 
 <section id="recent-exhibits" class="pretty-list">

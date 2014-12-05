@@ -411,21 +411,10 @@ body#items.show #myomeka-tags {
   font-weight: 400;
 }
 
-#exhibit-pages {
-  margin-bottom: 2em;
-  padding: 0.3em;
-  border-bottom: 1.5em solid #CCC;
-}
-
-#exhibit-pages li {
-  display: block;
-  padding: 0.5em 0;
-  font-weight: 400;
-}
-
 #exhibit-pages a {
   padding: 0.5em 1em;
   text-decoration: none;
+  line-height: 1.3em;
 }
 
 #exhibit-pages li a.current {
