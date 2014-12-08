@@ -179,7 +179,6 @@ body {
 
 #content .wrap {
   padding: 18px;
-  overflow: hidden;
 }
 
 /*=HOME PAGE */
@@ -962,6 +961,8 @@ body#exhibit.show .exhibit-text p {
 #exhibit-page-navigation {
   clear: none;
   overflow: hidden;
+  width: 98%;
+  padding: 1%;
 }
 
 #exhibit-page-navigation a {
