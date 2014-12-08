@@ -230,7 +230,7 @@ a:active {
 
 .item-pagination {
   clear: both;
-  padding-top: 2em;
+  padding: 2em 1% 1% 1%;
   overflow: hidden;
 }
 
