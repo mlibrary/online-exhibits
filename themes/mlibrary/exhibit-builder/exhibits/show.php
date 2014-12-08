@@ -1,10 +1,8 @@
 <?php
   echo head(
     array(
-      'title' => html_escape(
-                   metadata('exhibit', 'title') . ' : ' .
-                   metadata('exhibit_page', 'title')
-                 ),
+      'title' => metadata('exhibit', 'title') . ' | ' .
+                 metadata('exhibit_page', 'title'),
       'bodyid'=>'exhibit',
       'bodyclass' => 'show'
     )

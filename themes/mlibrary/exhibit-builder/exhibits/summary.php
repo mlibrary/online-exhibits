@@ -1,4 +1,11 @@
-<?php echo head(array('title' => html_escape('Summary of ' . metadata('exhibit','title')),'bodyid'=>'exhibit','bodyclass'=>'summary')); ?>
+<?php
+  echo head(
+    array(
+      'title' => 'Summary of ' . metadata('exhibit','title'),
+      'bodyid'=>'exhibit','bodyclass'=>'summary'
+    )
+  );
+?>
 
 <div id="primary">
 
