@@ -1048,7 +1048,7 @@ body#exhibit.show .exhibit-text p {
 
 .record-metadata-list dt {
   font-size: 1.6em;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-family: GillSansRegular, "Gill Sans MT", "Gill Sans", Calibri, "Trebuchet MS", sans-serif;
   font-style: italic;
 }
 
