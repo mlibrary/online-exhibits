@@ -673,10 +673,9 @@ class CsvImport_Import extends Omeka_Record_AbstractRecord
      */
     protected function _addItemFromRow($row)
     {
-    
         $result = $this->getColumnMaps()->map($row);
-        
-        
+
+
         $tags = $result[CsvImport_ColumnMap::TYPE_TAG];
         $itemMetadata = array(
             Builder_Item::IS_PUBLIC      => $this->is_public,
@@ -713,14 +712,14 @@ class CsvImport_Import extends Omeka_Record_AbstractRecord
 
         $fileUrls = $result[CsvImport_ColumnMap::TYPE_FILE];
      //   $fUrls = $result[CsvImport_ColumnMap::TARGET_TYPE_URL];
-	      
-								        
+
+
 				foreach ($fileUrls as $url) {
-						if (preg_match('/\/www-dev\/nancymou.www.lib\//',$url))
+						if (preg_match('/\/mnt/exhibits/csv\//',$url))
 								$fileType = 'Filesystem';
 						else
 								$fileType = 'Url';
-								
+
             try {
                 $file = insert_files_for_item($item, $fileType, $url,
                     array('ignore_invalid_files' => false));
