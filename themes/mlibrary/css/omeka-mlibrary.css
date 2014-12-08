@@ -190,7 +190,7 @@ body {
 
 #home #primary {
   position: relative;
-  border-top: 4px solid #CCC;
+  border-top: 4px solid #C0C0C0;
 }
 
 #home-header-wrap {
@@ -387,7 +387,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 .pretty-list > * {
-  border-bottom: 4px solid #CCC;
+  border-bottom: 4px solid #C0C0C0;
 }
 
 .pretty-list .button-wrap {
@@ -404,7 +404,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 .pretty-list > *:first-child {
-  border-top: 4px solid #CCC;
+  border-top: 4px solid #C0C0C0;
 }
 
 .pretty-list .pagination {
@@ -554,7 +554,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   right: -18px;
   margin-bottom: 1.5em;
   padding: 0;
-  border-bottom: 4px solid #CCC;
+  border-bottom: 4px solid #C0C0C0;
   background-repeat: no-repeat;
   background-position: left top;
   background-size: cover;
@@ -567,7 +567,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   height: 100%;
   top: 0;
   opacity: 0;
-
   filter: alpha(opacity=0);
 }
 
@@ -594,7 +593,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   box-shadow: -4px 4px #333;
   box-shadow: -4px 4px rgba(0, 0, 0, 0.4);
   font-weight: bold;
-  border: 1px solid #CCC;
+  border: 1px solid #C0C0C0;
   text-align: left;
 }
 
@@ -700,13 +699,13 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #exhibit.summary #exhibit-sections {
   clear: both;
-  border-top: 0 dotted  #CCC;
+  border-top: 0 dotted  #C0C0C0;
 }
 
 #exhibit.summary #summary-sidebar + #exhibit-sections {
   clear: both;
   padding-top: 1em;
-  border-top: 1px dotted  #CCC;
+  border-top: 1px dotted  #C0C0C0;
 }
 
 #exhibit-sections h3 {
@@ -740,11 +739,12 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #sharethis {
-  background-color: #CCC;
+  background-color: #C0C0C0;
   padding: 1em;
   display: inline-block;
   position: relative;
   z-index: 500;
+  color: #222;
 }
 
 #sharethis > span {
@@ -781,7 +781,7 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 #exhibit-pages .current ul {
   padding: 1em;
   margin: 0;
-  background-color: #e0e0e0;
+  background-color: #D7D7D7;
 }
 
 #exhibit-pages li {
@@ -800,6 +800,10 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   padding: 0.25em;
 }
 
+.exhibit-navigation #exhibit-pages .current ul a {
+  color: #222;
+}
+
 #exhibit .exhibit-overview a,
 #exhibit-pages > li > a {
   font-weight: bold;
@@ -810,16 +814,17 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #exhibit .exhibit-overview a,
 #exhibit-pages > li > a {
-  border-top: 4px solid #CCC;
+  border-top: 4px solid #C4C4C4;
   margin: -4px 0 0 0;
 }
 
 #exhibit .exhibit-overview.active a,
 #exhibit-pages > li.current > a {
-  background-color: #CCC;
+  background-color: #C4C4C4;
   width: 245px;
   padding-right: 25px;
   z-index: 99;
+  color: #222;
 }
 
 #exhibit-pages .current .current a {
