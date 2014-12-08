@@ -56,7 +56,7 @@
 
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
-      <p class="credits">Curated by <?php echo html_escape(metadata('exhibit','credits')); ?></p>
+      <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
     </div>
 
   </section>
