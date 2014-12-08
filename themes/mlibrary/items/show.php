@@ -63,13 +63,14 @@
     echo mlibrary_metadata_sideinfo('item');
   ?>
 
-  <div id="item-metadata">
-    <?php
-      // The following function prints all the the metadata associated with an item: Dublin Core, extra element sets, etc.
-      // See http://omeka.org/codex or the examples on items/browse for information on how to print only select metadata fields.
-      echo all_element_texts('item');
-    ?>
-  </div>
+  <?
+    // The following function prints all the the metadata associated with an item: Dublin Core, extra element sets, etc.
+    // See http://omeka.org/codex or the examples on items/browse for information on how to print only select metadata fields.
+    $rendered_item_metatdata = all_element_texts('item');
+    if (!empty($rendered_item_metatdata)) {
+      echo '<div id="item-metadata">' . $rendered_item_metatdata . '</div>';
+    }
+  ?>
 
   <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item)); ?>
 

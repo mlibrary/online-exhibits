@@ -28,7 +28,7 @@ foreach ($elementsForDisplay as $setName => $setElements) {
       }
     }
 
-    echo '<dl class="record-metadata-list">' . implode($list_elements, '') . '</dl>';
+    echo (empty($list_elements)) ? '' : '<dl class="record-metadata-list">' . implode($list_elements, '') . '</dl>';
   }
 }
 ?>

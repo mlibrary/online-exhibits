@@ -287,7 +287,7 @@ function mlibrary_display_video() {
     $html_video .='</div>';
   }// end elseif (!empty($elementvideos))
   return $html_video;
-} // if itemtype=video
+}
 
 
 function mlibrary_metadata_sideinfo($item){
@@ -334,7 +334,7 @@ function mlibrary_metadata_sideinfo($item){
              '</dd>';
   }
 
-  return '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
+  return (empty($html)) ? '' : '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
 }
 
 /**
