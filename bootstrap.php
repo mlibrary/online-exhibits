@@ -46,7 +46,8 @@ define('SCRIPTS_DIR', APP_DIR . '/scripts');
 // Define the web address constants.
 
 // Set the scheme.
-$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+//$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+$base_root = (isset($_SERVER['REMOTE_USER']) && (!empty($_SERVER['REMOTE_USER']))) ? 'https' : 'http';
 
 // Set the domain.
 if (!isset($_SERVER['HTTP_HOST'])) {
