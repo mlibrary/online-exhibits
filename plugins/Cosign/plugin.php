@@ -19,7 +19,7 @@
  function cosign_define_acl($args){
   $acl = $args['acl'];
 	require_once dirname(__FILE__).'/GroupCosignAssertion.php';	
-	$acl->allow(null, 'ExhibitBuilder_Exhibits', array('show','edit','delete'),
+	$acl->allow(null, 'ExhibitBuilder_Exhibits', array('edit','delete'),
 		     new GroupCosignAssertion);
 		  //   print_r($acl);
 		    // exit;
