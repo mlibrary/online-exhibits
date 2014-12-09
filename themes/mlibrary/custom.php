@@ -4,13 +4,6 @@
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
-add_filter('exhibit_builder_generate_xml', 'mlibrary_exhibit_builder_generate_xml');
-
-function mlibrary_exhibit_builder_generate_xml($xml)
-{
-   return $xml;
-}
-
 function mlibrary_get_tagline($tagline = null)
 {
   if (!$tagline) {
