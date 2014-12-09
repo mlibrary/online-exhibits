@@ -373,20 +373,6 @@ function mlibrary_header_banner() {
 	return $output;
 }
 
- /**The code can be alter if there is different options than fancy box. For now the default is fancy box.*/
-function mlibrary_light_box(){
-  $lightbox_setting=get_theme_option('Light Box');
-	//	if ($lightbox_setting == 'fancy'){
-  echo queue_js_file('fancybox/fancybox-init-config');
-	//    	return $lightbox_setting;
-	return 'fancy';
-  // }
-   /*else {
-      echo queue_js_file('fancybox/fancybox-init-config');
-   		return 'fancy';
-   } */
-}
-
 /** New exhibits feed to RSS **/
 function mlibrary_display_rss($feedUrl, $num = 3) {
   try {

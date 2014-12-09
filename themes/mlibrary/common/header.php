@@ -26,17 +26,12 @@
     queue_js_file('html5shiv-printshiv.min', 'javascripts', array('conditional' => '(lt IE 9)'));
     queue_js_file('JwPlayer/jwplayer');
     queue_js_file('fancybox/source/fancybox-init-config');
-    queue_js_file('mdcollapse');
     queue_js_file('jquery.aw-showcase.min');
 
     echo auto_discovery_link_tags();
     echo head_css();
     echo head_js();
   ?>
-
-  <!--[if lt IE 9]>
-    <script src="javascripts/html5shiv-printshiv.min.js"></script>
-  <![endif]-->
 
 </head>
 <?php
