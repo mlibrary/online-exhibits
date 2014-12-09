@@ -13,7 +13,7 @@ foreach ($elementsForDisplay as $setName => $setElements) {
         foreach ($elementInfo['texts'] as $text) {
           if ($elementName == 'Source'
               && filter_var($text, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
-            if (!preg_match('/^https?:\/\//', $text)) { $text = 'http://' . $text; }
+            if (!preg_match('/^\s*https?:\/\//', $text)) { $text = 'http://' . $text; }
             $text = '<a href="' . $text . '">View Item Source</a>';
           }
 
