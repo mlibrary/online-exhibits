@@ -42,7 +42,8 @@ echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits 
 
                 echo '</div>';
 
-                $tags = str_replace(';', '', tag_string($exhibit, url('exhibits/browse')));
+                $tags = str_replace(';', '', tag_string($exhibit, 'exhibits/browse'));
+
                 if (!empty($tags)) { echo '<div class="tags"> <h4 class="tags-heading">Tags</h4> ' . $tags . '</div>'; }
               ?>
           </article>
