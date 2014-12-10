@@ -87,7 +87,7 @@
       // Array of all the metadata that can be updated.
       // Each item is structured as follows:
       //   [ 'Selector for the field', 'New content for the field' ]
-      metadata = [
+      var metadata = [
         [ ".fullsizeitemimage", item.image ],
         [ ".FileCaption", item.title ],
         [ ".Metadata p", item.description ],
