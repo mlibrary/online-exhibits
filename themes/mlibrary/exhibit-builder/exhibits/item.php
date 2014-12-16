@@ -31,9 +31,16 @@
   </div>
 </div>
 
-<div class="button exhibit-item-back-button">
-  <?php mlibrary_display_back_button_item_page('exhibit'); ?>
-</div>
+<?php
+  if (isset($_GET['exhibit']) && isset($_GET['page'])) {
+    echo '<div class="button exhibit-item-back-button"><a href="' .
+        exhibit_builder_exhibit_uri(
+          get_record_by_id('exhibit', $_GET['exhibit']),
+          get_record_by_id('exhibit_page', $_GET['page'])
+        ) .
+      '">Return to Exhibit</a></div>';
+  }
+?>
 
 <h1><?php echo $item_title; ?></h1>
 

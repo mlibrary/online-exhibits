@@ -9,11 +9,13 @@
       'bodyclass' => 'show item'
     )
   );
-?>
 
-<div class="button item-back-button">
-  <?php mlibrary_display_back_button_item_page('item'); ?>
-</div>
+  if (isset($_GET['page'])) {
+    echo '<div class="button exhibit-item-back-button">' .
+        '<a href="' . url('items') . '?page=' . $_GET['page'] . '">Return to Item Archive</a>
+      </div>';
+  }
+?>
 
 <?php echo '<h1>' . $item_title . '</h1>'; ?>
 
@@ -61,28 +63,30 @@
     }
 
     echo mlibrary_metadata_sideinfo('item');
-  ?>
 
-  <?
     // The following function prints all the the metadata associated with an item: Dublin Core, extra element sets, etc.
     // See http://omeka.org/codex or the examples on items/browse for information on how to print only select metadata fields.
     $rendered_item_metatdata = all_element_texts('item');
     if (!empty($rendered_item_metatdata)) {
       echo '<div id="item-metadata">' . $rendered_item_metatdata . '</div>';
     }
+
+    fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
+
+    echo mlibrary_add_vars_to_href(
+      '<ul class="item-pagination navigation">
+        <li id="previous-item" class="button">' .
+          link_to_previous_item_show('Previous Item') .
+        '</li>
+        <li id="next-item" class="next button">' .
+          link_to_next_item_show('Next Item') .
+        '</li>
+      </ul>',
+      [ 'page' => (isset($_GET['page'])) ? $_GET['page'] : '1' ]
+    );
+
   ?>
-
-  <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item)); ?>
-
-  <ul class="item-pagination navigation">
-    <li id="previous-item" class="button">
-      <?php echo link_to_previous_item_show('Previous Item');?>
-    </li>
-    <li id="next-item" class="next button">
-      <?php echo link_to_next_item_show('Next Item'); ?>
-    </li>
-  </ul>
-</div> <!--// end primary-->
+</div>
 
 <script type="text/javascript">
   jQuery(function(){

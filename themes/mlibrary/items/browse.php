@@ -32,7 +32,7 @@
         <div class="item-body">
           <h2 class="item-heading">
             <?php
-              echo link_to_item(
+              echo mlibrary_link_to_item_with_return(
                 strip_formatting(
                   metadata(
                     'item',
@@ -49,7 +49,7 @@
 
             if (metadata('item', 'has thumbnail')) {
 
-              echo link_to_item(
+              echo mlibrary_link_to_item_with_return(
                 item_image(
                   'square_thumbnail',
                   array(
@@ -71,7 +71,7 @@
               preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
               $entry_id = $match[1];
 
-              echo link_to_item('<img src="http://cdn.kaltura.com/p/' . $partnerId . '/thumbnail/entry_id/' . $match[1] . '/width/200/height/200/type/1/quality/100" / style="width:200px; height:200px">');
+              echo mlibrary_link_to_item_with_return('<img src="http://cdn.kaltura.com/p/' . $partnerId . '/thumbnail/entry_id/' . $match[1] . '/width/200/height/200/type/1/quality/100" / style="width:200px; height:200px">');
 
             } elseif ($elementvideos = metadata(
                                         'item',
@@ -79,8 +79,8 @@
                                         array('no_escape' => true, 'all' => true)
                                       )) {
               $videoid = str_replace($remove, "", $elementvideos);
-              $image = "<img src='http://i4.ytimg.com/vi/".$videoid[0]."/default.jpg' style='width:200px; height:200px'/>";
-              echo link_to_item($image);
+              $image = "<img src='http://i4.ytimg.com/vi/" . $videoid[0] . "/default.jpg' style='width:200px; height:200px'/>";
+              echo mlibrary_link_to_item_with_return($image);
             }
 
             if ($has_image) { echo '</div>'; }
