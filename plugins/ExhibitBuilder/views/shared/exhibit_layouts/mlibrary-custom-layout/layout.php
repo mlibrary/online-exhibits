@@ -94,7 +94,12 @@
         [ ".Metadata #date", item.date ],
         [ ".Metadata #creator", item.creator ],
         [ ".multi #viewinarchive",
-          '<a href="' + exhibitPath + '/item/' + item.archive + '">View Item </a>' ]
+          '<a href="' + exhibitPath + '/item/' + item.archive + '?<?php
+            echo http_build_query([
+              'exhibit' => get_current_record('exhibit_page')->exhibit_id,
+              'page' => get_current_record('exhibit_page')->id
+            ]);
+          ?>">View Item</a>' ]
       ];
 
       // Update each metadata field. If no content is set, hide the field.
