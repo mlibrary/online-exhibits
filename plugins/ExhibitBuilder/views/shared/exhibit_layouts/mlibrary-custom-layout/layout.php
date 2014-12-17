@@ -95,10 +95,7 @@
         [ ".Metadata #creator", item.creator ],
         [ ".multi #viewinarchive",
           '<a href="' + exhibitPath + '/item/' + item.archive + '?<?php
-            echo http_build_query([
-              'exhibit' => get_current_record('exhibit_page')->exhibit_id,
-              'page' => get_current_record('exhibit_page')->id
-            ]);
+            echo http_build_query(mlibrary_exhibit_item_query_string_settings());
           ?>">View Item</a>' ]
       ];
 

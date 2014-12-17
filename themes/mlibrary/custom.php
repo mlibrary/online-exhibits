@@ -494,10 +494,7 @@ function mlibrary_exhibit_builder_attachment_markup($html, $compact) {
     // Add a query string to then end of the href so we know which exhibit you came from
     $html = mlibrary_add_vars_to_href(
       $html,
-      [
-        'exhibit' => get_current_record('exhibit_page')->exhibit_id,
-        'page'    => get_current_record('exhibit_page')->id
-      ]
+      mlibrary_exhibit_item_query_string_settings()
     );
   } else { // Mlibrary custom layout
     // This layout (custom layout)
@@ -542,6 +539,24 @@ function mlibrary_link_to_item_with_return($text, $attributes = []) {
   );
 }
 
+/**
+ * Ensure that all item links from exhibits include the proper query string.
+ */
+add_filter('exhibit_builder_link_to_exhibit_item', 'mlibrary_exhibit_builder_link_to_exhibit_item');
+function mlibrary_exhibit_builder_link_to_exhibit_item($html, $compact) {
+  return mlibrary_add_vars_to_href(
+    $html,
+    mlibrary_exhibit_item_query_string_settings()
+  );
+}
+
+/**
+ * Function to return common settings for exhibit item link query strings
+ */
+function mlibrary_exhibit_item_query_string_settings() {
+  return [ 'exhibit' => get_current_record('exhibit_page')->exhibit_id,
+           'page'    => get_current_record('exhibit_page')->id ];
+}
 
 /**
 * This function creates the Vertical Navigation on the left hand side of any Exhibit page.
