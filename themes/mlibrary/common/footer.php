@@ -9,9 +9,7 @@
       <?php if ((get_theme_option('Display Footer Copyright') == 1) && $copyright = option('copyright')): ?>
            <p><?php echo $copyright; ?></p>
       <?php endif; ?>
-      <p>
       <p>&copy; <?php echo date("Y");?>&nbsp;<?php echo __('Proudly powered by <a href="http://omeka.org">Omeka</a>.'); ?></p>
-      </p>
   </div><!-- end footer-content -->
   <?php fire_plugin_hook('public_footer', array('view'=>$this)); ?>
 </footer>
