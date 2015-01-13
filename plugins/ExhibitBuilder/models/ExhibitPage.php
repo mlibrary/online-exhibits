@@ -76,6 +76,12 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
             $entries = $this->ExhibitPageEntry;
             for ($i=1; $i <= $highCount; $i++) {
                 $ip = $entries[$i];
+                if (!empty($entries[$i])) {
+                   $ip = $entries[$i];
+                }
+                else {
+	           $ip = '';
+                }
 
                 if (!$ip) {
                     $ip = new ExhibitPageEntry;
