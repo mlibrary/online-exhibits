@@ -243,19 +243,25 @@ function mlibrary_display_video() {
                               );
 
   if (!empty($elementvideos_VCM)) {
-  $html_video = '<div id="showcase" class="showcase">';
-  foreach($elementvideos_VCM as $i => $elementvideo_VCM ) {
-  $html_video .='<div>' .$elementvideo_VCM .
+    $html_video = '<div id="showcase" class="showcase">';
+    foreach($elementvideos_VCM as $i => $elementvideo_VCM ) {
+      if (empty($elementtitles[$i])) {
+  	       $elementtitles[$i] = strip_formatting(metadata('item',array('Dublin Core', 'Title')));
+      }
+      $html_video .='<div>' .$elementvideo_VCM .
                 '<div class="showcase-caption">
                   <h3>' . $elementtitles[$i] . '</h3>
                 </div>
                 </div>';
-  }//end of foreach
-  $html_video .='</div>';
+    }
+    $html_video .='</div>';
   } elseif (!empty($elementvideos)) {
     $html_video ='<div id="showcase" class="showcase">';
     foreach($elementvideos as $i => $elementvideo ) {
-    $html_video .='<div>
+      if (empty($elementtitles[$i])) {
+  	      $elementtitles[$i] = strip_formatting(metadata('item',array('Dublin Core', 'Title')));
+  	  }
+      $html_video .='<div>
                    <iframe src="http://www.youtube.com/embed/' . $elementvideo . '" frameborder="0" width="650" height="400"></iframe>
                    <div class="showcase-caption">
                    <h3>' . $elementtitles[$i] . '</h3>
@@ -270,7 +276,7 @@ function mlibrary_display_video() {
 
 function mlibrary_metadata_sideinfo($item){
   $html = '';
-  get_current_record('item');
+  $item = get_current_record('item');
 
   $elementInfos = array(
     array('Dublin Core', 'Creator'),
@@ -288,11 +294,17 @@ function mlibrary_metadata_sideinfo($item){
     );
 
     if (!empty($elementTexts)) {
-        $name = ($elementName == 'Identifier') ? 'Source' : $elementName;
+        $name = ($elementName == 'Identifier') ? 'Identifier' : $elementName;
         $html .= '<dt>' . $name . '</dt>';
 
       foreach($elementTexts as $elementText) {
-        $data = ($elementName == 'Identifier') ? '<a href="' . $elementText . '">View Source</a>' : $elementText;
+        $array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");
+        if ((in_array($item->id, $array_items)) && ($elementName == 'Identifier')) {
+              $data = $elementText;
+           }
+        else {
+					 $data = ($elementName == 'Identifier') ? '<a href="' . $elementText . '">View Link</a>' : $elementText;
+        }
         $html .= '<dd>' . $data . '</dd>';
       }
     }
@@ -489,13 +501,16 @@ function mlibrary_exhibit_builder_attachment_markup($html, $compact) {
       $item_type = $compact['attachment']['item']->getItemType()->name;
       if (($item_type =='Video')) {
         $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
+        if (!empty($compact['attachment']['caption'])) {
+           $html .= $compact['attachment']['caption'];
+        }
       }
     }
     // Add a query string to then end of the href so we know which exhibit you came from
     $html = mlibrary_add_vars_to_href(
-      $html,
-      mlibrary_exhibit_item_query_string_settings()
-    );
+            $html,
+            mlibrary_exhibit_item_query_string_settings()
+           );
   } else { // Mlibrary custom layout
     // This layout (custom layout)
     $files = $compact['attachment']['item']->Files;
@@ -567,25 +582,28 @@ function mlibrary_exhibit_builder_page_summary($exhibitPage = null, $current_pag
     $exhibitPage = get_current_record('exhibit_page');
   }
  $parents = $current_page->getAncestors();
- if(($current_page->id == $exhibitPage->id))
+ if (($current_page->id == $exhibitPage->id)) {
  $html = '<li class="current">'
          . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
 	 . metadata($exhibitPage, 'title') .'</a>';
- elseif (!empty($parents) && ($exhibitPage->id == $parents[0]->id))
- $html = '<li class="current">'
-         . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-         . metadata($exhibitPage, 'title') .'</a>';
- else
- $html  = '<li>'
-	  . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-          . metadata($exhibitPage, 'title') .'</a>';
+ } elseif ((!empty($parents))
+             && ($exhibitPage->id == $parents[0]->id)
+          ) {
+              $html = '<li class="current">'
+                     . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+                     . metadata($exhibitPage, 'title') .'</a>';
+            } else {
+                $html  = '<li>'
+                  	  . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+                      . metadata($exhibitPage, 'title') .'</a>';
+            }
           //Add Children to navigation.
  $children = $exhibitPage->getChildPages();
  if ($children) {
     $html .= '<ul>';
     foreach ($children as $child) {
-    $html .= mlibrary_exhibit_builder_page_summary($child,$current_page);
-    release_object($child);
+       $html .= mlibrary_exhibit_builder_page_summary($child,$current_page);
+       release_object($child);
     }
     $html .= '</ul>';
   }
@@ -655,29 +673,36 @@ if ($exhibitPage->layout!= 'mlibrary-custom-layout') {
         //  if (($attachment) && (($item_type!= 'Sound') || ($item_type!= 'video'))) {
           if ($item_type == 'Still Image') {
             foreach(loop('files') as $file):
-            if ($file->hasThumbnail() && ($firstthumbnail!= true)) {
-               $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';
-               $html .= file_markup($file, array(
-                                 'imageSize'=>'square_thumbnail',
-                                 'imgAttributes'=>array(
-                                                  'alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),
-                                                  'linkToFile'=>false));
-               $html .= '</div>' . "\n";
-               $image_index++;
-               $firstthumbnail = true;
-            } elseif ($file->hasThumbnail() && ($firstthumbnail == true)) {
-               $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';
-               $title = $file->title;
-               $html .= file_markup($file, array(
-                                 'imageSize'=>'square_thumbnail',
-                                 'imgAttributes'=>array(
-                                                  'alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),
-                                 'linkToFile'=>false
-                                 )
-                        );
-               $html .= '</div>' . "\n";
-               $image_index++;
-            }
+            if (($file->hasThumbnail())
+                 && ($firstthumbnail!= true)
+              ) {
+                  $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';
+                  $html .= file_markup($file, array(
+                                      'imageSize'=>'square_thumbnail',
+                                      'imgAttributes'=>array(
+                                                     'alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),
+                                                     'linkToFile'=>false));
+                  $html .= '<div class="exhibit-item-caption"><p>'.$attachment['caption'].'</p></div>';
+                  $html .= '</div>' . "\n";
+                  $image_index++;
+                  $firstthumbnail = true;
+                } elseif (($file->hasThumbnail())
+                           && ($firstthumbnail == true)
+                         ) {
+                             $html .= "\n" . '<div class="square_thumbnail id'.$file->id.' exhibit-item"  file_id="id'.$file->id.'">';
+                             $title = $file->title;
+                             $html .= file_markup($file, array(
+                                                  'imageSize'=>'square_thumbnail',
+                                                 'imgAttributes'=>array(
+                                                                  'alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),
+                                                 'linkToFile'=>false
+                                                 )
+                             );
+
+                             $html .= '<div class="exhibit-item-caption"><p>'.$attachment['caption'].'</p></div>';
+                             $html .= '</div>' . "\n";
+                             $image_index++;
+                         }
             endforeach;
           }
         }
