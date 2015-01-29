@@ -10,7 +10,7 @@
 <div class="secondary gallery">
 	<h3>Secondary</h3>
 	<?php 
-	    for($i=2;$i<=5;$i++):
+	    for($i=2;$i<=9;$i++):
 	        echo exhibit_builder_layout_form_item($i);
 	    endfor;      
 	?>

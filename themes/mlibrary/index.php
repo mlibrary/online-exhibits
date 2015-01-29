@@ -95,7 +95,7 @@
           </div>
 
           <?php
-            $tags = str_replace(';', '', tag_string($exhibits,url('exhibits/browse')));
+            $tags = str_replace(';', '', tag_string($exhibits,'exhibits/browse'));
             if (!empty($tags)) { echo '<div class="tags"> <h4 class="tags-heading">Tags</h4> ' . $tags . '</div>'; }
           ?>
         </article>
