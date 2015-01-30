@@ -1147,46 +1147,17 @@ body#exhibit.show .exhibit-text p {
 
 /*=404 */
 
-body.error404 #content h1 {
-  padding-bottom: 0.4em;
+.error-page main {
+  margin: 6em auto;
+  width: 500px;
 }
 
-body.error404 #content {
-  background: url(../images/layout/browse-bg.gif) repeat-x top #F3F3F3;
+.error-page h1 {
+  text-align: center;
 }
 
-body.error404 div.errorPreview {
-  float: left;
-  width: 40%;
-  margin: 5%;
-  margin-top: 2%;
-}
-
-body.error404 div.errorPreview h2 {
-  padding: 0.6em 0;
-  font-family: inherit;
-  font-size: 1.5em;
-  line-height: 1.5em;
-  letter-spacing: 0.08em;
-  text-transform: none;
-  border-bottom: 1px solid #DDD;
-}
-
-body.error404 #recent-items ul li.item {
-  margin: 0;
-  line-height: 1.5;
-  border-top: 1px solid white;
-  border-bottom: 1px solid #DADADA;
-}
-
-body.error404 #recent-items ul li.item a {
-  display: block;
-  padding: 0.6em 0;
-  text-decoration: none;
-}
-
-body.error404 #recent-items ul li.item a:hover {
-  color: #5A99DE;
+.error-page main p {
+  font-size: 1.4em
 }
 
 /*=FOOTER */
