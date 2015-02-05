@@ -947,7 +947,6 @@ body#exhibit.show .exhibit-text p {
 }
 
 .gallery-full-left .secondary .exhibit-item {
-  float: left;
   width: 45%;
   margin-right: 0;
   margin-left: 10px;

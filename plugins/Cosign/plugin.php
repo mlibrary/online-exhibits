@@ -167,8 +167,9 @@ function loginf($loginform){
 	     return $loginform;
 	 }
 	 else {
-	   $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits-o2/admin/';
-      header('location: '.$redirected_url);
+   	 $url_pecies = explode('/',$_SERVER['REQUEST_URI']);
+	   $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/'.$url_pecies[1].'/admin/';
+     header('location: '.$redirected_url);
 	  }
 }
 
@@ -180,7 +181,8 @@ function login($authAdapter,$loginForm) {
     return $authAdapter;
   }
   else {
-    $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/online-exhibits-o2/admin/';
+     $url_pecies = explode('/',$_SERVER['REQUEST_URI']);
+	   $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/'.$url_pecies[1].'/admin/';
     header('location: '.$redirected_url);
   }
 }
