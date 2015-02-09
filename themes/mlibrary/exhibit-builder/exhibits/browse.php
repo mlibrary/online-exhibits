@@ -1,6 +1,7 @@
 <?php $title = __('Browse Exhibits');
 //echo head(array('title'=>$title,'bodyid'=>'exhibit','bodyclass'=>'browse'));
-echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits browse'));?>
+echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits browse'));
+$exhibit_image_object = new CosignImagexhibitrelationship();?>
 
 <?php $awkward_gallery_setting=get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
   <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>
@@ -22,7 +23,7 @@ echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits 
             <div class="item-body">
               <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
-                $theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($exhibit->id);
+                $theme_options_array['exhibitimage'] = $exhibit_image_object->get_image_attached_to_exhibits($exhibit->id);
                 $Exhibit_image = $theme_options_array['exhibitimage'];
 
 
@@ -43,7 +44,6 @@ echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits 
                 echo '</div>';
 
                 $tags = str_replace(';', '', tag_string($exhibit, 'exhibits/browse'));
-
                 if (!empty($tags)) { echo '<div class="tags"> <h4 class="tags-heading">Tags</h4> ' . $tags . '</div>'; }
               ?>
           </article>

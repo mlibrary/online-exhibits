@@ -5,6 +5,8 @@
       'bodyid'=>'exhibit','bodyclass'=>'summary'
     )
   );
+
+  $exhibit_image_object = new CosignImagexhibitrelationship();
 ?>
 
 <div id="primary">
@@ -50,7 +52,7 @@
       <?php
         $exhibit_record = get_current_record('exhibit', false);
         $theme_options_array = $exhibit_record->getThemeOptions();
-        $theme_options_array['exhibitimage'] = get_image_attached_to_exhibits($exhibit_record['id']);
+        $theme_options_array['exhibitimage'] = $exhibit_image_object->get_image_attached_to_exhibits($exhibit_record['id']);
         $exhibit_image = $theme_options_array['exhibitimage'];
 
         if ($exhibit_image) {

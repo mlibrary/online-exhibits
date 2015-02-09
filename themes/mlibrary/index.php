@@ -1,4 +1,7 @@
-<?php echo head(array('bodyid'=>'home')); ?>
+<?php echo head(array('bodyid'=>'home'));
+			$exhibit_image_object = new CosignImagexhibitrelationship();
+?>
+
 <div id="primary">
   <h1>Online Exhibits</h1>
   <section id="greeting" >
@@ -24,7 +27,7 @@
          && function_exists('exhibit_builder_display_random_featured_exhibit')) {
       $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
       $feature_exhibit = array_pop($feature_exhibits);
-      $exhibit_image = get_image_attached_to_exhibits($feature_exhibit->id);
+      $exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($feature_exhibit->id);
       $image_size = getimagesize(
         str_replace(
           'https://',
@@ -78,7 +81,7 @@
 
             <div class="img-wrap">
               <?php
-                $Exhibit_image = get_image_attached_to_exhibits($exhibits->id);
+                $Exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($exhibits->id);
                 if (!empty($Exhibit_image)) {
                   echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
                 } else {
