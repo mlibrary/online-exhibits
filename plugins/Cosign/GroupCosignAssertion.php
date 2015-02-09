@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class GroupCosignAssertion extends Omeka_Acl_Assert_Ownership
 {
@@ -8,31 +8,31 @@ class GroupCosignAssertion extends Omeka_Acl_Assert_Ownership
                            Zend_Acl_Resource_Interface $resource = null,
                            $privilege = null)
     {
-         
+
       $allowed = parent::assert($acl,$role,$resource,$privilege);
- 
+
       if (!$allowed){
-					if (($this->_istestexhibitbuilder($resource->id)))
-	        return "allowed";	
+					if (($this->_is_exhibit_link_to_group($resource->id)))
+	        return "allowed";
 	        else
-	         return $allowed;     	        
+	         return $allowed;
       }
       else
 	      return $allowed;
-      
+
     } // end assert
-    
-    private function _istestexhibitbuilder($id) {
+
+    private function _is_exhibit_link_to_group($id) {
 	    $newgroupsexhibitrelationship = new CosignGroupexhibitrelationship;
-	     $grouping = new CosignGrouping;
-			$group_in_exhibit = $newgroupsexhibitrelationship->get_Cgroups_ids_attached_to_exhibits($id);
-	
+	    $grouping = new CosignGrouping;
+			//$group_in_exhibit = $newgroupsexhibitrelationship->get_Cgroups_ids_attached_to_exhibits($id);
+			$group_in_exhibit = $newgroupsexhibitrelationship->get_groups_ids_attached_to_exhibits($id);
+
 			$user = current_user();
 			$user_id = $user['id'];
 			$result=0;
 			if(!empty($group_in_exhibit[0]))
 					$result = $grouping->get_user_ingroup($group_in_exhibit[0],$user_id);
-		//print_r($user_id);
 			return $result;
 		}
 
