@@ -1,6 +1,12 @@
 <?php
   $pageTitle = __('Browse Items');
-  echo head(array('title'=>$pageTitle,'bodyid'=>'items','bodyclass' => 'item tags'));
+  echo head(
+    array(
+      'title' => $pageTitle,
+      'bodyid' => 'items',
+      'bodyclass' => 'items tags'
+      )
+  );
 ?>
 
 <div id="primary">

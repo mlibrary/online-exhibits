@@ -3,7 +3,13 @@
   $partnerId = '1038472';
   $remove = '';
 
-  echo head(array('title'=>$pageTitle,'bodyid'=>'items','bodyclass' => 'items browse'));
+  echo head(
+    array(
+      'title' => $pageTitle,
+      'bodyid' => 'items',
+      'bodyclass' => 'items browse'
+      )
+  );
 ?>
 
 <div id="primary">
@@ -23,7 +29,9 @@
                           array('Item Type Metadata', 'Video_embeded_code'),
                           array('no_escape' => true, 'all' => true)
                         );
-        $has_tags = metadata('item', 'has tags')
+        $has_tags = metadata('item', 'has tags');
+        $Creator = metadata('item', array('Dublin Core', 'Creator'));
+        $Date = metadata('item', array('Dublin Core', 'Date'));
       ?>
       <article class="cf<?php
         if (!$has_image) { echo ' no_image'; }
@@ -33,13 +41,13 @@
           <h2 class="item-heading">
             <?php
               echo mlibrary_link_to_item_with_return(
-                strip_formatting(
-                  metadata(
-                    'item',
-                    array('Dublin Core', 'Title')
-                  )
-                ),
-                array('class'=>'permalink')
+                   strip_formatting(
+                      metadata(
+                        'item',
+                        array('Dublin Core', 'Title')
+                      )
+                   ),
+                   array('class'=>'permalink')
               );
             ?>
           </h2>
@@ -84,8 +92,8 @@
             }
 
             if ($has_image) { echo '</div>'; }
-
-            if ($has_tags) {
+            // if condition added to display metadata if it is available.
+            if ((!empty($Creator)) || (!empty($Date))) {
               $metadata = [
                 'Created by'             => metadata('item', array('Dublin Core', 'Creator')),
                 'Date'                   => metadata('item', array('Dublin Core', 'Date')),

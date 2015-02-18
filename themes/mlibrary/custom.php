@@ -4,7 +4,8 @@
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
-function mlibrary_get_tagline($tagline = null)
+//Not used
+/*function mlibrary_get_tagline($tagline = null)
 {
   if (!$tagline) {
      $tagline = get_theme_option('Tagline') ?
@@ -12,7 +13,7 @@ function mlibrary_get_tagline($tagline = null)
 		'Add a tagline for your site in theme options';
   }
   return $tagline;
-}
+}*/
 
 /**
 * Extends featured exhibit function to include snippet from description for exhibits and
@@ -58,13 +59,11 @@ function mlibrary_link_to_related_exhibits($id) {
   $exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($id));
   $i= 0;
   if(!empty($exhibits)) {
-     echo '<div class="element"><h2>Related Exhibits</h2>';
-     echo '<ul>';
      foreach($exhibits as $exhibit) {
-	echo '<li style="padding-bottom: 5px;">'.link_to_exhibit(null, array(), null, $exhibit).'</li>';
+     	$data[] = link_to_exhibit(null, array(), null, $exhibit);
      }
-     echo '</ul></div>';
   }
+   return $data;
 }
 
 
@@ -273,7 +272,7 @@ function mlibrary_display_video() {
   return $html_video;
 }
 
-
+// Display the Item source from the Identifier field. If it is valid url it will be displayed as a link other wise it will be displayed not as url.
 function mlibrary_metadata_sideinfo($item){
   $html = '';
   $item = get_current_record('item');
@@ -294,17 +293,17 @@ function mlibrary_metadata_sideinfo($item){
     );
 
     if (!empty($elementTexts)) {
-        $name = ($elementName == 'Identifier') ? 'Identifier' : $elementName;
+        $name = ($elementName == 'Identifier') ? 'Item Source' : $elementName;
         $html .= '<dt>' . $name . '</dt>';
 
       foreach($elementTexts as $elementText) {
-        $array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");
-        if ((in_array($item->id, $array_items)) && ($elementName == 'Identifier')) {
-              $data = $elementText;
-           }
-        else {
-					 $data = ($elementName == 'Identifier') ? '<a href="' . $elementText . '">View Link</a>' : $elementText;
-        }
+        //$array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");
+        //if ((in_array($item->id, $array_items)) && ($elementName == 'Identifier')) {
+            //  $data = $elementText;
+          // }
+        //else {
+					 $data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Item Source</a>' : $elementText;
+        //}
         $html .= '<dd>' . $data . '</dd>';
       }
     }
@@ -323,6 +322,15 @@ function mlibrary_metadata_sideinfo($item){
                str_replace(';', '', tag_string('item')) .
              '</dd>';
   }
+
+//Discuss with creator if it is a useful feature.
+/*	$related_exhibit_data = mlibrary_display_related_exhibits($item);
+	if (!empty($related_exhibit_data)) {
+		$html .= '<dt>Related Exhibits</dt>';
+  	foreach($related_exhibit_data as $val) {
+	    	$html .= '<dd>'.$val.'</dd>';
+		}
+  }*/
 
   return (empty($html)) ? '' : '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
 }
@@ -652,11 +660,13 @@ if ($exhibitPage->layout!= 'mlibrary-custom-layout') {
     }
    } //forloop
 } elseif ($exhibitPage->layout == 'mlibrary-custom-layout') {
+
 	//This layout dose not support thumbnail image of youtube video or kultura video
   $image_index=0;
   // start is 1 and end is 12, this is the way set it up in the new layout or other layout that has thumbnail it can be
 	//changed to something else.
   $firstthumbnail  =false;
+
   for ($i=(int)$start; $i <= (int)$end; $i++) {
   	//check to see if there is item exist with exhibit_builder_use_exhibit_page_item function
         $attachment = exhibit_builder_page_attachment($i);
@@ -666,23 +676,22 @@ if ($exhibitPage->layout!= 'mlibrary-custom-layout') {
           } else {
              $item_type = $attachment['item']->getItemType()->name;
           }
-
           $item = $attachment['item'];
-
           set_loop_records('files', $attachment['item']->Files);
         //  if (($attachment) && (($item_type!= 'Sound') || ($item_type!= 'video'))) {
-          if ($item_type == 'Still Image') {
+          if ($item_type != 'video') {
             foreach(loop('files') as $file):
             if (($file->hasThumbnail())
                  && ($firstthumbnail!= true)
               ) {
+
                   $html = "\n" . '<div class="square_thumbnail id'.$file->id.' first exhibit-item"  file_id="id'.$file->id.'">';
                   $html .= file_markup($file, array(
                                       'imageSize'=>'square_thumbnail',
                                       'imgAttributes'=>array(
                                                      'alt'=>strip_formatting(metadata($item, array('Dublin Core', 'Title')))),
                                                      'linkToFile'=>false));
-                  $html .= '<div class="exhibit-item-caption"><p>'.$attachment['caption'].'</p></div>';
+                  $html .= '<div class="exhibit-item-caption">'.$attachment['caption'].'</div>';
                   $html .= '</div>' . "\n";
                   $image_index++;
                   $firstthumbnail = true;
@@ -699,14 +708,19 @@ if ($exhibitPage->layout!= 'mlibrary-custom-layout') {
                                                  )
                              );
 
-                             $html .= '<div class="exhibit-item-caption"><p>'.$attachment['caption'].'</p></div>';
+                             $html .= '<div class="exhibit-item-caption">'.$attachment['caption'].'</div>';
                              $html .= '</div>' . "\n";
                              $image_index++;
                          }
             endforeach;
           }
+          else {
+          $html = "Please Check Item type, Item type must be an Image.";
+          }
+
         }
    }
 }
+
 return $html;
 }

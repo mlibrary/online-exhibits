@@ -1,9 +1,15 @@
 <?php $title = __('Browse Exhibits');
-//echo head(array('title'=>$title,'bodyid'=>'exhibit','bodyclass'=>'browse'));
-echo head(array('title' =>$title, 'bodyid'=>'exhibit', 'bodyclass' => 'exhibits browse'));
+echo head(
+     array(
+       'title' =>$title,
+       'bodyid'=>'exhibit',
+       'bodyclass' => 'exhibits browse'
+     )
+   );
+
 $exhibit_image_object = new CosignImagexhibitrelationship();?>
 
-<?php $awkward_gallery_setting=get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
+<?php $awkward_gallery_setting = get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
   <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>
 
 
@@ -15,9 +21,7 @@ $exhibit_image_object = new CosignImagexhibitrelationship();?>
 
       <?php
         foreach (loop('exhibit') as $exhibit):
-          if($exhibit['title'] != 'Galleries'):
       ?>
-
           <?php $theme_options_array = $exhibit->getThemeOptions(); ?>
           <article class="cf">
             <div class="item-body">
@@ -25,7 +29,6 @@ $exhibit_image_object = new CosignImagexhibitrelationship();?>
               <?php
                 $theme_options_array['exhibitimage'] = $exhibit_image_object->get_image_attached_to_exhibits($exhibit->id);
                 $Exhibit_image = $theme_options_array['exhibitimage'];
-
 
                 echo '<div class="img-wrap">';
 
@@ -49,7 +52,6 @@ $exhibit_image_object = new CosignImagexhibitrelationship();?>
           </article>
 
       <?php
-          endif;
         endforeach;
       ?>
 
