@@ -261,7 +261,7 @@ function mlibrary_display_video() {
   	      $elementtitles[$i] = strip_formatting(metadata('item',array('Dublin Core', 'Title')));
   	  }
       $html_video .='<div>
-                   <iframe src="http://www.youtube.com/embed/' . $elementvideo . '" frameborder="0" width="650" height="400"></iframe>
+                   <iframe src="//www.youtube.com/embed/' . $elementvideo . '" frameborder="0" width="650" height="400"></iframe>
                    <div class="showcase-caption">
                    <h3>' . $elementtitles[$i] . '</h3>
                    </div>
@@ -401,7 +401,7 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
 		foreach ($elementids_youtube_video as $elementid_youtube_video) {
 			$videoid = str_replace($remove, "", $elementid_youtube_video);
 			if (!empty($videoid)) {
-				$video_thumnail_image = "<img src='http://i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:152px'/>";
+				$video_thumnail_image = "<img src='//i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:152px'/>";
 			}
 		}
   }//if
@@ -409,7 +409,7 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
   	$data = $elementvideos_kultura_VCM[0];
 		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
     $partnerId = 1038472;
-    $video_thumnail_image = '<img src="http://cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100"/>';
+    $video_thumnail_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100"/>';
   }//if
   $html = exhibit_builder_link_to_exhibit_item($video_thumnail_image,'',$item);
   return $html;
