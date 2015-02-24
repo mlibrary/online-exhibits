@@ -40,7 +40,7 @@ $exhibit_image_object = new CosignImagexhibitrelationship();?>
 
                 echo '</div>';
 
-                if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))) {
+                if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                   echo '<p class="item-description">' . $exhibitDescription . '</p>';
                 }
 
