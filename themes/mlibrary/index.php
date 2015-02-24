@@ -91,7 +91,7 @@
             </div>
 
             <?php
-              if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300))) {
+              if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                 echo '<p class="item-description">' . $exhibitDescription . '</p>';
               }
             ?>
