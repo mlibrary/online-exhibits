@@ -6,6 +6,8 @@
  add_plugin_hook('define_acl', 'cosign_define_acl');
  // This event will be triggered when save button in the Exhibit metadata form clicked.
  add_plugin_hook('after_save_exhibit','cosign_save_exhibit');
+ //add_plugin_hook('html_purifier_form_submission','cosign_purify_html');
+
  // This event will be triggered when save button in the pages in exhibit is clicked.
  add_plugin_hook('before_delete_user','cosign_delete_user_from_group');
  add_plugin_hook('after_delete_exhibit', 'cosign_delete_exhibit');
@@ -20,7 +22,8 @@ function cosign_define_acl($args) {
           new GroupCosignAssertion);
   }
   $acl->allow('contributor', 'Items', array('makePublic'));
- }
+  $acl->allow('admin', 'CsvImport_Index');
+}
 
 function cosign_delete_exhibit_page($args) {
 	$exhibit = $args['record'];
@@ -52,8 +55,16 @@ function cosign_install() {
        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
   }
 
+
+
+
 function cosign_save_exhibit($args) {
   $exhibit = $args['record'];
+ // if ($_POST['public']!=1)
+//print_r($_POST);
+//exit;
+
+
   $Exhibit_image = cosign_exhibit_image_file($exhibit);
 
   $newimageexhibitrelationship = new CosignImagexhibitrelationship;

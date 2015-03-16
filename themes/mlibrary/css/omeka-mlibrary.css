@@ -944,6 +944,7 @@ body.item #item-images .square_thumbnail img,
 body#exhibit.show .exhibit-text p {
   clear: left;
   width: auto;
+  margin-bottom: 0.5em;
 }
 
 .gallery-full-left .secondary .exhibit-item {

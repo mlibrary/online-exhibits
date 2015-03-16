@@ -1,4 +1,5 @@
 <?php
+
   $item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
   if (empty($item_title)) { $item_title = __('[Untitled]'); }
 

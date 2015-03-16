@@ -44,9 +44,7 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
         </div>
     </fieldset>
     </div>
-    
-  
-    
+
     <div id="save" class="three columns omega panel">
         <?php echo $this->formSubmit('save_page_metadata', __('Save Changes'), array('class'=>'submit big green button')); ?>
         <?php if ($exhibit_page->exists()): ?>

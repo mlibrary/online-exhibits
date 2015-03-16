@@ -244,7 +244,12 @@ if ($xml = file_get_contents($url))
         <div id="public-featured">
             <div class="public">
                 <label for="public"><?php echo __('Public'); ?>:</label>
-                   <?php echo $this->formCheckbox('public', $exhibit->public, array(), array('1', '0')); ?>
+                <?php if ($request->getActionName()=='add'): ?>
+                   <?php echo $this->formCheckbox('public',0, array(), array('1', '0')); ?>
+                <?php else: ?>
+                   <?php echo $this->formCheckbox('public',$exhibit->public, array(), array('1', '0')); ?>
+                <?php endif; ?>
+
             </div>
             <div class="featured">
                 <label for="featured"><?php echo __('Featured'); ?>:</label>

@@ -23,9 +23,9 @@
     <ul id="exhibit-pages">
       <?php
         set_exhibit_pages_for_loop_by_exhibit();
-       // foreach (loop('exhibit_page') as $exhibitPage) {
-         // echo exhibit_builder_page_summary($exhibitPage);
-       // }
+        foreach (loop('exhibit_page') as $exhibitPage) {
+          echo exhibit_builder_page_summary($exhibitPage);
+        }
       ?>
     </ul>
   </nav>
