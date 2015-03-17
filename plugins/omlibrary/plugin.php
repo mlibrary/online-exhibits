@@ -173,8 +173,12 @@ function omlibrary_install(){
 
 
 function omlibrary_setup_acl($acl){
+if ($acl->has('ExhibitBuilder_Exhibits')){
     $acl->deny('contributor', 'ExhibitBuilder_Exhibits',array('editAll','deleteAll'));
+}
+if ($acl->has('CsvImport_Index')){
   	$acl->allow('admin', 'CsvImport_Index');
+}
 }
 
 
