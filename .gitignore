@@ -1,6 +1,7 @@
 /db.ini
 /files-dev
 /files
+/plugins/Dropbox/files
 !/files/.htaccess
 /application/logs/errors.log
 /application/logs/
