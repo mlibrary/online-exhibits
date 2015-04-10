@@ -22,7 +22,7 @@ function cosign_define_acl($args) {
           new GroupCosignAssertion);
   }
   $acl->allow('contributor', 'Items', array('makePublic'));
-  $acl->allow('admin', 'CsvImport_Index');
+//  $acl->allow('admin', 'CsvImport_Index');
 }
 
 function cosign_delete_exhibit_page($args) {
