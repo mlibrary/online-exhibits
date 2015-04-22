@@ -713,11 +713,13 @@ class CsvImport_Import extends Omeka_Record_AbstractRecord
         $fileUrls = $result[CsvImport_ColumnMap::TYPE_FILE];
                   foreach ($fileUrls as $url) {
 			//Use this path for testing on dev
-			//if (preg_match('/online-exhibits/',$url))
-			if (preg_match('/mnt\/exhibits\/csv/',$url))
-				$fileType = 'Filesystem';
-			else
+			//if (strpos($url,'/online-exhibits/'))
+		  if (strpos($url,'/mnt/exhibits/csv/') === false) {
 				$fileType = 'Url';
+			}
+			else {
+				$fileType = 'Filesystem';
+		 }
 
             try {
                 $file = insert_files_for_item($item, $fileType, $url,
