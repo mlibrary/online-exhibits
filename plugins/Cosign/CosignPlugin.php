@@ -98,10 +98,10 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
      public function authenticate()
      {
          // Omeka needs the user ID (not username)
-         $omeka_user = get_db()->getTable('User')->findBySql("username = ?", 
+         $omeka_user = get_db()->getTable('User')->findBySql("username = ?",
                          array(
                          $this->omeka_userid
-                         ), 
+                         ),
                          true
                      );
          if ($omeka_user) {
