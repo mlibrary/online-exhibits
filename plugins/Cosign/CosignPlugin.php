@@ -1,7 +1,6 @@
 <?php
-
 /**
-* This class is to Cosign only to admin page in Omeka
+* This class is to Cosign to admin page in Omeka
 */
 
 class CosignPlugin extends Omeka_Plugin_AbstractPlugin
@@ -9,10 +8,21 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     /**
      * @var array Hooks for the plugin.
      */
-  //  protected $_hooks = array('initialize','define_routes');
-    protected $_hooks = array('define_routes');
+    protected $_hooks = array('define_routes','config_form','config');
 
     protected $_filters = array('login_adapter','login_form');
+
+  //show plugin configuration page
+    public function hookconfigform()
+    {
+        include('config_cosign_form.php');
+    }
+
+   //save plugin configurations in the database
+    public function hookconfig($post)
+    {
+	      set_option('configuration_this_configuration', trim($_POST['configuration_this_configuration']));
+    }
 
     /**
     /* The purpose of this filter is to by pass the Omeka login form so it will not
@@ -23,39 +33,17 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     public function filterLoginForm($loginform)
     {
         if((isset($_SERVER['REMOTE_USER']))) {
-             // Leave those uncommented till need to be tested by Meghan & Nancy for
-             // different browsers.
-             /*if($_SERVER['REMOTE_USER'] == 'musolffm') {
-                 if(strpos($_SERVER['HTTP_USER_AGENT'],"Firefox") != false) {
-                     $_SERVER['REMOTE_USER'] = 'user2';
-                     $_SERVER['ORIGINAL_USER'] = 'musolffm';
-                 }
-                 if(strpos($_SERVER['HTTP_USER_AGENT'],"Safari") != false) {
-                     $_SERVER['REMOTE_USER'] = 'user1';
-                     $_SERVER['ORIGINAL_USER'] = 'musolffm';
-                 }
-             }*/
-             /*if($_SERVER['REMOTE_USER'] == 'nancymou') {
-                  if(strpos($_SERVER['HTTP_USER_AGENT'],"Firefox") != false) {
-                      $_SERVER['REMOTE_USER'] = 'user3';
-                      $_SERVER['ORIGINAL_USER'] = 'nancymou';
-                  }*/
-                 /* if(strpos($_SERVER['HTTP_USER_AGENT'],"Chrome") != false) {
-                    $_SERVER['REMOTE_USER'] = 'jlausch';
-                    $_SERVER['ORIGINAL_USER'] = 'nancymou';
-                 }
-             }*/
-
 	        $_POST['username'] = $_SERVER['REMOTE_USER'];
 	        $_POST['password'] = 'dd';
 	        $_SERVER['REQUEST_METHOD'] = 'POST';
+
 	        return $loginform;
 	      } else {
-         $url_pecies = explode('/',$_SERVER['REQUEST_URI']);
-         //Add https to redirect to Cosign then the Omeka filter login form will be called
-         // with remote user.
-	       $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/'.$url_pecies[1].'/admin/';
-         header('location: '.$redirected_url);
+           $url_pieces = explode('/',$_SERVER['REQUEST_URI']);
+           //Add https to redirect to Cosign then the Omeka filter login form will be called
+           // with remote user.
+      	   $redirected_url = WEB_DIR;
+           header('location: '.$redirected_url);
 	      }
     }
 
@@ -69,8 +57,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
         $route = new Zend_Controller_Router_Route('users/logout',
         	 array(
     	           'module'     => 'cosign',
-        	   'controller' => 'Cosign',
-       		   'action'     => 'logout'
+        	       'controller' => 'Cosign',
+       		       'action'     => 'logout'
    		  )
                 );
         $router->addRoute('logoutCosignUser', $route);
@@ -85,14 +73,13 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
    function filterLoginAdapter($authAdapter,$loginForm)
     {
         if (isset($_SERVER['REMOTE_USER'])) {
-            $username = $_SERVER['REMOTE_USER'];
-            $pwd = '';
-            $authAdapter = new Omeka_Auth_Adapter_Cosign($username,$pwd);
+            $authAdapter = new Omeka_Auth_Adapter_Cosign($loginForm['login_form']->getValue('username'),
+            $loginForm['login_form']->getValue('password'));
             return $authAdapter;
 
         } else {
-            $url_pecies = explode('/',$_SERVER['REQUEST_URI']);
-	    $redirected_url = 'https://'.$_SERVER['SERVER_NAME'].'/'.$url_pecies[1].'/admin/';
+            $url_pieces = explode('/',$_SERVER['REQUEST_URI']);
+     	      $redirected_url = WEB_DIR;
             header('location: '.$redirected_url);
         }
     }
