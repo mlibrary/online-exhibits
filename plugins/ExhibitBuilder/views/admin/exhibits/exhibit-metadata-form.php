@@ -1,8 +1,9 @@
 <?php
 
 	$request = Zend_Controller_Front::getInstance()->getRequest();
-	$group_names_object = new CosignPage();
-	$groups_exhibits_object = new CosignGroupexhibitrelationship();
+	$group_names_object = new LibraryGroupListOfGroups();
+  $groups_exhibits_object = new LibraryGroupexhibitrelationship();
+
 	//$actionName = $request->getActionName();
 ?>
 
@@ -129,13 +130,15 @@ if ($xml = file_get_contents($url))
             <div class="five columns omega inputs">
              <fieldset id="lib-tags">
               <p>You must click <strong> Update Tags</strong> to add additional tags to the Exhibit.</p>
-              <?php foreach ($hlplists['subject'] as $subjectvalue){
+              <?php
+              foreach ($hlplists['subject'] as $subjectvalue) {
+              if (!empty($subjectvalue['name'])) {
                     echo "<li class='subject-parent'>". $this->formCheckbox($subjectvalue['name'])."<label for='".$subjectvalue['name']."'><a href='#' class='subjectshow_hide'>".$subjectvalue['name']."</a></label>";
               ?>
                     <div class='internalslidingDiv'>
                  	   <ul>
                       <?php foreach ($subjectvalue->topic as $value) {
-                                   if ($value->xpath("sub-topic")){
+                                   if ($value->xpath("sub-topic")) {
                                       print "<li class='subject-parent '>".$this->formCheckbox($value['name'])."<label for='".$value['name']."'><a href='#' class='subject-nested'>".$value['name']."</a></label>"; ?>
                                       <div class='subject-sub-internalslidingDiv'>
                                         <ul>
@@ -153,6 +156,7 @@ if ($xml = file_get_contents($url))
                       ?>
                     </ul>
                     </div>
+                    <?php }?>
                     </li>
               <?php }?>
               </fieldset>
@@ -204,7 +208,6 @@ if ($xml = file_get_contents($url))
                               echo $this->formSelect('group-selection',$groupValue,'',$group_names);
                     		  }
                     		  if (($user->role=='contributor') || ($user->role=='researcher')) {
-
                               $group_exhibit_id =  $groups_exhibits_object->get_groups_ids_attached_to_exhibits($exhibit->id);
                               $groupValue =  $group_names_object->get_groups_names_belongto_user($user->id,$user->role);
                               echo $this->formSelect('group-selection',$group_exhibit_id,'',$groupValue);

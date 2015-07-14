@@ -1,5 +1,5 @@
 <?php echo head(array('bodyid'=>'home'));
-			$exhibit_image_object = new CosignImagexhibitrelationship();
+			$exhibit_image_object = new LibraryGroupImagexhibitrelationship();
 ?>
 
 <div id="primary">
@@ -32,13 +32,13 @@
         str_replace(
           'https://',
           'http://',
-          WEB_FILES . $exhibit_image['image_name']
+          'http://www.lib.umich.edu/online-exhibits/files/fullsize' . $exhibit_image['image_name']
         )
       );
 
       // If we successfully got the image size...
-      if ($image_size) {
-        $img_src = WEB_FILES . $exhibit_image['image_name'];
+     if ($image_size) {
+        $img_src = 'http://www.lib.umich.edu/online-exhibits/files/fullsize' . $exhibit_image['image_name'];
 
         // Adjust the styling based on the aspect ratio of the image...
         if (($image_size[0] / $image_size[1]) > 1.6) {
@@ -82,9 +82,11 @@
             <div class="img-wrap">
               <?php
                 $Exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($exhibits->id);
+
                 if (!empty($Exhibit_image)) {
-                  echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+                  echo '<img src="'.'http://www.lib.umich.edu/online-exhibits/files/fullsize'.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
                 } else {
+
                   echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
                 }
               ?>

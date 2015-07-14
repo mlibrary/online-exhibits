@@ -6,7 +6,7 @@
     )
   );
 
-  $exhibit_image_object = new CosignImagexhibitrelationship();
+  $exhibit_image_object = new LibraryGroupImagexhibitrelationship();
 ?>
 
 <div id="primary">
