@@ -39,7 +39,7 @@
         <div class="twitter-share">
           <a  href="https://twitter.com/share"
               class="twitter-share-button"
-              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the MLibary Online Exhibits!" >
+              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" >
             Tweet
           </a>
         </div>

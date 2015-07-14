@@ -129,7 +129,8 @@ if ($xml = file_get_contents($url))
             <div class="five columns omega inputs">
              <fieldset id="lib-tags">
               <p>You must click <strong> Update Tags</strong> to add additional tags to the Exhibit.</p>
-              <?php foreach ($hlplists['subject'] as $subjectvalue){
+              <?php foreach ($hlplists['subject'] as $subjectvalue) {
+              if(!empty($subjectvalue['name'])) {
                     echo "<li class='subject-parent'>". $this->formCheckbox($subjectvalue['name'])."<label for='".$subjectvalue['name']."'><a href='#' class='subjectshow_hide'>".$subjectvalue['name']."</a></label>";
               ?>
                     <div class='internalslidingDiv'>
@@ -154,7 +155,7 @@ if ($xml = file_get_contents($url))
                     </ul>
                     </div>
                     </li>
-              <?php }?>
+              <?php }}?>
               </fieldset>
               </div>
         </div>
