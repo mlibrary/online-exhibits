@@ -21,7 +21,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
    //save plugin configurations in the database
     public function hookconfig($post)
     {
-	      set_option('configuration_this_configuration', trim($_POST['configuration_this_configuration']));
+	      set_option('configuration_this_configuration',
+	       trim($_POST['configuration_this_configuration']));
     }
 
     /**
@@ -32,12 +33,12 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     */
     public function filterLoginForm($loginform)
     {
-        if((isset($_SERVER['REMOTE_USER']))) {
-	        $_POST['username'] = $_SERVER['REMOTE_USER'];
-	        $_POST['password'] = 'dd';
-	        $_SERVER['REQUEST_METHOD'] = 'POST';
 
-	        return $loginform;
+        if((isset($_SERVER['REMOTE_USER']))) {
+      	   $_POST['username'] = $_SERVER['REMOTE_USER'];
+ 	         $_POST['password'] = 'dd';
+	         $_SERVER['REQUEST_METHOD'] = 'POST';
+	         return $loginform;
 	      } else {
            $url_pieces = explode('/',$_SERVER['REQUEST_URI']);
            //Add https to redirect to Cosign then the Omeka filter login form will be called
@@ -73,7 +74,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
    function filterLoginAdapter($authAdapter,$loginForm)
     {
         if (isset($_SERVER['REMOTE_USER'])) {
-            $authAdapter = new Omeka_Auth_Adapter_Cosign($loginForm['login_form']->getValue('username'),
+            $authAdapter = new Omeka_Auth_Adapter_Cosign($loginForm
+            ['login_form']->getValue('username'),
             $loginForm['login_form']->getValue('password'));
             return $authAdapter;
 
