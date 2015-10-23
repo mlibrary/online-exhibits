@@ -2,7 +2,6 @@
 /**
 * This class is to Cosign to admin page in Omeka
 */
-
 class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 {
     /**
@@ -33,8 +32,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     */
     public function filterLoginForm($loginform)
     {
-
-        if((isset($_SERVER['REMOTE_USER']))) {
+       if((isset($_SERVER['REMOTE_USER']))) {
       	   $_POST['username'] = $_SERVER['REMOTE_USER'];
  	         $_POST['password'] = 'dd';
 	         $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -60,8 +58,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     	           'module'     => 'cosign',
         	       'controller' => 'Cosign',
        		       'action'     => 'logout'
-   		  )
-                );
+   		     )
+        );
         $router->addRoute('logoutCosignUser', $route);
     }
 
@@ -78,7 +76,6 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
             ['login_form']->getValue('username'),
             $loginForm['login_form']->getValue('password'));
             return $authAdapter;
-
         } else {
             $url_pieces = explode('/',$_SERVER['REQUEST_URI']);
      	      $redirected_url = WEB_DIR;
@@ -86,7 +83,6 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
         }
     }
 }
-
 
  class Omeka_Auth_Adapter_Cosign implements Zend_Auth_Adapter_Interface
  {

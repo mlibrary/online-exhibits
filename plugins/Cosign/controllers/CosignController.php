@@ -28,5 +28,4 @@ class Cosign_CosignController extends Omeka_Controller_AbstractActionController
 				// Have to be added to configuration form when plugin installed.
         $this->_helper->redirector->gotoUrl(get_option('configuration_this_configuration'));
  } //LogoutAction
-
 }
