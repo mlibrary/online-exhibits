@@ -7,7 +7,7 @@ echo head(
      )
    );
 
-$exhibit_image_object = new LibraryGroupImagexhibitrelationship();?>
+$exhibit_image_object = new LibraryImagBelongToExhibitRelationShip();?>
 
 <?php $awkward_gallery_setting = get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
   <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>

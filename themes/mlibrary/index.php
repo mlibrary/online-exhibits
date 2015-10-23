@@ -1,5 +1,5 @@
 <?php echo head(array('bodyid'=>'home'));
-			$exhibit_image_object = new LibraryGroupImagexhibitrelationship();
+			$exhibit_image_object = new LibraryImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
@@ -28,13 +28,18 @@
       $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
       $feature_exhibit = array_pop($feature_exhibits);
       $exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($feature_exhibit->id);
-      $image_size = getimagesize(
-        str_replace(
-          'https://',
-          'http://',
-          'http://www.lib.umich.edu/online-exhibits/files/fullsize' . $exhibit_image['image_name']
-        )
-      );
+      if (!empty($exhibit_image)) {
+        $image_size = getimagesize(
+           str_replace(
+           'https://',
+           'http://',
+           'http://www.lib.umich.edu/online-exhibits/files/fullsize' . $exhibit_image['image_name']
+          )
+        );
+      }
+      else {
+      $image_size = '';
+      }
 
       // If we successfully got the image size...
      if ($image_size) {

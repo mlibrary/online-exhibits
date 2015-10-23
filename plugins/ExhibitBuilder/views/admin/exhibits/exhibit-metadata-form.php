@@ -1,8 +1,23 @@
 <?php
 
 	$request = Zend_Controller_Front::getInstance()->getRequest();
-	$group_names_object = new LibraryGroupListOfGroups();
-  $groups_exhibits_object = new LibraryGroupexhibitrelationship();
+	if (class_exists('LibraryListOfGroups')) {
+	    $groups_names_object = new LibraryListOfGroups();
+	}
+	else
+   	$groups_names_object = '';
+
+if (class_exists('LibraryExhibitGroupsRelationShip')) {
+	   $exhibit_groups_object = new LibraryExhibitGroupsRelationShip;
+ }
+ else
+   $exhibit_groups_object = '';
+
+   if (class_exists('LibraryGroupUserRelationship')) {
+	    $user_group_object= new  LibraryGroupUserRelationship();
+	}
+	else
+ 	  $user_group_object = '';
 
 	//$actionName = $request->getActionName();
 ?>
@@ -174,6 +189,9 @@ if ($xml = file_get_contents($url))
                 <?php endif;?>
             </div>
         </div>
+            <?php
+            if ((!empty($groups_names_object)) and (!empty($user_group_object)) and (!empty($exhibit_groups_object))) {
+            ?>
      <div class="field">
         <?php  $user = current_user();?>
             <div class="two columns alpha">
@@ -185,41 +203,43 @@ if ($xml = file_get_contents($url))
                 ?>
             </div>
             <div class="five columns omega inputs">
-                <?php //$values = array('' => __('')) + exhibit_builder_get_themes(); ?>
-                <?php //echo get_view()->formSelect('theme', $exhibit->theme, array(), $values); ?>
-                <?php /*if ($theme && $theme->hasConfig): ?>
-                    <a href="<?php echo html_escape(url("exhibits/theme-config/$exhibit->id")); ?>" class="configure-button button"><?php echo __('Configure'); ?></a>
-                <?php endif;*/?>
                 <?php
-                      $group_names = $group_names_object->get_groups_names();
+                      $group_names = $groups_names_object->get_groups_names();
                       $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
                       //($acl->isAllowed('super') || $acl->isAllowed('admin'))
 
                       if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
-                             echo $this->formSelect('group-selection','','',$group_names);
+                             echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
                       elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
-                              $groupValue =  $group_names_object->get_groups_names_belongto_user($user->id,$user->role);
-                    			    echo $this->formSelect('group-selection',$groupValue,'',$groupValue);
+                              $groupValue =  $user_group_object->get_groups_user_belong_to($user->id);
+                    			    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
                     	}
-                      elseif ($request->getActionName()=='edit'){
-                          if (($user->role=='super') || ($user->role=='admin')) {
+                      elseif ($request->getActionName()=='edit') {
 
-                              $groupValue =  $groups_exhibits_object->get_groups_ids_attached_to_exhibits($exhibit->id);
-                              echo $this->formSelect('group-selection',$groupValue,'',$group_names);
+                          if (($user->role=='super') || ($user->role=='admin')) {
+                              $current_exhibitGroup =  $exhibit_groups_object->get_groups_ids_attached_to_exhibit($exhibit->id);
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+                           //   $group_belong_exhibit_ownerId = $user_group_object->get_groups_user_belong_to($exhibit_ownerId);
+                               echo $this->formSelect('group-selection',$current_exhibitGroup,array('multiple'=>'multiple'),$groupNames);
                     		  }
                     		  if (($user->role=='contributor') || ($user->role=='researcher')) {
-                              $group_exhibit_id =  $groups_exhibits_object->get_groups_ids_attached_to_exhibits($exhibit->id);
-                              $groupValue =  $group_names_object->get_groups_names_belongto_user($user->id,$user->role);
-                              echo $this->formSelect('group-selection',$group_exhibit_id,'',$groupValue);
-                    		  }
+                              $current_exhibitGroup = $exhibit_groups_object->get_groups_ids_attached_to_exhibit($exhibit->id);
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              if ($exhibit_ownerId == $user->id) {
+				                          echo $this->formSelect('group-selection',$current_exhibitGroup,array('multiple'=>'multiple'),$group_names);
+				                      }
+				                      else {
+				                        $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+				                         echo $this->formSelect('group-selection',$current_exhibitGroup,array('multiple'=>'multiple'),$groupNames);
+				                      }
+                          }
                       }
-                    //else{
-              		       //$group_id = get_groups_ids_attached_to_exhibits($exhibit->id);
-                    		 //echo select(array('name'=>'group-selection','id'=>'group-selection'),get_groups_names_belongto_user($user->entity_id,$user->role),$group_id);
-                    //}
                 ?>
             </div>
         </div>
+              <?php }
+            ?>
     </fieldset>
     <fieldset>
         <legend><?php echo __('Pages'); ?></legend>

@@ -6,7 +6,7 @@
     )
   );
 
-  $exhibit_image_object = new LibraryGroupImagexhibitrelationship();
+  $exhibit_image_object = new LibraryImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
