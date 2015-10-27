@@ -11,7 +11,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     protected $_filters = array('login_adapter','login_form');
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         if (isset($_SERVER['REMOTE_USER'])) {
             /**
@@ -30,9 +31,9 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
             ini_set('session.cookie_secure', TRUE);
             $bootstrap = Zend_Registry::get('bootstrap');
             $config = $bootstrap->getResource('Config');
-            $new_config = new Zend_Config($config->toArray(), TRUE);
-            $new_config->session->name = 'S' . md5(BASE_DIR);
-            $bootstrap->getContainer()->config = $new_config;
+            $newConfig = new Zend_Config($config->toArray(), TRUE);
+            $newConfig->session->name = 'S' . md5(BASE_DIR);
+            $bootstrap->getContainer()->config = $newConfig;
         }
     }
 
@@ -57,11 +58,18 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     public function filterLoginForm($loginform)
     {
         if ((isset($_SERVER['REMOTE_USER']))) {
+            $length = 16;
             $_POST['username'] = $_SERVER['REMOTE_USER'];
             if (function_exists('openssl_random_pseudo_bytes')) {
-                $_POST['password'] = openssl_random_pseudo_bytes(16);
+                $_POST['password'] = openssl_random_pseudo_bytes($length);
             } else {
-                $_POST['password'] = md5sum($_SERVER['REMOTE_USER'] . time());
+                $characters = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()" .
+                    "-_<>,./:;'{[}]\\|~`";
+                $_POST['password'] = substr(
+                    str_shuffle( str_repeat($characters, $length)),
+                    0,
+                    $length
+                );
             }
             $_SERVER['REQUEST_METHOD'] = 'POST';
             return $loginform;

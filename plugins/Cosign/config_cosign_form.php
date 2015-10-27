@@ -3,7 +3,7 @@
     <label for="cosign_logout_url">
       Enter the default URL you want your site to use:
     </label>
-  </div>';
+  </div>
   <div class="inputs five columns omega">
     <?php
 print get_view()->formText(
