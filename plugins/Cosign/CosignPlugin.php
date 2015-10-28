@@ -32,7 +32,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     */
     public function filterLoginForm($loginform)
     {
-       if((isset($_SERVER['REMOTE_USER']))) {
+      if((isset($_SERVER['REMOTE_USER']))) {
       	   $_POST['username'] = $_SERVER['REMOTE_USER'];
  	         $_POST['password'] = 'dd';
 	         $_SERVER['REQUEST_METHOD'] = 'POST';
