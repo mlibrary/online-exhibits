@@ -52,7 +52,9 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     /**
     * The purpose of this filter is to by pass the Omeka login form so it will
     * not display to users. But still we need to pass a username and password 
-    * that is expected from Omeka form. The user is authenticare through the
+    * that is expected from Omeka form. The password generated here is not stored in the database.
+    * The passowrd stored in db came from UserControl where secure password is created.
+    * The user is authenticare through the
     * cosign first then the filter for the login form is called.
     */
     public function filterLoginForm($loginform)
