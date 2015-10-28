@@ -12,13 +12,13 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array('login_adapter','login_form');
 
   //show plugin configuration page
-    public function hookconfigform()
+    public function hookConfigForm()
     {
         include('config_cosign_form.php');
     }
 
    //save plugin configurations in the database
-    public function hookconfig($post)
+    public function hookConfig($post)
     {
 	      set_option('configuration_this_configuration',
 	       trim($_POST['configuration_this_configuration']));
@@ -33,10 +33,26 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     public function filterLoginForm($loginform)
     {
       if((isset($_SERVER['REMOTE_USER']))) {
-      	   $_POST['username'] = $_SERVER['REMOTE_USER'];
- 	         $_POST['password'] = 'dd';
-	         $_SERVER['REQUEST_METHOD'] = 'POST';
-	         return $loginform;
+     // 	   $_POST['username'] = $_SERVER['REMOTE_USER'];
+ 	     //    $_POST['password'] = 'dd';
+	       //  $_SERVER['REQUEST_METHOD'] = 'POST';
+	         //return $loginform;
+	          $length = 16;
+            $_POST['username'] = $_SERVER['REMOTE_USER'];
+            if (function_exists('openssl_random_pseudo_bytes')) {
+                $_POST['password'] = openssl_random_pseudo_bytes($length);
+            } else {
+                $characters = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()" .
+                    "-_<>,./:;'{[}]\\|~`";
+                $_POST['password'] = substr(
+                    str_shuffle( str_repeat($characters, $length)),
+                    0,
+                    $length
+                );
+            }
+            $_SERVER['REQUEST_METHOD'] = 'POST';
+            return $loginform;
+
 	      } else {
            $url_pieces = explode('/',$_SERVER['REQUEST_URI']);
            //Add https to redirect to Cosign then the Omeka filter login form will be called
