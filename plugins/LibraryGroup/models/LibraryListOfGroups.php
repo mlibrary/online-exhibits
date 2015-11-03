@@ -4,6 +4,7 @@ class LibraryListOfGroups extends Omeka_Record_AbstractRecord {
     public $name;
     public $group_id;
 
+//list all groups available
 function get_groups_names() {
   $db = get_db();
   $group_list='';
@@ -17,17 +18,7 @@ function get_groups_names() {
   return $group_list;
 }
 
-
-function get_groups_names_using_groupID($groupId) {
-  $db = get_db();
-  $group_list='';
-  $groups='';
-  $where = "`group_id` = ?";
-	$group_names = $db->getTable("LibraryListOfGroups")->findBySql($where,array($groupId));
-
-  return $group_names[0]['name'];
-}
-
+// get groups related to specific role
 function get_groups_names_using_role($id, $role) {
   $db = get_db();
   $group_list='';

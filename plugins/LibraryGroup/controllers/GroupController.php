@@ -9,7 +9,7 @@ class LibraryGroup_GroupController extends UsersController {
 
  public function init()
  {
-    $this->newUser_group_object = new LibraryGroupUserRelationship;
+   // $this->newUser_group_object = new LibraryGroupUserRelationship;
     $this->newGroups_names_object = new LibraryListOfGroups;
     $this->_helper->db->setDefaultModelName('User');
  }
@@ -19,11 +19,16 @@ class LibraryGroup_GroupController extends UsersController {
         // Create a new page.
        $user = new User();
 	     $form_user = $this->_getUserForm($user);
+	     $groupUserObjects = LibraryGroupUserRelationship::findUserRelationshipRecords($user->id);
+	     foreach($groupUserObjects as $groupUserObject) {
+		  	   $groupUserValue[]= $groupUserObject['group_id'];
+			 }
+
 	     $form_user->addElement('Multiselect', 'group', array(
                 'label' => __('Group'),
                 'description' => __("Select the unit in the Library the user belong to."),
                 'multiOptions' => $this->newGroups_names_object->get_groups_names(),
-                'value' => ((!empty($user->id)) ? $this->newUser_group_object->get_groups_user_belong_to($user->id)  : ''),
+                'value' => ((!empty($user->id)) ? $groupUserValue : ''),
                 'class' => 'field',
                 'order' => 3
           ));
@@ -70,6 +75,11 @@ class LibraryGroup_GroupController extends UsersController {
  {
     $user = $this->_helper->db->findById();
     $currentUser = $this->getCurrentUser();
+    $groupUserObjects = LibraryGroupUserRelationship::findUserRelationshipRecords($user->id);
+	  foreach($groupUserObjects as $groupUserObject) {
+		  	   $groupUserValue[]= $groupUserObject['group_id'];
+		}
+
   	$changePasswordForm = new Omeka_Form_ChangePassword;
     $changePasswordForm->setUser($user);
     $form_user = $this->_getUserForm($user);
@@ -79,7 +89,7 @@ class LibraryGroup_GroupController extends UsersController {
              'label' => __('Group'),
              'description' => __("Select the unit in the Library the user belong to."),
              'multiOptions' => $this->newGroups_names_object->get_groups_names(),
-             'value' => ((!empty($user->id)) ? $this->newUser_group_object->get_groups_user_belong_to($user->id)  : ''),
+             'value' => ((!empty($user->id)) ? $groupUserValue  : ''),
              'class' => 'field',
              'order' => 3
           ));
@@ -133,8 +143,10 @@ class LibraryGroup_GroupController extends UsersController {
               if ($user->save(false)) {
                   if ($currentUser->role=='super') {
                   		 if(!empty($user->group)) {
-                  		      $newUser_group = new LibraryGroupUserRelationship;
-                  		      $newUser_group->delete_user_relationship_records($user->id);
+                  		      $userGroupsObjects = LibraryGroupUserRelationship::findUserRelationshipRecords($user->id);
+                            foreach($userGroupsObjects as $userGroupsObject) {
+                                $userGroupsObject->delete();
+                            }
               		          $groups = $user->group;
       		                  foreach($groups as $group) {
       		                    $newUser_group = new LibraryGroupUserRelationship;

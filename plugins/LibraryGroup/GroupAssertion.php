@@ -23,16 +23,13 @@ class GroupAssertion extends Omeka_Acl_Assert_Ownership {
     } // end assert
 
 //This function validate if the user with group relation is linked to an exhibit.
- private function _is_exhibit_link_to_group($id)
+ private function _is_exhibit_link_to_group($exhibitId)
  {
      $flag = false;
 		 $user = current_user();
 		 $user_id = $user['id'];
-	   $newExhibit_groups_object = new LibraryExhibitGroupsRelationShip;
-	   $newUser_groups_object = new LibraryGroupUserRelationship;
-		 $groups_in_exhibit = $newExhibit_groups_object->get_groups_ids_attached_to_exhibit($id);
-
-		 $user_groups = $newUser_groups_object->get_groups_user_belong_to($user_id);
+		 $groups_in_exhibit = LibraryExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibitId);
+		 $user_groups = LibraryGroupUserRelationship::findUserRelationshipRecords($user_id);
 		 foreach ($user_groups as $group) {
 		   if((array_search($group,$groups_in_exhibit)!==false))
   			  return true;

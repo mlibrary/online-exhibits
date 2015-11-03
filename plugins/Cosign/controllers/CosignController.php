@@ -16,13 +16,13 @@ class Cosign_CosignController extends Omeka_Controller_AbstractActionController
             $cosignService = $_SERVER['COSIGN_SERVICE'];
         } else {
             // If COSIGN_SERVICE isn't set, then make a guess.
-            $cosignService = 'cosign-' . $_SERVER['HTTP_HOST'],
+            $cosignService = 'cosign-' . $_SERVER['HTTP_HOST'];
         }
 
         header(
             sprintf(
                 $cookieTemplate,
-                $cosignService;
+                $cosignService,
                 $_SERVER['HTTP_HOST']
             )
         );

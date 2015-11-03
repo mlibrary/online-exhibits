@@ -19,7 +19,6 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
     );
 
     public function hookInitialize() {
-			 //Zend_Controller_Front::getInstance()->registerPlugin(new MlibraryGroupControllerPlugin);
 			 get_view()->addHelperPath(dirname(__FILE__) . '/views/helpers', 'ExhibitBuilder_View_Helper_');
 		}
   	/**
@@ -30,15 +29,14 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
 	  {
         $db = $this->_db;
         //list of groups in db (
-      /* 1 | Hatcher-Shapiro-AAEL
-         2 | Special Collections
-         3 | Taubman
-         4 | MPublishing
-         5 | Clark
-         6 | Digital Media Commons
-         7 | Bentley
-        11 | workshop */
-
+       /* Learning & Teaching
+           Library IT
+           Collections
+           Research
+           Budget & Planning
+           Taubman
+           Operations
+      */
         // List of Group Names.
         $sql = "
                    CREATE TABLE IF NOT EXISTS `$db->LibraryListOfGroups` (
@@ -49,7 +47,7 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $db->query($sql);
 
-				//Relationship between Groups and Users
+				//Relationship between Groups and Users. A user can belong to many groups.
         $sql = "
                    CREATE TABLE IF NOT EXISTS `$db->LibraryGroupUserRelationship` (
                    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -59,7 +57,7 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $db->query($sql);
 
-        //Relationship between Groups and Exhibits
+        //Relationship between Groups and Exhibits. An Exhibit can have many groups belong to.
          $sql = "
                    CREATE TABLE IF NOT EXISTS `$db->LibraryExhibitGroupsRelationShip` (
                   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -69,7 +67,7 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
         $db->query($sql);
 
-				//Relationship between Exhibits and Images
+				//Relationship between Exhibits and Images. Each Exhibit has one image.
         $sql = "
                    CREATE TABLE IF NOT EXISTS `$db->LibraryImagBelongToExhibitRelationShip` (
                    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -91,21 +89,24 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
             array('showNotPublic'));
             $acl->allow(null, 'ExhibitBuilder_Exhibits', array('edit','delete'),
             new GroupAssertion);
-       }
-       $acl->allow('contributor', 'Items', array('makePublic'));
-       $acl->allow('admin', 'CsvImport_Index');
+        }
+        $acl->allow('contributor', 'Items', array('makePublic'));
+        $acl->allow('admin', 'CsvImport_Index');
     }
 
     public function hookAfterDeleteExhibit($args)
     {
 			//delete_exhibit
-	  	$exhibit = $args['record'];
-	  	$newImage_belong_to_exhibit_object = new LibraryImagBelongToExhibitRelationShip;
-	  	$newImage_belong_to_exhibit_object->deleteImage_belong_to_exhibit(
-	  	                                                   $exhibit->id);
-	 		$newExhibitr_group_object = new LibraryExhibitGroupsRelationShip();
-			$newExhibitr_group_object->delete_groups_in_exhibit_records(
-			                                                   $exhibit->id);
+	  	  $exhibit = $args['record'];
+	  	  $imageObject = LibraryImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
+		   // foreach($imageObjects as $imageObject) {
+				$imageObject->delete();
+		    //}
+
+	 		  $exhibitGroupsObjectRecords = LibraryExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+    		foreach($exhibitGroupsObjectRecords as $exhibitGroupsObjectRecord){
+            $exhibitGroupsObjectRecord->delete();
+        }
 		}
 
 	public function hookAfterSaveExhibit($args)
@@ -114,37 +115,43 @@ class LibraryGroupPlugin extends Omeka_Plugin_AbstractPlugin
    	 $exhibit = $args['record'];
      $Exhibit_image = $this->imageOfExhibit($exhibit);
 		 $newImage_belong_to_exhibit_object = new LibraryImagBelongToExhibitRelationShip;
-		 $newImage_belong_to_exhibit_object->deleteImage_belong_to_exhibit(
-		                                                    $exhibit->id);
-		 if (!empty($Exhibit_image)) {
+
+		 $imageObject = LibraryImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
+		 $imageObject->delete();
+
+
+		  if (!empty($Exhibit_image)) {
 		     $newImage_belong_to_exhibit_object->entity_id = $exhibit->id;
-				 $newImage_belong_to_exhibit_object->image_name = $Exhibit_image['image'];
-				 $newImage_belong_to_exhibit_object->image_title = $Exhibit_image['title'];
-				 $newImage_belong_to_exhibit_object->save();
-		 }
+		     $newImage_belong_to_exhibit_object->image_name = $Exhibit_image['image'];
+		     $newImage_belong_to_exhibit_object->image_title = $Exhibit_image['title'];
+		     $newImage_belong_to_exhibit_object->save();
+		  }
 		 //group selection then save to exhibit
 
-		 if(!empty($_POST['group-selection'])) {
+		  if(!empty($args['record']['group-selection'])) {
     		 $exhibit = $args['record'];
-    		  $newExhibit_group_object = new LibraryExhibitGroupsRelationShip();
-    		 $newExhibit_group_object->delete_groups_in_exhibit_records(
-				                                                      $exhibit->id);
-				  $goups = $_POST['group-selection'];
-				 foreach($goups as $group) {
-				 $newExhibit_group_object = new LibraryExhibitGroupsRelationShip();
-		  	 $newExhibit_group_object->exhibit_id = $exhibit->id;
-	  		 $newExhibit_group_object->group_id = $group;
-				 $newExhibit_group_object->save();
-				 }
-		 }
+    		  $exhibitGroupsObjectRecords = LibraryExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+    		  foreach($exhibitGroupsObjectRecords as $exhibitGroupsObjectRecord){
+              $exhibitGroupsObjectRecord->delete();
+       }
+
+		   $goups = $args['record']['group-selection'];
+		   foreach($goups as $group) {
+		  		 $newExhibit_group_object = new LibraryExhibitGroupsRelationShip();
+		     	 $newExhibit_group_object->exhibit_id = $exhibit->id;
+	  		   $newExhibit_group_object->group_id = $group;
+				   $newExhibit_group_object->save();
+		   }
+	  }
 	}
 
 	public function hookBeforeDeleteUser($args)
 	{
    	 $user = $args['record'];
-   	 $newUser_groups_object = new LibraryGroupUserRelationship();
-     $newUser_groups_object->delete_user_relationship_records(
-                                                                   $user->id);
+     $userGroupsObjects = LibraryGroupUserRelationship::findUserRelationshipRecords($user->id);
+     foreach($userGroupsObjects as $userGroupsObject) {
+         $userGroupsObject->delete();
+     }
 	}
 
  public function hookDefineRoutes($args)
