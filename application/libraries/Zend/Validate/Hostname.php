@@ -517,14 +517,14 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
         }
 
         // RFC3986 3.2.2 states:
-        // 
+        //
         //     The rightmost domain label of a fully qualified domain name
-        //     in DNS may be followed by a single "." and should be if it is 
+        //     in DNS may be followed by a single "." and should be if it is
         //     necessary to distinguish between the complete domain name and
         //     some local domain.
-        //     
+        //
         // (see ZF-6363)
-        
+
         // Local hostnames are allowed to be partitial (ending '.')
         if ($this->_options['allow'] & self::ALLOW_LOCAL) {
             if (substr($value, -1) === '.') {
@@ -549,8 +549,16 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
         if ((count($domainParts) > 1) && (strlen($value) >= 4) && (strlen($value) <= 254)) {
             $status = false;
 
-            $origenc = iconv_get_encoding('internal_encoding');
-            iconv_set_encoding('internal_encoding', 'UTF-8');
+            //$origenc = iconv_get_encoding('internal_encoding');
+            //iconv_set_encoding('internal_encoding', 'UTF-8');
+            $origenc = PHP_VERSION_ID < 50600
+                        ? iconv_get_encoding('internal_encoding')
+                        : ini_get('default_charset');
+            if (PHP_VERSION_ID < 50600) {
+                iconv_set_encoding('internal_encoding', 'UTF-8');
+            } else {
+                ini_set('default_charset', 'UTF-8');
+            }
             do {
                 // First check TLD
                 $matches = array();

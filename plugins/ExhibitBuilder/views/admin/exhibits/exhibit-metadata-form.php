@@ -1,7 +1,7 @@
 <?php
 	$request = Zend_Controller_Front::getInstance()->getRequest();
-	if (class_exists('LibraryListOfGroups')) {
-	    $groups_names_object = new LibraryListOfGroups();
+	if (class_exists('ListOfGroups')) {
+	    $groups_names_object = new ListOfGroups();
 	}
 	else
    	$groups_names_object = '';
@@ -118,9 +118,7 @@ if ($xml = file_get_contents($url))
                 <?php echo $this->formLabel('tags', __('Tags')); ?>
             </div>
             <div class="five columns omega inputs">
-                <?php //$exhibitTagList = join(', ', pluck('name', $exhibit->Tags)); ?>
-                 <?php //Added by Nancy Moussa
-                 $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
+                 <?php $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
                 <?php echo $this->formText('tags', $exhibitTagList); ?>
             </div>
            <div class="two columns alpha">
@@ -175,7 +173,7 @@ if ($xml = file_get_contents($url))
             </div>
         </div>
             <?php
-            if ((!empty($groups_names_object)) and (class_exists('LibraryGroupUserRelationship')) and (class_exists('LibraryExhibitGroupsRelationShip'))) {
+            if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
             ?>
      <div class="field">
         <?php  $user = current_user();?>
@@ -191,23 +189,29 @@ if ($xml = file_get_contents($url))
                 <?php
                       $group_names = $groups_names_object->get_groups_names();
                       $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
+                      $groupExhibitValue[] = '';
+                      $groupValue[] = '';
 
                       if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
                              echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
 
                       elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
-                              $user_group_objects =  LibraryGroupUserRelationship::findUserRelationshipRecords($user->id);
-                               foreach($user_group_objects as $user_group_object) {
-		  	   													$groupValue[]= $user_group_object['group_id'];
+                              $user_group_objects =  GroupUserRelationship::findUserRelationshipRecords($user->id);
+                              if (!empty($user_group_objects)) {
+                                   foreach($user_group_objects as $user_group_object) {
+		  	   													  $groupValue[]= $user_group_object['group_id'];
+	                         		     }
 	                         		}
                     			    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
                     	}
 
                       elseif ($request->getActionName()=='edit') {
                           if (($user->role=='super') || ($user->role=='admin')) {
-                              $current_exhibitGroups =  LibraryExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
-                              foreach($current_exhibitGroups as $current_exhibitGroup) {
-		  	   													$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+                              $current_exhibitGroups =  ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+															if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   												 	  $groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
 	                         		}
 
                               $exhibit_ownerId =  $exhibit['owner_id'];
@@ -216,9 +220,11 @@ if ($xml = file_get_contents($url))
                     		  }
 
                     		  if (($user->role=='contributor') || ($user->role=='researcher')) {
-                              $current_exhibitGroups = LibraryExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
-                              foreach($current_exhibitGroups as $current_exhibitGroup) {
-		  	   													$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+                              $current_exhibitGroups = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+                              if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   												   	$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
 	                         		}
 
                               $exhibit_ownerId =  $exhibit['owner_id'];

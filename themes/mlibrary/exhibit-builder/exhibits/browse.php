@@ -7,7 +7,7 @@ echo head(
      )
    );
 
-//$exhibit_image_object = new LibraryImagBelongToExhibitRelationShip();?>
+//$exhibit_image_object = new ImagBelongToExhibitRelationShip();?>
 
 <?php $awkward_gallery_setting = get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
   <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>
@@ -27,7 +27,7 @@ echo head(
             <div class="item-body">
               <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
-                $theme_options_array['exhibitimage'] = LibraryImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
+                $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
                 $Exhibit_image = $theme_options_array['exhibitimage'];
 
                 echo '<div class="img-wrap">';
