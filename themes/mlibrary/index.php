@@ -1,5 +1,5 @@
 <?php echo head(array('bodyid'=>'home'));
-			$exhibit_image_object = new CosignImagexhibitrelationship();
+		//	$exhibit_image_object = new ImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
@@ -27,17 +27,22 @@
          && function_exists('exhibit_builder_display_random_featured_exhibit')) {
       $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
       $feature_exhibit = array_pop($feature_exhibits);
-      $exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($feature_exhibit->id);
-      $image_size = getimagesize(
-        str_replace(
-          'https://',
-          'http://',
-          WEB_FILES . $exhibit_image['image_name']
-        )
-      );
+      $exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($feature_exhibit->id);
+      if (!empty($exhibit_image)) {
+        $image_size = getimagesize(
+           str_replace(
+           'https://',
+           'http://',
+           WEB_FILES . $exhibit_image['image_name']
+          )
+        );
+      }
+      else {
+      $image_size = '';
+      }
 
       // If we successfully got the image size...
-      if ($image_size) {
+     if ($image_size) {
         $img_src = WEB_FILES . $exhibit_image['image_name'];
 
         // Adjust the styling based on the aspect ratio of the image...
@@ -81,10 +86,12 @@
 
             <div class="img-wrap">
               <?php
-                $Exhibit_image = $exhibit_image_object->get_image_attached_to_exhibits($exhibits->id);
+                $Exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibits->id);
+
                 if (!empty($Exhibit_image)) {
-                  echo '<img src="'.WEB_FILES.$Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
+                  echo '<img src="'. WEB_FILES . $Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
                 } else {
+
                   echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
                 }
               ?>

@@ -1,9 +1,8 @@
 <?php
-
 /**
 *
 */
-class CosignPageTable extends Omeka_Db_Table
+class ListOfGroupsTable extends Omeka_Db_Table
 {
     // Original table name was 'posters', not 'my_omeka_posters'
    // protected $_name = 'grouping_relationship';

@@ -1,9 +1,10 @@
 <?php
-
 	$request = Zend_Controller_Front::getInstance()->getRequest();
-	$group_names_object = new CosignPage();
-	$groups_exhibits_object = new CosignGroupexhibitrelationship();
-	//$actionName = $request->getActionName();
+	if (class_exists('ListOfGroups')) {
+	    $groups_names_object = new ListOfGroups();
+	}
+	else
+   	$groups_names_object = '';
 ?>
 
 <style>
@@ -117,9 +118,7 @@ if ($xml = file_get_contents($url))
                 <?php echo $this->formLabel('tags', __('Tags')); ?>
             </div>
             <div class="five columns omega inputs">
-                <?php //$exhibitTagList = join(', ', pluck('name', $exhibit->Tags)); ?>
-                 <?php //Added by Nancy Moussa
-                 $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
+                 <?php $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
                 <?php echo $this->formText('tags', $exhibitTagList); ?>
             </div>
            <div class="two columns alpha">
@@ -129,14 +128,15 @@ if ($xml = file_get_contents($url))
             <div class="five columns omega inputs">
              <fieldset id="lib-tags">
               <p>You must click <strong> Update Tags</strong> to add additional tags to the Exhibit.</p>
-              <?php foreach ($hlplists['subject'] as $subjectvalue) {
-              if(!empty($subjectvalue['name'])) {
+              <?php
+              foreach ($hlplists['subject'] as $subjectvalue) {
+              if (!empty($subjectvalue['name'])) {
                     echo "<li class='subject-parent'>". $this->formCheckbox($subjectvalue['name'])."<label for='".$subjectvalue['name']."'><a href='#' class='subjectshow_hide'>".$subjectvalue['name']."</a></label>";
               ?>
                     <div class='internalslidingDiv'>
                  	   <ul>
                       <?php foreach ($subjectvalue->topic as $value) {
-                                   if ($value->xpath("sub-topic")){
+                                   if ($value->xpath("sub-topic")) {
                                       print "<li class='subject-parent '>".$this->formCheckbox($value['name'])."<label for='".$value['name']."'><a href='#' class='subject-nested'>".$value['name']."</a></label>"; ?>
                                       <div class='subject-sub-internalslidingDiv'>
                                         <ul>
@@ -171,6 +171,9 @@ if ($xml = file_get_contents($url))
                 <?php endif;?>
             </div>
         </div>
+            <?php
+            if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
+            ?>
      <div class="field">
         <?php  $user = current_user();?>
             <div class="two columns alpha">
@@ -182,42 +185,63 @@ if ($xml = file_get_contents($url))
                 ?>
             </div>
             <div class="five columns omega inputs">
-                <?php //$values = array('' => __('')) + exhibit_builder_get_themes(); ?>
-                <?php //echo get_view()->formSelect('theme', $exhibit->theme, array(), $values); ?>
-                <?php /*if ($theme && $theme->hasConfig): ?>
-                    <a href="<?php echo html_escape(url("exhibits/theme-config/$exhibit->id")); ?>" class="configure-button button"><?php echo __('Configure'); ?></a>
-                <?php endif;*/?>
                 <?php
-                      $group_names = $group_names_object->get_groups_names();
+                      $group_names = $groups_names_object->get_groups_names();
                       $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
-                      //($acl->isAllowed('super') || $acl->isAllowed('admin'))
+                      $groupExhibitValue[] = '';
+                      $groupValue[] = '';
 
                       if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
-                             echo $this->formSelect('group-selection','','',$group_names);
+                             echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
+
                       elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
-                              $groupValue =  $group_names_object->get_groups_names_belongto_user($user->id,$user->role);
-                    			    echo $this->formSelect('group-selection',$groupValue,'',$groupValue);
+                              $user_group_objects =  GroupUserRelationship::findUserRelationshipRecords($user->id);
+                              if (!empty($user_group_objects)) {
+                                   foreach($user_group_objects as $user_group_object) {
+		  	   													  $groupValue[]= $user_group_object['group_id'];
+	                         		     }
+	                         		}
+                    			    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
                     	}
-                      elseif ($request->getActionName()=='edit'){
+
+                      elseif ($request->getActionName()=='edit') {
                           if (($user->role=='super') || ($user->role=='admin')) {
+                              $current_exhibitGroups =  ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+															if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   												 	  $groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
+	                         		}
 
-                              $groupValue =  $groups_exhibits_object->get_groups_ids_attached_to_exhibits($exhibit->id);
-                              echo $this->formSelect('group-selection',$groupValue,'',$group_names);
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+                               echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
                     		  }
+
                     		  if (($user->role=='contributor') || ($user->role=='researcher')) {
+                              $current_exhibitGroups = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+                              if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   												   	$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
+	                         		}
 
-                              $group_exhibit_id =  $groups_exhibits_object->get_groups_ids_attached_to_exhibits($exhibit->id);
-                              $groupValue =  $group_names_object->get_groups_names_belongto_user($user->id,$user->role);
-                              echo $this->formSelect('group-selection',$group_exhibit_id,'',$groupValue);
-                    		  }
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              if ($exhibit_ownerId == $user->id) {
+				                          echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$group_names);
+				                      }
+				                      else {
+				                         $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+				                         echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
+				                      }
+
+                          }
                       }
-                    //else{
-              		       //$group_id = get_groups_ids_attached_to_exhibits($exhibit->id);
-                    		 //echo select(array('name'=>'group-selection','id'=>'group-selection'),get_groups_names_belongto_user($user->entity_id,$user->role),$group_id);
-                    //}
                 ?>
             </div>
         </div>
+              <?php }
+            ?>
     </fieldset>
     <fieldset>
         <legend><?php echo __('Pages'); ?></legend>

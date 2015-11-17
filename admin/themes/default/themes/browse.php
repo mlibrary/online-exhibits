@@ -20,16 +20,16 @@ if ($current->image) {
         <h3><?php echo html_escape($current->title); ?></h3>
         <p class="author"><a href="<?php echo html_escape($current->website); ?>"><?php echo __('By %s', html_escape($current->author)); ?></a></p>
         <p class="theme-description"><?php echo html_escape($current->description); ?></p>
-        <p class="theme-support-link"><a href="<?php echo $current->support_link; ?>" target="_blank"><?php echo __('Get support');?></a></p>
+        <!--<p class="theme-support-link"><a href="<?php echo $current->support_link; ?>" target="_blank"><?php echo __('Get support');?></a></p>-->
     </div>
 </div>
 
 <p class="managethemes"><?php echo __('Add new themes by downloading them from the <a href="http://omeka.org/add-ons/themes/" target="_blank">Omeka Theme Directory</a>, or <a href="http://omeka.org/codex/Theme_Writing_Best_Practices" target="_blank">design your own</a>!'); ?></p>
 <div class="themes group">
 <form method="post" action="<?php echo $this->url(array('controller'=>'themes', 'action'=>'switch'), 'default'); ?>">
-<?php 
+<?php
 $i = 0;
-foreach($themes as $theme): 
+foreach($themes as $theme):
     if ($current != $theme ):
     if ($theme->image) {
         $themeScreenshot = html_escape($theme->image);
@@ -37,7 +37,7 @@ foreach($themes as $theme):
         $themeScreenshot = img('fallback-theme.png');
     }
 ?>
- 
+
         <div class="theme<?php if($current == $theme) echo ' current-theme';?> three columns<?php if ($i++ % 3) echo ' alpha'; ?>">
             <div class="crop">
                 <img src="<?php echo $themeScreenshot; ?>" alt="<?php echo __('Screenshot for %s Theme', html_escape($theme->title)); ?>" />
@@ -46,7 +46,7 @@ foreach($themes as $theme):
             <div class="meta">
                 <h3><?php echo html_escape($theme->title); ?></h3>
                 <p class="author"><a href="<?php echo html_escape($theme->website); ?>" target="_blank"><?php echo __('By %s', html_escape($theme->author)); ?></a></p>
-                <p class="theme-support-link"><a href="<?php echo $current->support_link; ?>" target="_blank"><?php echo __('Get support');?></a></p>
+                <!--<p class="theme-support-link"><a href="<?php echo $current->support_link; ?>" target="_blank"><?php echo __('Get support');?></a></p>-->
             </div>
             <?php fire_plugin_hook('admin_themes_browse_each', array('theme' => $theme, 'view' => $this)); ?>
         </div>
