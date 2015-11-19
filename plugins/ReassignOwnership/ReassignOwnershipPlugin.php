@@ -75,14 +75,14 @@ class ReassignOwnershipPlugin extends Omeka_Plugin_AbstractPlugin
 
             // if it is a new record, user->id will be the default as an owner
 						if (isset($record->getOwner()->id)) {
-		         		echo $view->formSelect('reassign_ownership_id',$record->getOwner()->id , array('id'=>'reassign-ownership'), get_table_options('User', null, array('sort_field' => 'name')));
+		         		echo $view->formSelect('reassign_ownership_id',$record->getOwner()->id ,
+		         		array('id'=>'reassign-ownership'), get_table_options('User', null, array('sort_field' => 'name')));
          		}
          		else {
-								echo $view->formSelect('reassign_ownership_id',$user->id , array('id'=>'reassign-ownership'), get_table_options('User', null, array('sort_field' => 'name')));
+								echo $view->formSelect('reassign_ownership_id',$user->id , array('id'=>'reassign-ownership'),
+								get_table_options('User', null, array('sort_field' => 'name')));
          		}
-
             echo "</div>";
-
         }
     }
 }
