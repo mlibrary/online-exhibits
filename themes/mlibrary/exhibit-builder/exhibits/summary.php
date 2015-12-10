@@ -52,7 +52,11 @@
       <?php
         $exhibit_record = get_current_record('exhibit', false);
         $theme_options_array = $exhibit_record->getThemeOptions();
-        $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit_record['id']);
+        if (class_exists('ExhibitBuilderImagePlugin')) {
+      		  $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit_record['id']);
+        }
+        else
+            $theme_options_array['exhibitimage'] = '';
         $exhibit_image = $theme_options_array['exhibitimage'];
 
         if ($exhibit_image) {

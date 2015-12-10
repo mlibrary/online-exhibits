@@ -1,5 +1,4 @@
 <?php echo head(array('bodyid'=>'home'));
-		//	$exhibit_image_object = new ImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
@@ -27,7 +26,13 @@
          && function_exists('exhibit_builder_display_random_featured_exhibit')) {
       $feature_exhibits = mlibrary_exhibit_builder_display_random_featured_exhibit();
       $feature_exhibit = array_pop($feature_exhibits);
-      $exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($feature_exhibit->id);
+      if (class_exists('ExhibitBuilderImagePlugin')) {
+        $exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($feature_exhibit->id);
+      }
+      else {
+        $exhibit_image = '';
+      }
+
       if (!empty($exhibit_image)) {
         $image_size = getimagesize(
            str_replace(
@@ -86,14 +91,18 @@
 
             <div class="img-wrap">
               <?php
-                $Exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibits->id);
+              if (class_exists('ExhibitBuilderImagePlugin')) {
+                 $Exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibits->id);
+              }
+              else {
+                 $Exhibit_image = '';
+              }
 
-                if (!empty($Exhibit_image)) {
+              if (!empty($Exhibit_image)) {
                   echo '<img src="'. WEB_FILES . $Exhibit_image['image_name'].'" alt="'.$Exhibit_image['image_title'].'" />';
-                } else {
-
+              } else {
                   echo('<img src="'.img("mlibrary_galleryDefault.jpg").'" alt="Mlibrary default image"/>');
-                }
+              }
               ?>
             </div>
 
