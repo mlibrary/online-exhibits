@@ -2,17 +2,18 @@
 
 <h1><?php echo metadata('item', array('Dublin Core', 'Title')); ?></h1>
 
+    <?php if (get_theme_option('Item FileGallery') == 0 && metadata('item', 'has files')): ?>
+    <div class="element-text"><?php echo files_for_item(array('imageSize' => 'fullsize')); ?></div>
+    <?php endif; ?>
+
+
 <?php echo all_element_texts('item'); ?>
 
 <!-- The following returns all of the files associated with an item. -->
-<?php if (metadata('item', 'has files')): ?>
+<?php if (metadata('item', 'has files') && (get_theme_option('Item FileGallery') == 1)): ?>
 <div id="itemfiles" class="element">
     <h3><?php echo __('Files'); ?></h3>
-    <?php if (get_theme_option('Item FileGallery') == 1): ?>
     <div class="element-text"><?php echo item_image_gallery(); ?></div>
-    <?php else: ?>
-    <div class="element-text"><?php echo files_for_item(); ?></div>
-    <?php endif; ?>
 </div>
 <?php endif; ?>
 
