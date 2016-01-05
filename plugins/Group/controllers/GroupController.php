@@ -17,12 +17,12 @@ class Group_GroupController extends UsersController {
  {
         // Create a new page.
        $user = new User();
-	     $userForm = $this->_getUserForm($user);
-	     $groupUserObjects = GroupUserRelationship::findUserRelationshipRecords($user->id);
-	     $userForm = $this->_addElement($userForm, $user, $groupUserObjects);
-        $userForm->setSubmitButtonText(__('Add User'));
-        $this->view->form = $userForm;
-	      if (!$this->getRequest()->isPost()) {
+	   $userForm = $this->_getUserForm($user);
+	   $groupUserObjects = GroupUserRelationship::findUserRelationshipRecords($user->id);
+	   $userForm = $this->_addElement($userForm, $user, $groupUserObjects);
+    //    $userForm->setSubmitButtonText(__('Add User'));
+       $this->view->form = $userForm;
+	   if (!$this->getRequest()->isPost()) {
 				 		return;
 	      }
 
@@ -62,8 +62,7 @@ class Group_GroupController extends UsersController {
   	$changePasswordForm = new Omeka_Form_ChangePassword;
     $changePasswordForm->setUser($user);
     $userForm = $this->_getUserForm($user);
-
-    $userForm->setSubmitButtonText(__('Save Changes'));
+//    $userForm->setSubmitButtonText(__('Save Changes'));
 
     if ($currentUser->role == 'super') {
        $userForm =  $this->_addElement($userForm, $user, $groupUserObjects);
@@ -109,6 +108,7 @@ class Group_GroupController extends UsersController {
                   $success = true;
               }
         } else {
+
               if  (!$userForm->isValid($_POST)) {
 				       		$this->_helper->flashMessenger(__('There was an invalid entry on the form. Please try again.'), 'error');
                   return;
@@ -130,6 +130,7 @@ class Group_GroupController extends UsersController {
                   $this->_helper->flashMessenger($user->getErrors());
               }
         } //$_POST['update_api_keys']
+
         if ($success) {
                 // Redirect to the current page
 				      $this->_helper->redirector->gotoRoute();

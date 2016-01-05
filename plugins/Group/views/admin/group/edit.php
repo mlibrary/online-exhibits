@@ -11,12 +11,19 @@ echo head(array('title' => $userTitle, 'bodyclass' => 'users'));
 <?php echo flash(); ?>
 
 <section class="seven columns alpha">
+<form method="post">
     <p class='explanation'>* <?php echo __('required field'); ?></p>
-    <?php echo $this->form; 
-     if (is_allowed($user, 'delete')): 
-    echo link_to($user, 'delete-confirm', __('Delete'), array('class' => 'red button delete-confirm')); 
-     endif;?> 
+    <?php
+       echo $this->form;
+       if (is_allowed($user, 'delete')):
+           echo link_to($user, 'delete-confirm', __('Delete'), array('class' => 'red button delete-confirm'));
+       endif;
+       echo $this->formSubmit('submit', __('Save Changes'), array('class' => 'submit big green button'));
+     ?>
 </section>
+</form>
+
+
 
 <section class="ten columns alpha">
     <form method="post">
@@ -66,7 +73,7 @@ echo head(array('title' => $userTitle, 'bodyclass' => 'users'));
         </tbody>
     </table>
     <?php endif; ?>
-    <?php echo $this->formSubmit('update_api_keys', 'Update API Keys'); ?>
+    <?php echo $this->formSubmit('update_api_keys', 'Update API Keys');?>
     </form>
 </section>
 <?php fire_plugin_hook('admin_users_form', array('user' => $user, 'form' => $form, 'view' => $this)); ?>
