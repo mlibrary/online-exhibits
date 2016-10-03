@@ -27,20 +27,32 @@ echo head(
             <div class="item-body">
               <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
-              if (class_exists('ExhibitBuilderImagePlugin')) {
+             /* if (class_exists('ExhibitBuilderImagePlugin')) {
                   $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
               }
               else {
                   $theme_options_array['exhibitimage'] = '';
-              }
+              }*/
 
-                $Exhibit_image = $theme_options_array['exhibitimage'];
+              if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
+               //echo exhibit_builder_link_to_exhibit($exhibit, $exhibitImage, array('class' => 'image'));
+
+                    $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
+               } else {
+                  //  $theme_options_array['exhibitimage'] = '';
+                      $Exhibit_image = '';
+                    }
+
+
+
+            //    $Exhibit_image = $theme_options_array['exhibitimage'];
+
                 echo '<div class="img-wrap">';
 
                   if (!empty($Exhibit_image)) {
-                    echo '<img src="' . WEB_FILES . $Exhibit_image['image_name'] . '" alt="'.$Exhibit_image['image_title'] . '" />';
+                      echo $Exhibit_image;//$Exhibit_image['image_name'];
                   } else {
-                    echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt=""/>';
+                    echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Default gallery image"/>';
                   }
 
                 echo '</div>';

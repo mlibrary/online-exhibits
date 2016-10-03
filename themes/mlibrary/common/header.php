@@ -11,6 +11,8 @@
   <meta name="description" content="<?php echo option('description'); ?>" />
   <script src="https://api.simile-widgets.org/ajax/2.2.1/simile-ajax-api.js" type="text/javascript"></script>
   <script src=" https://api.simile-widgets.org/timeline/2.3.1/timeline-api.js?bundle=true" type="text/javascript"></script>
+  <script src="//cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+  <script type="text/javascript" src="https://nancymou.www.lib.umich.edu/online-exhibits-2.3/themes/mlibrary/javascripts/L.TileLayer.Zoomify.js"></script>
 
   <?php
     fire_plugin_hook('public_head', array('view'=>$this));
@@ -27,7 +29,8 @@
     queue_js_file('JwPlayer/jwplayer');
     queue_js_file('fancybox/source/fancybox-init-config');
     queue_js_file('jquery.aw-showcase.min');
-
+    queue_js_file('openseadragon/openseadragon.min');
+    queue_js_file('openseadragon/openseadragon-viewerinputhook.min');
     echo auto_discovery_link_tags();
     echo head_css();
     echo head_js();

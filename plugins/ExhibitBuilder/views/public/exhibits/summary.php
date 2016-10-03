@@ -18,13 +18,13 @@
 <?php endif; ?>
 </div>
 
+<?php
+$pageTree = exhibit_builder_page_tree();
+if ($pageTree):
+?>
 <nav id="exhibit-pages">
-    <ul>
-        <?php set_exhibit_pages_for_loop_by_exhibit(); ?>
-        <?php foreach (loop('exhibit_page') as $exhibitPage): ?>
-        <?php echo exhibit_builder_page_summary($exhibitPage); ?>
-        <?php endforeach; ?>
-    </ul>
+    <?php echo $pageTree; ?>
 </nav>
+<?php endif; ?>
 
 <?php echo foot(); ?>

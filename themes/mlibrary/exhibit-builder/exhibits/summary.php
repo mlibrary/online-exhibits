@@ -52,15 +52,16 @@
       <?php
         $exhibit_record = get_current_record('exhibit', false);
         $theme_options_array = $exhibit_record->getThemeOptions();
-        if (class_exists('ExhibitBuilderImagePlugin')) {
-      		  $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit_record['id']);
-        }
-        else
-            $theme_options_array['exhibitimage'] = '';
-        $exhibit_image = $theme_options_array['exhibitimage'];
 
-        if ($exhibit_image) {
-          echo '<img src="' . WEB_FILES.$exhibit_image['image_name'] . '" alt="' . $exhibit_image['image_title'] . '" />';
+        if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
+           $Exhibit_image = $exhibitImage;
+        } else {
+           $Exhibit_image = '';
+        }
+
+        if ($Exhibit_image) {
+         // echo '<img src="' . WEB_FILES.$exhibit_image['image_name'] . '" alt="' . $exhibit_image['image_title'] . '" />';
+            echo $Exhibit_image;
         } else {
           echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Mlibrary default image"/>';
         }

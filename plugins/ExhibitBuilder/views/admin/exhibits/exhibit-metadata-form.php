@@ -76,8 +76,9 @@ if ($xml = file_get_contents($url))
 ?>
 
 
+
 <form id="exhibit-metadata-form" method="post" class="exhibit-builder">
-    <div class="seven columns alpha">
+    <section class="seven columns alpha">
     <fieldset>
         <legend><?php echo __('Exhibit Metadata'); ?></legend>
         <div class="field">
@@ -118,14 +119,15 @@ if ($xml = file_get_contents($url))
                 <?php echo $this->formLabel('tags', __('Tags')); ?>
             </div>
             <div class="five columns omega inputs">
-                 <?php $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
+                <?php $exhibitTagList = join('; ', pluck('name', $exhibit->Tags)); ?>
                 <?php echo $this->formText('tags', $exhibitTagList); ?>
             </div>
-           <div class="two columns alpha">
+        </div>
+        <div class="two columns alpha">
             	 <?php echo $this->formLabel('add-library-tags:', __('Add Library Tags:')); ?>
             	 <?php echo $this->formButton('lib-tag-update','Update Tags'); ?>
-            </div>
-            <div class="five columns omega inputs">
+        </div>
+           <div class="five columns omega inputs">
              <fieldset id="lib-tags">
               <p>You must click <strong> Update Tags</strong> to add additional tags to the Exhibit.</p>
               <?php
@@ -157,8 +159,7 @@ if ($xml = file_get_contents($url))
                     </li>
               <?php }}?>
               </fieldset>
-              </div>
-        </div>
+         </div>
         <div class="field">
             <div class="two columns alpha">
                 <?php echo $this->formLabel('theme', __('Theme')); ?>
@@ -166,12 +167,11 @@ if ($xml = file_get_contents($url))
             <div class="five columns omega inputs">
                 <?php $values = array('' => __('Current Public Theme')) + exhibit_builder_get_themes(); ?>
                 <?php echo get_view()->formSelect('theme', $exhibit->theme, array(), $values); ?>
-                <?php if ($theme && $theme->hasConfig): ?>
-                    <a href="<?php echo html_escape(url("exhibits/theme-config/$exhibit->id")); ?>" class="configure-button button"><?php echo __('Configure'); ?></a>
-                <?php endif;?>
+                    <input type="submit" class="configure-button" name="configure-theme" value="<?php echo __('Configure'); ?>">
             </div>
         </div>
-            <?php
+
+  <?php
             if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
             ?>
      <div class="field">
@@ -242,6 +242,16 @@ if ($xml = file_get_contents($url))
         </div>
               <?php }
             ?>
+
+        <div class="field">
+            <div class="two columns alpha">
+                <?php echo $this->formLabel('use_summary_page', __('Use Summary Page?')); ?>
+            </div>
+            <div class="five columns omega inputs">
+                <p class="explanation"><?php echo __("Start the exhibit on the summary page. If unchecked, start on the first exhibit page if it exists."); ?></p>
+                <?php echo $this->formCheckbox('use_summary_page', $exhibit->use_summary_page, array(), array('1', '0')); ?>
+            </div>
+        </div>
     </fieldset>
     <fieldset>
         <legend><?php echo __('Pages'); ?></legend>
@@ -249,7 +259,7 @@ if ($xml = file_get_contents($url))
             <?php if (!$exhibit->TopPages): ?>
                 <p><?php echo __('There are no pages.'); ?></p>
             <?php else: ?>
-                <p id="reorder-instructions"><?php echo __('To reorder pages, click and drag the page up or down to the preferred location.'); ?></p>
+                <p class="instructions"><?php echo __('To reorder or nest pages, click and drag a page to the preferred location.'); ?></p>
                 <?php echo common('page-list', array('exhibit' => $exhibit), 'exhibits'); ?>
             <?php endif; ?>
         </div>
@@ -257,37 +267,36 @@ if ($xml = file_get_contents($url))
             <input type="submit" name="add_page" id="add-page" value="<?php echo __('Add Page'); ?>" />
         </div>
     </fieldset>
-    </div>
+    </section>
     <?php echo $csrf; ?>
-
-    <div id="save" class="three columns omega panel">
-        <?php echo $this->formSubmit('save_exhibit', __('Save Changes '), array('class'=>'submit big green button')); ?>
-        <?php if ($exhibit->exists()): ?>
-            <?php echo exhibit_builder_link_to_exhibit($exhibit, __('View Public Page'), array('class' => 'big blue button', 'target' => '_blank')); ?>
-            <?php echo link_to($exhibit, 'delete-confirm', __('Delete The Exhibit'), array('class' => 'big red button delete-confirm')); ?>
-        <?php endif; ?>
-        <div id="public-featured">
-            <div class="public">
-                <label for="public"><?php echo __('Public'); ?>:</label>
-                <?php if ($request->getActionName()=='add'): ?>
-                   <?php echo $this->formCheckbox('public',0, array(), array('1', '0')); ?>
-                <?php else: ?>
-                   <?php echo $this->formCheckbox('public',$exhibit->public, array(), array('1', '0')); ?>
+    <section class="three columns omega">
+        <div id="save" class="panel">
+            <?php echo $this->formSubmit('save_exhibit', __('Save Changes'), array('class'=>'submit big green button')); ?>
+            <?php if ($exhibit->exists()): ?>
+                <?php echo exhibit_builder_link_to_exhibit($exhibit, __('View Public Page'), array('class' => 'big blue button', 'target' => '_blank')); ?>
+                <?php if (is_allowed($exhibit, 'delete')): ?>
+                    <?php echo link_to($exhibit, 'delete-confirm', __('Delete Exhibit'), array('class' => 'big red button delete-confirm')); ?>
                 <?php endif; ?>
-
-            </div>
-            <div class="featured">
-                <label for="featured"><?php echo __('Featured'); ?>:</label>
-                <?php echo $this->formCheckbox('featured', $exhibit->featured, array(), array('1', '0')); ?>
+            <?php endif; ?>
+            <div id="public-featured">
+                <div class="public">
+                    <label for="public"><?php echo __('Public'); ?>:</label>
+                    <?php echo $this->formCheckbox('public', $exhibit->public, array(), array('1', '0')); ?>
+                </div>
+                <div class="featured">
+                    <label for="featured"><?php echo __('Featured'); ?>:</label>
+                    <?php echo $this->formCheckbox('featured', $exhibit->featured, array(), array('1', '0')); ?>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 </form>
 
 <script type="text/javascript" charset="utf-8">
+//<![CDATA[
     jQuery(window).load(function() {
-        Omeka.ExhibitBuilder.wysiwyg();
-        //////////////////////////////
+        Omeka.wysiwyg();
+    //////////////////////////////
         jQuery.noConflict();
 		    jQuery(".internalslidingDiv").hide();
         jQuery(".subject-sub-internalslidingDiv").hide();
@@ -336,5 +345,5 @@ if ($xml = file_get_contents($url))
 	  		  tagsInput.focus(); //provide feedback by setting focus to the input
        });// lib-tag-update
     }); //jQuery(window).load(function() {
+//]]>
 </script>
-

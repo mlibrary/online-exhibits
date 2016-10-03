@@ -20,6 +20,28 @@
   margin: 0 !important;
 }
 
+.layout-file-text .exhibit-items.right {
+    float: right;
+    margin-left: 5%;
+    margin-right: 0;
+    width: 48%;
+}
+
+.layout-gallery .gallery-showcase.right, .layout-gallery .gallery.right {
+    float: right;
+    margin-left: 0%;
+}
+
+.layout-gallery .gallery-showcase.left.with-right {
+    margin-right: 13px;
+}
+
+.layout-file-text .exhibit-items.left {
+    float: left;
+    margin-left: 0%;
+    margin-right: 2%;
+} 
+
 .pagination input[type="text"] {
   width: 35px;
   margin-right: 1px;
@@ -73,7 +95,7 @@
   display: inline-block;
 }
 
-.exhibit-item img {
+.layout-gallery .gallery.with-showcase .exhibit-item img {
   max-width: 75%;
   border: 2px solid #CCC;
   box-shadow: none;

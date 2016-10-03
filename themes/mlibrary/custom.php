@@ -79,7 +79,7 @@ function mlibrary_display_related_exhibits($item) {
 
 
 //Return a zoomed image object.
-function mlibrary_zoom_fullsize_image($image_index=0, $filename = Null, $theme_name = Null) {
+/*function mlibrary_zoom_fullsize_image($image_index=0, $filename = Null, $theme_name = Null) {
   $image_object = '<div class="zoom img' . $image_index . ' swf-zoom">
 	<OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
    CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
@@ -106,7 +106,14 @@ function mlibrary_zoom_fullsize_image($image_index=0, $filename = Null, $theme_n
   return $image_object;
 }
 
+function mlibrary_zoom_fullsize_image($item) {
+  $my_image = fire_plugin_hook('open_layers_zoom_display_file', array('file' => $item));
+        //    $my_image = fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
+  return $my_image;
+}*/
+
 function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name) {
+// $objectOpenSeadragonPlugin = new OpenSeadragonPlugin();
  set_loop_records('files', get_current_record('item')->Files);
   // removed the if condition from here
   // Either image or sound
@@ -138,11 +145,15 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
 		                             )
 		                );
 
-     if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
-     $html_fullsize_image = mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
-     } else {
-     $html_fullsize_image = file_markup($file,array(
-				        'imageSize' => 'fullsize',
+   //  if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+         //$html_fullsize_image = mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
+        // $html_fullsize_image = mlibrary_zoom_fullsize_image($file);
+//$html_fullsize_image = $objectOpenSeadragonPlugin->openseadragon_pyramid($file,'original');
+//print_r($html_fullsize_image);
+//exit;
+  //   } else {
+         $html_fullsize_image = file_markup($file,array(
+		        		        'imageSize' => 'fullsize',
                                         'imgAttributes' => array(
                               	             'alt' => strip_formatting(metadata(
                               	                      'item',
@@ -158,10 +169,10 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
 						             'class' => 'fullsize img' . $image_index,
             						     'id' => 'item-image')
           						     );
-     }
-     $fullsizeimage = true;
-     $json_fullsize['img'.$image_index] = $html_fullsize_image;
-     } else {
+    // }
+         $fullsizeimage = true;
+         $json_fullsize['img'.$image_index] = $html_fullsize_image;
+    } else {
      $file_metadata .= '<div class="file-metadata img' .$image_index .
                           '" style="display:none">' . strip_formatting(metadata(
                                                                   'file',
@@ -175,9 +186,11 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
                           				     'linkToFile' => false), array(
                                             					    'class' => 'square_thumbnail img' .$image_index )
 				           );
-     if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
-      $json_fullsize['img'.$image_index] = mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
-     } else {
+     //if (file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+       //$json_fullsize['img'.$image_index] = $this->openLayersZoom()->zoom($filename);
+      // $json_fullsize['img'.$image_index] = mlibrary_zoom_fullsize_image($file);
+      // mlibrary_zoom_fullsize_image($image_index, $filename, $theme_name);
+     //} else {
       $html_fullsize_image .= file_markup($file, array(
 					  'imageSize' => 'fullsize',
 				          'imgAttributes'=> array(
@@ -206,7 +219,7 @@ function mlibrary_display_still_image($item, $image_index=0, $audio, $theme_name
 									                         		 'id' => 'item-image'
 											                         )
 						     );
-      }//zoom
+     // }//zoom
    }// else fullsizeimage is true
   } // file has a thumbnail
   endforeach;
@@ -419,6 +432,7 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
 *
 **/
 function mlibrary_exhibit_builder_custom_layout($file, $item, $displayFilesOptions, $htmlimage) {
+
 	$extension = pathinfo($file->filename, PATHINFO_EXTENSION);
 	$filename = basename($file->filename,'.'.$extension);
 	$htmlimage['id'.$file->id]['archive'] = $item->id;
@@ -433,7 +447,8 @@ function mlibrary_exhibit_builder_custom_layout($file, $item, $displayFilesOptio
 	$htmlimage['id'.$file->id]['title']       = $displayFilesOptions['title'];
 	$htmlimage['id'.$file->id]['date']        = $displayFilesOptions['year'];
 	$firstimage='true';
-	if(file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+	/*if(file_exists('files/zoom_tiles/'.$filename.'_zdata')) {
+   //   $htmlimage['id'.$file->id]['image'] = mlibrary_zoom_fullsize_image($file);
     $htmlimage['id'.$file->id]['image'] = '<div class="zoom id' . $file->id . ' exhibit-item">
       <OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
               CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"
@@ -441,11 +456,11 @@ function mlibrary_exhibit_builder_custom_layout($file, $item, $displayFilesOptio
               HEIGHT="450" ID="theMovie">
 		    <PARAM NAME="FlashVars"
                VALUE="zoomifyImagePath=' . url('') . 'files/zoom_tiles/' . $filename . '_zdata">
-        <PARAM NAME="MENU"
+            <PARAM NAME="MENU"
                VALUE="FALSE">
-	      <PARAM NAME="SRC"
+	        <PARAM NAME="SRC"
                VALUE="' . url('') . 'themes/mlibrary/javascripts/ZoomifyViewer.swf">
-  	    <PARAM NAME="wmode"
+  	        <PARAM NAME="wmode"
                VALUE="opaque">
 		    <EMBED FlashVars="zoomifyImagePath=' . url('') . 'files/zoom_tiles/' . $filename . '_zdata"
                SRC="' . url('') . 'themes/mlibrary/javascripts/ZoomifyViewer.swf"
@@ -455,11 +470,11 @@ function mlibrary_exhibit_builder_custom_layout($file, $item, $displayFilesOptio
                WIDTH="100%"
                HEIGHT="450"
                NAME="theMovie">
-        </EMBED>
+            </EMBED>
       </OBJECT>
     </div>';
   }
-  else {
+  else {*/
     $htmlimage['id'.$file->id]['image'] = '<div class="fullsize id'.$file->id.' exhibit-item">' .
       file_markup(
         $file,
@@ -485,7 +500,7 @@ function mlibrary_exhibit_builder_custom_layout($file, $item, $displayFilesOptio
         )
       ) .
     '</div>';
-  }
+  //}
   return $htmlimage;
 }
 

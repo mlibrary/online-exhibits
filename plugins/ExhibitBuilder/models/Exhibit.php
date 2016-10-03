@@ -4,7 +4,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.txt
  * @package ExhibitBuilder
  */
- 
+
 /**
  * Exhibit model.
  *
@@ -12,27 +12,110 @@
  */
 class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
+    /**
+     * Exhibit title.
+     *
+     * @var string
+     */
     public $title;
+
+    /**
+     * Exhibit description (in HTML).
+     *
+     * @var string
+     */
     public $description;
+
+    /**
+     * Exhibit credits.
+     *
+     * @var string
+     */
     public $credits;
+
+    /**
+     * Whether the exhibit is featured.
+     *
+     * @var integer
+     */
     public $featured = 0;
-    public $public = 1;
+
+    /**
+     * Whether the exhibit is public.
+     *
+     * @var integer
+     */
+    public $public = 0;
+
+    /**
+     * Public theme to use for this exhibit.
+     *
+     * @var string
+     */
     public $theme;
+
+    /**
+     * Options for this exhibit's theme, serialized.
+     *
+     * @var string
+     */
     public $theme_options;
+
+    /**
+     * URL slug for the exhibit.
+     *
+     * @var string
+     */
     public $slug;
+
+    /**
+     * Date the exhibit was created, as a MySQL-formatted date string.
+     *
+     * @var string
+     */
     public $added;
+
+    /**
+     * Date the exhibit was last modified, as a MySQL-formatted date string.
+     *
+     * @var string
+     */
     public $modified;
+
+    /**
+     * User ID of the user who created the exhibit.
+     *
+     * @var integer
+     */
     public $owner_id;
 
+    /**
+     * Whether the summary page will be used.
+     *
+     * @var integer
+     */
+    public $use_summary_page = 1;
+
+    /**
+     * Quick-access mappings for related records.
+     *
+     * @var array
+     */
     protected $_related = array(
-        'Pages' => 'getPages', 'TopPages' => 'getTopPages', 'Tags' => 'getTags'
+        'Pages' => 'getPages',
+        'PagesById' => 'getPagesById',
+        'PagesByParent' => 'getPagesByParent',
+        'TopPages' => 'getTopPages',
+        'Tags' => 'getTags'
     );
-    
+
+    /**
+     * Set up mixins for shared behaviors.
+     */
     public function _initializeMixins()
     {
         $this->_mixins[] = new Mixin_Tag($this);
         $this->_mixins[] = new Mixin_Owner($this);
-        $this->_mixins[] = new Mixin_Order($this, 'ExhibitPage', 'exhibit_id', 'ExhibitPages');
         $this->_mixins[] = new Mixin_Slug($this, array(
             'slugEmptyErrorMessage' => __('Exhibits must be given a valid slug.'),
             'slugLengthErrorMessage' => __('A slug must be 30 characters or less.'),
@@ -41,7 +124,11 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         $this->_mixins[] = new Mixin_PublicFeatured($this);
         $this->_mixins[] = new Mixin_Search($this);
     }
-    
+
+
+    /**
+     * Validation callback.
+     */
     protected function _validate()
     {
         if (!strlen((string)$this->title)) {
@@ -57,16 +144,29 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         }
     }
 
+    /**
+     * Delete callback.
+     *
+     * Delete all assigned pages when the exhibit is deleted.
+     */
     protected function _delete()
     {
         //get all the pages and delete them
         $pages = $this->getTable('ExhibitPage')->findBy(array('exhibit'=>$this->id));
         foreach($pages as $page) {
+            $page->setFixChildrenOnDelete(false);
             $page->delete();
         }
         $this->deleteTaggings();
     }
 
+    /**
+     * After-save callback.
+     *
+     * Updates search text and page data for the exhibit.
+     *
+     * @param array $args
+     */
     protected function afterSave($args)
     {
         if (!$this->public) {
@@ -75,7 +175,7 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         $this->setSearchTextTitle($this->title);
         $this->addSearchText($this->title);
         $this->addSearchText($this->description);
-        
+
         if ($args['post']) {
             //Add the tags after the form has been saved
             $post = $args['post'];
@@ -110,13 +210,13 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
             if ($parentId == 'null') {
                 $pageData[$pageId] = null;
             }
-            
+
             if (!isset($ordersByParent[$parentId])) {
                 $order = $ordersByParent[$parentId] = 0;
             } else {
                 $order = ++$ordersByParent[$parentId];
             }
-            
+
             $orders[$pageId] = $order;
         }
 
@@ -134,46 +234,103 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
     /**
      * Get all the pages for this Exhibit.
      *
-     * @return array
+     * @return Exhibit[]
      */
     public function getPages()
     {
         return $this->getTable('ExhibitPage')->findBy(array('exhibit' => $this->id, 'sort_field' => 'order'));
     }
 
+    /**
+     * Get all pages for this Exhibit, indexed by page ID.
+     *
+     * @return Exhibit[]
+     */
+    public function getPagesById()
+    {
+        $pages = $this->Pages;
+        $pagesById = array();
+        foreach ($pages as $page) {
+            $pagesById[$page->id] = $page;
+        }
+
+        return $pagesById;
+    }
+
+    /**
+     * Get all pages for this Exhibit, indexed by parent ID.
+     *
+     * @return array
+     */
+    public function getPagesByParent()
+    {
+        $pages = $this->Pages;
+        $pagesByParent = array();
+        foreach ($pages as $page) {
+            $parent_id = $page->parent_id ? (int) $page->parent_id : 0;
+            $pagesByParent[$parent_id][] = $page;
+        }
+
+        return $pagesByParent;
+    }
+
+    /**
+     * Get all the pages for this exhibit with no parent (top-level pages).
+     *
+     * @return ExhibitPage[]
+     */
     public function getTopPages()
     {
         if (!$this->exists()) {
             return array();
         }
 
-        return $this->getTable('ExhibitPage')->findBy(array('exhibit'=>$this->id, 'topOnly'=>true, 'sort_field'=>'order'));
+        $pages = $this->PagesByParent;
+
+        return isset($pages[0]) ? $pages[0] : array();
     }
 
-    public function countTopPages()
-    {
-        if (!$this->exists()) {
-            return 0;
-        }
-
-        return $this->getTable('ExhibitPage')->count(array('exhibit'=>$this->id, 'topOnly'=>true));
-    }
-
-
-    public function getTopPageBySlug($slug)
-    {
-
-    }
-
+    /**
+     * Get the first page with no parent.
+     *
+     * @return ExhibitPage|null
+     */
     public function getFirstTopPage()
     {
+        $topPages = $this->getTopPages();
 
+        $topPage = null;
+        if ($topPages) {
+            $topPage = current($topPages);
+        }
+
+        return $topPage;
     }
 
-
-    public function getPagesCount($topOnly = true)
+    /**
+     * Get the number of pages for the exhibit. Optionally, restrict the count
+     * to only top-level pages.
+     *
+     * @param boolean $topOnly Whether to count only top pages
+     * @return ExhibitPage[]
+     */
+    public function countPages($topOnly = false)
     {
-        return $this->getTable('ExhibitPage')->count(array('exhibit'=>$this->id, 'topOnly'=>$topOnly));
+        return $this->getTable('ExhibitPage')->count(array(
+            'exhibit' => $this->id, 'topOnly' => $topOnly));
+    }
+
+    /**
+     * Alias for countPages, for compatibility purposes.
+     *
+     * @deprecated
+     * @see countPages()
+     * @param boolean $topOnly Whether to count only top pages
+     * @return ExhibitPage[]
+     */
+    public function getPagesCount($topOnly = false)
+    {
+        return $this->countPages($topOnly);
     }
 
     /**
@@ -193,6 +350,12 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         return $this->getTable()->exhibitHasItem($this->id, $item->id);
     }
 
+    /**
+     * Set options and optionally the theme name.
+     *
+     * @param array $themeOptions
+     * @param string|null $themeName
+     */
     public function setThemeOptions($themeOptions, $themeName = null)
     {
         if ($themeName === null) {
@@ -206,6 +369,13 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         $this->theme_options = serialize($themeOptionsArray);
     }
 
+    /**
+     * Get the options for the exhibit's theme.
+     *
+     * @param string|null $themeName If specified, get options for this theme
+     *  instead of the exhibit's theme
+     * @return array
+     */
     public function getThemeOptions($themeName = null)
     {
         if ($themeName === null) {
@@ -220,7 +390,13 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         $themeOptionsArray = unserialize($this->theme_options);
         return @$themeOptionsArray[$themeName];
     }
-    
+
+    /**
+     * Get a URL to this exhibit with the specified action.
+     *
+     * @param string $action Action to link to
+     * @return string
+     */
     public function getRecordUrl($action = 'show')
     {
         if ('show' == $action) {
@@ -230,6 +406,45 @@ class Exhibit extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_I
         $urlHelper = new Omeka_View_Helper_Url;
         $params = array('action' => $action, 'id' => $this->id);
         return $urlHelper->url($params, 'exhibitStandard');
+    }
+
+    /**
+     * Get a representative file for this Exhibit.
+     *
+     * The representative is the first attached file in the exhibit.
+     *
+     * @return File|null
+     */
+    public function getFile()
+    {
+        $db = $this->getDb();
+        $fileTable = $this->getDb()->getTable('File');
+        $select =
+            $fileTable->getSelect()
+            ->joinInner(
+                array('eba' => $db->ExhibitBlockAttachment),
+                'eba.file_id = files.id',
+                array()
+            )
+            ->joinInner(
+                array('epb' => $db->ExhibitPageBlock),
+                'epb.id = eba.block_id',
+                array()
+            )
+            ->joinInner(
+                array('ep' => $db->ExhibitPage),
+                'ep.id = epb.page_id',
+                array()
+            )
+            ->where('ep.exhibit_id = ?', $this->id)
+            ->where('files.has_derivative_image = 1')
+            ->order(array('ep.order', 'ep.parent_id', 'epb.order', 'eba.order'))
+           ->limit(1);
+//$test = $fileTable->fetchObject($select);
+//print($select);
+//exit;
+        return $fileTable->fetchObject($select);
+
     }
 
     /**

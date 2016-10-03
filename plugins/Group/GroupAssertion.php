@@ -24,11 +24,15 @@ class GroupAssertion extends Omeka_Acl_Assert_Ownership {
 		 $user = current_user();
 		 $user_id = $user['id'];
 		 $groups_in_exhibit = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibitId);
-		 $user_groups = GroupUserRelationship::findUserRelationshipRecords($user_id);
+//print_r($groups_in_exhibit);
+//exit;		 
+$user_groups = GroupUserRelationship::findUserRelationshipRecords($user_id);
 		 foreach ($user_groups as $group) {
-		   if((array_search($group,$groups_in_exhibit)!==false))
+  if((array_search($group,$groups_in_exhibit)!==false))
   			  return true;
 		 }
+print_r("I am not valid");
+exit;
 		 return $flag;
  }
 }
