@@ -6,3 +6,4 @@
 /application/logs/errors.log
 /application/logs/
 !/application/logs/.htaccess
+.DS_Store
