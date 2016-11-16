@@ -45,28 +45,39 @@ class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
 			//delete_exhibit
 	  	  $exhibit = $args['record'];
          ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id)->delete();
-		}
+    }
 
-	  public function hookAfterSaveExhibit($args)
-	  {
+    public function hookAfterSaveExhibit($args)
+    {
 		  //save_exhibit
-   	  $exhibit = $args['record'];
-      $newExhibit_image = $this->imageOfExhibit($exhibit);
-      if (!empty($newExhibit_image)) {
-    	   $currentExhibitImageObject = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
-   	     ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$newExhibit_image,$exhibit->id);
- 		  }
-	  }
+     $exhibit = $args['record'];
+      //$newExhibit_image = $this->imageOfExhibit($exhibit)
+     //$exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title));
+     if ((!empty($file)) and ($file->hasThumbnail())) {     
+     $file = $exhibit->getFile();
+     $imgurl = $file->getStoragePath('fullsize');
+     $exhibitImage = array(
+                          'image'=>'/'.$imgurl,
+                          'title'=>metadata($exhibit, 'title')
+                      );
+ 
+  //if (!empty($newExhibit_image)) {
+      if (!empty($exhibitsImage)) {
+    	 $currentExhibitImageObject = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
+   	 ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$exhibitImage,$exhibit->id);
+         }
+    }
+    }
 
     public function imageOfExhibit($exhibit)
     {
       $Exhibit_image = '';
       $topPages = $exhibit->getTopPages();
       if (count($topPages) > 0) {
-     		   $exhibitPage = $topPages[0];
-	    }
-	    else
-         return '';
+         $exhibitPage = $topPages[0];
+      }
+      else
+        return '';
 
 	    while ($Exhibit_image == '') {
 		     foreach ($exhibitPage->getPageEntries() as $pageEntry) {
