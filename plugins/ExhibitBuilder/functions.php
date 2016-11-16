@@ -254,14 +254,14 @@ CREATE TABLE IF NOT EXISTS `{$db->prefix}exhibit_block_attachments` (
 SQL
         );
 
-        $sql = "SELECT id, layout FROM `{$db->prefix}exhibit_pages` ORDER BY id";
+        $sql = "SELECT * FROM `{$db->prefix}exhibit_pages` ORDER BY id";
         $pages = $db->query($sql)->fetchAll();
 
 
         $upgrader = new ExhibitPageUpgrader($db);
 
         foreach ($pages as $page) {
-            $upgrader->upgradePage($page['id'], $page['layout']);
+            $upgrader->upgradePage($page['id'], $page['layout'],$page['exhibit_id']);
         }
 
         $sql = "DROP TABLE `{$db->prefix}exhibit_page_entries`";
