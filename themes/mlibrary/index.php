@@ -36,8 +36,7 @@
         $exhibit_image = '';
       }*/
 
-      $exhibitImage = record_image($feature_exhibit, 'fullsize', array('alt' => $feature_exhibit->title));
-
+      $exhibitImage = record_image($feature_exhibit, 'original', array('alt' => $feature_exhibit->title));
 
       if (!empty($exhibitImage)) {
            $Exhibit_image = $exhibitImage;
