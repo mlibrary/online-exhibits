@@ -34,7 +34,7 @@ echo head(
                   $theme_options_array['exhibitimage'] = '';
               }*/
 
-              if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
+              if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
                //echo exhibit_builder_link_to_exhibit($exhibit, $exhibitImage, array('class' => 'image'));
 
                     $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);

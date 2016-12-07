@@ -53,7 +53,7 @@
         $exhibit_record = get_current_record('exhibit', false);
         $theme_options_array = $exhibit_record->getThemeOptions();
 
-        if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
+        if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
            $Exhibit_image = $exhibitImage;
         } else {
            $Exhibit_image = '';

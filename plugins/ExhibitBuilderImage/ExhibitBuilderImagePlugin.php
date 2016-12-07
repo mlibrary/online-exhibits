@@ -51,21 +51,16 @@ class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
     {
 		  //save_exhibit
      $exhibit = $args['record'];
-      //$newExhibit_image = $this->imageOfExhibit($exhibit)
-     //$exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title));
-     if ((!empty($file)) and ($file->hasThumbnail())) {     
      $file = $exhibit->getFile();
+     if ((!empty($file)) and ($file->hasThumbnail())) {     
      $imgurl = $file->getStoragePath('fullsize');
      $exhibitImage = array(
                           'image'=>'/'.$imgurl,
                           'title'=>metadata($exhibit, 'title')
                       );
  
-  //if (!empty($newExhibit_image)) {
-      if (!empty($exhibitsImage)) {
     	 $currentExhibitImageObject = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
-   	 ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$exhibitImage,$exhibit->id);
-         }
+         ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$exhibitImage,$exhibit->id);
     }
     }
 
