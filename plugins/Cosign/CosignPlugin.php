@@ -121,7 +121,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     private function redirectedURL()
     {
-        return str_replace('http://', 'https://', WEB_DIR);
+        return "https://{$_SERVER['HTTP_HOST']}/login?dest=" . rawurlencode($_SERVER['REQUEST_URI']);
     }
 }
 
