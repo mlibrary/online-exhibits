@@ -64,8 +64,8 @@ $options = $block->getOptions();
         echo $this->formSelect($formStem . '[options][captions-position]',
             @$options['captions-position'], array(),
             array(
-                'center' => __('Center'),
                 'left' => __('Left'),
+                'center' => __('Center'),
                 'right' => __('Right')
             ));
         ?>

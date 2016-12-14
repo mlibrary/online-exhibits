@@ -237,6 +237,7 @@ div.layout-file-text .right.square_thumbnail ~ p{
   max-width: 75%;
   border: 2px solid #CCC;
   box-shadow: none;
+  margin-right: 3em;
 }
 
 .gallery-thumbnail img {

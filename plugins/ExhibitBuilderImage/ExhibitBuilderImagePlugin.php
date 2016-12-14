@@ -10,13 +10,24 @@ class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
     */
     protected $_hooks = array(
                     'install',
+                    'uninstall',
                     'before_delete_exhibit',
                     'after_save_exhibit',
     );
 
-	  public function hookInstall()
+          public function hookUninstall() 
+          {
+             // Drop the table.
+             $db = $this->_db;
+             $sql = "DROP TABLE IF EXISTS `$db->ImagBelongToExhibitRelationShip`";
+             $db->query($sql);
+
+             $this->_uninstallOptions();
+         }
+	  
+         public function hookInstall()
 	  {
-        $db = $this->_db;
+            $db = $this->_db;
         //list of groups in db (
        /* Learning & Teaching
            Library IT
