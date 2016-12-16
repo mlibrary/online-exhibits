@@ -261,6 +261,7 @@
       echo '<div id="item-metadata">' . $rendered_item_metatdata . '</div>';
     }
 
+    if (isset($_GET['page'])) {
     echo mlibrary_add_vars_to_href(
       '<ul class="item-pagination navigation">
         <li id="previous-item" class="button">' .
@@ -273,6 +274,7 @@
       [ 'page' => (isset($_GET['page'])) ? html_escape($_GET['page']) : '1' ]
 
     );
+  }
   ?>
 </div> <!--primary-->
 
