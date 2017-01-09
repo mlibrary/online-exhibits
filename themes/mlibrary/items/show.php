@@ -9,8 +9,19 @@
       'bodyclass' => 'show item'
     )
   );
-
-  if (isset($_GET['page'])) {
+ // if the item is part of the exhibit builder layout
+ if (isset($_GET['exhibit']) && isset($_GET['page'])) {
+    $pageClean = html_escape($_GET['page']);
+    $exhibitClean = html_escape($_GET['exhibit']);
+    echo '<div class="button exhibit-item-back-button"><a href="' .
+        exhibit_builder_exhibit_uri(
+          get_record_by_id('exhibit', $exhibitClean),
+          get_record_by_id('exhibit_page', $pageClean)
+        ) .
+      '">Return to Exhibit</a></div>';
+  }
+  // if the item is part of items archive
+  elseif (isset($_GET['page'])) {
         $pageClean = html_escape($_GET['page']);
         echo '<div class="button exhibit-item-back-button">' .
         '<a href="' . url('items') . '?page=' . $pageClean . '">Return to Item Archive</a>
@@ -244,7 +255,6 @@
 <?php    echo '</div>'; //item-images
    }
 
-
     if (!$fullsizeimage && ($audio_file || ($item_type == 'Sound'))) {
        // if first file is an audio file then display a default image for sound file.
        echo '<img src="' . img('audio_default02.gif') . '" alt="Oops" /></div>'; //item-images
@@ -261,7 +271,7 @@
       echo '<div id="item-metadata">' . $rendered_item_metatdata . '</div>';
     }
 
-    if (isset($_GET['page'])) {
+  if (isset($_GET['page']) && !isset($_GET['exhibit'])) {
     echo mlibrary_add_vars_to_href(
       '<ul class="item-pagination navigation">
         <li id="previous-item" class="button">' .
