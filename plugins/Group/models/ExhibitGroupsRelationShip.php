@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 //require_once 'MyOmekaPosterItemTable.php';
 //Relationship between Exhibits and groups.
 class ExhibitGroupsRelationShip extends Omeka_Record_AbstractRecord{
@@ -23,12 +27,11 @@ public $exhibit_id;
 
  public static function deleteGroupsBelongToExhibit($exhibitGroupsObjects) {
      foreach($exhibitGroupsObjects as $exhibitGroupsObject) {
-         $exhibitGroupsObject->delete();
-    }
+             $exhibitGroupsObject->delete();
+     }
  }
 
  public static function updateGroupsBelongToExhibit($oldGroups,$newGroups,$exhibit_id) {
-
     ExhibitGroupsRelationShip::deleteGroupsBelongToExhibit($oldGroups);
     ExhibitGroupsRelationShip::addNewGroupsBelongToExhibit($newGroups,$exhibit_id);
  }

@@ -1,5 +1,10 @@
 <?php
-/** Zend_Application */
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+ 
+ /** Zend_Application */
 require_once 'Zend/Application.php';
 require_once CONTROLLER_DIR.'/UsersController.php';
 
@@ -16,12 +21,11 @@ class Group_GroupController extends UsersController {
  public function addAction()
  {
         // Create a new page.
-       $user = new User();
+           $user = new User();
 	   $userForm = $this->_getUserForm($user);
 	   $groupUserObjects = GroupUserRelationship::findUserRelationshipRecords($user->id);
 	   $userForm = $this->_addElement($userForm, $user, $groupUserObjects);
-    //    $userForm->setSubmitButtonText(__('Add User'));
-       $this->view->form = $userForm;
+           $this->view->form = $userForm;
 	   if (!$this->getRequest()->isPost()) {
 				 		return;
 	      }
@@ -59,10 +63,9 @@ class Group_GroupController extends UsersController {
     $currentUser = $this->getCurrentUser();
     $groupUserValue='';
     $groupUserObjects = GroupUserRelationship::findUserRelationshipRecords($user->id);
-  	$changePasswordForm = new Omeka_Form_ChangePassword;
+    $changePasswordForm = new Omeka_Form_ChangePassword;
     $changePasswordForm->setUser($user);
     $userForm = $this->_getUserForm($user);
-//    $userForm->setSubmitButtonText(__('Save Changes'));
 
     if ($currentUser->role == 'super') {
        $userForm =  $this->_addElement($userForm, $user, $groupUserObjects);
@@ -96,7 +99,7 @@ class Group_GroupController extends UsersController {
                   $key->label = $this->getParam('api_key_label');
                   $key->key = sha1($user->username . microtime() . rand());
                   $key->save();
-                  $this->_helper->flashMessenger(__('A new API key was successfully createdrr.'), 'success');
+                  $this->_helper->flashMessenger(__('A new API key was successfully created.'), 'success');
                   $success = true;
               }
               // Rescend API keys.

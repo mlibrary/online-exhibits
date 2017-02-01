@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 //require_once 'MyOmekaPosterItemTable.php';
 //Relationship between groups and users
 //This is a model of the record that exists in a table omeka_grouping_relationship, that

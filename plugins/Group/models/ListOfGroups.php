@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 //Groups table
 class ListOfGroups extends Omeka_Record_AbstractRecord {
     public $name;

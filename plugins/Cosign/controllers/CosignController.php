@@ -1,10 +1,13 @@
 <?php
 
-/** Zend_Application */
-require_once 'Zend/Application.php';
+  /** Zopyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+  
+  require_once 'Zend/Application.php';
 
-class Cosign_CosignController extends Omeka_Controller_AbstractActionController
-{
+  class Cosign_CosignController extends Omeka_Controller_AbstractActionController
+  {
     public function logoutAction()
     {
         Zend_Session::destroy();
@@ -30,4 +33,4 @@ class Cosign_CosignController extends Omeka_Controller_AbstractActionController
         // Have to be added to configuration form when plugin installed.
         $this->_helper->redirector->gotoUrl(get_option('cosign_logout_url'));
     } //LogoutAction
-}
+  }

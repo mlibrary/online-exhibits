@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
   $item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
   if (empty($item_title)) { $item_title = __('[Untitled]'); }
 
@@ -76,8 +80,6 @@
               if ($openLayersZoomobject->isZoomed($file) and file_exists($filePath)) {
                 $index_file = $index_file + 1;
                 $vid = 'os' . $index_file;
-                     // list($width, $height, $type, $attr) = getimagesize(FILES_DIR .
-                        //DIRECTORY_SEPARATOR . 'original' . DIRECTORY_SEPARATOR . $file->filename);
                 list($width, $height, $type, $attr) = getimagesize($filePath);
 
                 list($root, $ext) = $openLayersZoomobject->_getRootAndExtension($file->filename);
@@ -287,32 +289,5 @@
   }
   ?>
 </div> <!--primary-->
-
-
-
-<!--<script type="text/javascript">
-  jQuery(function(){
-    jQuery("#item-images").data('curimg','img1');
-
-    jQuery(".square_thumbnail").click(function(e){
-      var target = jQuery(this);
-      var classList = target.attr('class').split(/\s+/);
-      var imgClass = classList[1]; //hardcoded, but simplest way to get to specific class, without regex and loop
-
-      target.siblings(".file-metadata").hide();
-      jQuery("#fsize_images div").hide();
-      target.siblings(".file-metadata." + imgClass).show();
-
-      var fullsize = target.siblings('#fsize_images').find("." + imgClass);
-
-      if (fullsize.length > 0 && fullsize.hasClass('fullsize')) {
-        fullsize.show();
-      } else {
-        jQuery("#fsize_images").html(imagesJSON[imgClass] + jQuery("#fsize_images").html());
-        jQuery("a.fancyitem").fancybox(jQuery(document).data('fboxSettings'));
-      }
-    });
-  });
-</script>-->
 
 <?php echo foot(); ?>

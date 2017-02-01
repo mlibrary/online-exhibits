@@ -1,4 +1,6 @@
-﻿</div><!-- end content -->
+﻿<!-- Copyright (c) 2016, Regents of the University of Michigan.
+All rights reserved. See LICENSE.txt for details.-->
+</div><!-- end content -->
 <footer>
         <div id="footer-content" class="center-div">
         <?php if($footerText = get_theme_option('Footer Text')): ?>

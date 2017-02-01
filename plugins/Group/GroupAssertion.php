@@ -1,5 +1,8 @@
 <?php
-
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 class GroupAssertion extends Omeka_Acl_Assert_Ownership {
 
  public function assert(Zend_Acl $acl,
@@ -25,10 +28,6 @@ class GroupAssertion extends Omeka_Acl_Assert_Ownership {
 		 $user_id = $user['id'];
 		 $groups_in_exhibit = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibitId);
                  $user_groups = GroupUserRelationship::findUserRelationshipRecords($user_id);
-		 /*foreach ($user_groups as $group) {
-                   if((array_search($group,$groups_in_exhibit)!==false))
-  			  return true;
-		 }*/
                  foreach ($groups_in_exhibit as $groups_in_exhibit_object => $value) {
                     foreach ($user_groups as $group => $group_id) {
                        if ($group_id['group_id'] == $value['group_id'])

@@ -1,6 +1,10 @@
 <?php
-//require_once 'MyOmekaPosterItemTable.php';
-// A record model that link an image with an Exhibit.
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+  //require_once 'MyOmekaPosterItemTable.php';
+  // A record model that link an image with an Exhibit.
 class ImagBelongToExhibitRelationShip extends Omeka_Record_AbstractRecord {
    public $entity_id; // refer to exhibit id
    public $image_name;

@@ -1,11 +1,17 @@
-<?php $title = __('Browse Exhibits');
-echo head(
-     array(
-       'title' =>$title,
-       'bodyid'=>'exhibit',
-       'bodyclass' => 'exhibits browse'
-     )
-   );
+<?php 
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+
+$title = __('Browse Exhibits');
+       echo head(
+            array(
+               'title' =>$title,
+               'bodyid'=>'exhibit',
+               'bodyclass' => 'exhibits browse'
+            )
+       );
 
 ?>
 
@@ -27,25 +33,12 @@ echo head(
             <div class="item-body">
               <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
-             /* if (class_exists('ExhibitBuilderImagePlugin')) {
-                  $theme_options_array['exhibitimage'] = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
-              }
-              else {
-                  $theme_options_array['exhibitimage'] = '';
-              }*/
 
               if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
-               //echo exhibit_builder_link_to_exhibit($exhibit, $exhibitImage, array('class' => 'image'));
-
                     $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
                } else {
-                  //  $theme_options_array['exhibitimage'] = '';
                       $Exhibit_image = '';
                     }
-
-
-
-            //    $Exhibit_image = $theme_options_array['exhibitimage'];
 
                 echo '<div class="img-wrap">';
 

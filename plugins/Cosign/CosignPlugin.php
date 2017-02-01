@@ -1,7 +1,11 @@
 <?php
-/**
-* This class is to Cosign to admin page in Omeka
-*/
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+ /**
+  * This class is to Cosign to admin page in Omeka
+  */
 class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 {
     /**

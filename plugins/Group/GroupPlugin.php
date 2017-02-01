@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 /**
 * This class is to create a group in User form and Exhibit Metadata form as part of Omeka
 * admin page

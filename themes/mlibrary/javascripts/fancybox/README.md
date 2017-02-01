@@ -17,7 +17,6 @@ To get started, download the plugin, unzip it and copy files to your website/app
 Load files in the <head> section of your HTML document. Make sure you also add the jQuery library.
 
     <head>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
         <link rel="stylesheet" href="/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
         <script type="text/javascript" src="/fancybox/jquery.fancybox.pack.js"></script>
     </head>

@@ -1,4 +1,8 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
   $pageTitle = __('Browse Items');
   $partnerId = '1038472';
   $remove = '';

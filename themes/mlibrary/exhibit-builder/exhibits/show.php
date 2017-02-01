@@ -1,4 +1,9 @@
 <?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+
   echo head(
     array(
       'title' => metadata('exhibit', 'title') . ' | ' .

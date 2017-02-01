@@ -1,10 +1,15 @@
 <?php
-/**
-* This class is to provide contributors a privilege to publish item as public and allow admin role to use CsvImport.
-* admin page
-*/
-class AccessPlugin extends Omeka_Plugin_AbstractPlugin
-{
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+ /**
+  * This class is to provide contributors a privilege to publish item as public and allow admin role to use CsvImport.
+  * admin page
+ */
+ 
+ class AccessPlugin extends Omeka_Plugin_AbstractPlugin
+ {
     /**
     * @var array Hooks for the plugin.
     */

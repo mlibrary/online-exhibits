@@ -1,10 +1,14 @@
 <?php
-/**
-* This class is to attach an image to an Exhibit.
-* admin page
-*/
-class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
-{
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+ /**
+  * This class is to attach an image to an Exhibit.
+  * admin page
+ */
+ class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
+ {
     /**
     * @var array Hooks for the plugin.
     */
@@ -54,81 +58,79 @@ class ExhibitBuilderImagePlugin extends Omeka_Plugin_AbstractPlugin
     public function hookBeforeDeleteExhibit($args)
     {
 			//delete_exhibit
-	  	  $exhibit = $args['record'];
+	 $exhibit = $args['record'];
          ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id)->delete();
     }
 
     public function hookAfterSaveExhibit($args)
     {
 		  //save_exhibit
-     $exhibit = $args['record'];
-     $file = $exhibit->getFile();
-     if ((!empty($file)) and ($file->hasThumbnail())) {     
-     $imgurl = $file->getStoragePath('fullsize');
-     $exhibitImage = array(
+         $exhibit = $args['record'];
+         $file = $exhibit->getFile();
+         if ((!empty($file)) and ($file->hasThumbnail())) {     
+            $imgurl = $file->getStoragePath('fullsize');
+            $exhibitImage = array(
                           'image'=>'/'.$imgurl,
                           'title'=>metadata($exhibit, 'title')
                       );
  
-    	 $currentExhibitImageObject = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
-         ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$exhibitImage,$exhibit->id);
-    }
+    	    $currentExhibitImageObject = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($exhibit->id);
+            ImagBelongToExhibitRelationShip::updateImageBelongToExhibit($currentExhibitImageObject,$exhibitImage,$exhibit->id);
+         }
     }
 
     public function imageOfExhibit($exhibit)
     {
-      $Exhibit_image = '';
-      $topPages = $exhibit->getTopPages();
-      if (count($topPages) > 0) {
-         $exhibitPage = $topPages[0];
-      }
-      else
-        return '';
+         $Exhibit_image = '';
+         $topPages = $exhibit->getTopPages();
+         if (count($topPages) > 0) {
+            $exhibitPage = $topPages[0];
+         }
+         else
+           return '';
 
-	    while ($Exhibit_image == '') {
-		     foreach ($exhibitPage->getPageEntries() as $pageEntry) {
-      		     // retrieve the image file that is stored and check if there is a thumbnail available, if not, check the next pageEntry.
-		         if ($pageEntry->file_id) {
-			    	     $file = get_db()->getTable('File')->find($pageEntry->file_id);
-				         $item = get_db()->getTable('Item')->find($pageEntry->item_id);
-     			   } elseif ($item = $pageEntry->Item) {
-		    		     if (isset($item->Files[0])) {
-				    		     $file = $item->Files[0];
-       		       }
-			       }
-
-    				 if ((!empty($file)) and ($file->hasThumbnail())) {
-				  	     $imgurl = $file->getStoragePath('fullsize');
-					       $Exhibit_image = array(
-					                                      'image'=>'/'.$imgurl,
-					                                      'title'=>metadata($item, array('Dublin Core', 'Title'))
-					                                   );
-					        break;
-			       }
-				     if ($Exhibit_image != '') break;
+	 while ($Exhibit_image == '') {
+           foreach ($exhibitPage->getPageEntries() as $pageEntry) {
+      		 // retrieve the image file that is stored and check if there is a thumbnail available, if not, check the next pageEntry.
+               if ($pageEntry->file_id) {
+	           $file = get_db()->getTable('File')->find($pageEntry->file_id);
+		   $item = get_db()->getTable('Item')->find($pageEntry->item_id);
+     	       } elseif ($item = $pageEntry->Item) {
+		     if (isset($item->Files[0])) {
+		         $file = $item->Files[0];
+       		     }
+	       }
+    	       if ((!empty($file)) and ($file->hasThumbnail())) {
+	           $imgurl = $file->getStoragePath('fullsize');
+		   $Exhibit_image = array(
+                                           'image'=>'/'.$imgurl,
+					   'title'=>metadata($item, array('Dublin Core', 'Title'))
+					 );
+		   break;
+	       }
+	       if ($Exhibit_image != '') break;
          }//for each
+         // if page object exists, grab link to the first child page if exists. If it doesn't, grab
+	 // a link to the next page
+         $targetPage = null;
 
-			   // if page object exists, grab link to the first child page if exists. If it doesn't, grab
-			   // a link to the next page
-  		   $targetPage = null;
-
-	  	   if ($nextPage = $exhibitPage->firstChildOrNext()) {
-			       $targetPage = $nextPage;
-		     }
-		     elseif ($exhibitPage->parent_id) {
-			       $parentPage = $exhibitPage->getParent();
-			       $nextParentPage = $parentPage->next();
-			       if ($nextParentPage) {
-				        $targetPage = $nextPage;
-			       }
-		     } // elseif
-		     if ($targetPage) {
-			       $exhibitPage = $targetPage;
-		     }
-		     else {
-			      break;
-		     }
-      }//while
-      return $Exhibit_image;
-   }
+	 if ($nextPage = $exhibitPage->firstChildOrNext()) {
+	     $targetPage = $nextPage;
+         }
+         elseif ($exhibitPage->parent_id) {
+             $parentPage = $exhibitPage->getParent();
+	     $nextParentPage = $parentPage->next();
+             if ($nextParentPage) {
+	         $targetPage = $nextPage;
+	     }
+         } // elseif
+         if ($targetPage) {
+             $exhibitPage = $targetPage;
+         }
+         else {
+	     break;
+	 }
+   }//while
+   return $Exhibit_image;
+ }
 }
