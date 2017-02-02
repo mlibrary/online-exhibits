@@ -20,10 +20,12 @@ div.layout-file-text .left ~ p {
 
 .layout-file-text .exhibit-items.right {
   margin-bottom: 1.2em;
+  margin-left: 4%;
 }
 
 .layout-file-text .exhibit-items.left {
   margin-bottom: 1.2em;
+  margin-right: 4%;
 }
 
 div.layout-file-text .right.fullsize ~ p {
@@ -119,7 +121,7 @@ div.layout-file-text .right.square_thumbnail ~ p{
 
 .exhibit-block {
     clear: both;
-    margin-bottom: 4em;
+   /* margin-bottom: 4em;*/
 }
 
 .exhibit-body-wrap .exhibit-item-caption p {
@@ -150,7 +152,6 @@ div.layout-file-text .right.square_thumbnail ~ p{
     float: right;
    max-width: 27%;
    margin-bottom:2%;
-
 }
 
 .layout-gallery .gallery-showcase.right, .layout-gallery .gallery.right {
