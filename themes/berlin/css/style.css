@@ -416,9 +416,22 @@ form, fieldset {
   padding: 0;
 }
 
-input[type=text], input[type=password], textarea {
+input[type="email"],
+input[type="number"],
+input[type="search"],
+input[type="text"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+textarea {
   border: 1px solid #ccc;
-  display: block;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}
+input[type="checkbox"] + label {
+  display: inline-block;
 }
 
 /* -- Headings -- */
@@ -793,9 +806,9 @@ header:after {
   /* mega menu list */
   /* a top level navigation item in the mega menu */
   /* first descendant link within a top level navigation item */
-  /* focus/open states of first descendant link within a top level 
+  /* focus/open states of first descendant link within a top level
      navigation item */
-  /* open state of first descendant link within a top level 
+  /* open state of first descendant link within a top level
      navigation item */
   /* sub-navigation panel */
   /* sub-navigation panel open state */
@@ -1542,6 +1555,7 @@ ul.title-list {
 /* @group ----- Items/Search ----- */
 .field {
   margin-bottom: 1.5em;
+  overflow: hidden;
 }
 
 .search-entry select {
@@ -1573,7 +1587,7 @@ ul.title-list {
 
 /* @end */
 /* @group ----- Collections/Browse ----- */
-.browse .collection,
+.browse .collection.record,
 .browse .exhibit {
   clear: both;
   border-bottom: 1px solid #eee;
@@ -1581,11 +1595,11 @@ ul.title-list {
   width: 100%;
   padding-top: 1.5em;
 }
-.browse .collection .view-items-link,
+.browse .collection.record .view-items-link,
 .browse .exhibit .view-items-link {
   margin-bottom: 2.25em;
 }
-.browse .collection h3,
+.browse .collection.record h3,
 .browse .exhibit h3 {
   margin: 0;
 }
@@ -1616,7 +1630,7 @@ ul.title-list {
   margin-right: 10px;
   width: 220px;
   margin-left: 0;
-  margin: 0;
+  margin: 0 0 0.75em;
   max-width: 100%;
 }
 @media only screen and (max-width: 767px) {
@@ -1743,13 +1757,14 @@ ul.title-list {
 #item-filters ul, #search-filters ul {
   padding-left: 0;
   list-style-type: none;
+  border-bottom: 1px solid #eee;
+  margin: -0.75em 0 0;
 }
 #item-filters ul > li, #search-filters ul > li {
   display: inline-block;
-}
-#item-filters ul > li:after, #search-filters ul > li:after {
-  content: " \00B7";
-  margin: 0 10px 0 5px;
+  background-color: #eee;
+  padding: 0.375em 0.75em;
+  margin: 0 0.75em 0.75em 0;
 }
 #item-filters ul > li:last-child:after, #search-filters ul > li:last-child:after {
   content: "\00A0";
@@ -1897,6 +1912,11 @@ footer nav + p {
 }
 #exhibit-pages > ul > li.current ul {
   display: block;
+}
+
+.secondary-nav + .exhibit {
+  border-top: 0;
+  padding-top: 0;
 }
 
 #exhibit-pages ul ul {
@@ -2090,8 +2110,6 @@ footer nav + p {
 }
 @media screen and (max-width: 768px) {
   #mobile-nav ul {
-    position: absolute;
-    z-index: 199;
     background: #fafafa;
     border-bottom: 1px solid #ccc;
     width: 100%;
@@ -2182,6 +2200,24 @@ footer nav + p {
 
   #sort-links {
     float: left;
+  }
+
+  /* @end */
+  /* @group ----- Collections/Browse ----- */
+  .collection-meta {
+    width: 100%;
+    display: inline;
+    float: none;
+  }
+
+  .browse .collection .image {
+    margin: 1.5em 1.5em 1.5em 10px;
+    float: left;
+  }
+
+  .browse .collection.record .view-items-link,
+  .browse .exhibit .view-items-link {
+    clear: both;
   }
 
   /* @end */

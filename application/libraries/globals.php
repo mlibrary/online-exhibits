@@ -875,12 +875,13 @@ function plugin_is_active($name, $version = null, $compOperator = '>=')
  *
  * @package Omeka\Function\Locale
  * @uses Zend_Translate::translate()
- * @param string $string The string to be translated.
+ * @param string|array $msgid The string to be translated, or Array for plural
+ *  translations.
  * @param mixed $args string formatting args. If any extra args are passed, the
  *  args and the translated string will be formatted with sprintf().
  * @return string The translated string.
  */
-function __($string)
+function __($msgid)
 {
     // Avoid getting the translate object more than once.
     static $translate;
@@ -894,7 +895,11 @@ function __($string)
     }
 
     if ($translate) {
-        $string = $translate->translate($string);
+        $string = $translate->translate($msgid);
+    } elseif (is_array($msgid)) {
+        $string = ($msgid[2] === 1) ? $msgid[0] : $msgid[1];
+    } else {
+        $string = $msgid;
     }
 
     $args = func_get_args();
@@ -905,6 +910,25 @@ function __($string)
     }
 
     return $string;
+}
+
+/**
+ * Transform arguments in an array suitable for __.
+ *
+ * <code>
+ *     $n = count($items);
+ *     echo __(plural('one item', '%s items', $n), $n);
+ * </code>
+ *
+ * @package Omeka\Function\Locale
+ * @param string $msgid The string to be translated, singular form
+ * @param string $msgid_plural The string to be translated, plural form
+ * @param int $n Used to determine the plural form
+ * @return array Array to pass to __
+ */
+function plural($msgid, $msgid_plural, $n)
+{
+    return array($msgid, $msgid_plural, $n);
 }
 
 /**
@@ -1128,7 +1152,7 @@ function head_js($includeDefaults = true)
                    ->prependScript('window.jQuery.ui || document.write(' . js_escape(js_tag('vendor/jquery-ui')) . ')')
                    ->prependFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
                    ->prependScript('window.jQuery || document.write(' . js_escape(js_tag('vendor/jquery')) . ')')
-                   ->prependFile('//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+                   ->prependFile('//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js');
     }
     return $headScript;
 }
@@ -1354,7 +1378,7 @@ function latest_omeka_version()
                  . "returned with status=" . $result->getStatus() . " and "
                  . "response body=" . $result->getBody());
         }
-    } catch (Zend_Http_Client_Adapter_Exception $e) {
+    } catch (Zend_Http_Client_Exception $e) {
         debug('Error in retrieving latest Omeka version: ' . $e->getMessage());
     }
     return false;
@@ -1449,9 +1473,14 @@ function tag_attributes($attributes)
 
     $attr = array();
     foreach ($toProcess as $key => $attribute) {
-        // Only include the attribute if its value is a string.
+        // Reject weird attribute names (a little more restrictively than necessary)
+        if (preg_match('/[^A-Za-z0-9_:.-]/', $key)) {
+            continue;
+        }
         if (is_string($attribute)) {
             $attr[$key] = $key . '="' . html_escape( $attribute ) . '"';
+        }  else if ($attribute === true) {
+            $attr[$key] = $key;
         }
     }
     return join(' ',$attr);

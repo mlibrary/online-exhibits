@@ -52,7 +52,7 @@ class SimplePagesPlugin extends Omeka_Plugin_AbstractPlugin
           `slug` tinytext COLLATE utf8_unicode_ci NOT NULL,
           `text` mediumtext COLLATE utf8_unicode_ci,
           `updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          `inserted` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+          `inserted` timestamp NOT NULL DEFAULT '2000-01-01 00:00:00',
           `order` int(10) unsigned NOT NULL,
           `parent_id` int(10) unsigned NOT NULL,
           `template` tinytext COLLATE utf8_unicode_ci NOT NULL,
@@ -153,6 +153,10 @@ class SimplePagesPlugin extends Omeka_Plugin_AbstractPlugin
 
         if ($oldVersion < '3.0.2') {
             $db->query("ALTER TABLE `$db->SimplePagesPage` MODIFY `text` MEDIUMTEXT COLLATE utf8_unicode_ci");
+        }
+
+        if ($oldVersion < '3.0.7') {
+            $db->query("ALTER TABLE `$db->SimplePagesPage` ALTER `inserted` SET DEFAULT '2000-01-01 00:00:00'");
         }
     }
 

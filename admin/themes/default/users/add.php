@@ -3,8 +3,6 @@ echo head(array('title' => __('Add New User'), 'bodyclass' => 'users'));
 echo flash();
 ?>
 <form method="post">
-<?php
-echo "I am here";?>
 <section class="seven columns alpha">
     <p class='explanation'>* <?php echo __('required field'); ?></p>
     <?php echo $this->form; ?>
