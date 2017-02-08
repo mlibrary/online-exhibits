@@ -11,16 +11,17 @@ class ExhibitPageUpgrader
 
     /**
      * Mappings from page old page types to upgrade methods.
-     * 
+     *
      * @var array
      */
     protected $_upgraders = array(
         'text' => '_upgradeText',
         'text-image-left' => '_upgradeTextImage',
         'text-image-right' => '_upgradeTextImage',
-        'gallery-thumbnails' => '_upgradeGallery',
         'gallery-thumbnails-text-top' => '_upgradeGallery',
         'gallery-thumbnails-text-bottom' => '_upgradeGallery',
+        'gallery-narrative' => '_upgradeGalleryFull',
+        'mlibrary-custom-layout' => '_upgradeGalleryFull',
         'image-list-left' => '_upgradeImageList',
         'image-list-right' => '_upgradeImageList',
         'image-list-left-thumbs' => '_upgradeImageList',
@@ -75,7 +76,7 @@ SQL;
         if (isset($this->_upgraders[$pageLayout])) {
             $upgrader = $this->_upgraders[$pageLayout];
         } else {
-            // The image-list upgrader is the most 
+            // The image-list upgrader is the most
             $upgrader = '_upgradeImageList';
             $pageLayout = 'image-list-left';
         }
@@ -141,7 +142,7 @@ SQL;
      * @param array $entries Associative array for all old entries
      * @param string $layout Old layout name
      */
-    protected function _upgradeGallery($pageId, $entries, $layout)
+     protected function _upgradeGallery($pageId, $entries, $layout)
     {
         $textTop = false;
         $textBottom = false;
@@ -195,9 +196,9 @@ SQL;
     protected function _upgradeImageList($pageId, $entries, $layout)
     {
         $fileSize = 'fullsize';
-        
+
         $nameParts = explode('-', $layout);
-        
+
         $filePosition = $nameParts[2];
         if (count($nameParts) == 4) {
             $fileSize = 'thumbnail';
@@ -236,6 +237,7 @@ SQL;
         }
     }
 
+
     /**
      * Upgrade an old gallery-full-* layout.
      *
@@ -245,13 +247,19 @@ SQL;
      */
     protected function _upgradeGalleryFull($pageId, $entries, $layout)
     {
-        $nameParts = explode('-', $layout);
-        
+		if ($layout == 'mlibrary-custom-layout') {
+           $nameParts[2] = 'right';
+         } else {
+           $nameParts = explode('-', $layout);
+         }
+
         $showcasePosition = $nameParts[2];
         if ($showcasePosition == 'left') {
             $galleryPosition = 'right';
-        } else {
+        } else if ($showcasePosition == 'right') {
             $galleryPosition = 'left';
+        } else {
+           $galleryPosition = 'right';
         }
 
         $options = array(
@@ -270,8 +278,11 @@ SQL;
         );
 
         $order = 1;
+        print_r($entries);
         foreach ($entries as $entry) {
             if (!empty($entry['item_id'])) {
+              // print_r($entry['item_id']);
+              //  print_r($entry['file_id']);
                 $this->_createAttachment(array(
                     'block_id' => $galleryBlockId,
                     'item_id' => $entry['item_id'],
@@ -281,6 +292,7 @@ SQL;
                 ));
             }
         }
+
     }
 
     /**

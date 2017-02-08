@@ -7,7 +7,7 @@ $size = isset($options['file-size'])
     : 'fullsize';
 $captionPosition = isset($options['captions-position'])
     ? html_escape($options['captions-position'])
-    : 'center';
+    : 'left';
 ?>
 <div class="exhibit-items <?php echo $position; ?> <?php echo $size; ?> captions-<?php echo $captionPosition; ?>">
     <?php foreach ($attachments as $attachment): ?>
