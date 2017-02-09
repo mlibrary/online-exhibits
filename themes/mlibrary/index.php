@@ -59,7 +59,8 @@
       $image_size = '';
       }*/
 
-      $file = $feature_exhibit->getFile();
+      //$file = $feature_exhibit->getFile();
+        $file = $feature_exhibit->getCoverImage();
 
         if (!$file) {
 
