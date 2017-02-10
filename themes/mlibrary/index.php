@@ -28,36 +28,13 @@
 
       $feature_exhibit = array_pop($feature_exhibits);
 
-
-     /* if (class_exists('ExhibitBuilderImagePlugin')) {
-        $exhibit_image = ImagBelongToExhibitRelationShip::findImageBelongToExhibit($feature_exhibit->id);
-      }
-      else {
-        $exhibit_image = '';
-      }*/
-
       $exhibitImage = record_image($feature_exhibit, 'original', array('alt' => $feature_exhibit->title));
 
       if (!empty($exhibitImage)) {
            $Exhibit_image = $exhibitImage;
-
       } else {
            $Exhibit_image = '';
-
       }
-
-     /* if (!empty($exhibit_image)) {
-        $image_size = getimagesize(
-           str_replace(
-           'https://',
-           'http://',
-           WEB_FILES . $exhibit_image['image_name']
-          )
-        );
-      }
-      else {
-      $image_size = '';
-      }*/
 
       //$file = $feature_exhibit->getFile();
         $file = $feature_exhibit->getCoverImage();
