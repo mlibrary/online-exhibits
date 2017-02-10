@@ -75,8 +75,6 @@ if ($xml = file_get_contents($url))
 		$hlplists = (array) $xml;
 ?>
 
-
-
 <form id="exhibit-metadata-form" method="post" class="exhibit-builder">
     <section class="seven columns alpha">
     <fieldset>
@@ -160,7 +158,7 @@ if ($xml = file_get_contents($url))
               <?php }}?>
               </fieldset>
          </div>
-        <div class="field">
+         <div class="field">
             <div class="two columns alpha">
                 <?php echo $this->formLabel('theme', __('Theme')); ?>
             </div>
@@ -170,7 +168,6 @@ if ($xml = file_get_contents($url))
                     <input type="submit" class="configure-button" name="configure-theme" value="<?php echo __('Configure'); ?>">
             </div>
         </div>
-
   <?php
             if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
             ?>
@@ -242,8 +239,7 @@ if ($xml = file_get_contents($url))
         </div>
               <?php }
             ?>
-
-        <div class="field">
+    <div class="field">
             <div class="two columns alpha">
                 <?php echo $this->formLabel('use_summary_page', __('Use Summary Page?')); ?>
             </div>
@@ -251,7 +247,18 @@ if ($xml = file_get_contents($url))
                 <p class="explanation"><?php echo __("Start the exhibit on the summary page. If unchecked, start on the first exhibit page if it exists."); ?></p>
                 <?php echo $this->formCheckbox('use_summary_page', $exhibit->use_summary_page, array(), array('1', '0')); ?>
             </div>
-        </div>
+    </div>
+    <div id="cover-image-container" class="field">
+            <div class="two columns alpha">
+                <?php echo $this->formLabel('cover_image', __('Cover Image')); ?>
+            </div>
+            <div class="five columns omega inputs">
+                <p class="explanation">
+                  <?php echo __('Choose a file to represent this exhibit. The selected file will serve as the thumbnail for the exhibit.'); ?>
+                </p>
+                <?php echo $this->partial('files/cover-image.php', array('file' => $exhibit->getCoverImage())); ?>
+            </div>
+    </div>
     </fieldset>
     <fieldset>
         <legend><?php echo __('Pages'); ?></legend>
@@ -291,39 +298,72 @@ if ($xml = file_get_contents($url))
         </div>
     </section>
 </form>
-
+<div id="cover-image-panel" title="<?php echo html_escape(__('Choose a Cover Image')); ?>">
+    <div id="item-form">
+        <button type="button" id="revert-selected-item">Revert to Selected Item</button>
+        <button type="button" id="show-or-hide-search" class="show-form blue">
+            <span class="show-search-label"><?php echo __('Show Search Form'); ?></span>
+            <span class="hide-search-label"><?php echo __('Hide Search Form'); ?></span>
+        </button>
+        <a href="<?php echo url('exhibit-builder/items/browse'); ?>" id="view-all-items" class="green button"><?php echo __('View All Items'); ?></a>
+        <div id="page-search-form" class="container-twelve">
+        <?php
+            $action = url(array('module' => 'exhibit-builder',
+                'controller' => 'items', 'action' => 'browse'), 'default', array(), true);
+            echo items_search_form(array('id' => 'search'), $action);
+        ?>
+        </div>
+        <div id="item-select"></div>
+    </div>
+    <div id="cover-image-options">
+      <button type="button" id="change-selected-item"><?php echo __('Change Selected Item'); ?></button>
+      <div class="options">
+        <div id="cover-image-item-options"></div>
+      </div>
+      <div id="attachment-save">
+        <button type="submit" id="choose-cover-image"><?php echo __('Choose'); ?></button>
+      </div>
+    </div>
+    <div id="cover-image-panel-loading"><span class="spinner"></span></div>
+</div>
 <script type="text/javascript" charset="utf-8">
 //<![CDATA[
     jQuery(window).load(function() {
         Omeka.wysiwyg();
-    //////////////////////////////
-        jQuery.noConflict();
-		    jQuery(".internalslidingDiv").hide();
-        jQuery(".subject-sub-internalslidingDiv").hide();
+        Omeka.ExhibitBuilder.setUpCoverImageChooser(
+          <?php echo json_encode(url('exhibit-builder/files/cover-image')); ?>,
+          <?php echo js_escape(url('exhibits/attachment-item-options')); ?>
+        );
+        Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse')); ?>);
 
-		    jQuery('.subjectshow_hide').click(function(e){
+    //////////////////////////////
+
+        jQuery.noConflict();
+        jQuery(".internalslidingDiv").hide();
+        jQuery(".subject-sub-internalslidingDiv").hide();
+        jQuery('.subjectshow_hide').click(function(e){
 			    e.preventDefault();
 			    jQuery(".internalslidingDiv",jQuery(this).parents('li')).toggle();
 			    jQuery(this).children(".subject-sub-internalslidingDiv").hide();
 			    jQuery(this).parents('li').toggleClass('list-open');
 			    return false;
-		    });
+	});
 
-		    jQuery('.subject-nested').click(function(e){
+        jQuery('.subject-nested').click(function(e){
 		  	  e.preventDefault();
 			    e.stopPropagation();
 			    jQuery(".subject-sub-internalslidingDiv",jQuery(this).closest('li')).toggle();
 			    jQuery(this).parents('li').toggleClass('list-open');
 		  	  return false;
-		    });
+        });
 
-    	  jQuery('#lib-tags input[type=checkbox]').click(function(e){
+    	jQuery('#lib-tags input[type=checkbox]').click(function(e){
 		      if(!jQuery('#lib-tag-update').hasClass('enabled')){
 			      jQuery('#lib-tag-update').addClass('enabled');
 		      }
-	      }); // enable update button
+	}); // enable update button
 
-	      jQuery('#lib-tag-update').click(function(){
+	jQuery('#lib-tag-update').click(function(){
 			    var tags = [];
 			    var tagsInput = jQuery('#tags');
 			    jQuery.each(tagsInput.val().split(';'),function(){ // grab current tag list
@@ -347,3 +387,4 @@ if ($xml = file_get_contents($url))
     }); //jQuery(window).load(function() {
 //]]>
 </script>
+
