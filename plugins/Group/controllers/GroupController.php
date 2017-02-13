@@ -24,7 +24,9 @@ class Group_GroupController extends UsersController {
            $user = new User();
 	   $userForm = $this->_getUserForm($user);
 	   $groupUserObjects = GroupUserRelationship::findUserRelationshipRecords($user->id);
-	   $userForm = $this->_addElement($userForm, $user, $groupUserObjects);
+           if (!empty($this->newGroups_names_object->get_groups_names())) {	   
+               $userForm = $this->_addElement($userForm, $user, $groupUserObjects);
+           }           
            $this->view->form = $userForm;
 	   if (!$this->getRequest()->isPost()) {
 				 		return;
@@ -66,9 +68,10 @@ class Group_GroupController extends UsersController {
     $changePasswordForm = new Omeka_Form_ChangePassword;
     $changePasswordForm->setUser($user);
     $userForm = $this->_getUserForm($user);
-
     if ($currentUser->role == 'super') {
-       $userForm =  $this->_addElement($userForm, $user, $groupUserObjects);
+       if (!empty($this->newGroups_names_object->get_groups_names())) {
+          $userForm =  $this->_addElement($userForm, $user, $groupUserObjects);
+       }
     }
 
     $userForm->setDefaults(array(
@@ -143,7 +146,7 @@ class Group_GroupController extends UsersController {
 
 
 private function _addElement($userForm, $user, $groupUserObjects) {
-   foreach($groupUserObjects as $groupUserObject) {
+foreach($groupUserObjects as $groupUserObject) {
 		  	      $groupUserValue[] = $groupUserObject['group_id'];
 	 }
 	 $userForm->addElement('Multiselect', 'group', array(
@@ -152,7 +155,7 @@ private function _addElement($userForm, $user, $groupUserObjects) {
                 'multiOptions' => $this->newGroups_names_object->get_groups_names(),
                 'value' => ((!empty($user->id)) ? $groupUserValue : ''),
                 'class' => 'field',
-                'order' => 3
+                'order' => 3,
     ));
 
    return $userForm;
