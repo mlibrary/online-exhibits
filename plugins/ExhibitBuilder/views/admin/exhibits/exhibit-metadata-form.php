@@ -291,11 +291,11 @@ if ($xml = file_get_contents($url))
             <?php endif; ?>
             <div id="public-featured">
                 <div class="public">
-                    <label for="public"><?php echo __('Public'); ?>:</label> 
+                    <label for="public"><?php echo __('Public'); ?>:</label>
                     <?php echo $this->formCheckbox('public', $exhibit->public, array(), array('1', '0')); ?>
                 </div>
                 <div class="featured">
-                    <label for="featured"><?php echo __('Featured'); ?>:</label> 
+                    <label for="featured"><?php echo __('Featured'); ?>:</label>
                     <?php echo $this->formCheckbox('featured', $exhibit->featured, array(), array('1', '0')); ?>
                 </div>
             </div>
@@ -336,7 +336,7 @@ if ($xml = file_get_contents($url))
         Omeka.wysiwyg();
     });
     jQuery(document).ready(function(){
-        Omeka.ExhibitBuilder.setUpCoverImageChooser(
+ Omeka.ExhibitBuilder.setUpCoverImageChooser(
           <?php echo json_encode(url('exhibit-builder/files/cover-image')); ?>,
           <?php echo js_escape(url('exhibits/attachment-item-options')); ?>
         );
