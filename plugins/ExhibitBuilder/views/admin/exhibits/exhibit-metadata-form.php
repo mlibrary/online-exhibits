@@ -122,7 +122,7 @@ if ($xml = file_get_contents($url))
             </div>
         </div>
 
-<div class="two columns alpha">
+        <div class="two columns alpha">
             	 <?php echo $this->formLabel('add-library-tags:', __('Add Library Tags:')); ?>
             	 <?php echo $this->formButton('lib-tag-update','Update Tags'); ?>
         </div>
@@ -302,6 +302,7 @@ if ($xml = file_get_contents($url))
         </div>
     </section>
 </form>
+
 <div id="cover-image-panel" title="<?php echo html_escape(__('Choose a Cover Image')); ?>">
     <div id="item-form">
         <button type="button" id="revert-selected-item">Revert to Selected Item</button>
@@ -336,58 +337,64 @@ if ($xml = file_get_contents($url))
         Omeka.wysiwyg();
     });
     jQuery(document).ready(function(){
- Omeka.ExhibitBuilder.setUpCoverImageChooser(
+        Omeka.ExhibitBuilder.setUpCoverImageChooser(
           <?php echo json_encode(url('exhibit-builder/files/cover-image')); ?>,
           <?php echo js_escape(url('exhibits/attachment-item-options')); ?>
         );
-        Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse')); ?>);
-        jQuery.noConflict();
-        jQuery(".internalslidingDiv").hide();
-        jQuery(".subject-sub-internalslidingDiv").hide();
-        jQuery('.subjectshow_hide').click(function(e){
-			    e.preventDefault();
-			    jQuery(".internalslidingDiv",jQuery(this).parents('li')).toggle();
-			    jQuery(this).children(".subject-sub-internalslidingDiv").hide();
-			    jQuery(this).parents('li').toggleClass('list-open');
-			    return false;
-	});
-
-        jQuery('.subject-nested').click(function(e){
-		  	  e.preventDefault();
-			    e.stopPropagation();
-			    jQuery(".subject-sub-internalslidingDiv",jQuery(this).closest('li')).toggle();
-			    jQuery(this).parents('li').toggleClass('list-open');
-		  	  return false;
-        });
-
-    	jQuery('#lib-tags input[type=checkbox]').click(function(e){
-		      if(!jQuery('#lib-tag-update').hasClass('enabled')){
-			      jQuery('#lib-tag-update').addClass('enabled');
-		      }
-	}); // enable update button
-
-	jQuery('#lib-tag-update').click(function(){
-			    var tags = [];
-			    var tagsInput = jQuery('#tags');
-			    jQuery.each(tagsInput.val().split(';'),function(){ // grab current tag list
-			      	tags.push(jQuery.trim(this)); //trim whitespace
-			    });
-
-			    jQuery('#lib-tags input[type=checkbox]').each(function() { // cycle and add new tags to list
-				    if(jQuery(this).is(':checked')){
-					  //console.log(jQuery(this));
-					    if(jQuery.inArray(this.name,tags) == -1){ // check if already a tag
-						    tags.push(this.name);
-					    }
-					    jQuery(this).removeAttr("checked"); //clear checkboxes
-				    }
-			    }); // lib-tags
-  			  var tagsStr = tags.join(';');
-			    tagsInput.val(tagsStr);
-  			  jQuery(this).removeClass('enabled');
-	  		  tagsInput.focus(); //provide feedback by setting focus to the input
-       });// lib-tag-update
-
+        Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse'));
+?>);
     });
+//]]>
+</script>
+<script>
+jQuery(window).load(function() {    
+    //////////////////////////////
+        jQuery.noConflict();
+                    jQuery(".internalslidingDiv").hide();
+        jQuery(".subject-sub-internalslidingDiv").hide();
+
+                    jQuery('.subjectshow_hide').click(function(e){
+                            e.preventDefault();
+                            jQuery(".internalslidingDiv",jQuery(this).parents('li')).toggle();
+                            jQuery(this).children(".subject-sub-internalslidingDiv").hide();
+                            jQuery(this).parents('li').toggleClass('list-open');
+                            return false;
+                    });
+
+                    jQuery('.subject-nested').click(function(e){
+                          e.preventDefault();
+                            e.stopPropagation();
+                            jQuery(".subject-sub-internalslidingDiv",jQuery(this).closest('li')).toggle();
+                            jQuery(this).parents('li').toggleClass('list-open');
+                          return false;
+                    });
+
+          jQuery('#lib-tags input[type=checkbox]').click(function(e){
+                      if(!jQuery('#lib-tag-update').hasClass('enabled')){
+                              jQuery('#lib-tag-update').addClass('enabled');
+                      }
+              }); // enable update button
+
+              jQuery('#lib-tag-update').click(function(){
+                            var tags = [];
+                            var tagsInput = jQuery('#tags');
+                            jQuery.each(tagsInput.val().split(';'),function(){ // grab current tag list
+                                tags.push(jQuery.trim(this)); //trim whitespace
+                            });
+
+                            jQuery('#lib-tags input[type=checkbox]').each(function() { // cycle and add new tags to list
+                                    if(jQuery(this).is(':checked')){
+                                          //console.log(jQuery(this));
+                                            if(jQuery.inArray(this.name,tags) == -1){ // check if already a tag
+                                                    tags.push(this.name);
+                                            }
+                                            jQuery(this).removeAttr("checked"); //clear checkboxes
+                                    }                                                                                                                                                                         }); // lib-tags
+                          var tagsStr = tags.join(';');
+                            tagsInput.val(tagsStr);
+                          jQuery(this).removeClass('enabled');
+                          tagsInput.focus(); //provide feedback by setting focus to the input
+       });// lib-tag-update
+    }); //jQuery(window).load(function() {
 //]]>
 </script>
