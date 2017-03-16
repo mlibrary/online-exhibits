@@ -1,32 +1,33 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Standard local filesystem storage adapter.
  *
- * The default adapter; this stores files in the Omeka archive directory
- * by default, but can be set to point to a different path.
- *
- * @package Omeka
+ * The default adapter; this stores files in the Omeka files directory by 
+ * default, but can be set to point to a different path.
+ * 
+ * @package Omeka\Storage\Adapter
  */
-class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
+class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter_AdapterInterface
 {
     /**
      * Local directory where files are stored.
      * 
      * @var string
      */
-    private $_localDir;
+    protected $_localDir;
 
-    private $_subDirs = array(
+    protected $_subDirs = array(
         'thumbnails', 
         'square_thumbnails', 
         'fullsize', 
-        'files',
+        'original',
         'theme_uploads'
     );
 
@@ -35,7 +36,7 @@ class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
      *
      * @var string
      */
-    private $_webDir;
+    protected $_webDir;
 
     /**
      * Set options for the storage adapter.
@@ -59,18 +60,18 @@ class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
                     break;
             }
         }
-        if (!$this->_localDir && defined('ARCHIVE_DIR')) {
-            $this->_localDir = ARCHIVE_DIR;
+        if (!$this->_localDir && defined('FILES_DIR')) {
+            $this->_localDir = FILES_DIR;
         }
-        if (!$this->_webDir && defined('WEB_ARCHIVE')) {
-            $this->_webDir = WEB_ARCHIVE;
+        if (!$this->_webDir && defined('WEB_FILES')) {
+            $this->_webDir = WEB_FILES;
         }
     }
 
     public function setUp()
     {
-        foreach ($this->_subDirs as $archiveDirName) {
-            $dirToCreate = $this->_getAbsPath($archiveDirName);
+        foreach ($this->_subDirs as $filesDirName) {
+            $dirToCreate = $this->_getAbsPath($filesDirName);
             if (!is_dir($dirToCreate)) {
                 $made = @mkdir($dirToCreate, 0770, true);
                 if (!$made || !is_readable($dirToCreate)) {
@@ -176,9 +177,24 @@ class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
         );
     }
 
+    /**
+     * Set the path of the local directory where files are stored.
+     *
+     * @param string
+     */
     public function setLocalDir($dir)
     {
         $this->_localDir = $dir;
+    }
+
+    /**
+     * Set the web URL that corresponds with the local dir.
+     *
+     * @param string
+     */
+    public function setWebDir($dir)
+    {
+        $this->_webDir = $dir;
     }
 
     /**
@@ -187,7 +203,7 @@ class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
      * @param string $path Storage path.
      * @return string Absolute local filesystem path.
      */
-    private function _getAbsPath($path)
+    protected function _getAbsPath($path)
     {
         return $this->_localDir . '/' . $path;
     }
@@ -196,7 +212,7 @@ class Omeka_Storage_Adapter_Filesystem implements Omeka_Storage_Adapter
      * @throws Omeka_Storage_Exception
      * @return boolean
      */
-    private function _rename($source, $dest)
+    protected function _rename($source, $dest)
     {
         $destDir = dirname($dest);
         if (!is_writable($destDir)) {

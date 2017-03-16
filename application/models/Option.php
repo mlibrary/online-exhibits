@@ -1,27 +1,49 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Models
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * A site option saved in the database.
+ *
+ * Options are stored and accessed by string keys.
+ * 
+ * @package Omeka\Record
  */
-class Option extends Omeka_Record { 
+class Option extends Omeka_Record_AbstractRecord
+{
+    /**
+     * Option name.
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     * Option value.
+     *
+     * @var string
+     */
     public $value;
-    
-    public function __toString() {
+
+    /**
+     * Use the option's value when treating it as a string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
         return $this->value;
     }
-    
+
+    /**
+     * Validate the Option.
+     *
+     * An option must have a non-empty and unique name.
+     */
     protected function _validate()
     {
         if (empty($this->name)) {

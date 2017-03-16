@@ -1,93 +1,132 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @subpackage Models
- * @author CHNM
+ * A plugin and its metadata.
+ *
+ * This record represents the data Omeka stores about each plugin and uses to
+ * manage the plugins, it is not a part of any plugin itself.
+ * 
+ * @package Omeka\Record
  */
-class Plugin extends Omeka_Record
+class Plugin extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
+    /**
+     * Directory name for the plugin.
+     *
+     * @var string
+     */
     public $name;
-    public $active = '0';
+
+    /**
+     * Whether this plugin is active.
+     *
+     * @var int
+     */
+    public $active = 0;
+
+    /**
+     * Version string for the currently-installed plugin.
+     *
+     * @var string
+     */
     public $version;
     
     /**
-     * @var string Human-readable display name of the plugin.
+     * Human-readable display name of the plugin.
+     * 
+     * @var string 
      */
     protected $_displayName;
     
     /**
-     * @var string Name of the plugin author.
+     * The plugin's author.
+     * 
+     * @var string
      */
     protected $_author;
     
     /**
-     * @var string Description of the plugin.
+     * Description of the plugin.
+     * 
+     * @var string 
      */
     protected $_description;
     
     /**
-     * @var string URL for documentation / further information about the plugin.
+     * URL for documentation or further information about the plugin.
+     * 
+     * @var string
      */
     protected $_link;
         
     /**
-     * @var boolean Whether or not the plugin has been loaded.
+     * Whether the plugin has been loaded.
+     * 
+     * @var boolean
      */
     protected $_loaded = false;
-            
+
     /**
-     * @var boolean Whether or not the plugin has a custom configuration form.
+     * Whether the plugin has a custom configuration form.
+     * 
+     * @var boolean 
      */
     protected $_hasConfig = false;
     
     /**
-     * @var array Array of directory names for required plugins.
+     * Directory names of required plugins.
+     * 
+     * @var array 
      */
     protected $_requiredPlugins = array();  
     
     /**
-     * @var array Array of directory names for optional plugins.
+     * Directory names of optional plugins.
+     * 
+     * @var array
      */
     protected $_optionalPlugins = array();
         
     /**
-     * @var string Minimum Omeka version requirement for the plugin.
-     */    
+     * Minimum Omeka version requirement for the plugin.
+     * 
+     * @var string 
+     */
     protected $_minimumOmekaVersion;    
     
     /**
-     * @var string Maximum version of Omeka that the plugin has been tested on.
+     * Maximum version of Omeka that the plugin has been tested on.
+     * 
+     * @var string 
      */
     protected $_testedUpToVersion;
     
     /**
-     * @var string Version of the plugin that is stored in the ini.
+     * Version of the plugin that is stored in the INI.
+     * 
+     * @var string 
      */
     protected $_iniVersion;
     
     /**
-     * @var array List of tags associated with this plugin, as retrieved from
+     * List of tags associated with this plugin, as retrieved from
      * the ini file.
+     * 
+     * @var array
      */
     protected $_iniTags = array();
 
     /**
-     * @var boolean Flag to determine how to load the plugin.php for this 
-     * plugin (require_once vs. require).
+     * Validate the plugin.
+     *
+     * The directory name must be set.
      */
-    protected $_requireOnce;
-        
     protected function _validate()
     {
         if (empty($this->name)) {
@@ -97,6 +136,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the name of the directory containing the plugin.
+     *
+     * @return string
      */
     public function getDirectoryName()
     {
@@ -107,6 +148,7 @@ class Plugin extends Omeka_Record
      * Set the name of the directory containing the plugin.
      * 
      * @param string $name
+     * @return Plugin
      */
     public function setDirectoryName($name)
     {
@@ -115,10 +157,12 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * Get the human-readable name of the plugin, e.g. "Dublin Core Extended".
+     * Get the human-readable name of the plugin.
      * 
      * If there is no human-readable name available, returns the directory name
      * instead.
+     *
+     * @return string
      */
     public function getDisplayName()
     {
@@ -132,6 +176,7 @@ class Plugin extends Omeka_Record
      * Set the human-readable name of the plugin.
      * 
      * @param string $name
+     * @return Plugin
      */
     public function setDisplayName($name)
     {
@@ -140,7 +185,9 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * Get the author's name.
+     * Get the plugin's author.
+     *
+     * @return string
      */
     public function getAuthor()
     {
@@ -151,6 +198,7 @@ class Plugin extends Omeka_Record
      * Set the author's name.
      * 
      * @param string $author
+     * @return Plugin
      */
     public function setAuthor($author)
     {
@@ -160,6 +208,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the description of the plugin.
+     *
+     * @return string
      */
     public function getDescription()
     {
@@ -169,7 +219,8 @@ class Plugin extends Omeka_Record
     /**
      * Set the description of the plugin.
      * 
-     * @param string $description 
+     * @param string $description
+     * @return Plugin
      */
     public function setDescription($description)
     {
@@ -179,6 +230,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the minimum version of Omeka that this plugin requires to work.
+     *
+     * @return string
      */
     public function getMinimumOmekaVersion()
     {
@@ -189,6 +242,7 @@ class Plugin extends Omeka_Record
      * Set the minimum required version of Omeka.
      * 
      * @param string $version
+     * @return Plugin
      */
     public function setMinimumOmekaVersion($version)
     {
@@ -198,6 +252,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the version of Omeka that this plugin is tested up to.
+     *
+     * @return string
      */
     public function getTestedUpToOmekaVersion()
     {
@@ -208,6 +264,7 @@ class Plugin extends Omeka_Record
      * Set the version of Omeka that this plugin is tested up to.
      * 
      * @param string $version
+     * @return Plugin
      */
     public function setTestedUpToOmekaVersion($version)
     {
@@ -217,6 +274,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the list of plugins that are required for this plugin to work.
+     *
+     * @return array
      */
     public function getRequiredPlugins()
     {
@@ -227,6 +286,7 @@ class Plugin extends Omeka_Record
      * Set the list of plugins that are required for this plugin to work.
      * 
      * @param array|string
+     * @return Plugin
      */
     public function setRequiredPlugins($plugins)
     {
@@ -239,7 +299,9 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the list of plugins that can be used, but are not required by, this
-     * plugin.  
+     * plugin.
+     *
+     * @return array
      */
     public function getOptionalPlugins()
     {
@@ -250,6 +312,7 @@ class Plugin extends Omeka_Record
      * Set the list of optional plugins.
      * 
      * @param array|string
+     * @return Plugin
      */
     public function setOptionalPlugins($plugins)
     {
@@ -262,6 +325,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the list of tags for this plugin (from the ini file).
+     *
+     * @return array
      */
     public function getIniTags()
     {
@@ -272,6 +337,7 @@ class Plugin extends Omeka_Record
      * Set the list of tags for this plugin.
      * 
      * @param array|string
+     * @return Plugin
      */
     public function setIniTags($tags)
     {
@@ -283,7 +349,34 @@ class Plugin extends Omeka_Record
     }
     
     /**
+     * Get the support link url from plugin.ini
+     * 
+     * @return string
+     */
+    public function getSupportLinkUrl()
+    {
+        return $this->_support_link;
+    }
+    
+    /**
+     * Set the support link url from plugin.ini
+     * 
+     * @param string $l
+     * @return Plugin
+     */
+    public function setSupportLinkUrl($link)
+    {
+        if ( $link && !parse_url($link, PHP_URL_SCHEME) ) {
+            $link = 'http://'.$link;
+        }
+        $this->_support_link = $link;
+        return $this;
+    }        
+    
+    /**
      * Get the URL link from the plugin.ini.
+     *
+     * @return string
      */
     public function getLinkUrl()
     {
@@ -293,7 +386,8 @@ class Plugin extends Omeka_Record
     /**
      * Set the link from the plugin.ini.
      * 
-     * @param string $link 
+     * @param string $link
+     * @return Plugin
      */
     public function setLinkUrl($link)
     {
@@ -305,9 +399,9 @@ class Plugin extends Omeka_Record
     }
         
     /**
-     * Whether or not the Plugin has been installed.
+     * Determine whether the Plugin has been installed.
      * 
-     * @return boolean 
+     * @return bool
      */
     public function isInstalled()
     {
@@ -315,7 +409,9 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * @return boolean
+     * Determine whether the Plugin has been loaded.
+     * 
+     * @return bool
      */
     public function isLoaded()
     {
@@ -323,7 +419,10 @@ class Plugin extends Omeka_Record
     }
 
     /**
-     * @param boolean $flag
+     * Set whether the plugin has been loaded.
+     * 
+     * @param bool $flag
+     * @return Plugin
      */
     public function setLoaded($flag)
     {
@@ -332,7 +431,9 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * Whether or not the plugin has been activated through the UI.
+     * Determine whether the plugin is active.
+     *
+     * @return bool
      */
     public function isActive()
     {
@@ -340,18 +441,21 @@ class Plugin extends Omeka_Record
     }
 
     /**
-     * Set whether or not the plugin has been activated.
+     * Set whether the plugin is active.
      * 
-     * @param boolean
+     * @param bool $flag
+     * @return Plugin
      */
     public function setActive($flag)
     {
         $this->active = $flag ? '1' : '0';
         return $this;
     }
-            
+    
     /**
-     * Whether or not the plugin has a custom configuration hook.
+     * Determine whether the plugin has a custom configuration form.
+     *
+     * @return bool
      */
     public function hasConfig()
     {
@@ -359,9 +463,10 @@ class Plugin extends Omeka_Record
     }
 
     /**
-     * Set whether or not the plugin has a custom configuration hook.
+     * Set whether the plugin has a custom configuration form.
      * 
-     * @param boolean $flag
+     * @param bool $flag
+     * @return Plugin
      */
     public function setHasConfig($flag)
     {
@@ -370,7 +475,9 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * Get the version of the plugin stored in the ini file.
+     * Get the version of the plugin stored in the INI file.
+     *
+     * @return string
      */
     public function getIniVersion()
     {
@@ -378,9 +485,10 @@ class Plugin extends Omeka_Record
     }
 
     /**
-     * Set the version of the plugin that is indicated by the ini file.
+     * Set the version of the plugin that is indicated by the INI file.
      * 
      * @param string $version
+     * @return Plugin
      */
     public function setIniVersion($version)
     {
@@ -390,6 +498,8 @@ class Plugin extends Omeka_Record
     
     /**
      * Get the version of the plugin that is stored in the database.
+     *
+     * @return string
      */
     public function getDbVersion()
     {
@@ -400,15 +510,18 @@ class Plugin extends Omeka_Record
      * Set the version of the plugin that is stored in the database.
      * 
      * @param string $version
+     * @return Plugin
      */
     public function setDbVersion($version)
     {
         $this->version = trim($version);
         return $this;
     }
-            
+
     /**
-     * Determine whether or not there is a new version of the plugin available.
+     * Determine whether there is a new version of the plugin available.
+     *
+     * @return bool
      */
     public function hasNewVersion()
     {
@@ -416,16 +529,25 @@ class Plugin extends Omeka_Record
     }
     
     /**
-     * Determine whether the plugin meets the minimum version requirements for Omeka.
+     * Determine whether this Omeka install meets the plugin's minimum version
+     * requirements.
      * 
      * If the field is not set, assume that it meets the requirements.  If the 
      * field is set, it must be greater than the current version of Omeka.
+     *
+     * @return bool
      */
     public function meetsOmekaMinimumVersion()
     {
         return !$this->getMinimumOmekaVersion() || version_compare($this->getMinimumOmekaVersion(), OMEKA_VERSION, '<=');
     }
-    
+
+    /**
+     * Determine whether this Omeka version has been tested for use with the
+     * plugin.
+     *
+     * @return bool
+     */
     public function meetsOmekaTestedUpToVersion()
     {
         // Add 'p' to the declared tested version from the plugin.
@@ -435,31 +557,12 @@ class Plugin extends Omeka_Record
     }
 
     /**
-     * Set a flag to determine whether plugin.php may be reloaded repeatedly
-     * in the test environment.
+     * Declare the Plugin model as relating to the Plugins ACL resource.
      *
-     * If set to true, plugin.php will be loaded via require_once. This is the
-     * default, and it is the only way that will work if functions and classes
-     * have been defined directly in plugin.php. 
-     *
-     * If set to false, plugin.php will be loaded via require. This allows 
-     * plugin writers to avoid duplicating executable logic from plugin.php
-     * in their tests. In order for this to work, plugin.php must contain only
-     * executable logic (no function or class definitions).
-     *
-     * @param boolean $flag
+     * @return string
      */
-    public function setRequireOnce($flag)
+    public function getResourceId()
     {
-        $this->_requireOnce = $flag;
-    }
-
-    /**
-     * @see setRequireOnce()
-     * @return boolean
-     */
-    public function getRequireOnce()
-    {
-        return $this->_requireOnce;
+        return 'Plugins';
     }
 }

@@ -10,7 +10,7 @@
  *
  * @package Dropbox
  */
-class Dropbox_IndexController extends Omeka_Controller_Action
+class Dropbox_IndexController extends Omeka_Controller_AbstractActionController
 {
     /**
      * Front admin page.
@@ -26,23 +26,34 @@ class Dropbox_IndexController extends Omeka_Controller_Action
     {
         $fileNames = $_POST['dropbox-files'];
         $uploadedFileNames = array();
-        $notUploadedFileNamesToErrorMessages = array();
         if ($fileNames) {
             try {
                 $uploadedFileNames = $fileNames;
-                $notUploadedFileNamesToErrorMessages = $this->_uploadFiles($fileNames);
-                if ($notUploadedFileNamesToErrorMessages) {
-                    $uploadedFileNames = array_diff($fileNames, array_keys($notUploadedFileNamesToErrorMessages));
+                $fileErrors = $this->_uploadFiles($fileNames);
+                if ($fileErrors) {
+                    $message = 'Some files were not uploaded. Specific errors for each file follow below:';
+                    foreach ($fileErrors as $fileName => $errorMessage) {
+                       $message .= "\n- $fileName: $errorMessage";
+                    }
+                    $this->_helper->flashMessenger($message, 'error');
+                    $uploadedFileNames = array_diff($fileNames, array_keys($fileErrors));
                 }
             } catch(Exception $e) {
-                $this->flashError($e->getMessage());
-                $this->redirect->goto('index');
+                $this->_helper->flashMessenger($e->getMessage());
+                $this->_helper->redirector('index');
             }
         } else {
-            $this->flashError('You must select a file to upload.');
-            $this->redirect->goto('index');
+            $this->_helper->flashMessenger('You must select a file to upload.');
+            $this->_helper->redirector('index');
         }
-        $this->view->assign(compact('uploadedFileNames', 'notUploadedFileNamesToErrorMessages'));
+        if ($uploadedFileNames) {
+            $message = 'The following files were uploaded:';
+            foreach ($uploadedFileNames as $fileName) {
+                $message .= "\n- $fileName";
+            }
+            $this->_helper->flashMessenger($message, 'success');
+        }    
+        $this->_helper->redirector('index');
     }
 
     /**
@@ -55,32 +66,44 @@ class Dropbox_IndexController extends Omeka_Controller_Action
     protected function _uploadFiles($fileNames)
     {
         if (!dropbox_can_access_files_dir()) {
-            throw new Dropbox_Exception('Please make the following dropbox directory writable: ' . dropbox_get_files_dir_path());
+            throw new Dropbox_Exception('The Dropbox files directory must be both readable and writable.');
         }
-        $notUploadedFileNamesToErrorMessages = array();
+        $fileErrors = array();
         foreach ($fileNames as $fileName) {
-            $filePath = PLUGIN_DIR.DIRECTORY_SEPARATOR.'Dropbox'.DIRECTORY_SEPARATOR.'files'.DIRECTORY_SEPARATOR.$fileName;
             $item = null;
             try {
-                if (!dropbox_can_access_file($filePath)) {
-                    throw new Dropbox_Exception('Please make the following dropbox file readable and writable: ' . $filePath);
-                }
-                $itemMetadata = array(  'public'            => $_POST['dropbox-public'],
-                                        'featured'          => $_POST['dropbox-featured'],
-                                        'collection_id'     => $_POST['dropbox-collection-id'],
-                                        'tags'              => $_POST['dropbox-tags']
-                                     );
-                $elementTexts = array('Dublin Core' => array('Title' => array(array('text' => $fileName, 'html' => false))));
-                $fileMetadata = array('file_transfer_type' => 'Filesystem', 'files' => array($filePath));
+                $filePath = dropbox_validate_file($fileName);
+                $itemMetadata = array(
+                    'public' => $_POST['dropbox-public'],
+                    'featured' => $_POST['dropbox-featured'],
+                    'collection_id' => $_POST['dropbox-collection-id']
+                        ? $_POST['dropbox-collection-id']
+                        : null,
+                    'tags' => $_POST['dropbox-tags']
+                );
+                $elementTexts = array(
+                    'Dublin Core' => array(
+                        'Title' => array(
+                            array('text' => $fileName, 'html' => false)
+                        )
+                    )
+                );
+                $fileMetadata = array(
+                    'file_transfer_type' => 'Filesystem',
+                    'file_ingest_options' => array(
+                        'ignore_invalid_files' => false
+                    ),
+                    'files' => array($filePath)
+                );
                 $item = insert_item($itemMetadata, $elementTexts, $fileMetadata);
                 release_object($item);
                 // delete the file from the dropbox folder
                 unlink($filePath);
             } catch(Exception $e) {
                 release_object($item);
-                $notUploadedFileNamesToErrorMessages[$fileName] = $e->getMessage();
+                $fileErrors[$fileName] = $e->getMessage();
             }
         }
-        return $notUploadedFileNamesToErrorMessages;
+        return $fileErrors;
     }
 }

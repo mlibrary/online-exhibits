@@ -1,39 +1,127 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * Dummy model to simulate the other ActiveRecord models
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @subpackage Models
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- */ 
+ * A theme and its metadata.
+ * 
+ * Unlike most other models, Themes are not stored in the database. This model
+ * relies only on INI data, but acts like an Omeka_Record_AbstractRecord model.
+ * 
+ * @package Omeka\Record
+ */
 class Theme 
 {
+    /**
+     * Filename for the theme screenshot.
+     */
     const THEME_IMAGE_FILE_NAME = 'theme.jpg';
+
+    /**
+     * Filename for the theme INI file.
+     */
     const THEME_INI_FILE_NAME = 'theme.ini';
+
+    /**
+     * Filename for the theme config form INI file.
+     */
     const THEME_CONFIG_FILE_NAME = 'config.ini';
-    
+
+    /**
+     * Option name for the current public theme.
+     */
     const PUBLIC_THEME_OPTION = 'public_theme';
+
+    /**
+     * Option name for the current admin theme.
+     */
     const ADMIN_THEME_OPTION = 'admin_theme';
-    
+
+    /**
+     * Absolute path to the theme.
+     *
+     * @var string
+     */
     public $path;
+
+    /**
+     * Directory name of the theme.
+     *
+     * @var string
+     */
     public $directory;
+
+    /**
+     * Web path to the theme screenshot.
+     *
+     * @var string
+     */
     public $image;
+
+    /**
+     * The theme's author.
+     *
+     * @var string
+     */
     public $author;
+
+    /**
+     * The theme's title.
+     *
+     * @var string
+     */
     public $title;
+
+    /**
+     * The theme's description.
+     *
+     * @var string
+     */
     public $description;
+
+    /**
+     * The software license for the theme.
+     *
+     * @var string
+     */
     public $license;
+
+    /**
+     * A link to the theme's website.
+     *
+     * @var string
+     */
     public $website;
-    
+
+    /**
+     * The minimum Omeka version the theme will run on.
+     *
+     * @var string
+     */
+    public $omeka_minimum_version;
+
+    /**
+     * Set the INI and file data for the theme, given its directory name.
+     *
+     * @param string $themeName Directory name.
+     */
+    public function __construct($themeName) 
+    {
+        $this->setDirectoryName($themeName);
+        $this->setImage(self::THEME_IMAGE_FILE_NAME);
+        $this->setIni(self::THEME_INI_FILE_NAME);
+        $this->setConfig(self::THEME_CONFIG_FILE_NAME);
+    }
+
+    /**
+     * Set the theme's directory name and path.
+     *
+     * @param string $dir Directory name.
+     */
     public function setDirectoryName($dir)
     {
         // Define a hard theme path for the theme
@@ -82,7 +170,12 @@ class Theme
     {
         return $this->getAssetPath() . '/' . $pluginModuleName;
     }
-    
+
+    /**
+     * Set the web path to the screenshot, if it exists.
+     *
+     * @param string $fileName Relative filename of the image to check.
+     */
     public function setImage($fileName)
     {
         // Test to see if an image is available to present the user
@@ -93,7 +186,12 @@ class Theme
             $this->image = $img;
         }
     }
-    
+
+    /**
+     * Load data from the INI file at the given path.
+     *
+     * @param string $fileName Relative filename of the INI file.
+     */
     public function setIni($fileName)
     {
         $themeIni = $this->path . '/' . $fileName;
@@ -107,7 +205,12 @@ class Theme
             }
         }
     }
-    
+
+    /**
+     * Check for a theme config file at the given location.
+     *
+     * @param string $fileName Relative filename of the theme config.ini.
+     */
     public function setConfig($fileName)
     {
         // Get the theme's config file
@@ -132,34 +235,38 @@ class Theme
         return apply_filters($type . '_theme_name', get_option("{$type}_theme"));
     }
 
+
     /**
-     * Retrieve an available theme (or all themes).
+     * Retrieve all themes
      *
-     * @param string|null $themeName  The name of the theme.  If null, it returns all available themes.
-     * @return Theme|array A theme object or array of theme objects
+     * @return array An array of theme objects
      */
-    static public function getAvailable($themeName=null) 
+    static public function getAllThemes() 
     {
         /**
          * Create an array of themes, with the directory paths
          * theme.ini files and images paths if they are present
          */
-        if (!$themeName) {
-            $themes = array();
-            $iterator = new VersionedDirectoryIterator(PUBLIC_THEME_DIR);
-            $themeDirs = $iterator->getValid();
-            foreach ($themeDirs as $themeName) {
-                $themes[$themeName] = self::getAvailable($themeName);
-            }
-            return $themes;
-        } else {
-            $theme = new Theme();            
-            $theme->setDirectoryName($themeName);
-            $theme->setImage(self::THEME_IMAGE_FILE_NAME);
-            $theme->setIni(self::THEME_INI_FILE_NAME);
-            $theme->setConfig(self::THEME_CONFIG_FILE_NAME);
-            return $theme;
+        $themes = array();
+        $iterator = new VersionedDirectoryIterator(PUBLIC_THEME_DIR);
+        $themeDirs = $iterator->getValid();
+        foreach ($themeDirs as $themeName) {
+            $themes[$themeName] = self::getTheme($themeName);
         }
+        return $themes;
+    }
+
+
+    /**
+     * Retrieve a theme.
+     *
+     * @param string $themeName  The name of the theme.
+     * @return Theme A theme object
+     */
+    static public function getTheme($themeName) 
+    {
+        $theme = new Theme($themeName);     
+        return $theme;
     }
     
     /** 
@@ -167,9 +274,8 @@ class Theme
      * 
      * @param string $themeName  The name of the theme
      * @param array $themeConfigOptions An associative array of configuration options, 
-     *                                  where each key is a configuration form input name and 
-     *                                  each value is a string value of that configuration form input
-     * @return void 
+     *  where each key is a configuration form input name and 
+     *  each value is a string value of that configuration form input
      */    
     static public function setOptions($themeName, $themeConfigOptions)
     {
@@ -182,14 +288,18 @@ class Theme
      * 
      * @param string $themeName  The name of the theme
      * @return array An associative array of configuration options, 
-     *               where each key is a configuration form input name and 
-     *               each value is a string value of that configuration form input
+     *  where each key is a configuration form input name and 
+     *  each value is a string value of that configuration form input
      */
     static public function getOptions($themeName)
     {
         $themeOptionName = self::getOptionName($themeName);
         $themeConfigOptions = get_option($themeOptionName);
-        $themeConfigOptions = apply_filters('theme_options', $themeConfigOptions, $themeName);
+        $themeConfigOptions = apply_filters(
+            'theme_options', 
+            $themeConfigOptions, 
+            array('theme_name' => $themeName)
+        );
         if ($themeConfigOptions) {
             $themeConfigOptions = unserialize($themeConfigOptions);
         } else {
@@ -223,7 +333,6 @@ class Theme
      * @param string $themeName  The name of the theme
      * @param string $themeOptionName The name of the theme option
      * @param string The value of the theme option
-     * @return void
      */
     static public function setOption($themeName, $themeOptionName, $themeOptionValue)
     {
@@ -235,8 +344,9 @@ class Theme
     }
     
     /** 
-     * Get the name of a specific theme's option.  Each theme has a single option in the option's table, 
-     * which stores all of the configuration options for that theme
+     * Get the name of a specific theme's option.  Each theme has a single
+     * option in the option's table, which stores all of the configuration
+     * options for that theme
      * 
      * @param string $themeName  The name of the theme
      * @return string The name of a specific theme's option.
@@ -259,7 +369,7 @@ class Theme
     static public function getUploadedFileName($themeName, $optionName, $fileName)
     {
         $filter = new Omeka_Filter_Filename;
-        return $filter->renameFileForArchive($fileName);
+        return $filter->renameFile($fileName);
     }
     
     /**

@@ -1,41 +1,18 @@
-<?php 
+<?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Implements ingesting files from the local filesystem.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2010
+ * 
+ * @package Omeka\File\Ingest
  */
-class Omeka_File_Ingest_Filesystem extends Omeka_File_Ingest_Source
+class Omeka_File_Ingest_Filesystem extends Omeka_File_Ingest_AbstractSourceIngest
 {
-    /**
-     * Set of info about the file to be transferred.
-     * 
-     * @param array $fileInfo In addition to the defaults, this may contain a 
-     * 'rename' = (boolean) flag, which indicates defaults to false and indicates
-     * whether or not to attempt to move the file instead of copying it.
-     * @return array Iterable info array.
-     */
-    protected function _parseFileInfo($fileInfo)
-    {
-        $infoArray = parent::_parseFileInfo($fileInfo);
-        foreach ($infoArray as $key => $info) {
-            if (!array_key_exists('rename', $info)) {
-                $infoArray[$key]['rename'] = false;
-            }
-        }
-        
-        return $infoArray;
-    }
-    
     /**
      * Retrieve the original filename of the file to be transferred.
      * 
@@ -63,12 +40,8 @@ class Omeka_File_Ingest_Filesystem extends Omeka_File_Ingest_Source
      * @return void
      */
     protected function _transfer($source, $destination, array $info)
-    {        
-        if ($info['rename']) {
-            $result = rename($source, $destination);
-        } else {
-            $result = copy($source, $destination);
-        }
+    {
+        $result = copy($source, $destination);
 
         if (!$result) {
             throw new Omeka_File_Ingest_Exception("Could not transfer \"$source\" to \"$destination\".");
@@ -83,18 +56,9 @@ class Omeka_File_Ingest_Filesystem extends Omeka_File_Ingest_Source
      * @param void
      */
     protected function _validateSource($source, $info)
-    {        
-        if ($info['rename']) {
-            if (!is_writable(dirname($source))) {
-                throw new Omeka_File_Ingest_InvalidException("File's parent directory is not writable or does not exist: $source");
-            }
-            if (!is_writable($source)) {
-                throw new Omeka_File_Ingest_InvalidException("File is not writable or does not exist: $source");
-            }
-        } else {
-            if (!is_readable($source)) {
-                throw new Omeka_File_Ingest_InvalidException("File is not readable or does not exist: $source");
-            }
+    {
+        if (!is_readable($source)) {
+            throw new Omeka_File_Ingest_InvalidException("File is not readable or does not exist: $source");
         }
     }
 }

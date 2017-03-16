@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Amf
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Auth.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version    $Id$
  */
 
 /** @see Zend_Amf_Auth_Abstract */
@@ -28,12 +28,15 @@ require_once 'Zend/Acl.php';
 /** @see Zend_Auth_Result */
 require_once 'Zend/Auth/Result.php';
 
+/** @see Zend_Xml_Security */
+require_once 'Zend/Xml/Security.php';
+
 /**
  * This class implements authentication against XML file with roles for Flex Builder.
  *
  * @package    Zend_Amf
  * @subpackage Adobe
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Amf_Adobe_Auth extends Zend_Amf_Auth_Abstract
@@ -61,7 +64,7 @@ class Zend_Amf_Adobe_Auth extends Zend_Amf_Auth_Abstract
     public function __construct($rolefile)
     {
         $this->_acl = new Zend_Acl();
-        $xml = simplexml_load_file($rolefile);
+        $xml = Zend_Xml_Security::scanFile($rolefile);
 /*
 Roles file format:
  <roles>

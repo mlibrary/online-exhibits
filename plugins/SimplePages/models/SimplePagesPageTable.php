@@ -1,17 +1,15 @@
 <?php
 /**
- * @version $Id$
- * @copyright Center for History and New Media, 2008
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package SimplePages
+ * Simple Pages
+ *
+ * @copyright Copyright 2008-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * The Simple Pages page table class.
  *
  * @package SimplePages
- * @author CHNM
- * @copyright Center for History and New Media, 2008
  */
 class SimplePagesPageTable extends Omeka_Db_Table
 {
@@ -19,7 +17,7 @@ class SimplePagesPageTable extends Omeka_Db_Table
      * Find all pages, ordered by slug name.
      *
      * @return array The pages ordered alphabetically by their slugs
-     **/
+     */
     public function findAllPagesOrderBySlug()
     {
         $select = $this->getSelect()->order('slug');
@@ -27,10 +25,10 @@ class SimplePagesPageTable extends Omeka_Db_Table
     }
     
     public function applySearchFilters($select, $params)
-    {        
+    {
+        $alias = $this->getTableAlias();
         $paramNames = array('parent_id', 
-                            'is_published', 
-                            'add_to_public_nav', 
+                            'is_published',
                             'title', 
                             'slug',
                             'created_by_user_id',
@@ -39,19 +37,19 @@ class SimplePagesPageTable extends Omeka_Db_Table
                             
         foreach($paramNames as $paramName) {
             if (isset($params[$paramName])) {             
-                $select->where('s.' . $paramName . ' = ?', array($params[$paramName]));
+                $select->where($alias . '.' . $paramName . ' = ?', array($params[$paramName]));
             }            
         }
 
         if (isset($params['sort'])) {
             switch($params['sort']) {
                 case 'alpha':
-                    $select->order('s.title ASC');
-                    $select->order('s.order ASC');
+                    $select->order("{$alias}.title ASC");
+                    $select->order("{$alias}.order ASC");
                     break;
                 case 'order':
-                    $select->order('s.order ASC');
-                    $select->order('s.title ASC');
+                    $select->order("{$alias}.order ASC");
+                    $select->order("{$alias}.title ASC");
                     break;
             }
         }         
@@ -143,7 +141,7 @@ class SimplePagesPageTable extends Omeka_Db_Table
      *
      * @param integer $pageId The id of the page whose potential parent pages are returned.
      * @return array The potential parent pages.
-     **/
+     */
     public function findPotentialParentPages($pageId)
     {
         // create a page lookup table for all of the pages
@@ -170,7 +168,7 @@ class SimplePagesPageTable extends Omeka_Db_Table
     *
     * @param integer $pageId The id of the page whose ancestors are returned.
     * @return array The array of ancestor pages.
-    **/
+    */
     public function findAncestorPages($pageId) 
     {        
         // set the default ancestor pages to an empty array
@@ -185,5 +183,15 @@ class SimplePagesPageTable extends Omeka_Db_Table
         }
         
         return $ancestorPages;
+    }
+    public function getSelect()
+    {
+        $select = parent::getSelect();
+        $permissions = new Omeka_Db_Select_PublicPermissions('SimplePages_Page');
+        $permissions->apply($select, 'simple_pages_pages','created_by_user_id','is_published');
+        
+        
+        return $select;
+	
     }
 }

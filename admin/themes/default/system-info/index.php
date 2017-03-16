@@ -1,25 +1,18 @@
 <?php
 $title = __('System Information');
-head(array('title' => $title, 'bodyclass' => 'system-info')); ?>
+echo head(array('title' => $title, 'bodyclass' => 'system-info')); ?>
 
-<h1><?php echo $title; ?></h1>
-
-<div id="primary">
 <?php echo flash(); ?>
-
-<pre id="info-field">
-<?php
-foreach ($info as $category => $entries) {
-    echo html_escape(__($category)) . "\n";
-
-    foreach ($entries as $name => $value) {
-        printf("    %-20s%s\n", html_escape($name) . ':', html_escape($value));
-    }
-
-    echo "\n";
-}
-?>
-</pre>
-</div>
-
-<?php foot();
+<table>
+<?php foreach ($info as $category => $entries): ?>
+    <tr><th colspan="2"><?php echo html_escape($category); ?></th></tr>
+    <?php foreach ($entries as $name => $value): ?>
+    <tr>
+        <td><?php echo html_escape($name); ?></td>
+        <td><?php echo html_escape($value); ?></td>
+    </tr>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+</table>
+<?php fire_plugin_hook('admin_system_info', array('system_info' => $info, 'view' => $this)); ?>
+<?php echo foot();

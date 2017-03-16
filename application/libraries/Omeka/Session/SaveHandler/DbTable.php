@@ -1,9 +1,9 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
@@ -13,19 +13,14 @@
  *
  * Note that this must be updated meticulously after any changes to the 
  * sessions table schema.
- *
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
+ * 
+ * @package Omeka\Session
  */
-class Omeka_Session_SaveHandler_DbTable 
-    extends Zend_Session_SaveHandler_DbTable
+class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
 {
-
     public function init()
     {
-        $db = Omeka_Context::getInstance()->db;
+        $db = Zend_Registry::get('bootstrap')->getResource('Db');
         $tableName = $db->prefix . 'sessions';
         $this->_metadata = array(
             'id' => array(
@@ -33,10 +28,10 @@ class Omeka_Session_SaveHandler_DbTable
                 'TABLE_NAME' => $tableName,
                 'COLUMN_NAME' => 'id',
                 'COLUMN_POSITION' => 1,
-                'DATA_TYPE' => 'char',
+                'DATA_TYPE' => 'varchar',
                 'DEFAULT' => '',
                 'NULLABLE' => false,
-                'LENGTH' => '32',
+                'LENGTH' => '128',
                 'SCALE' => null,
                 'PRECISION' => null,
                 'UNSIGNED' => null,

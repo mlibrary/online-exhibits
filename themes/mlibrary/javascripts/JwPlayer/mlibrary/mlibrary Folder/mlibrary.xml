@@ -1,0 +1,71 @@
+<?xml version='1.0'?>
+<skin version='1.1' name='SkinName' author='http://www.yoursite.com/'>
+
+   <components>
+<component name='controlbar'>
+
+   <settings>
+      <setting name='backgroundcolor' value='0x000000'/>
+      <setting name='margin' value='10' />
+
+      <setting name='font' value='_sans' />
+      <setting name='fontsize' value='10' />
+
+      <setting name='fontcolor' value='0x000000' />
+      <setting name='fontstyle' value='normal' />
+
+      <setting name='fontweight' value='normal' />
+      <setting name='buttoncolor' value='0xFFFFFF' />
+
+   </settings>
+   <layout>
+   <group position='left'>
+
+      <button name='play' />
+      <divider width='5'/>
+	  <divider element='dividerLeft'/>
+   </group>
+   <group position='center'>
+   		
+      <slider name='time' />
+
+   </group>
+   <group position='right'>
+   <divider element='dividerRight'/>
+      <text name='elapsed' />
+        <divider width='5'/>
+      <button name='mute' />
+   </group>
+   </layout>
+   <elements>
+      <element name='background' src='background.jpg' />
+
+     
+      <element name='dividerLeft' src='dividerLeft.jpg' />
+	   <element name='dividerRight' src='dividerRight.jpg' />
+
+      <element name='playButton' src='play.jpg' />
+      <element name='playButtonOver' src='play.jpg' />
+      <element name='pauseButton' src='pause.jpg' />
+      <element name='pauseButtonOver' src='pause.jpg' />
+
+
+      <element name='timeSliderRail' src='rail.jpg' />
+	  <element name='timeSliderCapLeft' src='railCapLeft.jpg' />
+	   <element name='timeSliderCapRight' src='railCapRight.jpg' />
+
+      <element name='timeSliderBuffer' src='buffer.jpg' />
+      <element name='timeSliderProgress' src='progress.jpg' />
+
+
+      <element name='muteButton' src='mute.jpg' />
+
+      <element name='muteButtonOver' src='mute.jpg' />
+      <element name='unmuteButton' src='unmute.jpg' />
+
+      <element name='unmuteButtonOver' src='unmute.jpg' />
+
+   </elements>
+</component>   
+</components>
+</skin>

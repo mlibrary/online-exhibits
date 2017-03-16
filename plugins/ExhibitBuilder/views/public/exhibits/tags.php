@@ -1,16 +1,23 @@
 <?php
 $title = __('Browse Exhibits by Tag');
-head(array('title' => $title, 'bodyid' => 'exhibit', 'bodyclass' => 'tags'));
+echo head(array('title' => $title, 'bodyclass' => 'exhibits tags'));
 ?>
-<div id="primary">
 <h1><?php echo $title; ?></h1>
-<ul class="navigation exhibit-tags" id="secondary-nav">
-    <?php echo nav(array(
-        __('Browse All') => uri('exhibits/browse'),
-        __('Browse by Tag') => uri('exhibits/tags')
-    )); ?>
-</ul>
 
-<?php echo tag_cloud($tags,uri('exhibits/browse')); ?>
-</div>
-<?php foot(); ?>
+<nav class="navigation exhibit-tags" id="secondary-nav">
+    <?php echo nav(array(
+            array(
+                'label' => __('Browse All'),
+                'uri' => url('exhibits/browse')
+            ),
+            array(
+                'label' => __('Browse by Tag'),
+                'uri' => url('exhibits/tags')
+            )
+        )
+    ); ?>
+</nav>
+
+<?php echo tag_cloud($tags, 'exhibits/browse'); ?>
+
+<?php echo foot(); ?>

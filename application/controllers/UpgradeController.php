@@ -1,19 +1,14 @@
-<?php 
+<?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
- */
- 
-/**
- * Database upgrade controller.
+ * Omeka
  * 
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private 
- * @package Omeka
- * @subpackage Controllers
- */ 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
+ */
+
+/**
+ * @package Omeka\Controller
+ */
 class UpgradeController extends Zend_Controller_Action
 {
     public function __construct(Zend_Controller_Request_Abstract $request,
@@ -21,10 +16,7 @@ class UpgradeController extends Zend_Controller_Action
                                 array $invokeArgs = array())
     {
         parent::__construct($request, $response, $invokeArgs);
-        
-        //Make sure we only load the built-in view scripts when upgrading
-        $this->view->setScriptPath(VIEW_SCRIPTS_DIR);
-        $this->view->setAssetPath(VIEW_SCRIPTS_DIR, WEB_VIEW_SCRIPTS);
+
     }
     
     public function indexAction()
@@ -41,26 +33,20 @@ class UpgradeController extends Zend_Controller_Action
     {        
         $manager = Omeka_Db_Migration_Manager::getDefault();
         if (!$manager->canUpgrade()) {
-            return $this->_forward('completed');
+            throw new Omeka_Db_Migration_Exception('Omeka is unable to upgrade.');
         }
-        
-        $debugMode = (boolean)$this->getInvokeArg('bootstrap')->config->debug->exceptions;
-        $this->view->debugMode = $debugMode;
+
+        $this->view->success = false;
         try {
             $manager->migrate();
             $manager->finalizeDbUpgrade();
             $this->view->success = true;            
         } catch (Omeka_Db_Migration_Exception $e) {
             $this->view->error = $e->getMessage();
-            $this->view->trace = $e->getTraceAsString();
+            $this->view->exception = $e;
         } catch (Zend_Db_Exception $e) {
             $this->view->error = __("SQL error in migration: ") . $e->getMessage();
-            $this->view->trace = $e->getTraceAsString();
+            $this->view->exception = $e;
         }
-    }
-    
-    public function completedAction()
-    {
-        
     }
 }

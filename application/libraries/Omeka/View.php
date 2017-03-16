@@ -1,23 +1,22 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Customized subclass of Zend Framework's View class.
  *
- * This adds the correct script paths for themes and plugins
- * so that controllers can render the appropriate scripts.
+ * This adds the correct script paths for themes and plugins so that controllers 
+ * can render the appropriate scripts.
  *
- * This will also inject directly into the view scripts
- * all variables that have been assigned to the view,
- * so that theme writers can access them as $item instead of
- * $this->item, for example.
- *
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * This will also inject directly into the view scripts all variables that have 
+ * been assigned to the view, so that theme writers can access them as $item 
+ * instead of $this->item, for example.
+ * 
+ * @package Omeka\View
  */
 class Omeka_View extends Zend_View_Abstract
 {    
@@ -48,7 +47,16 @@ class Omeka_View extends Zend_View_Abstract
         // Setting the XHTML1_STRICT doctype fixes validation errors for ZF's form elements
         $this->doctype()->setDoctype('HTML5');
         
-        $this->addHelperPath(HELPER_DIR, 'Omeka_View_Helper');
+        $this->addHelperPath(VIEW_HELPERS_DIR, 'Omeka_View_Helper');
+
+        try {
+            $mvc = Zend_Registry::get('plugin_mvc');
+            foreach ($mvc->getHelpersDirs() as $pluginDirName => $dir) {
+                $this->addHelperPath($dir, "{$pluginDirName}_View_Helper"); 
+            }
+        } catch (Zend_Exception $e) {
+            // no plugins or MVC component, so we can't add helper paths
+        }
     }
     
     /**
@@ -104,12 +112,8 @@ class Omeka_View extends Zend_View_Abstract
      */
     public function _run() {
         $this->_loadCustomThemeScripts();
-        
         $vars = $this->getVars();
-                
-        require_once HELPERS;
-        
-        extract($vars);    
+        extract($vars);
         include func_get_arg(0);
     }
     
