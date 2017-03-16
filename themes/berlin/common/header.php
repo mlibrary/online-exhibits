@@ -20,7 +20,7 @@
     <?php fire_plugin_hook('public_head',array('view'=>$this)); ?>
     <!-- Stylesheets -->
     <?php
-    queue_css_file(array('iconfonts', 'style'));
+    queue_css_file(array('iconfonts', 'skeleton','style'));
 
     echo head_css();
     ?>
@@ -53,15 +53,15 @@
                   echo public_nav_main();
              ?>
          </div>
-  
+
          <div id="mobile-nav" role="navigation" aria-label="<?php echo __('Mobile Navigation'); ?>">
              <?php
                   echo public_nav_main();
              ?>
          </div>
-        
+
         <?php echo theme_header_image(); ?>
-                       
+
     <div id="content" role="main" tabindex="-1">
 
 <?php fire_plugin_hook('public_content_top', array('view'=>$this)); ?>

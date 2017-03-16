@@ -32,7 +32,7 @@ All rights reserved. See LICENSE.txt for details.-->
 	<script type="text/javascript">
     var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-1341620-8']);
-        _gaq.push(['_gat._anonymizeIp']);        
+        _gaq.push (['_gat._anonymizeIp']);        
         _gaq.push(['_trackPageview']);
 
     (function() {

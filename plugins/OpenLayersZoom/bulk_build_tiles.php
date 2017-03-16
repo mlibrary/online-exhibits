@@ -12,7 +12,6 @@
 	// max_picture_size in bytes, to prevent memory errors for big files
 	$max_picture_size = 29900000;
 	$collection_id = "";
-
 	if ($collection_id == "")
 	{
 		print "Please provide a collection_id\n";
@@ -80,6 +79,8 @@
 			print "Tiling $filename [$item_id]\n";
 		}
 	}
-exit;
 
+print_r("I am here");
+
+exit;
 ?>

@@ -563,7 +563,8 @@ th {
   }
 
   .columns.alpha,
-  .field label {
+  .field label,
+  .field .label {
     font-weight: bold;
   }
 
@@ -899,24 +900,13 @@ th {
     padding: 0.75em 2%;
     margin-bottom: 1.5em;
     overflow: auto;
+    margin-top: 0.75em;
   }
 
   .remove_search {
-    text-indent: -9999px;
     width: 30px;
     position: relative;
     height: 30px;
-  }
-  .remove_search:after {
-    content: "\f00d";
-    font-family: "FontAwesome";
-    text-indent: 0;
-    text-align: center;
-    width: 100%;
-    top: 0;
-    left: 0;
-    position: absolute;
-    line-height: 30px;
   }
 
   #advanced-search-form .inputs {
@@ -1525,7 +1515,8 @@ th {
     margin-top: 0.66667em;
   }
 
-  #recent-items .item {
+  #recent-items .item,
+  #recent-items .view-items-link {
     clear: both;
   }
 
@@ -2216,18 +2207,6 @@ th {
     width: 100%;
     float: right;
   }
-  .field .search-entry input[type=text],
-  .field .search-entry select {
-    width: 28%;
-    display: inline-block;
-    float: left;
-    margin: 0 3px 0 0;
-  }
-  .field .remove_search {
-    margin-top: 0;
-    float: right;
-    clear: none;
-  }
   .field label,
   .field .label,
   .field .columns.alpha {
@@ -2252,13 +2231,35 @@ th {
   #advanced-search-form {
     margin-bottom: 40px;
   }
-  #advanced-search-form button {
-    clear: both;
-    width: auto;
-    margin-left: 31%;
-  }
   #advanced-search-form .submit {
     float: right;
+  }
+
+  #advanced-search-form .search-entry input[type=text],
+  #advanced-search-form .search-entry select {
+    width: calc((100% - 2.625em) / 3);
+    display: inline-block;
+    margin: 0 3px 0 0;
+    float: none;
+  }
+
+  #advanced-search-form .field .remove_search {
+    text-indent: -9999px;
+    margin-top: 0;
+    width: 1.875em;
+    float: right;
+    clear: none;
+  }
+  #advanced-search-form .field .remove_search:after {
+    content: "\f00d";
+    font-family: "FontAwesome";
+    text-indent: 0;
+    text-align: center;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    line-height: 30px;
   }
 
   /* @end */

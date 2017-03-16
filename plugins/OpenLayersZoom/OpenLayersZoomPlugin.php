@@ -209,10 +209,7 @@ class OpenLayersZoomPlugin extends Omeka_Plugin_AbstractPlugin
         foreach ($file_objects as $objects => $value) {
 	       if (isset($value['checkbox'])) {
 	          $file = $files[(int)$objects];
-	     //     print_r("inside check box");
-	      //    print_r($file);
 	   		  if (!$this->isZoomed($file)) {
-	   		//  print_r("no zoomed file");
     	  			$this->_createTiles($value['checkbox']);
 				}
 		        $filesaved = true;
@@ -222,55 +219,7 @@ class OpenLayersZoomPlugin extends Omeka_Plugin_AbstractPlugin
 
 	            $this->_removeZDataDir($value['hidden']);
 	       }
-     //       exit;
         }
-
-     /*  exit;
-        foreach ($post as $key => $value) {
-
-       print_r($key);
-       print_r("<br>");
-       print_r("file save is ".$filesaved);
-       print_r("<br>");
-       $counter = $counter+1;
-       print_r("counter is here".$counter);
-       print_r("<br>");
-       if ($counter==7)
-       	exit;
-            // Key is the file id of the stored image, value is the filename.
-            if (strpos($key, 'open_layers_zoom_') !== false) {
-	            foreach($value as $b){
-	           		 if (isset($b['checkbox'])) {
-//print_r($value);
-					 $filesaved = true;
-		             /*  	 $file = $files[(int) substr($key, strlen('open_layers_zoom_filename_'))];
-		        	     if (!$this->isZoomed($file)) {
-        		           $this->_createTiles($value);
-			             }
-		                $filesaved = true;
-        		     }
-		             elseif (isset($b['hidden']) && ($filesaved != true)) {
-		             $filesaved = false;
-//	                 $this->_removeZDataDir($value);
-					// print_r("inside hidden");
-	                 }
-    	        }
-    	        exit;
-	        }
-
-
-            /*if (strpos($key, 'open_layers_zoom_filename_') !== false) {
-
-                $file = $files[(int) substr($key, strlen('open_layers_zoom_filename_'))];
-                if (!$this->isZoomed($file)) {
-                   $this->_createTiles($value);
-                }
-                $filesaved = true;
-            }
-            elseif ((strpos($key, 'open_layers_zoom_removed_hidden_') !== false) && ($filesaved != true)) {
-                $this->_removeZDataDir($value);
-            }
-        }*/
     }
 
     /**
@@ -331,24 +280,15 @@ class OpenLayersZoomPlugin extends Omeka_Plugin_AbstractPlugin
                 ? html_escape($_REQUEST['open_zoom_layer_req'])
                 : '-1';
 
-        //    $tileUrl = 'https://www.lib.umich.edu'.url('').'files/zoom_tiles/'.$root.'_zdata';
             $html = '<script type="text/javascript">
                 open_layers_zoom_add_zoom("' . $root . '","' . $width . '","' . $height . '","' . $tileUrl . '/",' . $open_zoom_layer_req . ');
             </script>';
-
-/* $html = '<script type="text/javascript">
-                open_layers_zoom_add_zoom("' . $root . '","' . $width . '","' . $height . '","' . $tileUrl . '/",' . $open_zoom_layer_req . ');
-            </script>';*/
-
-
         }
 
         // Else display normal file.
         else {
             $html = file_markup($file, $options);
         }
-
-
         echo $html;
 
     }
@@ -462,9 +402,6 @@ class OpenLayersZoomPlugin extends Omeka_Plugin_AbstractPlugin
 
         // Does it have zoom tiles?
         elseif (file_exists($this->_getZDataDir($file))) {
-            // fetch identifier, to use in link to tiles for this jp2 - pbinkley
-            // $jp2 = item('Dublin Core', 'Identifier') . '.jp2';
-            // $tileUrl = ZOOMTILES_WEB . '/' . $jp2;
             $tileUrl = $this->_getZDataWeb($file);
         }
 

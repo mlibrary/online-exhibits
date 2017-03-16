@@ -11,7 +11,7 @@ $galleryFileSize = isset($options['gallery-file-size'])
     : 'square_thumbnail';
 $captionPosition = isset($options['captions-position'])
     ? html_escape($options['captions-position'])
-    : 'left';
+    : 'center';
 ?>
 <?php if ($showcaseFile): ?>
 <div class="gallery-showcase <?php echo $showcasePosition; ?> with-<?php echo $galleryPosition; ?> captions-<?php echo $captionPosition; ?>">
