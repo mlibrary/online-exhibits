@@ -147,8 +147,6 @@ class Omeka_Form_User extends Omeka_Form
         $this->addElement('hash', 'user_csrf', array(
             'timeout' => 3600
         ));
-
-        $this->addElement('hash', 'user_csrf');
     }
     
     public function setHasRoleElement($flag)
