@@ -15,9 +15,9 @@
  *
  * @category   Zend
  * @package    Zend_Session
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: DbTable.php 23775 2011-03-01 17:25:24Z ralph $
+ * @version    $Id$
  */
 
 /**
@@ -46,7 +46,7 @@ require_once 'Zend/Config.php';
  * @category   Zend
  * @package    Zend_Session
  * @subpackage SaveHandler
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Session_SaveHandler_DbTable
@@ -326,55 +326,6 @@ class Zend_Session_SaveHandler_DbTable
         }
 
         return $return;
-    }
-
-    /**
-     * We want to use REPLACE INTO for storing session data.
-     * Zend doesn't natively support REPLACE INTO.
-     * Most of this was from Zend_Db_Adapter_Abstract.
-     */
-    public function insert(array $bind) {
-        $table = ($this->_schema ? $this->_schema . '.' : '') . $this->_name;
-
-        // extract and quote col names from the array keys
-        $cols = array();
-        $vals = array();
-        $i = 0;
-        foreach ($bind as $col => $val) {
-            $cols[] = $this->_db->quoteIdentifier($col, true);
-            if ($val instanceof Zend_Db_Expr) {
-                $vals[] = $val->__toString();
-                unset($bind[$col]);
-            } else {
-                if ($this->_db->supportsParameters('positional')) {
-                    $vals[] = '?';
-                } else {
-                    if ($this->_db->supportsParameters('named')) {
-                        unset($bind[$col]);
-                        $bind[':col'.$i] = $val;
-                        $vals[] = ':col'.$i;
-                        $i++;
-                    } else {
-                        /** @see Zend_Db_Adapter_Exception */
-                        require_once 'Zend/Db/Adapter/Exception.php';
-                        throw new Zend_Db_Adapter_Exception(get_class($this) ." doesn't support positional or named binding");
-                    }
-                }
-            }
-        }
-        // build the statement
-        $sql = "REPLACE INTO "
-             . $this->_db->quoteIdentifier($table, true)
-             . ' (' . implode(', ', $cols) . ') '
-             . 'VALUES (' . implode(', ', $vals) . ')';
-
-        // execute the statement and return the number of affected rows
-        if ($this->_db->supportsParameters('positional')) {
-            $bind = array_values($bind);
-        }
-        $stmt = $this->_db->query($sql, $bind);
-        $result = $stmt->rowCount();
-        return $result;
     }
 
     /**

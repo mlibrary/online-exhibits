@@ -1,96 +1,161 @@
-if (typeof Omeka === 'undefined') {
-    Omeka = {};
+if (!Omeka) {
+    var Omeka = {};
 }
 
 Omeka.ItemTypes = {};
 
-/**
- * Add AJAX-enabled buttons to item type form for adding and removing elements.
- *
- * @param {string} addNewRequestUrl
- * @param {string} addExistingRequestUrl
- * @param {string} changeExistingElementUrl
- */
-Omeka.ItemTypes.manageItemTypes = function (addNewRequestUrl, addExistingRequestUrl, changeExistingElementUrl) {
+(function ($) {
     /**
-     * Activate dropdown for selecting from existing elements.
+     * Enable drag and drop sorting for elements.
      */
-    function activateSelectElementDropdowns() {
-        jQuery('select.existing-element-drop-down').change(function () {
-            var dropDown = jQuery(this);
-            var elementId = dropDown.val();
-            var addExistingElementIdPrefix = 'add-existing-element-id-';
-            var addExistingElementId = this.getAttribute('id');
-            if (addExistingElementId) {
-                var elementTempId = addExistingElementId.substring(addExistingElementIdPrefix.length);
-                jQuery.ajax({
-                    url: changeExistingElementUrl,
-                    dataType: 'json',
-                    data: {elementId: elementId, elementTempId: elementTempId},
-                    success: function (response) {
-                        var elementDescriptionCol = dropDown.parent().next();
-                        elementDescriptionCol.html(response.elementDescription);
-                        var elementDataTypeNameCol = elementDescriptionCol.next();
-                        elementDataTypeNameCol.html(response.elementDataTypeName);
-                    },
-                    error: function () {
-                        alert('Unable to get selected element data.');
-                    }
+    Omeka.ItemTypes.enableSorting = function () {
+        $('.sortable').sortable({
+            items: 'li.element',
+            forcePlaceholderSize: true,
+            forceHelperSize: true,
+            revert: 200,
+            placeholder: 'ui-sortable-highlight',
+            containment: 'document',
+            update: function (event, ui) {
+                $(this).find('.element-order').each(function (index) {
+                    $(this).val(index + 1);
                 });
             }
         });
-    }
-    
+    };
+
     /**
-     * Turn all the links into AJAX requests that will mark the element for deletion and update the list.
+     * Add link that collapses and expands content.
      */
-    function activateRemoveElementLinks() {
-        jQuery('a.delete-element').click(function (event) {
-            event.preventDefault();
-            var elementsToRemove = jQuery('#elements-to-remove');
+    Omeka.ItemTypes.addHideButtons = function () {
+        $('.sortable .drawer-contents').each(function () {
+            if( $(this).prev().hasClass("sortable-item") ) {
+                $(this).hide();
+            }
+        });
+        $('div.sortable-item').each(function () {
+            $(this).append('<div class="drawer"></div>');
+        });
+        $('.drawer').click( function (event) {
+                event.preventDefault();
+                $(event.target).parent().next().toggle();
+                $(this).toggleClass('opened');
+            })
+            .mousedown(function (event) {
+                event.stopPropagation();
+            });
+    };
 
-            var removeElementLinkPrefix = 'remove-element-link-';
-            var removeElementLinkId = this.getAttribute('id');
-            if (removeElementLinkId) {
-                var elementId = removeElementLinkId.substring(removeElementLinkPrefix.length);
-                if (elementId) {
-                    if (!confirm('Are you sure you want to delete this element? This will remove the element from this particular item type. Items that are assigned to this item type will lose metadata that is specific to this element.')) {
-                        return;
-                    }
-                    elementsToRemove.attr('value', elementsToRemove.attr('value') + elementId + ',');
+    /**
+     * Add AJAX-enabled buttons to item type form for adding and removing elements.
+     *
+     * @param {string} addNewRequestUrl
+     * @param {string} addExistingRequestUrl
+     * @param {string} changeExistingElementUrl
+     */
+    Omeka.ItemTypes.manageItemTypes = function (addNewRequestUrl, addExistingRequestUrl, changeExistingElementUrl) {
+        /**
+         * Activate dropdown for selecting from existing elements.
+         */
+        function activateSelectElementDropdowns() {
+            $('select.existing-element-drop-down').change(function () {
+                var dropDown = $(this);
+                var elementId = dropDown.val();
+                var addExistingElementIdPrefix = 'add-existing-element-id-';
+                var addExistingElementId = this.getAttribute('id');
+                if (addExistingElementId) {
+                    var elementTempId = addExistingElementId.substring(addExistingElementIdPrefix.length);
+                    $.ajax({
+                        url: changeExistingElementUrl,
+                        dataType: 'json',
+                        data: {elementId: elementId, elementTempId: elementTempId},
+                        success: function (response) {
+                            var elementDescriptionCol = dropDown.parent().next();
+                            if(response.elementDescription) {
+                                elementDescriptionCol.html('<div class="element-description">' + response.elementDescription + '</div>');
+                                elementDescriptionCol.toggle();
+                            } else {
+                                elementDescriptionCol.hide();
+                            }
+                        },
+                        error: function () {
+                            alert('Unable to get selected element data.');
+                        }
+                    });
                 }
-            }
-            var row = jQuery(this).parent().parent();
-            row.remove();
-        });
-    }
-
-    jQuery('#add-element').click(function (event) {
-        event.preventDefault();
-        var elementCount = jQuery('#element-list-tbody tr').length;
-        var typeValue = jQuery('input[name=add-element-type]:checked').val();
-        var requestUrl;
-        if (typeValue === 'new') {
-            requestUrl = addNewRequestUrl;
-        } else {
-            requestUrl = addExistingRequestUrl;
+            });
         }
-        jQuery.ajax({
-            url: requestUrl,
-            dataType: 'text',
-            data: {elementCount: elementCount},
-            success: function (responseText) {
-                var response = responseText || 'no response text';
-                var list = jQuery('#element-list-tbody');
-                list.append(response);
-                activateRemoveElementLinks();
-                activateSelectElementDropdowns();
-            },
-            error: function () {
-                alert('Unable to get a new element.');
-            }
-        });
-    });
+        
+        /**
+         * Turn all the links into AJAX requests that will mark the element for deletion and update the list.
+         */
+        function activateRemoveElementLinks() {
 
-    activateRemoveElementLinks();
-};
+            $(document).on('click', '.delete-element', function (event) {
+                event.preventDefault();
+                toggleElements(this);
+            });
+            $('a.undo-delete').click( function (event) {
+                event.preventDefault();
+                toggleElements(this);
+            });
+        }
+        
+        function toggleElements(button) {
+            var elementsToRemove = $('#itemtypes_remove');
+            var removeElementLinkPrefix = 'remove-element-link-';
+            var removeElementLinkId = button.getAttribute('id');
+            if ($(button).hasClass('delete-element')) {
+                if (removeElementLinkId !== null) {
+                    var elementId = removeElementLinkId.substring(removeElementLinkPrefix.length);
+                    if (elementId) {
+                        elementsToRemove.attr('value', elementsToRemove.attr('value') + elementId + ',');
+                    }
+                    $(button).prevAll('.element-order').attr('name', '');
+                    $(button).parent().addClass('deleted');
+                    $(button).parent().next().addClass('deleted');
+                    $(button).prev().toggle();
+                    $(button).toggle();
+                } else {
+                    var row = $(button).parent().parent();
+                    row.remove();
+                }
+            } else {
+                if (removeElementLinkId) {
+                    var elementId = removeElementLinkId.substring(removeElementLinkPrefix.length);
+                    $(button).prevAll('.element-order').attr('name', 'elements[' + elementId + '][order]');
+                }
+                $(button).parent().removeClass('deleted');
+                $(button).parent().next().removeClass('deleted');
+                $(button).next().toggle();
+                $(button).toggle();
+            }
+        }
+
+        $('#add-element').click( function (event) {
+            event.preventDefault();
+            var elementCount = $('#item-type-elements li').length;
+            var typeValue = $('input[name=add-element-type]:checked').val();
+            var requestUrl;
+            if (typeValue === 'new') {
+                requestUrl = addNewRequestUrl;
+            } else {
+                requestUrl = addExistingRequestUrl;
+            }
+            $.ajax({
+                url: requestUrl,
+                dataType: 'text',
+                data: {elementCount: elementCount},
+                success: function (responseText) {
+                    var response = responseText || 'no response text';
+                    $('.add-new').parent().before(response);
+                },
+                error: function () {
+                    alert('Unable to get a new element.');
+                }
+            });
+        });
+
+        activateRemoveElementLinks();
+    };
+})(jQuery);

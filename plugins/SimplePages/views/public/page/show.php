@@ -1,21 +1,24 @@
-<?php 
-
+<?php
 $bodyclass = 'page simple-page';
-if (simple_pages_is_home_page(get_current_simple_page())) {
+if ($is_home_page):
     $bodyclass .= ' simple-page-home';
-} ?>
+endif;
 
-<?php head(array('title' => html_escape(simple_page('title')), 'bodyclass' => $bodyclass, 'bodyid' => html_escape(simple_page('slug')))); ?>
+echo head(array(
+    'title' => metadata('simple_pages_page', 'title'),
+    'bodyclass' => $bodyclass,
+    'bodyid' => metadata('simple_pages_page', 'slug')
+));
+?>
 <div id="primary">
-    <?php if (!simple_pages_is_home_page(get_current_simple_page())): ?>
+    <?php if (!$is_home_page): ?>
     <p id="simple-pages-breadcrumbs"><?php echo simple_pages_display_breadcrumbs(); ?></p>
+    <h1><?php echo metadata('simple_pages_page', 'title'); ?></h1>
     <?php endif; ?>
-    <h1><?php echo html_escape(simple_page('title')); ?></h1>
-    <?php echo eval('?>' . simple_page('text')); ?>
+    <?php
+    $text = metadata('simple_pages_page', 'text', array('no_escape' => true));
+    echo $this->shortcodes($text);
+    ?>
 </div>
-<?php if (!simple_pages_is_home_page(get_current_simple_page())): ?>
-<div id="secondary">
-    <?php echo simple_pages_navigation(); ?>
-</div>
-<?php endif; ?>
+
 <?php echo foot(); ?>

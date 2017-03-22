@@ -1,23 +1,19 @@
-<?php 
+<?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
- */
- 
-/**
- * This controller plugin allows for debugging Request objects
- * without inserting debugging code into the Zend Framework
- * code files.
- *
- * Debugging web requests is enabled by setting 'debug.request = true'
- * in the config.ini file.
+ * Omeka
  * 
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
- * @package Omeka
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
+ */
+
+/**
+ * This controller plugin allows for debugging Request objects without inserting 
+ * debugging code into the Zend Framework code files.
+ *
+ * Debugging web requests is enabled by setting 'debug.request = true' in the 
+ * config.ini file.
+ * 
+ * @package Omeka\Controller\Plugin
  */
 class Omeka_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
 {
@@ -33,13 +29,13 @@ class Omeka_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
      */
     public function preDispatch(Zend_Controller_Request_Abstract $request)
     {
-        $config = Omeka_Context::getInstance()->config;
+        $bootstrap = Zend_Registry::get('bootstrap');
+        $config = $bootstrap->getResource('Config');
         
         $debugRequests = $config->debug->request;
         
         if ($debugRequests) {
-            $router = Omeka_Context::getInstance()->getFrontController()
-                                                  ->getRouter();
+            $router = Zend_Controller_Front::getInstance()->getRouter();
             $markup = $this->_getRequestMarkup($request, $router);
             $this->_requestMarkup = $markup;
         }
@@ -62,11 +58,12 @@ class Omeka_Controller_Plugin_Debug extends Zend_Controller_Plugin_Abstract
      */
     public function dispatchLoopShutdown()
     {
-        $enableProfiler = Omeka_Context::getInstance()->config->debug->profileDb;
+        $bootstrap = Zend_Registry::get('bootstrap');
+        $enableProfiler = $bootstrap->getResource('Config')->debug->profileDb;
         if (!$enableProfiler) {
             return;
         }
-        $profiler = Omeka_Context::getInstance()->db->getProfiler();
+        $profiler = $bootstrap->getResource('Db')->getProfiler();
         if ($profiler) {
             $markup = $this->_getProfilerMarkup($profiler);
             $this->getResponse()->setBody($markup);

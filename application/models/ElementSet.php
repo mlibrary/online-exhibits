@@ -1,40 +1,62 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
- 
+
 /**
- * @package Omeka
- * @subpackage Models
- * @author CHNM
- * @copyright Roy Rosenzweig Center for History and New Media, 2007-2010
+ * An element set and its metadata.
+ * 
+ * @package Omeka\Record
  */
-class ElementSet extends Omeka_Record
+class ElementSet extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Interface
 {
-    public $record_type_id;
+    /**
+     * Type of record this set applies to.
+     *
+     * @var string
+     */
+    public $record_type;
+
+    /**
+     * Name for the element set.
+     *
+     * @var string
+     */
     public $name;
+
+    /**
+     * Description for the element set.
+     *
+     * @var string
+     */
     public $description;
-    
+
+    /**
+     * Child Element records to save when saving this set.
+     *
+     * @var array
+     */
     protected $_elementsToSave = array();
     
-    const DEFAULT_RECORD_TYPE = 'Item';
-    const DEFAULT_DATA_TYPE = 'Text';
-    
+    /**
+     * The name of the item type element set.
+     * 
+     * This is used wherever it is important to distinguish this special case 
+     * element set from others.
+     */
+    const ITEM_TYPE_NAME = 'Item Type Metadata';
+
+    /**
+     * Get the Elements that are in this set.
+     *
+     * @return array
+     */
     public function getElements()
     {
         return $this->getTable('Element')->findBySet($this->name);
-    }
-    
-    private function _getDefaultRecordTypeId()
-    {
-        return $this->getTable('RecordType')->findIdFromName(self::DEFAULT_RECORD_TYPE);
-    }
-    
-    private function _getDefaultDataTypeId()
-    {
-        return $this->getTable('DataType')->findIdFromName(self::DEFAULT_DATA_TYPE);
     }
     
     /**
@@ -49,43 +71,38 @@ class ElementSet extends Omeka_Record
             $this->_elementsToSave[] = $record;
         }
     }
-    
+
+    /**
+     * Create a new Element record with the given data.
+     *
+     * @param array $options Data to set on the Element.
+     * @return Element
+     */
     private function _buildElementRecord($options)
     {
         $obj = new Element;
         $obj->setArray($options);
-        return $obj;        
+        return $obj;
     }
-    
+
     /**
-     * Set some default options when saving element sets (if not given).
-     * 
-     * @return void
+     * After-save hook.
+     *
+     * Save the $_elementsToSave and set their orders.
      */
-    protected function beforeSave()
-    {
-        if (empty($this->record_type_id)) {
-            $this->record_type_id = $this->_getDefaultRecordTypeId();
-        }
-        
-        if (empty($this->data_type_id)) {
-            $this->data_type_id = $this->_getDefaultDataTypeId();
-        }
-    }
-    
-    protected function afterSave()
+    protected function afterSave($args)
     {
         $maxOrder = $this->_getNextElementOrder();
         foreach ($this->_elementsToSave as $order => $obj) {
             $obj->element_set_id = $this->id;
             $obj->setOrder($maxOrder + (int)$order);
-            $obj->forceSave();
+            $obj->save();
             unset($this->_elementsToSave[$order]);
         }
     }
     
     /**
-     * Deletes all the elements associated with an element set.
+     * Delete all the elements associated with an element set.
      * 
      * @return void
      */
@@ -97,7 +114,12 @@ class ElementSet extends Omeka_Record
             $element->delete();
         }
     }
-    
+
+    /**
+     * Get an order value to place an Element at the end of this set.
+     *
+     * @return int
+     */
     private function _getNextElementOrder()
     {
         $db = $this->getDb();
@@ -112,7 +134,12 @@ class ElementSet extends Omeka_Record
         }
         return $nextElementOrder;
     }
-    
+
+    /**
+     * Validate the element set.
+     *
+     * Tests that name is non-empty and unique.
+     */
     protected function _validate()
     {
         if (!$this->fieldIsUnique('name')) {
@@ -122,5 +149,17 @@ class ElementSet extends Omeka_Record
         if (empty($this->name)) {
             $this->addError('Name', __('Name of element set must not be empty.'));
         }
+    }
+    
+    /**
+     * Identify ElementSet records as relating to the ElementSets ACL resource.
+     *
+     * Required by Zend_Acl_Resource_Interface.
+     *
+     * @return string
+     */
+    public function getResourceId()
+    {
+        return 'ElementSets';
     }
 }

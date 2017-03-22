@@ -4,9 +4,8 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 xmlns:dc="http://purl.org/dc/elements/1.1/">
 <?php 
-require_once 'ItemDcmesXml.php';
-$convert = new ItemDcmesXml; 
-while ($item = loop_items()) {
+$convert = new Output_ItemDcmesXml; 
+foreach (loop('items') as $item) {
     echo $convert->recordToDcmesXml($item);
 }
 ?>

@@ -1,8 +1,9 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
@@ -11,14 +12,14 @@
  * Caveat: Zend's storage adapter currently does not function correctly
  * with buckets that are validly-named, but use characters that cannot
  * appear in domain names.
- *
- * @package Omeka
+ * 
+ * @package Omeka\Storage\Adapter
  */
-class Omeka_Storage_Adapter_ZendS3 implements Omeka_Storage_Adapter
+class Omeka_Storage_Adapter_ZendS3 implements Omeka_Storage_Adapter_AdapterInterface
 {
     const AWS_KEY_OPTION = 'accessKeyId';
     const AWS_SECRET_KEY_OPTION = 'secretAccessKey';
-    const REGION_OPTION = 'region';
+    const ENDPOINT_OPTION = 'endpoint';
     const BUCKET_OPTION = 'bucket';
     const EXPIRATION_OPTION = 'expiration';
 
@@ -52,15 +53,16 @@ class Omeka_Storage_Adapter_ZendS3 implements Omeka_Storage_Adapter
         if (!array_key_exists(self::BUCKET_OPTION, $options)) {
             throw new Omeka_Storage_Exception('You must specify an S3 bucket name to use the ZendS3 storage adapter.');
         }
-        
-        $region = @$options[self::REGION_OPTION];
 
         // Use Omeka_Http_Client to retry up to 3 times on timeouts
         $client = new Omeka_Http_Client;
         $client->setMaxRetries(3);
         Zend_Service_Amazon_S3::setHttpClient($client);
         
-        $this->_s3 = new Zend_Service_Amazon_S3($awsKey, $awsSecretKey, $region);
+        $this->_s3 = new Zend_Service_Amazon_S3($awsKey, $awsSecretKey);
+        if (!empty($options[self::ENDPOINT_OPTION])) {
+            $this->_s3->setEndpoint($options[self::ENDPOINT_OPTION]);
+        }
     }
 
     public function setUp()
@@ -182,6 +184,16 @@ class Omeka_Storage_Adapter_ZendS3 implements Omeka_Storage_Adapter
         }
 
         return $uri;
+    }
+
+    /**
+     * Return the service object being used for S3 requests.
+     *
+     * @return Zend_Service_Amazon_S3
+     */
+    public function getS3Service()
+    {
+        return $this->_s3;
     }
 
     /**

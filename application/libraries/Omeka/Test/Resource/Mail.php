@@ -1,17 +1,15 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
- * @access private
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
  * Testing resource for saving mail to the filesystem.
- *
- * @package Omeka
- * @internal This implements Omeka internals and is not part of the public API.
- * @access private
+ * 
+ * @package Omeka\Test\Resource
  */
 class Omeka_Test_Resource_Mail extends Zend_Application_Resource_ResourceAbstract
 {    
@@ -20,25 +18,23 @@ class Omeka_Test_Resource_Mail extends Zend_Application_Resource_ResourceAbstrac
      */
     public function init()
     {
-        $this->getBootstrap()->bootstrap('Config');
-
-        $config = Zend_Registry::get('test_config');
-        
-        // If there's no path set, configure a blank path.
-        // This avoids errors on non-mail tests, but you'll still get
-        // an exception on mail tests to remind you to set the path.
-        if (isset($config->paths)) {
-            $path = $config->paths->maildir;
-        } else {
-            $path = '';
+        $bootstrap = $this->getBootstrap();
+        if (!$bootstrap->hasPluginResource('Tempdir')) {
+            $bootstrap->registerPluginResource('Tempdir');
         }
+        $bootstrap->bootstrap('Tempdir');
+        $tempDir = $bootstrap->getResource('Tempdir');
+
+        $path = "{$tempDir}/mail";
+        mkdir($path);
 
         $transport = new Zend_Mail_Transport_File(array(
             'path' => $path,
             'callback' => array(get_class($this), 'mailCallback')));
         Zend_Mail::setDefaultTransport($transport);
+        Zend_Registry::set('test_mail_dir', $path);
         
-        return new Zend_Mail;        
+        return new Zend_Mail;
     }
 
     /**

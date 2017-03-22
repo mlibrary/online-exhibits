@@ -15,9 +15,9 @@
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Redirector.php 23940 2011-05-02 20:20:40Z matthew $
+ * @version    $Id$
  */
 
 /**
@@ -29,7 +29,7 @@ require_once 'Zend/Controller/Action/Helper/Abstract.php';
  * @category   Zend
  * @package    Zend_Controller
  * @subpackage Zend_Controller_Action_Helper
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_Helper_Abstract
@@ -100,7 +100,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     }
 
     /**
-     * Retrieve HTTP status code for {@link _redirect()} behaviour
+     * Set HTTP status code for {@link _redirect()} behaviour
      *
      * @param  int $code
      * @return Zend_Controller_Action_Helper_Redirector Provides a fluent interface
@@ -123,7 +123,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     }
 
     /**
-     * Retrieve exit flag for {@link _redirect()} behaviour
+     * Set exit flag for {@link _redirect()} behaviour
      *
      * @param  boolean $flag
      * @return Zend_Controller_Action_Helper_Redirector Provides a fluent interface
@@ -146,7 +146,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     }
 
     /**
-     * Retrieve 'prepend base' flag for {@link _redirect()} behaviour
+     * Set 'prepend base' flag for {@link _redirect()} behaviour
      *
      * @param  boolean $flag
      * @return Zend_Controller_Action_Helper_Redirector Provides a fluent interface
@@ -211,8 +211,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     {
         if ($this->getUseAbsoluteUri() && !preg_match('#^(https?|ftp)://#', $url)) {
             $host  = (isset($_SERVER['HTTP_HOST'])?$_SERVER['HTTP_HOST']:'');
-          //  $proto = (isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=="off") ? 'https' : 'http';
-              $proto = (isset($_SERVER['REMOTE_USER'])&&(!empty($_SERVER['REMOTE_USER']))) ? 'https' : 'http';
+            $proto = (isset($_SERVER['HTTPS'])&&$_SERVER['HTTPS']!=="off") ? 'https' : 'http';
             $port  = (isset($_SERVER['SERVER_PORT'])?$_SERVER['SERVER_PORT']:80);
             $uri   = $proto . '://' . $host;
             if ((('http' == $proto) && (80 != $port)) || (('https' == $proto) && (443 != $port))) {
@@ -407,7 +406,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     /**
      * Redirect to a route-based URL
      *
-     * Uses route's assemble method tobuild the URL; route is specified by $name;
+     * Uses route's assemble method to build the URL; route is specified by $name;
      * default route is used if none provided.
      *
      * @param  array   $urlOptions Array of key/value pairs used to assemble URL
@@ -428,7 +427,7 @@ class Zend_Controller_Action_Helper_Redirector extends Zend_Controller_Action_He
     /**
      * Redirect to a route-based URL, and immediately exit
      *
-     * Uses route's assemble method tobuild the URL; route is specified by $name;
+     * Uses route's assemble method to build the URL; route is specified by $name;
      * default route is used if none provided.
      *
      * @param  array   $urlOptions Array of key/value pairs used to assemble URL

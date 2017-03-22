@@ -1,344 +1,293 @@
-<?php $item_title = item('Dublin Core', 'Title');
-$item_title_in_browse = strip_formatting($item_title);?>
-<?php head(array('title'=> html_escape("{$item_title_in_browse}"),'bodyid'=>'items','bodyclass'=>'show item')); ?>
+<?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
+  $item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
+  if (empty($item_title)) { $item_title = __('[Untitled]'); }
 
-<h1><?php echo $item_title;?></h1>
-
-<!-- start FancyBox initialization and configuration -->
-<?php //echo js('fancybox/fancybox-init-config');?>
-<?php $lightbox_setting = mlibrary_light_box(); ?>		
-
-<!-- MDCollapse Load -->
-<?php echo js('mdcollapse');?>	
-<?php echo js('JwPlayer/jwplayer');?>
-
-
- <?php 
-//$remove[] = "'";
-//$remove[] = '"';
-//$remove[] = " ";
-?>
-<?// Use Show case for video, to have more than one video at a time.?>
- <script type="text/javascript">
-jQuery.noConflict();
-jQuery(document).ready(function()
-{
-	jQuery("#showcase").awShowcase(
-	{
-		width:					650,
-		height:					450,
-		auto:					true,
-		interval:				6500,
-		continuous:				true,
-		loading:				true,
-		tooltip_width:			200,
-		tooltip_icon_width:		32,
-		tooltip_icon_height:	32,
-		tooltip_offsetx:		18,
-		tooltip_offsety:		0,
-		arrows:					false, 
-		buttons:				true,
-		btn_numbers:			true,
-		keybord_keys:			true,
-		mousetrace:				false,
-		pauseonover:			true,
-    transition:				'vslide', /* vslide/hslide/fade */
-		transition_speed:		0,
-		show_caption:			'onload', /* onload/onhover/show */
-		thumbnails:				false,
-		thumbnails_position:	'outside-last', /* outside-last/outside-first/inside-last/inside-first */
-		thumbnails_direction:	'horizontal', /* vertical/horizontal */
-		thumbnails_slidex:		0 /* 0 = auto / 1 = slide one thumbnail / 2 = slide two thumbnails / etc. */
-	});
-});
-</script>
-   	
-<div id="primary">
-	
-<!-- display files -->	
-
-  <?php
-  $item_type = $item->getItemType()->name;
-  if (!isset($exhibit->theme))
-		$theme_name= 'mlibrary';
-  else
-		$theme_name= $exhibit->theme;
-
-
-  $audio = array('application/ogg','audio/aac','audio/aiff','audio/midi','audio/mp3','audio/mp4','audio/mpeg','audio/mpeg3','audio/mpegaudio','audio/mpg','audio/ogg','audio/x-mp3','audio/x-mp4','audio/x-mpeg','audio/x-mpeg3','audio/x-midi','audio/x-mpegaudio','audio/x-mpg','audio/x-ogg','application/octet-stream');
-  //Three types of doc, image, sound or video
-if ($item_type!='Video')
-{	
-	// Either image or sound 
-	 
-	//start the loop of item files
-  $fullsizeimage=false;
-  $audio_file=false;
-		
-while(loop_files_for_item()):$file = get_current_file();
-	//variables used to check mime types for VideoJS compatibility, etc.
-   $mime = item_file('MIME Type');
-   $image_index++;
-   //Check to see if there is audio in one of the files included in any item
-   if (in_array($mime,$audio))
-    $audio_file=true;
-   
-   // Check to see it is an image file
-   if($file->hasThumbnail()){ 
-   // check to see if it is a first image file, first image file will be displayed in full size, anything after this will be thumbnail
-   		if ($fullsizeimage==false){	  
-			$file_metadata = '<div class="file-metadata img'.$image_index.'">'.item_file('Dublin Core', 'Title')."</div>";
-			$filename = basename($file->archive_filename,'.jpg');	
-			// To check if zoomed version available, if it is available then use it.
-			if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){  					
-				$html_fullsize_image= '<div class="zoom img'.$image_index.' swf-zoom"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="750" HEIGHT="450" ID="theMovie">
-					<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata">
-					<PARAM NAME="MENU" VALUE="FALSE">
-					<PARAM NAME="SRC" VALUE="'.uri('').'themes/'.$theme_name.'/javascripts/ZoomifyViewer.swf">
-					<param NAME=wmode VALUE=opaque> 
-					<EMBED FlashVars="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata" SRC="'.uri('').'themes/'.$theme_name.
-					'/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
-			}else{
-//				$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title').' '.'image'.' '.$image_index++.(item_file('Dublin Core','Title')? ' '.item_file('Dublin Core','Title'):'')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-		//		$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-				$html_fullsize_image= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-			}
-			// added to jason object
-			$json_fullsize['img'.$image_index] = $html_fullsize_image;
-      		$fullsizeimage=true;
-      		$html_thumnailsize_image= display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title').' '.'image'.' '.$image_index),'linkToFile'=>false),array('class' => 'square_thumbnail img'.$image_index ));
-			      
-			// if first image displayed in full size then display all images after that in thumbnail version      
-    	} elseif ($fullsizeimage==true){ 
-	    	$file_metadata .= '<div class="file-metadata img'.$image_index.'" style="display:none">'.item_file('Dublin Core', 'Title')."</div>";   
-			$filename = basename($file->archive_filename,'.jpg');  
-  			if(file_exists('archive/zoom_tiles/'.$filename.'_zdata')){   
-        		$json_fullsize['img'.$image_index] = '<div class="zoom img'.$image_index.' swf-zoom"><OBJECT CLASSID="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" CODEBASE="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0" WIDTH="750" HEIGHT="450" ID="theMovie">
-					<PARAM NAME="FlashVars" VALUE="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata">
-					<PARAM NAME="MENU" VALUE="FALSE">
-					<PARAM NAME="SRC" VALUE="'.uri('').'themes/'.$theme_name.'/javascripts/ZoomifyViewer.swf">
-					<param NAME=wmode VALUE=opaque> 
-					<EMBED FlashVars="zoomifyImagePath='.uri('').'archive/zoom_tiles/'.$filename.'_zdata" SRC="'.uri('').'themes/'.$theme_name.
-					'/javascripts/ZoomifyViewer.swf" wmode=opaque MENU="false" PLUGINSPAGE="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"  WIDTH="550" HEIGHT="450" NAME="theMovie"></EMBED></OBJECT></div>';
-			}else{
-   				$html_fullsize_image .= display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('style' => 'display:none', 'class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-   				$json_fullsize['img'.$image_index] = display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('rel'=>'group-fancy-image','class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-	   			//$json_fullsize['img'.$image_index] = display_file($file, array('imageSize'=>'fullsize','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title')),'linkAttributes'=>array('class'=>'fancyitem ' ,'title' => item('Dublin Core', 'Title'))),array('class' => 'fullsize img'.$image_index, 'id' => 'item-image'));	        
-			}
-        	$html_thumnailsize_image .=display_file($file, array('imageSize'=>'square_thumbnail','imgAttributes'=>array('alt'=>item('Dublin Core', 'Title').' '.'image'.' '.$image_index),'linkToFile'=>false),array('class' => 'square_thumbnail img'.$image_index )); 
-   		} // END - if $fullsizeimge
-    } // END hasThumbnail
-endwhile;
-
-echo '<script type="text/javascript"> var imagesJSON ='.json_encode($json_fullsize).'</script>';	
-echo'<div id="item-images">';	
-echo '<div id="fsize_images">'.$html_fullsize_image.'</div>';
-echo $file_metadata;
-echo $html_thumnailsize_image;
-  
-if (($fullsizeimage!=true) and (($audio_file==true) || ($item_type=='Sound')))
-// if first file is an audio file then display a default image for sound file.
-   echo '<img src="'.img('audio_default02.gif').'" alt="Oops" />';
-?>
-</div>
-
-<?php }
-// videos is displayed by using embeded tag from youtube
- elseif ($item_type=='Video') {  
-    	echo'<div id="item-video">';
-      $elementvideos = item('Item Type Metadata', 'Video_embeded_code', array('no_escape'=>true,'all'=>true));    
-      $elementtitles = item('Item Type Metadata', 'video_title', array('no_escape'=>true,'all'=>true));
-      $elementvideos_VCM = item('Item Type Metadata', 'video_embeded_code_VCM', array('no_escape'=>true, 'all'=>true));
-//    print_r($elementvideos_VCM);
-      
-          if (!empty($elementvideos_VCM)) { ?>
-              <div id="showcase" class="showcase">
-              <?php 
-                $i=0;
-                foreach($elementvideos_VCM as $elementvideo_VCM ) {          
-                   $elementvideo_VCM = str_replace( $remove, "", $elementvideo_VCM );            
-                   echo '<div>';            
-                   echo $elementvideo_VCM; ?>
-                   <div class="showcase-caption">
-                       <?php echo'<h3>'.$elementtitles[$i].'</h3>';?>
-                   </div>             
-                   <?php echo '</div>'; 
-                    $i++;
-                }?> <!-- foreach loop-->
-              </div> <!-- showcase -->
-      <?php } 
-          elseif (!empty($elementvideos)) { ?>
-              <div id="showcase" class="showcase">
-              <?php $i=0;
-                foreach($elementvideos as $elementvideo ) {          
-                  $elementvideo = str_replace( $remove, "", $elementvideo );            
-                  echo '<div>';            
-                  echo '<iframe src="http://www.youtube.com/embed/'.$elementvideo.'" frameborder="0" width="650" height="400"></iframe>';  ?>
-                  <div class="showcase-caption">
-                    <?php echo'<h3>'.$elementtitles[$i].'</h3>';?>
-                  </div>             
-                  <?php echo '</div>'; 
-                   $i++;
-                }?> <!-- foreach loop-->
-              </div> <!-- showcase -->
-          <?php } ?>      
-      </div> <!--item-video -->
-<?php }
-
-	$index=0;
-	$aoutput='';    
-    while(loop_files_for_item()):$file = get_current_file();
-	//variables used to check mime types for VideoJS compatibility, etc.
-    $mime = item_file('MIME Type');   
-    if (array_search($mime,$audio) !== false) //echo display_file($file, array('width' => 200, 'height' => 20));//,'icons' => array('audio/mpeg'=>img('sound-icon.jpg'))));
-		{      
-      $sound_title = $this->fileMetadata($file, 'Dublin Core', 'Title');
-			$aoutput .= '<li class="audio-test">';    
-			$htmlscript = '<div id="mediaspace_'.$index.'">This text will be replaced</div>
-			<script type="text/javascript">
-			jwplayer("mediaspace_'.$index.'").setup({
-			"flashplayer": "/exhibits/themes/'.$theme_name.'/javascripts/JwPlayer/jplayer/player.swf",
-      "skin": "/exhibits/themes/'.$theme_name.'/javascripts/mlibrary/mlibrary.zip",
-    "dock": "false",
-    "backcolor": "FFFFFF",
-    "frontcolor": "FFFFFF",
-    "lightcolor": "FFFFFF",
-    "screencolor": "FFFFFF",
-			"file": "'.file_download_uri($file).'",
-			"controlbar": "bottom",
-			"width": "232",
-			"height": "23"
-			
-			});
-			</script>';
-			$aoutput.= $htmlscript;
-      $aoutput .=$sound_title;
-			$aoutput.= '</li>';
-		}
-    
-	$index++;
-	endwhile;
-	if(strlen($aoutput) > 0){
-		echo '<div id="item-audio" class="test"><ul>';
-		echo $aoutput;
-		echo '</ul></div>';
-
+  echo head(
+    array(
+      'title'     => $item_title,
+      'bodyid'    => 'items',
+      'bodyclass' => 'show item'
+    )
+  );
+ // if the item is part of the exhibit builder layout
+ if (isset($_GET['exhibit']) && isset($_GET['page'])) {
+    $pageClean = html_escape($_GET['page']);
+    $exhibitClean = html_escape($_GET['exhibit']);
+    echo '<div class="button exhibit-item-back-button"><a href="' .
+        exhibit_builder_exhibit_uri(
+          get_record_by_id('exhibit', $exhibitClean),
+          get_record_by_id('exhibit_page', $pageClean)
+        ) .
+      '">Return to Exhibit</a></div>';
   }
-	?>
-<?php // display metadata on the side?>
-	<div id="sidebar">	
-	 <?php $elementInfos = array(      
-        							     array('Dublin Core', 'Creator'),
-						  	           array('Dublin Core', 'Date'),
-							             array('Dublin Core', 'Identifier'),
-        							);
-				foreach($elementInfos as $elementInfo) 
-				{
-            $elementSetName = $elementInfo[0];
-            $elementName = $elementInfo[1];
-            $elementTexts = item($elementSetName, $elementName, array('no_escape'=>true,'all'=>true));
-            if (!empty($elementTexts)) 
-            { 
-								 echo '<div id="dublin-core-'.strtolower($elementName).'"class="element">';      
-       			     if ($elementName=='Identifier')
-       			     {
-											echo '<h2> View Source </h2>';							
-									}
-          		   foreach($elementTexts as $elementText) 
-          		   {  
-            			   $array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");		  					 
-             			   if (($elementName=='Identifier') and (in_array($item->id, $array_items)))                	    
-             	  	       echo '<div class="element-text">'.$elementText.'</div>';                                   	 
-              	     else if (($elementName=='Identifier') and (stristr($elementText, 'http') || stristr($elementText, 'https') || stristr($elementText, 'www')))
-                     		 echo "<div class='element-text'><a href=".$elementText.">".$elementText. "</a></div>";
-                	   else
-                   		   echo "<div class='element-text'>" .$elementText . "</div>";  
-                 } 
-                 echo '</div>';
-            }
-        }
-    ?>
-       
-       
-<!-- If the item belongs to a collection, the following creates a link to that collection. -->
-	<?php if (item_belongs_to_collection()):
-	 $Collection = get_collection_for_item(); ?>
-        <div id="collection" class="element">
-            <h2>Collection</h2>
-            <div class="element-text"><p><?php echo $Collection->name; //echo link_to_collection_for_item(); ?></p></div>
-        </div>
-    <?php endif; ?>
+  // if the item is part of items archive
+  elseif (isset($_GET['page'])) {
+        $pageClean = html_escape($_GET['page']);
+        echo '<div class="button exhibit-item-back-button">' .
+        '<a href="' . url('items') . '?page=' . $pageClean . '">Return to Item Archive</a>
+      </div>';
+  }
+?>
+<h1><?php echo $item_title; ?></h1>
+<div id="primary">
+  <?php
+    $index_file = 0;
+    $html_thumnailsize_image = "";
+    $html_fullsize_image ='';
+    $fullsizeimage = "";
+    $image_index = 0;
+    $audio_file = false;
+    $item_type = (empty($item->getItemType()->name)) ? 'Image' : $item->getItemType()->name;
+    $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary';
 
-<!-- The following prints a list of all tags associated with the item -->
-	<?php if (item_has_tags()): ?>
-	<div id="item-tags" class="element">
-		<h2>Tags</h2>
-		<div class="element-text"><?php echo item_tags_as_string(); ?></div> 
-	</div>
-	<?php endif;?>
-	
-<!-- The following prints a citation for this item. -->
-	<!--<div id="item-citation" class="element">
-    	<h3>Citation</h3>
-    	<div class="element-text"><?php //echo item_citation(); ?></div>
-	</div>-->
- 
-<!-- list any related exhibits - see theme custom php and configure in theme settings-->
-    <?php mlibrary_display_related_exhibits(); ?>
-    <?php mlibrary_display_back_button_item_page('item'); ?>
-</div>
-<!-- end display files -->
- 	<div id="item-metadata"> 	
-<!--  The following function prints all the the metadata associated with an item: Dublin Core, extra element sets, etc. See http://omeka.org/codex or the examples on items/browse for information on how to print only select metadata fields. -->
+    $audio = array(
+      'application/ogg',
+      'audio/aac',
+      'audio/aiff',
+      'audio/midi',
+      'audio/mp3',
+      'audio/mp4',
+      'audio/mpeg',
+      'audio/mpeg3',
+      'audio/mpegaudio',
+      'audio/mpg',
+      'audio/ogg',
+      'audio/x-mp3',
+      'audio/x-mp4',
+      'audio/x-mpeg',
+      'audio/x-mpeg3',
+      'audio/x-midi',
+      'audio/x-mpegaudio',
+      'audio/x-mpg',
+      'audio/x-ogg',
+      'application/octet-stream'
+    );
 
-    	<?php echo show_item_metadata(array('show_element_sets'=>array('Dublin Core'))); ?>
+    if ($item_type != 'Video') { ?>
+       <div id="item-images">
+         <?php
+            $openLayersZoomobject = new openLayersZoomPlugin();
+            $tile_sources = [];
+            foreach ($item->Files as $file) {
+              $image_index++;
+              $tile_url = "";
+              $filePath = FILES_DIR.'/'.$file->getStoragePath('original');
+              // Select Zoom option for the file
+              if ($openLayersZoomobject->isZoomed($file) and file_exists($filePath)) {
+                $index_file = $index_file + 1;
+                $vid = 'os' . $index_file;
+                list($width, $height, $type, $attr) = getimagesize($filePath);
 
-	</div><!-- end item-metadata -->
-    <?php echo plugin_append_to_items_show(); ?>
-	<ul class="item-pagination navigation">
-	<li id="previous-item" class="previous">
-		<?php echo link_to_previous_item('Previous Item in Items archive'); 
-		$id = item('id') ;		
-		mlibrary_display_items_in_exhibit_page($id);
-		?>
-	</li>
-	<li id="next-item" class="next">
-		<?php echo link_to_next_item('Next Item in Items archive'); ?>
-	</li>
-	</ul>
-	<!-- all other plugins-->
+                list($root, $ext) = $openLayersZoomobject->_getRootAndExtension($file->filename);
+                $tile_url = $openLayersZoomobject->getTileUrl($file);
+                $tile_size = 256;
+                $tier_size_in_tiles = [];
+                $tile_count_up_to_tier = [0];
+                $resolution = 1;
+                $resolutions = [];
+                while ($width > $tile_size || $height > $tile_size) {
+                  $resolutions[] = $resolution;
+                  $width_in_tiles = ceil($width / $tile_size);
+                  $height_in_tiles = ceil($height / $tile_size);
+                  $tier_size_in_tiles[] = [$width_in_tiles, $height_in_tiles];
+                  $tile_size *= 2;
+                  $resolution *= 2;
+                }
+                $tier_size_in_tiles[] = [1, 1];
+                $tier_count = count($tier_size_in_tiles);
+                for ($i = count($tier_size_in_tiles) - 1 ; $i < 0; --$i) {
+                  $width_in_tiles = $tier_size_in_tiles[$i][0];
+                  $height_in_tiles = $tier_size_in_tiles[$i][1];
+                  $tile_count_up_to_tier[] =
+                    $tile_count_up_to_tier[count($tile_count_up_to_tier) - 1] +
+                    $width_in_tiles * $height_in_tiles;
+                }
 
-	
-</div><!-- end primary -->
+                $tile_sources[] = [
+                  'tileUrl' => $tile_url,
+                  'origUrl' => file_display_url($file, 'original'),
+                  'imageWidth' => $width,
+                  'imageHeight' => $height,
+                  'tierSizeInTiles' => array_reverse($tier_size_in_tiles),
+                  'resolutions' => array_reverse($resolutions),
+                  'tileCountUpToTier' => $tile_count_up_to_tier,
+                ];
 
-	<script type="text/javascript">	
+              } //endif
+              else {  //zoom option not selected
 
-	jQuery(".element-set").mdcollapse(1,'div');  
-	jQuery("#item-images").data('curimg','img1');
-    
-	jQuery(".square_thumbnail").click(function(e){   
-		var target = jQuery(this);
-		var classList = target.attr('class').split(/\s+/);
-		var imgClass = classList[1]; //hardcoded, but simplest way to get to specific class, without regex and loop
-		
-		target.siblings(".file-metadata").hide();
-		jQuery("#fsize_images div").hide();
-		target.siblings(".file-metadata."+imgClass).show();
-		
-		var fullsize = target.siblings('#fsize_images').find("."+imgClass);
-		if(fullsize.length > 0 && fullsize.hasClass('fullsize')){
-			fullsize.show();
-		}else {
-//			jQuery("#fsize_images").html(imagesJSON[imgClass]+jQuery("#fsize_images"));
-			// question to Wesley why we 
-			jQuery("#fsize_images").html(imagesJSON[imgClass]+jQuery("#fsize_images").html());
-			jQuery("a.fancyitem").fancybox(jQuery(document).data('fboxSettings'));
-		}
-        // look for imgClass and show it.
-		
-	
-    });
- 
-    </script>
+                $html_fullsize_image .= file_markup(
+                  $file,
+                   array(
+                    'imageSize' => 'fullsize',
+                    'imgAttributes'=> array(
+                    'alt' => strip_formatting(metadata('item',array('Dublin Core', 'Title')))
+                  ),
+                  'linkAttributes' => array(
+                    'class'=> 'fancyitem',
+                    'title' => strip_formatting(metadata(
+                      'item',array('Dublin Core', 'Title')))
+                    )
+                  ),
+                  array('class' =>'fullsize', 'style' =>($image_index == 1 ? ' ' : 'display:none'), 'id'=>'page'.$image_index)
+                );
+                 }//end of it is not zoomed file
+           } //end loop for files in item
 
-<?php foot(); ?>
+          if ($index_file > 0) { ?>
+            <div id="fsize_images">
+            <!-- <div id="<?php echo $vid ?>" style="height: 600px; width: 100%;"></div>-->
+              <div id="image-zoomer-os" style="height: 600px; width: 100%;"></div>
+              <?php
+                $os = [
+                  'id' => 'image-zoomer-os',
+                  'prefixUrl' => WEB_ROOT.'/themes/mlibrary/items/openseadragon/images/',
+                  'showNavigator' => false,
+                  'animationTime' => 0.5,
+                  'showRotationControl' => false,
+                  'sequenceMode' => true,
+                  'autoHideControls' => false,
+                  'constrainDuringPan' => true,
+                  'tileSources' => [],
+                ];
+              ?>
+              <script type="text/javascript">
+                var tile_sources = <?php echo json_encode($tile_sources); ?>;
+                var os_data = <?php echo json_encode($os); ?>;
+                for (i = 0; i < tile_sources.length; ++i) {
+                  os_data.tileSources[i] = {
+                    height: tile_sources[i].imageHeight,
+                    width: tile_sources[i].imageWidth,
+                    tileSize: 256,
+                    minLevel: 8,
+                    getTileUrl: (function(tile_source) {
+                      return function(level, x, y) {
+                        console.log([x, y , z]);
+                        var z = level - 8;
+                        if (z < 0) return null;
+                        var tileIndex = (y * tile_source.tierSizeInTiles[z][0]) + x + tile_source.tileCountUpToTier[z];
+                        console.log(tileIndex);
+                        var tileGroup = (tileIndex / 256) | 0;
+                        console.log(tileGroup);
+                        return tile_source.tileUrl + '/TileGroup' + tileGroup + '/' + [z, x, y].join('-') + '.jpg';
+                    };})(tile_sources[i])
+                  }
+                }
+                os = OpenSeadragon(os_data);
+                os.addViewerInputHook({
+                  hooks: [
+                    {tracker: 'viewer', handler: 'scrollHandler', hookHandler: onViewerScroll}
+                  ]
+                });
+
+                function onViewerScroll(event) {
+                  // Disable mousewheel zoom on the viewer and let the original mousewheel events bubble
+                  if (!event.isTouchEvent) {
+                    event.preventDefaultAction = true;
+                    return true;
+                  }
+                }
+
+                function showPage(i)
+                {
+                  os.goToPage(i-1);
+                  jQuery('.square_thumbnail').removeClass('current');
+                  jQuery('#page' + i).addClass('current');
+                }
+              </script>
+            </div> <!--fsize_images-->
+            <aside class="openseadragon-help">
+              <p>Click on or tab onto the image to zoom in and out, as well as move it around.</p>
+              <dl>
+                <dt>Zoom in</dt>
+                <dd>click on the image <strong>or</strong> hold the shift key and use the up key</dd>
+                <dt>Zoom out</dt>
+                <dd>hold the shift key and click on the image <strong>or</strong> hold the shift key and use the down key</dd>
+                <dt>Move the image around</dt>
+               <dd>click and hold on the image and drag it <strong>or</strong> use the arrows</dd>
+              </dl>
+           </aside>
+          <?php }//index_file>0
+          else {
+                  echo '<div class="item-images"><div id="fsize_images">'.$html_fullsize_image.
+                       '</div></div>';?>
+                  <script type="text/javascript">
+                    jQuery(document).ready(function() {
+                    jQuery(".square_thumbnail").click(function(e){
+                         jQuery('.square_thumbnail').removeClass('current');
+                         jQuery(this).addClass('current');
+                         jQuery(".fullsize").hide();
+                         jQuery("#"+jQuery(this).data("image")).show();
+                    });
+                   });
+                  </script>
+
+             <?php }
+    $index = 0;
+    echo '<div class="image_zoom_thumbnail_container">';
+    foreach ($item->Files as $file) {
+      $index++;
+      if ($openLayersZoomobject->isZoomed($file)) {
+        echo '<a href="javascript:showPage(' . $index . ');">';
+        echo file_markup(
+          $file,
+          ['imageSize' => 'square_thumbnail', 'linkToFile' => false],
+          ['class' => 'square_thumbnail' . ($index == 1 ? ' current' : ''),'id' => 'page' . $index]
+        );
+        echo '</a>';
+      }
+      else {
+       /**
+        * For when we figure out what to do with mixed images.
+        */
+        echo '<a href="javascript:;">';
+        echo file_markup(
+          $file,
+          ['imageSize' => 'square_thumbnail', 'linkToFile' => false],
+          ['class' => 'square_thumbnail' . ($index == 1 ? ' current' : ''),'data-image'=>'page'.$index]
+         );
+        echo '</a>';
+      }
+    }
+    echo '</div>';?>
+<?php    echo '</div>'; //item-images
+   }
+
+    if (!$fullsizeimage && ($audio_file || ($item_type == 'Sound'))) {
+       // if first file is an audio file then display a default image for sound file.
+       echo '<img src="' . img('audio_default02.gif') . '" alt="Oops" /></div>'; //item-images
+    } elseif ($item_type == 'Video') {
+       echo mlibrary_display_video('item');
+    }?>
+
+   <?php echo mlibrary_metadata_sideinfo('item');
+    // The following function prints all the the metadata associated with an item: Dublin Core, extra element sets, etc.
+    // See http://omeka.org/codex or the examples on items/browse for information on how to print only select metadata fields.
+    $rendered_item_metatdata = all_element_texts('item');
+
+    if (!empty($rendered_item_metatdata)) {
+      echo '<div id="item-metadata">' . $rendered_item_metatdata . '</div>';
+    }
+
+  if (isset($_GET['page']) && !isset($_GET['exhibit'])) {
+    echo mlibrary_add_vars_to_href(
+      '<ul class="item-pagination navigation">
+        <li id="previous-item" class="button">' .
+          link_to_previous_item_show('Previous Item') .
+        '</li>
+        <li id="next-item" class="next button">' .
+          link_to_next_item_show('Next Item') .
+        '</li>
+      </ul>',
+      [ 'page' => (isset($_GET['page'])) ? html_escape($_GET['page']) : '1' ]
+
+    );
+  }
+  ?>
+</div> <!--primary-->
+
+<?php echo foot(); ?>

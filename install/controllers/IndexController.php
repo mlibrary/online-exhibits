@@ -1,14 +1,13 @@
 <?php
 /**
- * @copyright Roy Rosenzweig Center for History and New Media, 2009-2011
- * @license http://www.gnu.org/licenses/gpl-3.0.txt
- * @package Omeka
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
 /**
- * Default installer controller.
- *
- * @package Omeka
+ * @package Omeka\Install
  */
 class IndexController extends Zend_Controller_Action
 {
@@ -23,7 +22,7 @@ class IndexController extends Zend_Controller_Action
             try {
                 $bootstrap->bootstrap('Db');
                 if (!$bootstrap->hasResource('db')) {
-                    throw new Exception("Could not load database resource!");
+                    throw new Omeka_Application_Resource_Exception(__('Could not load database resource!'));
                 }
             } catch (Zend_Config_Exception $e) {
                 // A Zend_Config_Exception means it couldn't read the db.ini file.
@@ -54,7 +53,7 @@ class IndexController extends Zend_Controller_Action
         $requirements->check();
         require_once APP_DIR . '/forms/Install.php';
         $form = new Omeka_Form_Install;
-        $form->setDefault('path_to_convert',Omeka_File_Derivative_Image::getDefaultConvertDir());
+        $form->setDefault('path_to_convert', Omeka_File_Derivative_Strategy_ExternalImageMagick::getDefaultImageMagickDir());
         if ($requirements->hasError()) {
             return $this->_forward('errors', null, null, array('installer'=>$requirements));
         } else if ($this->getRequest()->isPost() && $form->isValid($_POST)) {
@@ -65,11 +64,12 @@ class IndexController extends Zend_Controller_Action
         $this->view->requirements = $requirements;
         $this->view->installer = $this->installer;
         $this->view->form = $form;
+        $this->view->form = $form;
     }
         
     public function installedAction()
     {
-        
+        set_theme_base_url('install');
     }
     
     public function errorsAction()

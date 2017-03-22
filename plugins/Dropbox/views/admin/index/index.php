@@ -1,68 +1,84 @@
-<?php queue_js('items'); ?>
-<?php head(array('title' => 'Dropbox', 'bodyclass' => 'dropbox')); ?>
-<?php $tagDelimiter = get_option('tag_delimiter'); ?>
+<?php 
+    queue_js_file('items');
+    queue_js_file('tabs');
+    queue_css_file('dropbox');
+    echo head(array('title' => __('Dropbox'), 'bodyclass' => 'dropbox'));
+    $tagDelimiter = get_option('tag_delimiter');
+  ?>
 
 <script type="text/javascript">
 //<![CDATA[
 jQuery(document).ready(function () {
     Omeka.Items.tagDelimiter = <?php echo js_escape($tagDelimiter); ?>;
-    Omeka.Items.tagChoices('#dropbox-tags', <?php echo js_escape(uri(array('controller' => 'tags', 'action' => 'autocomplete'), 'default', array(), true)); ?>);
+    Omeka.Items.tagChoices('#dropbox-tags', <?php echo js_escape(url(array('controller' => 'tags', 'action' => 'autocomplete'), 'default', array(), true)); ?>);
 });
 //]]>
 </script>
-
-<h1>Dropbox</h1>
-
-<div id="primary">
-    <?php echo flash(); ?>
-
-    <p>
-        To add files to the Dropbox, upload them to the Dropbox plugin's
-        /files/ folder.  Files in the Dropbox can be added to the
-        archive in bulk from this page, or added to individual items
-        from the normal item interface.
-    </p>
-
-    <form action="<?php echo html_escape(uri(array('action'=>'add'))); ?>" method="post" accept-charset="utf-8">
-
-        <h2>Batch Add Files</h2>
-        <p>For each file selected, a new item will be created. The properties set below will be applied to each new item.</p>
-        <h3>Select Files from Dropbox</h3>
+<?php echo flash(); ?>
+<p>
+<?php
+echo __("To make files available in the Dropbox, upload them to the Dropbox plugin's "
+    . "files/ folder on the server.  Dropbox files can be added in bulk to your site "
+    . "from this page, or added to individual items through an item's admin interface.");
+?>
+</p>
+<form action="<?php echo html_escape(url(array('action'=>'add'))); ?>" method="post" accept-charset="utf-8">
+    <section class="seven columns alpha">
+        <h2><?php echo __('Batch Add Items'); ?></h2>
+        <p>
+        <?php
+        echo __('For each file selected, a new item will be created. '
+            . 'The properties set to the right will be applied to each new item.');
+        ?>
+        </p>
         <?php dropbox_list(); ?>
-        <fieldset>
-            <h3>Item Properties</h3>
-            
-            <div class="field">
-                <label for="dropbox-public">Public</label>
-                <div class="inputs">
+    </section>
+    <section class="three columns omega">
+        <div id="save" class="panel">
+            <input type="submit" class="submit big green button" name="submit" id="dropbox-upload-files" value="<?php echo __('Upload Files as Items'); ?>" />
+            <div id="public-featured">
+                <div class="public">
+                    <label for="dropbox-public"><?php echo __('Public'); ?></label>
                     <?php echo $this->formCheckbox('dropbox-public', null, array('checked' => true)); ?>
                 </div>
-            </div>
-            <div class="field">
-                <label for="dropbox-featured">Featured</label>
-                <div class="inputs">
+                <div class="featured">
+                    <label for="dropbox-featured"><?php echo __('Featured'); ?></label>
                     <?php echo $this->formCheckbox('dropbox-featured'); ?>
                 </div>
             </div>
-            <div class="field">
-                <label for="dropbox-collection-id">Collection</label>
+            <div id="collection-form" class="field">
+                <label for="dropbox-collection-id"><?php echo __('Collection'); ?></label>
                 <div class="inputs">
-                    <?php echo select_collection(array('name'=>'dropbox-collection-id', 'id'=>'dropbox-collection-id')); ?>
+                    <?php  
+                    echo $this->formSelect(
+                        'dropbox-collection-id',
+                        null,
+                        array(),
+                        get_table_options('Collection')
+                    );
+                    ?>
                 </div>
             </div>
-            <div class="field">
-                <label for="dropbox-tags">Tags</label>
+            <div id="tags-form" class="field">
+                <label for="dropbox-tags"><?php echo __('Tags'); ?></label>
                 <div class="inputs">
-                    <?php echo $this->formText('dropbox-tags', null, array('class' => 'textinput')); ?>
-                    <p class="explanation">Separate tags with <?php echo settings('tag_delimiter'); ?></p>
+                    <?php echo $this->formText('dropbox-tags'); ?>
+                    <p class="explanation"><?php echo __('Separate tags with %s', option('tag_delimiter')); ?></p>
                 </div>
             </div>
-        </fieldset>
-
-        <div class="input">
-            <input type="submit" class="submit" name="submit" id="dropbox-upload-files" value="Upload Files as Items" />
         </div>
-    </form>
-</div>
+    </section>
+</form>
+<script type="text/javascript">
+jQuery('document').ready(function () {
+    function toggleUploadButton() {
+        jQuery('#dropbox-upload-files').prop('disabled',
+            !jQuery('input[name="dropbox-files[]"]:checked').length);
+    }
 
-<?php foot();
+    toggleUploadButton();
+    jQuery('input[name="dropbox-files[]"]').change(toggleUploadButton);
+    jQuery('#dropbox-file-checkboxes').on('dropbox-all-toggled', toggleUploadButton);
+});
+</script>
+<?php echo foot();

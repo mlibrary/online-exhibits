@@ -1,5 +1,6 @@
 <?php if ($this->requirements->hasWarning()): ?>
     <h2><?php echo __('Installation Warning'); ?></h2>
+
     <p><?php echo __('The following issues will not affect installation, but they may negatively affect the behavior of Omeka:'); ?>'</p>
     <ol>
     <?php foreach($this->requirements->getWarningMessages() as $warningMessage): ?>
@@ -10,7 +11,7 @@
     <?php endforeach; ?>
     </ol>
 <?php endif; ?>
-<h2><?php echo __('Configure Your Site'); ?> <span id="required-note">* <?php echo __('Required Fields'); ?></span></h2>
+<h2><?php echo __('Configure Your Site'); ?> <span id="required-note">* <?php echo __('required field'); ?></span></h2>
 <?php if ($this->form->isErrors()): ?>
     <h3 class="validation-error"><?php echo __('Form Validation Errors'); ?></h3>
     <p><?php echo __('There were errors found in your form. Please edit and resubmit.'); ?></p>

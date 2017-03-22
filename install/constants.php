@@ -1,5 +1,15 @@
 <?php
-require_once realpath(dirname(__FILE__) . '/../paths.php');
+/**
+ * Omeka
+ * 
+ * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
+ * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
+ * @package Omeka\Install
+ */
+
+define('INSTALL', true);
+
+require_once realpath(dirname(__FILE__) . '/../bootstrap.php');
 
 // This mini app is in the install/ directory.
 defined('APPLICATION_PATH')
@@ -9,5 +19,3 @@ defined('APPLICATION_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production'));
 
-// Needs to check the 'install/models' directory.
-set_include_path(APPLICATION_PATH . '/models' . PATH_SEPARATOR . get_include_path());

@@ -14,9 +14,9 @@
  *
  * @category   Zend
  * @package    Zend_Controller
- * @copyright  Copyright (c) 2005-2011 Zend Technologies USA Inc. (http://www.zend.com)
+ * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Http.php 24008 2011-05-04 18:11:15Z ralph $
+ * @version    $Id$
  */
 
 /** @see Zend_Controller_Request_Abstract */
@@ -390,7 +390,11 @@ class Zend_Controller_Request_Http extends Zend_Controller_Request_Abstract
     public function setRequestUri($requestUri = null)
     {
         if ($requestUri === null) {
-            if (isset($_SERVER['HTTP_X_REWRITE_URL'])) { // check this first so IIS will catch
+            if (isset($_SERVER['HTTP_X_ORIGINAL_URL'])) { 
+                // IIS with Microsoft Rewrite Module
+                $requestUri = $_SERVER['HTTP_X_ORIGINAL_URL'];
+            } elseif (isset($_SERVER['HTTP_X_REWRITE_URL'])) { 
+                // IIS with ISAPI_Rewrite
                 $requestUri = $_SERVER['HTTP_X_REWRITE_URL'];
             } elseif (
                 // IIS7 with URL Rewrite: make sure we get the unencoded url (double slash problem)
@@ -914,6 +918,20 @@ class Zend_Controller_Request_Http extends Zend_Controller_Request_Abstract
     }
 
     /**
+     * Was the request made by PATCH?
+     *
+     * @return boolean
+     */
+    public function isPatch()
+    {
+        if ('PATCH' == $this->getMethod()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Is the request a Javascript XMLHttpRequest?
      *
      * Should work with Prototype/Script.aculo.us, possibly others.
@@ -982,8 +1000,18 @@ class Zend_Controller_Request_Http extends Zend_Controller_Request_Abstract
         }
 
         // Try to get it from the $_SERVER array first
-        $temp = 'HTTP_' . strtoupper(str_replace('-', '_', $header));
-        if (isset($_SERVER[$temp])) {
+        $temp = strtoupper(str_replace('-', '_', $header));
+        if (isset($_SERVER['HTTP_' . $temp])) {
+            return $_SERVER['HTTP_' . $temp];
+        }
+
+        /*
+         * Try to get it from the $_SERVER array on POST request or CGI environment
+         * @see https://www.ietf.org/rfc/rfc3875 (4.1.2. and 4.1.3.)
+         */
+        if (isset($_SERVER[$temp])
+            && in_array($temp, array('CONTENT_TYPE', 'CONTENT_LENGTH'))
+        ) {
             return $_SERVER[$temp];
         }
 
