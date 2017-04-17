@@ -20,12 +20,12 @@ div.layout-file-text .left ~ p {
 
 .layout-file-text .exhibit-items.right {
   margin-bottom: 1.2em;
-  margin-left: 4%;
+  margin-left: 3%;
 }
 
 .layout-file-text .exhibit-items.left {
   margin-bottom: 1.2em;
-  margin-right: 4%;
+  margin-right: 3%;
 }
 
 div.layout-file-text .right.fullsize ~ p {
