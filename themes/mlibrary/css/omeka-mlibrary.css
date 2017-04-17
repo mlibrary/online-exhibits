@@ -601,6 +601,13 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   color: #555;
 }
 
+.pretty-list .collection-body {
+  margin: 0 3% 0 22%;
+  font-size: 1.4em;
+  width: auto;
+  color: #555;
+}
+
 .pretty-list .no_tags .item-body {
   width: 70%;
 }
@@ -644,6 +651,10 @@ body#home #content #primary #featured-exhibit-wrap h2 {
   margin: 0.7em 0 0 0;
 }
 
+.pretty-list .collection-description {
+  margin: 0.7em 0 0 0;
+}
+
 .pretty-list .img-wrap {
   text-align: right;
   height: 180px;
@@ -672,21 +683,24 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 }
 
 #exhibit.browse h1,
-#items.browse h1 {
+#items.browse h1,
+#collection.browse h1 {
   background-color: #fff;
   padding: 1em;
   margin: 0;
 }
 
 #exhibit.browse .wrap,
-#items.browse .wrap {
+#items.browse .wrap,
+#collection.browse .wrap {
   background-color: transparent;
   width: 995px;
   padding: 0;
 }
 
 #exhibit.browse .pretty-list,
-#items.browse .pretty-list {
+#items.browse .pretty-list,
+#collection.browse .pretty-list {
   margin-left: 0;
   width: auto;
 }
