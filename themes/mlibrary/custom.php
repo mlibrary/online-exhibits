@@ -70,7 +70,9 @@ function mlibrary_display_related_exhibits($item) {
 
 // Used in items/show.php and exhibits/item.php
 function mlibrary_display_video() {
- $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
+$html_video = '';
+ 
+$elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
                                                                                    )
