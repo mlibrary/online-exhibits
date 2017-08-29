@@ -71,7 +71,6 @@ function mlibrary_display_related_exhibits($item) {
 // Used in items/show.php and exhibits/item.php
 function mlibrary_display_video() {
 $html_video = '';
- 
 $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
@@ -239,7 +238,7 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
  *  It is not used in this installation, but it can be used in the future.
  **/
 function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
-	$remove[] = "'";
+$remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
 	if (!empty($elementids_youtube_video)) {
@@ -266,7 +265,7 @@ function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
  **/
 add_filter('exhibit_attachment_markup', 'mlibrary_exhibit_builder_attachment');
 function mlibrary_exhibit_builder_attachment($html, $compact) {
-  $remove[] = "'";
+ $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
   $thumnail_image = false;
@@ -278,7 +277,7 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
     $item = $compact['attachment']->getItem();
     if (($item !== null) and (!empty($item->getItemType()))) {
       $item_type = $item->getItemType();
-      if (($item_type =='Video')) {
+      if (($item_type['name'] =='Video')) {
         $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
         if (!empty($compact['attachment']['caption'])) {
            $html .= $compact['attachment']['caption'];
