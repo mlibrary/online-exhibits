@@ -15,15 +15,21 @@
   );
  // if the item is part of the exhibit builder layout
  if (isset($_GET['exhibit']) && isset($_GET['page'])) {
-    $pageClean = html_escape($_GET['page']);
-    $exhibitClean = html_escape($_GET['exhibit']);
-    echo '<div class="button exhibit-item-back-button"><a href="' .
-        exhibit_builder_exhibit_uri(
-          get_record_by_id('exhibit', $exhibitClean),
-          get_record_by_id('exhibit_page', $pageClean)
-        ) .
-      '">Return to Exhibit</a></div>';
-  }
+      $pageClean = html_escape($_GET['page']);
+      $exhibitClean = html_escape($_GET['exhibit']);
+      if (($exhibit->title) == 'upstart200') {
+          $exhibit_uri = exhibit_builder_exhibit_uri(
+                         get_record_by_id('exhibit', $exhibitClean));
+          echo '<div class="button exhibit-item-back-button"><a href="' .$exhibit_uri.'/submit-your-work'.
+                                                                '">Return to Exhibit</a></div>';
+      } else {
+        echo '<div class="button exhibit-item-back-button"><a href="' . exhibit_builder_exhibit_uri(
+                          get_record_by_id('exhibit', $exhibitClean),
+                          get_record_by_id('exhibit page', $pageClean)
+                         ).'">Return to Exhibit</a>
+              </div>';
+      }
+ }
   // if the item is part of items archive
   elseif (isset($_GET['page'])) {
         $pageClean = html_escape($_GET['page']);
