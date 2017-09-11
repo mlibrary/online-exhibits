@@ -53,7 +53,7 @@ function handle_signal($signal)
 pcntl_signal(SIGINT, "handle_signal");
 
 
-$application->bootstrap(array('Autoloader', 'Logger'));
+$application->bootstrap(array('Logger'));
 $host = isset($options->host) ? $options->host : '127.0.0.1';
 $port = isset($options->port) ? $options->port : 11300;
 $pheanstalk = new Pheanstalk_Pheanstalk("$host:$port");
@@ -72,8 +72,8 @@ if (!$pheanJob) {
     exit(0);
 }
 $application->bootstrap(array(
-    'Autoloader', 'Config', 'Db', 'Filederivatives', 'Locale', 'Options',
-    'Pluginbroker', 'Plugins', 'Jobs', 'Storage', 'Mail', 'View'
+    'Config', 'Logger', 'Db', 'Options', 'Pluginbroker', 'View', 'Locale', 'Mail',
+    'Plugins', 'Jobs', 'Storage', 'Filederivatives'
 ));
 
 // resend() must send jobs to the original queue by default.

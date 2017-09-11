@@ -28,8 +28,9 @@ function exhibit_builder_render_exhibit_page($exhibitPage = null)
         echo get_view()->partial($layout->getViewPartial(), array(
             'index' => $index,
             'options' => $block->getOptions(),
-            'text' => $block->text,
-            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array()
+            'text' => get_view()->shortcodes($block->text),
+            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array(),
+            'block' => $block,
         ));
         echo '</div>';
     }
@@ -153,7 +154,8 @@ function exhibit_builder_link_to_next_page($text = null, $props = array(), $exhi
 
     // if page object exists, grab link to the first child page if exists. If it doesn't, grab
     // a link to the next page
-    if ($targetPage = $exhibitPage->firstChildOrNext()) {
+    $targetPage = $exhibitPage->firstChildOrNext();
+    if ($targetPage) {
         if (!isset($props['class'])) {
             $props['class'] = 'next-page';
         }
@@ -183,7 +185,8 @@ function exhibit_builder_link_to_previous_page($text = null, $props = array(), $
 
     // If page object exists, grab link to previous exhibit page if exists. If it doesn't, grab
     // a link to the last page on the previous parent page, or the exhibit if at top level
-    if ($previousPage = $exhibitPage->previousOrParent()) {
+    $previousPage = $exhibitPage->previousOrParent();
+    if ($previousPage) {
         if(!isset($props['class'])) {
             $props['class'] = 'previous-page';
         }

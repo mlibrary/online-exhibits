@@ -44,6 +44,19 @@ $formAttributes['method'] = 'GET';
                 //[terms] = 'foobar'
                 //etc
                 echo $this->formSelect(
+                    "advanced[$i][joiner]",
+                    @$rows['joiner'],
+                    array(
+                        'title' => __("Search Joiner"),
+                        'id' => null,
+                        'class' => 'advanced-search-joiner'
+                    ),
+                    array(
+                        'and' => __('AND'),
+                        'or' => __('OR'),
+                    )
+                );
+                echo $this->formSelect(
                     "advanced[$i][element_id]",
                     @$rows['element_id'],
                     array(
@@ -69,7 +82,9 @@ $formAttributes['method'] = 'GET';
                         'does not contain' => __('does not contain'),
                         'is exactly' => __('is exactly'),
                         'is empty' => __('is empty'),
-                        'is not empty' => __('is not empty'))
+                        'is not empty' => __('is not empty'),
+                        'starts with' => __('starts with'),
+                        'ends with' => __('ends with'))
                     )
                 );
                 echo $this->formText(
@@ -109,7 +124,7 @@ $formAttributes['method'] = 'GET';
                 'collection',
                 @$_REQUEST['collection'],
                 array('id' => 'collection-search'),
-                get_table_options('Collection')
+                get_table_options('Collection', null, array('include_no_collection' => true))
             );
         ?>
         </div>

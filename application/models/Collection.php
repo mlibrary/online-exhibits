@@ -89,6 +89,8 @@ class Collection extends Omeka_Record_AbstractRecord implements Zend_Acl_Resourc
         switch ($property) {
             case 'total_items':
                 return $this->totalItems();
+            case 'display_title':
+                return $this->getDisplayTitle();
             default:
                 return parent::getProperty($property);
         }
@@ -205,7 +207,7 @@ class Collection extends Omeka_Record_AbstractRecord implements Zend_Acl_Resourc
      *
      * Handle public/private status for search.
      */
-    protected function afterSave()
+    protected function afterSave($args)
     {
         if (!$this->public) {
             $this->setSearchTextPrivate();

@@ -12,7 +12,7 @@ class ExhibitBuilder_FilesController extends Omeka_Controller_AbstractActionCont
      */
     public function coverImageAction()
     {
-        $file = $this->_helper->db->findById(null, 'File');        
+        $file = $this->_helper->db->findById(null, 'File');
         $this->view->file = $file;
     }
 }

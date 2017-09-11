@@ -1558,6 +1558,10 @@ ul.title-list {
   overflow: hidden;
 }
 
+.search-entry:first-child .advanced-search-joiner {
+  display: none;
+}
+
 .search-entry select {
   margin-bottom: 0.75em;
 }
