@@ -75,6 +75,22 @@
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
+      <?php  set_exhibit_pages_for_loop_by_exhibit();
+             foreach (loop('exhibit_page') as $exhibitPage) {
+                          $blocks = $exhibitPage->getPageBlocks();
+                          $firstBlock = $blocks[0];
+                          //$rawAttachments = $this->exhibitAttachment($firstBlock);
+//echo (metadata($firstBlock, 'image'));
+//print_r($rawAttachments);
+//exit;                          
+$rawAttachments = $exhibitPage->getAllAttachments();
+echo file_markup($rawAttachments[0]->getFile(), array('imageSize' => 'thumbnail'));
+//exit;  
+                       // $image_info = $this->exhibitAttachment($rawAttachments[0],array(), array('imageSize' => 'thumbnail'),true);
+echo (metadata($exhibitPage, 'title'));
+?><br><?php
+echo (metadata($firstBlock, 'text', array('snippet'=>150)));
+}?>
     </div>
 
   </section>

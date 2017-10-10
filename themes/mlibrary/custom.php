@@ -270,12 +270,12 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
   $elementvideos_VCM = "";
   $thumnail_image = false;
   $exhibitPage = get_current_record('exhibit_page', false);
-  $imageSize = $compact['fileOptions']['imageSize'];
+  //$imageSize = $compact['fileOptions']['imageSize'];
 
   // All Exhibit builder layout out of the box. Only customization for those layouts is adding video item type
   if ($exhibitPage->layout != 'mlibrary-custom-layout') {
     $item = $compact['attachment']->getItem();
-    if (($item !== null) and (!empty($item->getItemType()))) {
+  if (($item !== null) and (!empty($item->getItemType()))) {
       $item_type = $item->getItemType();
       if (($item_type['name'] =='Video')) {
         $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
