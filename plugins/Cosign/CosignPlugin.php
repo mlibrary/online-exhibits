@@ -18,7 +18,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     public function __construct()
     {
         parent::__construct();
-        if (isset($_SERVER['REMOTE_USER'])) {
+        if (!empty($_SERVER['HTTPS'])) {
             /**
             * When logged in, we want to ensure that we're using secure cookies.
             *
