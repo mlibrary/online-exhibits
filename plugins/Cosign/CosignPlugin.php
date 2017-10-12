@@ -11,7 +11,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     /**
     * @var array Hooks for the plugin.
     */
-    protected $_hooks = array('define_routes','config_form','config');
+    protected $_hooks = array('define_routes','config_form','config', 'initialize');
 
     protected $_filters = array('login_adapter','login_form');
 
@@ -38,6 +38,16 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
             $newConfig = new Zend_Config($config->toArray(), TRUE);
             $newConfig->session->name = 'S' . md5(BASE_DIR);
             $bootstrap->getContainer()->config = $newConfig;
+        }
+    }
+
+    public function hookInitialize() {
+        if (!empty($_SERVER['REMOTE_USER'])) {
+            $auth = Zend_Auth::getInstance();
+            if (!$auth->hasIdentity()) {
+                $adapter = new Omeka_Auth_Adapter_Cosign($_SERVER['REMOTE_USER'], '');
+                $auth->authenticate($adapter);
+            }
         }
     }
 
