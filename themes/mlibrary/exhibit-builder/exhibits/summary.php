@@ -10,7 +10,6 @@
     )
   );
 
-  //$exhibit_image_object = new ImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
@@ -52,9 +51,9 @@
 
     <h2 class="element-invisible">Exhibit Summary</h2>
 
-    <div class="exhibit_image">
+<!--    <div class="exhibit_image"> -->
       <?php
-        $exhibit_record = get_current_record('exhibit', false);
+    /*    $exhibit_record = get_current_record('exhibit', false);
         $theme_options_array = $exhibit_record->getThemeOptions();
 
         if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
@@ -68,33 +67,30 @@
             echo $Exhibit_image;
         } else {
           echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Mlibrary default image"/>';
-        }
+        }*/
       ?>
-    </div>
+
+    <!-- </div> --> 
 
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
+    </div>
+    <div class = "exhibit-theme">
       <?php  set_exhibit_pages_for_loop_by_exhibit();
              foreach (loop('exhibit_page') as $exhibitPage) {
-                          $blocks = $exhibitPage->getPageBlocks();
-                          $firstBlock = $blocks[0];
-                          //$rawAttachments = $this->exhibitAttachment($firstBlock);
-//echo (metadata($firstBlock, 'image'));
-//print_r($rawAttachments);
-//exit;                          
-$rawAttachments = $exhibitPage->getAllAttachments();
-echo file_markup($rawAttachments[0]->getFile(), array('imageSize' => 'thumbnail'));
-//exit;  
-                       // $image_info = $this->exhibitAttachment($rawAttachments[0],array(), array('imageSize' => 'thumbnail'),true);
-echo (metadata($exhibitPage, 'title'));
-?><br><?php
-echo (metadata($firstBlock, 'text', array('snippet'=>150)));
-}?>
+                          $block = $exhibitPage->getPageBlocks();
+                          $rawAttachment = $exhibitPage->getAllAttachments();?>
+                          <div id = "exhibit-theme-item">
+                           <?php
+                              $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
+                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
+                              echo '<a href="' . html_escape($uri) .'">'.$page_card_info.'</a>';
+                           ?>
+                         </div>
+             <?php }?>  
     </div>
-
   </section>
-
 </div>
 
 <?php echo foot(); ?>
