@@ -230,7 +230,7 @@ div.layout-file-text .right.square_thumbnail ~ p{
   background: url("../images/layout/browse-border.gif") repeat-x scroll center top transparent;
 }
 
-#exhibit.summary .gallery-thumbnail .exhibit-item {
+.layout-gallery {
   display: inline-block;
 }
 
@@ -835,9 +835,18 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #exhibit.summary .exhibit_image,
 #exhibit.summary #summary-sidebar {
-  float: right;
-  width: 48%;
+/*  float: right;
+  width: 48%;*/
   margin-right: 18px;
+}
+
+#exhibit-theme-item {
+  max-width : 30%;
+  display: inline-block;
+}
+
+#exhibit-theme-item a{
+  text-decoration:none;
 }
 
 #exhibit.summary .exhibit_image {
