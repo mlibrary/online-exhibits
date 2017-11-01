@@ -22,10 +22,12 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
 {
    $file = $rawAttachment[0]->getFile();
    $page_image = file_image('thumbnail','', $file);
-   $page_title = metadata($exhibitPage, 'title').'<br>';
+   $page_title = metadata($exhibitPage, 'title');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
 
-   $page_card_info = $page_image.$page_title.$page_description;
+   $page_card_info = array('image' => $page_image,
+                           'title' => $page_title,
+                           'description' => $page_description);
 
    return $page_card_info;
 }
@@ -282,31 +284,28 @@ $remove[] = "'";
  **/
 add_filter('exhibit_attachment_markup', 'mlibrary_exhibit_builder_attachment');
 function mlibrary_exhibit_builder_attachment($html, $compact) {
- $remove[] = "'";
+  $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
   $thumnail_image = false;
   $exhibitPage = get_current_record('exhibit_page', false);
-  //$imageSize = $compact['fileOptions']['imageSize'];
-
-  // All Exhibit builder layout out of the box. Only customization for those layouts is adding video item type
-if ($exhibitPage->layout != 'mlibrary-custom-layout') {
-       $item = $compact['attachment']->getItem();
-        if (($item !== null) and (!empty($item->getItemType()))) {
-            $item_type = $item->getItemType();
-            if (($item_type['name'] =='Video')) {
-               $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
-               if (!empty($compact['attachment']['caption'])) {
-                  $html .= $compact['attachment']['caption'];
-               }
-           }
-        }
-        // Add a query string to then end of the href so we know which exhibit you came from
-        $html = mlibrary_add_vars_to_href(
-                $html,
-                mlibrary_exhibit_item_query_string_settings()
-              );
-  }
+                 if ($exhibitPage->layout != 'mlibrary-custom-layout') {
+                        $item = $compact['attachment']->getItem();
+                        if (($item !== null) and (!empty($item->getItemType()))) {
+                            $item_type = $item->getItemType();
+                              if (($item_type['name'] =='Video')) {
+                                 $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
+                                    if (!empty($compact['attachment']['caption'])) {
+                                        $html .= $compact['attachment']['caption'];
+                                    }
+                              }
+                        }
+                        // Add a query string to then end of the href so we know which exhibit you came from
+                        $html = mlibrary_add_vars_to_href(
+                                  $html,
+                                  mlibrary_exhibit_item_query_string_settings()
+                                );
+                 }
   
   return $html;
 }

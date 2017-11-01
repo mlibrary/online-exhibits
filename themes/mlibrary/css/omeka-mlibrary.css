@@ -141,12 +141,6 @@ div.layout-file-text .right.square_thumbnail ~ p{
   margin: 0 !important;
 }
 
-/*.layout-file-text .exhibit-items.right {
-    float: right;
-   max-width: 48%;
-   margin-bottom:2%;
-
-}*/
 
 .layout-file-text .exhibit-items.right.thumbnail {
     float: right;
@@ -835,8 +829,6 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 
 #exhibit.summary .exhibit_image,
 #exhibit.summary #summary-sidebar {
-/*  float: right;
-  width: 48%;*/
   margin-right: 18px;
 }
 

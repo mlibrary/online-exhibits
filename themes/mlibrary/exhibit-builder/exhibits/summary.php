@@ -50,28 +50,6 @@
     </div>
 
     <h2 class="element-invisible">Exhibit Summary</h2>
-
-<!--    <div class="exhibit_image"> -->
-      <?php
-    /*    $exhibit_record = get_current_record('exhibit', false);
-        $theme_options_array = $exhibit_record->getThemeOptions();
-
-        if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
-           $Exhibit_image = $exhibitImage;
-        } else {
-           $Exhibit_image = '';
-        }
-
-        if ($Exhibit_image) {
-         // echo '<img src="' . WEB_FILES.$exhibit_image['image_name'] . '" alt="' . $exhibit_image['image_title'] . '" />';
-            echo $Exhibit_image;
-        } else {
-          echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Mlibrary default image"/>';
-        }*/
-      ?>
-
-    <!-- </div> --> 
-
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
@@ -85,7 +63,7 @@
                            <?php
                               $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
                               $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
-                              echo '<a href="' . html_escape($uri) .'">'.$page_card_info.'</a>';
+                              echo '<a href="' . html_escape($uri) .'">'.$page_card_info["image"].$page_card_info["title"].$page_card_info["description"].'</a>';
                            ?>
                          </div>
              <?php }?>  
