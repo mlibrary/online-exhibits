@@ -21,7 +21,7 @@
 function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
 {
    $file = $rawAttachment[0]->getFile();
-   $page_image = file_image('thumbnail','', $file);
+   $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);
    $page_title = metadata($exhibitPage, 'title');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
 

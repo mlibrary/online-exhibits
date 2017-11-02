@@ -18,6 +18,16 @@ div.layout-file-text .left ~ p {
   width:48%;
 }*/
 
+
+.image-card {
+  width: 13rem;
+  height: 7rem;
+}
+
+.card-info h3 {
+  color: #126dc1;
+}
+
 .layout-file-text .exhibit-items.right {
   margin-bottom: 1.2em;
   margin-left: 3%;
@@ -835,6 +845,10 @@ body#home #content #primary #featured-exhibit-wrap h2 {
 #exhibit-theme-item {
   max-width : 30%;
   display: inline-block;
+  margin-right: 13px;
+  margin-left: 13px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #exhibit-theme-item a{
