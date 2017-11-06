@@ -62,13 +62,12 @@
                           <div id = "exhibit-theme-item">
                            <?php
                               $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
-                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
-                              echo '<a href="' . html_escape($uri) .'">';
-                              echo '<div>'.$page_card_info["image"].'</div>';
-                              echo '<div class="card-info"><h3>'.$page_card_info["title"].'</h3>';
-                              echo $page_card_info["description"].'</div>';
-                              echo '</a>';
-                           ?>
+                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
+                              <a href= <?php echo html_escape($uri);?> >
+                                <div><?php  echo $page_card_info["image"];?></div>
+                                <div class="card-info"><h3><?php echo html_escape($page_card_info["title"]);?></h3>
+                                <?php echo html_escape($page_card_info["description"]);?></div>
+                              </a>                           
                          </div>
              <?php }?>  
     </div>
