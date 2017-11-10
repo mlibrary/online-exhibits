@@ -49,7 +49,7 @@
       </div>
     </div>
 
-    <h2 class="element-invisible">Exhibit Summary</h2>
+    <h2> Introduction </h2>
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
@@ -62,9 +62,12 @@
                           <div id = "exhibit-theme-item">
                            <?php
                               $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
-                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
-                              echo '<a href="' . html_escape($uri) .'">'.$page_card_info["image"].$page_card_info["title"].$page_card_info["description"].'</a>';
-                           ?>
+                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
+                              <a href= <?php echo html_escape($uri);?> >
+                                <div><?php  echo $page_card_info["image"];?></div>
+                                <div class="card-info"><h3><?php echo html_escape($page_card_info["title"]);?></h3>
+                                <?php echo html_escape($page_card_info["description"]);?></div>
+                              </a>                           
                          </div>
              <?php }?>  
     </div>
