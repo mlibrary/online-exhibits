@@ -83,11 +83,6 @@
 			</div>
 		</div>
     </header> 
-    <!--<div class="row">
-        <div class="col-md-12">
-         <?php echo search_form(array('show_advanced' => false, 'form_attributes'=>array('id'=>'navbar-search', 'class'=>'navbar-form navbar-right'))); ?>
-        </div>
-    </div> --> <!--Removes Search under Header Image-->
     <?php endif; ?>  
     
     <main id="content">
