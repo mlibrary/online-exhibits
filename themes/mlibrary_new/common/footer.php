@@ -3,8 +3,6 @@
 	<footer class="site-footer">
 			<div class="container container-medium">
 				<div id="footer-content">
-							<p><a href="">Home</a></p>
-							<p><a href="">Help</a></p>
 			        <?php if($footerText = get_theme_option('Footer Text')): ?>
 			        <div id="custom-footer-text">
 			            <p><?php echo get_theme_option('Footer Text'); ?></p>
