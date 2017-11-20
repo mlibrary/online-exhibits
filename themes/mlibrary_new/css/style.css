@@ -1,4 +1,14 @@
 /* Custom MLibrary Exhibits Theme Styles */
+/* Nancy added for image card in the introduction page*/
+.image-card {
+  width: 13rem;
+  height: 7rem;
+}
+
+.card-info h3 {
+  color: #126dc1;
+}
+
 
 .site-heading ul {
   padding: 0;
