@@ -21,17 +21,41 @@ require_once dirname(__FILE__) . '/functions.php';
 *
 **/
 function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
-{
-   $file = $rawAttachment[0]->getFile();
-   $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);
+{  // to see if there is no image attached to the first page.
+  if (empty($rawAttachment)) {
+     $page_image = img("defaulthbg.jpg");
+     $page_image = "<img class='image-card' alt='' src='".$page_image."'/>";
+   } else {
+          // if it is not video, display the original image of the first item attached
+          if (mlibrary_display_exhibit_type_of_item($rawAttachment) != 'Video') {
+            $file = $rawAttachment[0]->getFile();
+            $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);  
+          }
+          else {
+            // if it is a video, get the thumbnail image and display it
+            $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+          }
+    }
+
    $page_title = metadata($exhibitPage, 'title');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
 
    $page_card_info = array('image' => $page_image,
                            'title' => $page_title,
                            'description' => $page_description);
-
    return $page_card_info;
+}
+
+// get the type of the item
+function mlibrary_display_exhibit_type_of_item($rawAttachment)
+{
+   if ($rawAttachment[0]->getItem()->getItemType()!=null) {
+       $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
+   }else{
+       $itemType =  '';
+   }
+
+   return $itemType;
 }
 
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
@@ -258,7 +282,7 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
  * Retrieve a thumnail image for a video item type
  *  It is not used in this installation, but it can be used in the future.
  **/
-function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
+function mlibrary_exhibit_builder_video_attachment($item) {
 $remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
