@@ -24,18 +24,16 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
 {  // to see if there is no image attached to the first page.
   if (empty($rawAttachment)) {
      $page_image = img("defaulthbg.jpg");
-     $page_image = "<img class='image-card' alt='' src='".$page_image."'/>";
+     $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
+   } elseif (mlibrary_display_exhibit_type_of_item($rawAttachment) != 'Video') {
+      // if it is not video, display the original image of the first item attached
+     $file = $rawAttachment[0]->getFile();
+     $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);  
    } else {
-          // if it is not video, display the original image of the first item attached
-          if (mlibrary_display_exhibit_type_of_item($rawAttachment) != 'Video') {
-            $file = $rawAttachment[0]->getFile();
-            $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);  
-          }
-          else {
-            // if it is a video, get the thumbnail image and display it
-            $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
-          }
-    }
+     // if it is a video, get the thumbnail image and display it
+     $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+   }
+   
 
    $page_title = metadata($exhibitPage, 'title');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
