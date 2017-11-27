@@ -19,11 +19,18 @@ div.layout-file-text .left ~ p {
 }*/
 
 
-.image-card {
+/*.image-card {
   width: 13rem;
   height: 7rem;
-}
+}*/
 
+.image-card {
+	height: 296px;
+	width: 535px;
+	border-radius: 4px;
+	background-color: #FFFFFF;
+	box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+}
 .card-info h3 {
   color: #126dc1;
 }
