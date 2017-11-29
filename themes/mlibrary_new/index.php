@@ -15,23 +15,6 @@
 		<?php else: ?>
 		<?php echo $this->partial('common/loremize-main.phtml');?>
 		<?php endif; ?>
-		<?php
-	    $recentItems = get_theme_option('Homepage Recent Items');
-	    if ($recentItems === null || $recentItems === ''):
-	        $recentItems = 3;
-	    else:
-	        $recentItems = (int) $recentItems;
-	    endif;
-	    if ($recentItems):
-	    ?>	
-	    <div id="recent-items" class="row">	
-	        <h2><?php echo __('Recently Added Items'); ?></h2>
-	        <?php echo recent_items_bootstrap($recentItems,get_theme_option('display_recent_items_as')); ?>
-	        <div class="col-sm-12"><p class="view-items-link"><a href="<?php echo html_escape(url('items')); ?>"><?php echo __('View All Items'); ?></a></p></div>
-	    </div>
-	    <?php endif; ?>
-	    
-	    <?php fire_plugin_hook('public_home', array('view' => $this)); ?>
 
     </div>
     
@@ -57,9 +40,23 @@
 				<div class="panel-body"><?php echo random_featured_collection(); ?></div>
 			</div>
         <?php endif; ?>
-        <?php if ((get_theme_option('Display Featured Exhibit') !== '0') && plugin_is_active('ExhibitBuilder') && function_exists('exhibit_builder_display_random_featured_exhibit')): ?>
-            <?php echo exhibit_builder_display_random_featured_exhibit(); ?>
+        <?php if ((get_theme_option('Display Featured Exhibit') !== '0') && plugin_is_active('ExhibitBuilder') && function_exists('mlibrary_exhibit_builder_display_random_featured_exhibit')): ?>
+              <?php echo mlibrary_exhibit_builder_display_random_featured_exhibit(); ?>           
         <?php endif; ?>
     </div>
+</div>
+       <div>
+         <?php
+           if (plugin_is_active('ExhibitBuilder') && function_exists('recent_exhibits_bootstrap')) { 
+              echo recent_exhibits_bootstrap(4);
+           }?>
+       </div>
+    <div>
+      <a href="<?php echo url('exhibits'); ?>">Browse All Exhibits</a>
+    </div>
 </div>    
+
+<?php fire_plugin_hook('public_home', array('view' => $this)); ?>
+
 <?php echo foot(); ?>
+

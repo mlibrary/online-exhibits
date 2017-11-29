@@ -40,6 +40,20 @@ function recent_items_bootstrap($recentItems,$type){
 		}
 }
 
+function recent_exhibits_bootstrap($recentExhibits){
+    $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
+    if ($exhibits) {
+        $html = '';
+        foreach ($exhibits as $exhibit) {
+            $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibit' => $exhibit));
+        }
+    } else {
+        $html = '<p>' . __('No recent exhibits available.') . '</p>';
+    }
+    return $html;
+}
+
+
 function bs_link_logo_to_navbar($text = null, $props = array())
 {
     if (!$text) {
