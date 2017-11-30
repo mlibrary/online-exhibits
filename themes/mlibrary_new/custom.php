@@ -35,7 +35,6 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
    
 
    $page_title = metadata($exhibitPage, 'title');
-   $exhibit = get_current_record('exhibit');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
 
    $page_card_info = array('image' => $page_image,
@@ -58,9 +57,8 @@ function mlibrary_display_exhibit_type_of_item($rawAttachment)
 
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
-    $html = '<div id="featured-exhibit">';
+    $html = '<div id="featured-exhibit">'. '<h2>'.'Featured Exhibits'.'</h2>';
     $featuredExhibit = exhibit_builder_random_featured_exhibit();
-    $html .= '<h2>'.'Feature Exhibits'.'</h2>';
     if ($featuredExhibit) {
         $html .= get_view()->partial('exhibit-builder/exhibits/single.php', array('exhibit' => $featuredExhibit));
     } else {

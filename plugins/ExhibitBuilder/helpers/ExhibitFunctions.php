@@ -14,8 +14,7 @@
 function exhibit_builder_is_current_exhibit($exhibit)
 {
     $currentExhibit = get_current_record('exhibit', false);
-    return ($exhibit == $currentExhibit
-        || ($exhibit && $currentExhibit && $exhibit->id == $currentExhibit->id));
+    return ($exhibit == $currentExhibit || ($exhibit && $currentExhibit && $exhibit->id == $currentExhibit->id));
 }
 
 /**

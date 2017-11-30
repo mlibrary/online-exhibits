@@ -17,6 +17,10 @@
 		<?php endif; ?>
 
     </div>
+
+         <nav id="top-nav" class="top" role="navigation">
+            <?php echo public_nav_main(); ?>
+        </nav>
     
     <div class="col-md-4<?php echo $sidebar_add;?>">
 		<?php if (get_theme_option('display_sidebar_menu') !== '0'): ?>

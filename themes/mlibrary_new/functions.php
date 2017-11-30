@@ -40,12 +40,22 @@ function recent_items_bootstrap($recentItems,$type){
 		}
 }
 
-function recent_exhibits_bootstrap($recentExhibits){
+
+function recent_exhibits_bootstrap($recentExhibits) {
     $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
+    $html = '';
     if ($exhibits) {
-        $html = '';
         foreach ($exhibits as $exhibit) {
-            $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibit' => $exhibit));
+            $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
+            $exhibitImage = record_image($exhibit, 'original', array('alt' => $exhibit->title,
+                                                                     'class' => 'image-card'));
+            if ($exhibitImage == Null) {
+                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>';
+            }
+
+            $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
+                                                                                    'exhibit' => $exhibit,
+                                                                                    'title' => $title ));
         }
     } else {
         $html = '<p>' . __('No recent exhibits available.') . '</p>';
@@ -60,10 +70,12 @@ function bs_link_logo_to_navbar($text = null, $props = array())
         $text = option('site_title');
     }
     
-    if(theme_logo()){$logo= "";}
-    else $logo="onlytext";
+    if (theme_logo()) {
+       $logo = "";
+    } else 
+       $logo="onlytext";
     
-    return '<ul> <li class="site-logo" > <a '.$logo.'" href="http://lib.umich.edu" '. tag_attributes($props) . '>'.theme_logo(). "</a> </li>\n" . '<li class="site-logo-text" >' . '<a " href="' . html_escape(WEB_ROOT) . '">'.$text . '</a>' . '</li>' . '</ul>' ;
+       return '<ul> <li class="site-logo" > <a '.$logo.'" href="http://lib.umich.edu" '. tag_attributes($props) . '>'.theme_logo(). "</a> </li>\n" . '<li class="site-logo-text" >' . '<a " href="' . html_escape(WEB_ROOT) . '">'.$text . '</a>' . '</li>' . '</ul>' ;
 }
 
 
