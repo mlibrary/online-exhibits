@@ -57,7 +57,7 @@ function mlibrary_display_exhibit_type_of_item($rawAttachment)
 
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
-    $html = '<div id="featured-exhibit">'. '<h2>'.'Featured Exhibits'.'</h2>';
+    $html = '<div id="featured-exhibit"><h2>Featured Exhibits</h2>';
     $featuredExhibit = exhibit_builder_random_featured_exhibit();
     if ($featuredExhibit) {
         $html .= get_view()->partial('exhibit-builder/exhibits/single.php', array('exhibit' => $featuredExhibit));
