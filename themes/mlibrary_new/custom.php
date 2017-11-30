@@ -27,8 +27,7 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
      $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
    } elseif (mlibrary_display_exhibit_type_of_item($rawAttachment) != 'Video') {
       // if it is not video, display the original image of the first item attached
-     $file = $rawAttachment[0]->getFile();
-     $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);  
+     $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
    } else {
      // if it is a video, get the thumbnail image and display it
      $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
@@ -58,11 +57,17 @@ function mlibrary_display_exhibit_type_of_item($rawAttachment)
 
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
-  $exhibits = get_records('Exhibit' , array ('featured'=>true),$num=4);
-  shuffle($exhibits);
-  return $exhibits;
+    $html = '<div id="featured-exhibit">'. '<h2>'.'Featured Exhibits'.'</h2>';
+    $featuredExhibit = exhibit_builder_random_featured_exhibit();
+    if ($featuredExhibit) {
+        $html .= get_view()->partial('exhibit-builder/exhibits/single.php', array('exhibit' => $featuredExhibit));
+    } else {
+        $html .= '<p>' . __('You have no featured exhibits.') . '</p>';
+    }
+    $html .= '</div>';
+    $html = apply_filters('exhibit_builder_display_random_featured_exhibit', $html);
+    return $html;
 }
-
 /**
  * This function returns the style sheet for the theme. It will use the argument
  * passed to the function first, then the theme_option for Style Sheet, then

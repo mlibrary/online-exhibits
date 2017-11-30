@@ -34,7 +34,7 @@ $title = __('Browse Exhibits');
               <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
 
-              if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
+              if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
                     $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
                } else {
                       $Exhibit_image = '';
@@ -45,7 +45,7 @@ $title = __('Browse Exhibits');
                   if (!empty($Exhibit_image)) {
                       echo $Exhibit_image;//$Exhibit_image['image_name'];
                   } else {
-                    echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Default gallery image"/>';
+                      echo('<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>');                  
                   }
 
                 echo '</div>';

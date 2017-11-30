@@ -9,6 +9,14 @@
   color: #126dc1;
 }
 
+.feature-banner-image {
+  width:57rem;
+  height:19rem;
+}
+
+.exhibit.record {
+  display: inline-block;
+}
 
 .site-heading ul {
   padding: 0;
