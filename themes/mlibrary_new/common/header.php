@@ -58,7 +58,13 @@
         </div>
     </div>
 
-    <?php if ((get_theme_option('display_header') !== '0')): ?>
+    <?php if((end(explode('/',$_SERVER['REQUEST_URI']))=='exhibits') or (end(explode('/',$_SERVER['REQUEST_URI']))=='about')){
+              $display_banner_image = false;
+          }else {
+              $display_banner_image = true; 
+          }
+
+ if (((get_theme_option('display_header') !== '0')) and ($display_banner_image==true)): ?>
     <header id="banner" class="<?php echo get_theme_option('header_flow'); ?> page-header" style="background-size:cover;background-image:url('<?php 
 		if ((get_theme_option('Header Background Image') === null)){
 			echo img('defaulthbg.jpg');
