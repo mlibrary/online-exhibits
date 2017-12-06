@@ -14,7 +14,7 @@
 <!--Breadcrumb and Share Bar-->
   <div class="col-xs-9">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
         <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
       </ol>
   </div>
