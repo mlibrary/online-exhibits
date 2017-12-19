@@ -1,5 +1,6 @@
 <?php
     $pageTitle = __('Search Omeka ') . __('(%s total)', $total_results);
+    set_theme_option('display_header','0');
     echo head(array('title' => $pageTitle, 'bodyclass' => 'search'));
     $searchRecordTypes = get_search_record_types();
 ?>
