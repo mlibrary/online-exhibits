@@ -3,7 +3,7 @@
   * Copyright (c) 2016, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
-
+set_theme_option('display_header','0');
 $title = __('Browse Exhibits');
        echo head(
             array(
@@ -13,9 +13,21 @@ $title = __('Browse Exhibits');
             )
        );
 
-?>
 
-<?php $awkward_gallery_setting = get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
+?>
+  <div class="col-xs-9">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
+        <li class="breadcrumb-item active">Browse all exhibits</li>
+      </ol>
+  </div>
+
+
+  <?php
+    $html = mlibrary_display_popular_tags();
+    echo $html;
+  ?>
+
   <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>
 
 
@@ -31,7 +43,6 @@ $title = __('Browse Exhibits');
           <?php $theme_options_array = $exhibit->getThemeOptions(); ?>
           <article class="cf">
             <div class="item-body">
-              <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
               <?php
 
               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
@@ -48,9 +59,10 @@ $title = __('Browse Exhibits');
                       echo('<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>');                  
                   }
 
-                echo '</div>';
-
-                if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
+                echo '</div>';?>
+ 
+                <h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
+                <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                   echo '<p class="item-description">' . $exhibitDescription . '</p>';
                 }
 
