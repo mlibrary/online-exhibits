@@ -432,7 +432,7 @@ class Mixin_ElementText extends Omeka_Record_Mixin_AbstractMixin
                     }
                     // Only add the element text if it's not empty.  There
                     // should be no empty element texts in the DB.
-                    if (!empty($elementText['text'])) {
+                    if (strlen($elementText['text'])) {
                         $this->addTextForElement($element, $elementText['text'], $elementText['html']);
                     }
                 }
@@ -443,7 +443,7 @@ class Mixin_ElementText extends Omeka_Record_Mixin_AbstractMixin
     private function _addTextsByElementId(array $texts)
     {
         foreach ($texts as $key => $info) {
-            if (empty($info['text'])) {
+            if (!strlen($info['text'])) {
                 continue;
             }
             $text = new ElementText;
@@ -522,7 +522,7 @@ class Mixin_ElementText extends Omeka_Record_Mixin_AbstractMixin
                 );
                 
                 // Ignore fields that are empty (no text)
-                if (empty($elementText)) {
+                if (!strlen($elementText)) {
                     continue;
                 }
                 
@@ -684,6 +684,7 @@ class Mixin_ElementText extends Omeka_Record_Mixin_AbstractMixin
         $this->_recordsAreLoaded = false;
         $this->_replaceElementTexts = false;
         $this->_textsToSave = array();
+        $this->_elementsOnForm = array();
     }
     
     /**
@@ -752,5 +753,34 @@ SQL
     public function getElementTextCount($elementSetName, $elementName)
     {
         return count($this->getElementTexts($elementSetName, $elementName));
+    }
+
+    /**
+     * Return the title of this record for display/interface purposes
+     *
+     * If no title is present or the title contains no text, returns the passed $default value.
+     * If no $default is given, returns the translated string [Untitled].
+     *
+     * @pararm string|null $default Default value to return if no suitable Title element exists
+     * @return string Raw (unescaped) title string for the record.
+     */
+    public function getDisplayTitle($default = null)
+    {
+        $title = '';
+        $titles = $this->getElementTexts('Dublin Core', 'Title');
+        if ($titles) {
+            $title = $titles[0]->text;
+            if ($titles[0]->html) {
+                $title = trim(html_entity_decode(strip_formatting($title), ENT_QUOTES, 'UTF-8'));
+            }
+        }
+
+        if ($title === '') {
+            if (!$default) {
+                $default = __('[Untitled]');
+            }
+            $title = $default;
+        }
+        return $title;
     }
 }

@@ -92,9 +92,9 @@ class GroupPlugin extends Omeka_Plugin_AbstractPlugin
        // delete all groups too.
 	 		  $exhibitGroupsObjectRecords = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
 	 		  ExhibitGroupsRelationShip::deleteGroupsBelongToExhibit($exhibitGroupsObjectRecords);
-	}
+		}
 
-    public function hookAfterSaveExhibit($args)
+	  public function hookAfterSaveExhibit($args)
 	  {
 		  //save_exhibit
    	  $exhibit = $args['record'];

@@ -187,7 +187,7 @@ class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
                 }
             case 'collection_name':
                 if ($collection = $this->Collection) {
-                    return strip_formatting(metadata($collection, array('Dublin Core', 'Title')));
+                    return $collection->getProperty('display_title');
                 } else {
                     return null;
                 }
@@ -201,6 +201,8 @@ class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
                 return $this->hasThumbnail();
             case 'citation':
                 return $this->getCitation();
+            case 'display_title':
+                return $this->getDisplayTitle();
             default:
                 return parent::getProperty($property);
         }
@@ -396,6 +398,10 @@ class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
      */
     public function previous()
     {
+        $previousItem = apply_filters('item_previous', null, array('item' => $this));
+        if ($previousItem) {
+            return $previousItem;
+        }
         return $this->getDb()->getTable('Item')->findPrevious($this);
     }
     
@@ -407,6 +413,10 @@ class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
      */
     public function next()
     {
+        $nextItem = apply_filters('item_next', null, array('item' => $this));
+        if ($nextItem) {
+            return $nextItem;
+        }
         return $this->getDb()->getTable('Item')->findNext($this);
     }
 
@@ -467,12 +477,12 @@ class Item extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
             $citation .= "$creator, ";
         }
         
-        $title = strip_formatting(metadata($this, array('Dublin Core', 'Title')));
+        $title = metadata($this, 'display_title');
         if ($title) {
             $citation .= "&#8220;$title,&#8221; ";
         }
         
-        $siteTitle = strip_formatting(option('site_title'));
+        $siteTitle = option('site_title');
         if ($siteTitle) {
             $citation .= "<em>$siteTitle</em>, ";
         }

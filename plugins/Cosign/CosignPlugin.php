@@ -11,14 +11,14 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     /**
     * @var array Hooks for the plugin.
     */
-    protected $_hooks = array('define_routes','config_form','config');
+    protected $_hooks = array('define_routes','config_form','config', 'initialize');
 
-    protected $_filters = array('login_adapter','login_form');
+    protected $_filters = ['admin_whitelist'];
 
     public function __construct()
     {
         parent::__construct();
-        if (isset($_SERVER['REMOTE_USER'])) {
+        if (!empty($_SERVER['HTTPS'])) {
             /**
             * When logged in, we want to ensure that we're using secure cookies.
             *
@@ -41,6 +41,26 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
         }
     }
 
+    public function filterAdminWhitelist($list)
+    {
+      array_push($list, [
+        'module' => 'admin',
+        'controller' => 'redirector',
+        'action' => 'index',
+      ]);
+      return $list;
+    }
+
+    public function hookInitialize() {
+        if (!empty($_SERVER['REMOTE_USER'])) {
+            $auth = Zend_Auth::getInstance();
+            if (!$auth->hasIdentity()) {
+                $adapter = new Omeka_Auth_Adapter_Cosign($_SERVER['REMOTE_USER'], '');
+                $auth->authenticate($adapter);
+            }
+        }
+    }
+
     //show plugin configuration page
     public function hookConfigForm()
     {
@@ -54,45 +74,25 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     /**
-    * The purpose of this filter is to by pass the Omeka login form so it will
-    * not display to users. But still we need to pass a username and password
-    * that is expected from Omeka form. The password generated here is not stored in the database.
-    * The passowrd stored in db came from UserControl where secure password is created.
-    * The user is authenticare through the
-    * cosign first then the filter for the login form is called.
-    */
-    public function filterLoginForm($loginform)
-    {
-        if ((isset($_SERVER['REMOTE_USER']))) {
-            $length = 16;
-            $_POST['username'] = $_SERVER['REMOTE_USER'];
-            if (function_exists('openssl_random_pseudo_bytes')) {
-                $_POST['password'] = openssl_random_pseudo_bytes($length);
-            } else {
-                $characters = "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()" .
-                    "-_<>,./:;'{[}]\\|~`";
-                $_POST['password'] = substr(
-                    str_shuffle( str_repeat($characters, $length)),
-                    0,
-                    $length
-                );
-            }
-            $_SERVER['REQUEST_METHOD'] = 'POST';
-            return $loginform;
-        } else {
-           //Add https to redirect to Cosign then the Omeka filter login
-           // form will be called with remote user.
-           header('location: ' . $this->redirectedURL());
-        }
-    }
-
-    /**
     * Using this filter to pass the lgout through Cosign.
     */
     public function hookDefineRoutes($args)
     {
-        // Don't add these routes on the admin side to avoid conflicts.
         $router = $args['router'];
+
+        $router->addRoute(
+            'cosignUserLogin',
+            new Zend_Controller_Router_Route(
+                'users/login',
+                array(
+                    'module'     => 'admin',
+                    'controller' => 'redirector',
+                    'action'     => 'index',
+                    'redirect_uri' => $this->redirectedURL(),
+                )
+            )
+        );
+
         $route = new Zend_Controller_Router_Route(
             'users/logout',
             array(
@@ -104,28 +104,9 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
         $router->addRoute('logoutCosignUser', $route);
     }
 
-    /**
-    * After the login form filter is called, the login adapter filter used to
-    * override the default way Omeka authenticates users. It will be used to
-    * check if the username authenticate with the Cosign is available at Omeka
-    * user database or not.
-    */
-    public function filterLoginAdapter($authAdapter,$loginForm)
-    {
-        if (isset($_SERVER['REMOTE_USER'])) {
-            Zend_Session::regenerateId();
-            return new Omeka_Auth_Adapter_Cosign(
-                $loginForm['login_form']->getValue('username'),
-                $loginForm['login_form']->getValue('password')
-            );
-        } else {
-            header('location: ' . $this->redirectedURL());
-        }
-    }
-
     private function redirectedURL()
     {
-        return "https://{$_SERVER['HTTP_HOST']}/login?dest=" . rawurlencode($_SERVER['REQUEST_URI']);
+        return (isset($_SERVER['HTTPS']) ? 'https' : 'http') . "://{$_SERVER['HTTP_HOST']}/login?dest=/admin";
     }
 }
 

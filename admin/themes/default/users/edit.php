@@ -1,5 +1,5 @@
 <?php
-$userTitle = strip_formatting($user->username);
+$userTitle = $user->username;
 if ($userTitle != '') {
     $userTitle = ': &quot;' . html_escape($userTitle) . '&quot; ';
 } else {
@@ -20,11 +20,9 @@ echo flash();
         <?php
         echo $this->formSubmit('submit', __('Save Changes'), array('class' => 'submit big green button'));
         if (!$user->active):
-print_r("I am not active");
-exit;
-          //  echo $this->formSubmit('resend_activation_email', __('Resend Activation Email'), array('class' => 'submit big blue button'));
+            echo $this->formSubmit('resend_activation_email', __('Resend Activation Email'), array('class' => 'submit big blue button'));
         endif;
-       if (is_allowed($user, 'delete')):
+        if (is_allowed($user, 'delete')):
             echo link_to($user, 'delete-confirm', __('Delete'), array('class' => 'big red button delete-confirm'));
         endif;
         ?>

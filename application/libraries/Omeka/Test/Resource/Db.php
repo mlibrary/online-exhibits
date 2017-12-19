@@ -83,7 +83,6 @@ class Omeka_Test_Resource_Db extends Zend_Application_Resource_Db
     {
         $this->setAdapter('Mysqli');
         $params = Zend_Registry::get('test_config')->db->toArray();
-        $params['driver_options']['MYSQLI_INIT_COMMAND'] = "SET SESSION sql_mode='STRICT_ALL_TABLES'";
         $this->setParams($params);
     }
         

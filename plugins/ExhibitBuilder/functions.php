@@ -33,10 +33,11 @@ CREATE TABLE IF NOT EXISTS `{$db->prefix}exhibits` (
     `theme` VARCHAR(30) DEFAULT NULL,
     `theme_options` TEXT,
     `slug` VARCHAR(30) NOT NULL,
-    `added` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
-    `modified` TIMESTAMP NOT NULL DEFAULT '0000-00-00 00:00:00',
+    `added` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
+    `modified` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
     `owner_id` INT UNSIGNED DEFAULT NULL,
     `use_summary_page` TINYINT(1) DEFAULT 1,
+    `cover_image_file_id` INT UNSIGNED DEFAULT NULL,
     PRIMARY KEY  (`id`),
     UNIQUE KEY `slug` (`slug`),
     KEY `public` (`public`)
@@ -52,6 +53,8 @@ CREATE TABLE IF NOT EXISTS `{$db->prefix}exhibit_pages` (
     `title` VARCHAR(255) DEFAULT NULL,
     `slug` VARCHAR(30) NOT NULL,
     `order` SMALLINT UNSIGNED DEFAULT NULL,
+    `added` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
+    `modified` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
     PRIMARY KEY  (`id`),
     KEY `exhibit_id_order` (`exhibit_id`, `order`),
     UNIQUE KEY `exhibit_id_parent_id_slug` (`exhibit_id`, `parent_id`, `slug`)
@@ -121,6 +124,16 @@ function exhibit_builder_upgrade($args)
     $newVersion = $args['new_version'];
 
     $db = get_db();
+
+    // MySQL 5.7+ fix; must do first or else MySQL complains about any other ALTER
+    if (version_compare($oldVersion, '3.3', '<')) {
+        $sql = <<<SQL
+ALTER TABLE `{$db->prefix}exhibits`
+    ALTER `added` SET DEFAULT '2000-01-01 00:00:00',
+    ALTER `modified` SET DEFAULT '2000-01-01 00:00:00'
+SQL;
+        $db->query($sql);
+    }
 
     // Transition to upgrade model for EB
     if (version_compare($oldVersion, '0.6', '<') )
@@ -254,14 +267,12 @@ CREATE TABLE IF NOT EXISTS `{$db->prefix}exhibit_block_attachments` (
 SQL
         );
 
-        $sql = "SELECT * FROM `{$db->prefix}exhibit_pages` ORDER BY id";
+        $sql = "SELECT id, layout FROM `{$db->prefix}exhibit_pages` ORDER BY id";
         $pages = $db->query($sql)->fetchAll();
 
-
         $upgrader = new ExhibitPageUpgrader($db);
-
         foreach ($pages as $page) {
-            $upgrader->upgradePage($page['id'], $page['layout'],$page['exhibit_id']);
+            $upgrader->upgradePage($page['id'], $page['layout']);
         }
 
         $sql = "DROP TABLE `{$db->prefix}exhibit_page_entries`";
@@ -273,6 +284,23 @@ SQL
 
     if (version_compare($oldVersion, '3.1.4', '<')) {
         $sql = "ALTER TABLE `{$db->prefix}exhibits` ADD `use_summary_page` TINYINT(1) DEFAULT 1 AFTER `owner_id`";
+        $db->query($sql);
+    }
+
+    if (version_compare($oldVersion, '3.3', '<')) {
+        $sql = <<<SQL
+ALTER TABLE `{$db->prefix}exhibits`
+    ADD `cover_image_file_id` INT UNSIGNED DEFAULT NULL AFTER `use_summary_page`
+SQL;
+        $db->query($sql);
+    }
+    
+    if (version_compare($oldVersion, '3.3.3', '<')) {
+        $sql = <<<SQL
+ALTER TABLE `{$db->prefix}exhibit_pages`
+              ADD `added` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
+              ADD `modified` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00'
+SQL;
         $db->query($sql);
     }
 }
@@ -313,6 +341,7 @@ function exhibit_builder_define_acl($args)
      * but researcher/contributor cannot.
      */
     $acl->addResource('ExhibitBuilder_Exhibits');
+    $acl->addResource('ExhibitBuilder_Files');
 
     $acl->allow(null, 'ExhibitBuilder_Exhibits',
         array('show', 'summary', 'show-item', 'browse', 'tags'));
@@ -322,6 +351,8 @@ function exhibit_builder_define_acl($args)
         'add', 'add-page', 'delete-confirm', 'edit-page',
         'attachment', 'attachment-item-options', 'theme-config',
         'editSelf', 'deleteSelf', 'showSelfNotPublic', 'block-form'));
+
+    $acl->allow('contributor', 'ExhibitBuilder_Files', 'cover-image');
 
     $acl->allow(null, 'ExhibitBuilder_Exhibits', array('edit', 'delete'),
         new Omeka_Acl_Assert_Ownership);
@@ -349,7 +380,8 @@ function exhibit_builder_public_head($args)
 
     if ($module == 'exhibit-builder') {
         queue_css_file('exhibits');
-        if (($exhibitPage = get_current_record('exhibit_page', false))) {
+        $exhibitPage = get_current_record('exhibit_page', false);
+        if ($exhibitPage) {
             $blocks = $exhibitPage->ExhibitPageBlocks;
 
             $layouts = array();
@@ -444,7 +476,8 @@ function exhibit_builder_admin_nav($navArray)
 function exhibit_builder_theme_options($themeOptions, $args)
 {
     try {
-        if ($exhibit = get_current_record('exhibit', false)) {
+        $exhibit = get_current_record('exhibit', false);
+        if ($exhibit) {
             $exhibitThemeOptions = $exhibit->getThemeOptions();
             if (!empty($exhibitThemeOptions)) {
                 return serialize($exhibitThemeOptions);

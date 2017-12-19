@@ -1,12 +1,12 @@
 <?php
-    $fileTitle = metadata('file', array('Dublin Core', 'Title')) ? strip_formatting(metadata('file', array('Dublin Core', 'Title'))) : metadata('file', 'original filename');
+$fileTitle = metadata('file', 'display_title');
 
-    if ($fileTitle != '') {
-        $fileTitle = ': &quot;' . $fileTitle . '&quot; ';
-    } else {
-        $fileTitle = '';
-    }
-    $fileTitle = __('File #%s', metadata('file', 'id')) . $fileTitle;
+if ($fileTitle != '') {
+    $fileTitle = ': &quot;' . $fileTitle . '&quot; ';
+} else {
+    $fileTitle = '';
+}
+$fileTitle = __('File #%s', metadata('file', 'id')) . $fileTitle;
 ?>
 <?php echo head(array('title' => $fileTitle, 'bodyclass'=>'files show primary-secondary')); ?>
 
@@ -47,7 +47,5 @@
             <div class="element-text"><?php echo metadata('file', 'Type OS'); ?></div>
         </div>
     </div><!-- end type-metadata -->
-</div>
-
 </aside>
 <?php echo foot();?>

@@ -21,8 +21,7 @@
     jQuery(document).ready(function () {
         Omeka.showAdvancedForm();
         Omeka.skipNav();
-        Omeka.megaMenu();
-        ThanksRoy.moveNavOnResize();
+        Omeka.megaMenu('.no-touchevents #primary-nav');
         ThanksRoy.mobileMenu();
     });
     </script>

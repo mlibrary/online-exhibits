@@ -1,0 +1,415 @@
+/* Custom MLibrary Exhibits Theme Styles */
+
+.feature-banner-image {
+  width:57rem;
+  height:19rem;
+}
+
+.exhibit.record {
+  display: inline-block;
+}
+
+.site-heading ul {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  vertical-align: baseline;
+}
+
+.site-container {
+  line-height: 1rem;
+  padding: .5em 0;
+}
+
+.site-heading li {
+  color: #fff;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-content: center;
+}
+
+.site-logo img {
+  padding-right: .5em;
+  vertical-align: baseline;
+  width: 50px;
+}
+
+.site-logo-text a {
+  font-size: 1.5em;
+  color: #fff;
+  padding-left: .25em;
+}
+
+.search-panel {
+  padding: .5em 0;
+  background: #e6f3ff;
+  border-bottom: 2px solid #cce6ff;
+}
+
+a.navbar-brand {
+  color: #fff;
+}
+
+.search-box {
+  display: flex;
+  justify-content: center;
+}
+
+input#query.form-control {
+  margin-right: .5em;
+}
+
+#header-claim-holder h1, #header-claim-holder p {
+  color: #fff;
+  text-align: center;
+}
+
+/** Breadcrumbs + Share This **/
+
+ol.breadcrumb {
+  padding: 0;
+  margin: 0;
+  background-color: #f2f2f2;
+}
+
+main#content {
+  background-color: #f2f2f2;
+  padding-bottom: 2em;
+}
+
+ul.share-this > li {
+  display: inline-block;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ 
+/** Exhibit Navigation **/
+
+.exhibit-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: .25em;
+}
+
+.exhibit-nav-list-items {
+  padding: 0;
+  margin: 0;
+  color: #6E6E6E;
+}
+
+div.exhibit-overview.active {
+  color: #126DC1;
+  border-left: 4px solid #126DC1;
+  padding-left: .25em;
+}
+
+/** Exhibit Card Panels **/
+
+.exhibit-theme {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+#exhibit-theme-item {
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  margin: .5em;
+  width: calc(50% - 1em);
+}
+
+.panel-card-title {
+  color: #333;
+  margin: 0;
+}
+
+.panel-card-text {
+  color: #6E6E6E;
+  margin: 0;
+  line-height: 1.4;
+}
+.panel-heading {
+  padding: 0;
+}
+
+.image-card {
+  width: 100%;
+  border-top-right-radius: 4px;
+  border-top-left-radius: 4px;
+}
+
+.panel-body {
+  padding: 0 .5em .5em;
+}
+
+/** Footer **/
+
+#footer-content {
+  display: flex;
+  justify-content: flex-start;
+}
+
+#footer-content p {
+  padding: 0 .5em;
+}
+
+/** Packaged Theme Files **/
+
+body>.navbar {
+    -webkit-transition: background-color .3s ease-in;
+    transition: background-color .3s ease-in
+}
+
+@media (min-width:768px) {
+    body>.navbar-transparent {
+        background-color: transparent
+    }
+    body>.navbar-transparent .navbar-nav>.open>a {
+        background-color: transparent!important
+    }
+}
+
+
+.navbar-brand.onlytext{
+    padding: 19.5px 15px;
+}
+
+.navbar-brand>img {
+    display: inline;
+    
+}
+
+#banner {
+    min-height: 300px;
+    border-bottom: none
+}
+
+.table-of-contents {
+    margin-top: 1em
+}
+
+
+.page-header h1 {
+    font-size: 4em
+}
+
+.bs-docs-section {
+    margin-top: 6em
+}
+
+.bs-docs-section h1 {
+    padding-top: 10px
+}
+
+.bs-component {
+    position: relative
+}
+
+.bs-component .modal {
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    z-index: 1;
+    display: block
+}
+
+.bs-component .modal-dialog {
+    width: 90%
+}
+
+.bs-component .popover {
+    position: relative;
+    display: inline-block;
+    width: 220px;
+    margin: 20px
+}
+
+#source-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100;
+    font-weight: 700
+}
+
+.nav-tabs {
+    margin-bottom: 15px
+}
+
+.progress {
+    margin-bottom: 10px
+}
+
+.splash {
+    padding: 9em 0 2em;
+    background-color: #141d27;
+    background-image: url(../img/bg.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    color: #fff;
+    text-align: center
+}
+
+.splash .logo {
+    width: 160px
+}
+
+.splash h1 {
+    font-size: 3em
+}
+
+.splash #social {
+    margin: 2em 0
+}
+
+.splash .alert {
+    margin: 2em 0
+}
+
+.section-tout {
+    padding: 4em 0 3em;
+    border-bottom: 1px solid rgba(0, 0, 0, .05);
+    background-color: #eaf1f1
+}
+
+.section-tout .fa {
+    margin-right: .5em
+}
+
+.section-tout p {
+    margin-bottom: 3em
+}
+
+.section-preview {
+    padding: 4em 0 4em
+}
+
+.section-preview .preview {
+    margin-bottom: 4em;
+    background-color: #eaf1f1
+}
+
+.section-preview .preview .image {
+    position: relative
+}
+
+.section-preview .preview .image:before {
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: "";
+    pointer-events: none
+}
+
+.section-preview .preview .options {
+    padding: 1em 2em 2em;
+    border: 1px solid rgba(0, 0, 0, .05);
+    border-top: none;
+    text-align: center
+}
+
+.section-preview .preview .options p {
+    margin-bottom: 2em
+}
+
+.section-preview .dropdown-menu {
+    text-align: left
+}
+
+.section-preview .lead {
+    margin-bottom: 2em
+}
+
+@media (max-width:767px) {
+    .section-preview .image img {
+        width: 100%
+    }
+}
+
+.sponsor #carbonads {
+    max-width: 240px;
+    margin: 0 auto
+}
+
+.sponsor .carbon-text {
+    display: block;
+    margin-top: 1em;
+    font-size: 12px
+}
+
+.sponsor .carbon-poweredby {
+    float: right;
+    margin-top: 1em;
+    font-size: 10px
+}
+
+@media (max-width:767px) {
+    .splash {
+        padding-top: 4em
+    }
+    .splash .logo {
+        width: 100px
+    }
+    .splash h1 {
+        font-size: 2em
+    }
+    #banner {
+        text-align: center
+    }
+}
+
+
+.navbar {
+    margin-bottom: 0;
+    border-radius:0;
+}
+
+
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display:         flex;
+}
+
+.page-header {
+    margin-top:0;
+}
+
+.header-row {
+    padding-top:40px;
+}
+
+.bs-docs-section h1 {
+    margin-top: 10px;
+}
+
+@media only screen and (max-width: 767px)
+{
+
+	div#header-claim-holder .held, div#header-claim-holder p
+	{
+		max-width: 100%;
+	}
+
+}
+
+#sort-links-list {
+    list-style: none;
+    display: inline-block;
+
+  }
+  #sort-links-list li {
+    display: inline-block;
+  }
+

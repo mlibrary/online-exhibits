@@ -248,7 +248,8 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_AbstractActionC
         if ($this->getRequest()->isPost()) {
             $configHelper = new Omeka_Controller_Action_Helper_ThemeConfiguration;
 
-            if (($newOptions = $configHelper->processForm($form, $_POST, $previousOptions))) {
+            $newOptions = $configHelper->processForm($form, $_POST, $previousOptions);
+            if ($newOptions) {
                 $exhibit->setThemeOptions($newOptions);
                 $exhibit->save();
 
@@ -328,8 +329,10 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_AbstractActionC
                 $this->_helper->redirector->gotoRoute(array('action' => 'edit-page', 'id' => $exhibitPage->id), 'exhibitStandard');
             }
             return;
+        } else if ($success === false) {
+            $this->_helper->redirector->gotoRoute(array('action' => 'edit-page', 'id' => $exhibitPage->id), 'exhibitStandard');
+            return;
         }
-
         $this->render('page-form');
     }
 
@@ -376,10 +379,12 @@ class ExhibitBuilder_ExhibitsController extends Omeka_Controller_AbstractActionC
             $exhibitPage = $this->_helper->db->findById(null,'ExhibitPage');
         } catch (Exception $e) {
             $exhibitPage = new ExhibitPage;
-            if (($exhibit_id = $this->getParam('exhibit_id'))) {
+            $exhibit_id = $this->getParam('exhibit_id');
+            if ($exhibit_id) {
                 $exhibitPage->exhibit_id = $exhibit_id;
             }
-            if (($parent_id = $this->getParam('parent_id'))) {
+            $parent_id = $this->getParam('parent_id');
+            if ($parent_id) {
                 $exhibitPage->parent_id = $parent_id;
             }
         }

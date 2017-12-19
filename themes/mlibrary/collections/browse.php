@@ -1,27 +1,78 @@
-<?php head(array('title'=>'Browse Collections','bodyid'=>'collections','bodyclass' => 'browse')); ?>
-<div id="primary">
-	<h1>Collections</h1>
-    <div class="pagination"><?php echo pagination_links(); ?></div>
-		<?php while (loop_collections()): ?>
-			<div class="collection">
-			    
-            	<h2><?php echo link_to_collection(); ?></h2>
-	
-            	<div class="element">
-                <h3>Description</h3>
-            	<div class="element-text"><?php echo nls2p(collection('Description', array('snippet'=>250))); ?></div>
-	            </div>
-	            
+<?php
+ /**
+  * Copyright (c) 2016, Regents of the University of Michigan.
+  * All rights reserved. See LICENSE.txt for details.
+  */
 
-	
-            	<p class="view-items-link"><?php echo link_to_browse_items('View All Items',array('collection' => collection('id'))); ?> | <?php echo link_to_collection('More Information'); ?></p>
-            	
-            <?php echo plugin_append_to_collections_browse_each(); ?>
-            
-            </div><!-- end class="collection" -->
-		<?php endwhile; ?>
-		
-        <?php echo plugin_append_to_collections_browse(); ?>
-</div><!-- end primary -->
-			
-<?php foot(); ?>
+$title = __('Browse Collections');
+       echo head(
+            array(
+               'title' =>$title,
+               'bodyid'=>'collection',
+               'bodyclass' => 'collection browse'
+            )
+       );
+
+?>
+
+<?php //$awkward_gallery_setting = get_theme_option('Featured Image Gallery') ? get_theme_option('Featured Image Gallery') : 'yes'; ?>
+  <h1><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h1>
+
+
+<div id="primary" class="browse">
+
+  <?php if (count($collections) > 0): ?>
+
+    <div id="collectionss" class="pretty-list">
+
+      <?php
+        foreach (loop('collection') as $collection):
+      ?>
+          <?php //$theme_options_array = $collection->getThemeOptions(); ?>
+          <article class="cf">
+            <div class="collection-body">
+              <h2 class="collection-heading"><?php echo link_to_collection(); ?></h2>
+              <?php
+
+              if ($collectionImage = record_image($collection, 'fullsize', array('alt' => $collection->title))) {
+                    $Collection_image = $collectionImage;//array('image_name'=>$exhibitImage);
+               } else {
+                      $Collection_image = '';
+                    }
+
+                echo '<div class="img-wrap">';
+
+                  if (!empty($Collection_image)) {
+                      echo $Collection_image;//$Exhibit_image['image_name'];
+                  } else {
+                    echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Default gallery image"/>';
+                  }
+
+                echo '</div>';
+
+                if($collectionDescription = metadata($collection, array('Dublin Core','Description'))) {
+                  echo '<p class="collection-Description">' . $collectionDescription . '</p>';
+                }
+
+                echo '</div>';
+
+              ?>
+          </article>
+
+      <?php
+        endforeach;
+      ?>
+
+      <?php
+        echo '<h2 class="element-invisible">Pagination</h2>' . pagination_links();
+      ?>
+
+    </div>
+
+  <?php else: ?>
+    <p>There are no collections available yet.</p>
+  <?php endif; ?>
+
+</div>
+
+<?php echo foot(); ?>

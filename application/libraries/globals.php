@@ -729,6 +729,11 @@ function insert_collection($metadata = array(), $elementTexts = array())
  */
 function insert_element_set($elementSetMetadata = array(), array $elements = array())
 {
+    // Set the element set name if a string is provided.
+    if (is_string($elementSetMetadata)) {
+        $elementSetMetadata = array('name' => $elementSetMetadata);
+    }
+
     $builder = new Builder_ElementSet(get_db());
     $builder->setRecordMetadata($elementSetMetadata);
     $builder->setElements($elements);
@@ -875,12 +880,13 @@ function plugin_is_active($name, $version = null, $compOperator = '>=')
  *
  * @package Omeka\Function\Locale
  * @uses Zend_Translate::translate()
- * @param string $string The string to be translated.
+ * @param string|array $msgid The string to be translated, or Array for plural
+ *  translations.
  * @param mixed $args string formatting args. If any extra args are passed, the
  *  args and the translated string will be formatted with sprintf().
  * @return string The translated string.
  */
-function __($string)
+function __($msgid)
 {
     // Avoid getting the translate object more than once.
     static $translate;
@@ -894,7 +900,11 @@ function __($string)
     }
 
     if ($translate) {
-        $string = $translate->translate($string);
+        $string = $translate->translate($msgid);
+    } elseif (is_array($msgid)) {
+        $string = ($msgid[2] === 1) ? $msgid[0] : $msgid[1];
+    } else {
+        $string = $msgid;
     }
 
     $args = func_get_args();
@@ -905,6 +915,25 @@ function __($string)
     }
 
     return $string;
+}
+
+/**
+ * Transform arguments in an array suitable for __.
+ *
+ * <code>
+ *     $n = count($items);
+ *     echo __(plural('one item', '%s items', $n), $n);
+ * </code>
+ *
+ * @package Omeka\Function\Locale
+ * @param string $msgid The string to be translated, singular form
+ * @param string $msgid_plural The string to be translated, plural form
+ * @param int $n Used to determine the plural form
+ * @return array Array to pass to __
+ */
+function plural($msgid, $msgid_plural, $n)
+{
+    return array($msgid, $msgid_plural, $n);
 }
 
 /**
@@ -1128,7 +1157,7 @@ function head_js($includeDefaults = true)
                    ->prependScript('window.jQuery.ui || document.write(' . js_escape(js_tag('vendor/jquery-ui')) . ')')
                    ->prependFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js')
                    ->prependScript('window.jQuery || document.write(' . js_escape(js_tag('vendor/jquery')) . ')')
-                   ->prependFile('//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js');
+                   ->prependFile('//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js');
     }
     return $headScript;
 }
@@ -1354,7 +1383,7 @@ function latest_omeka_version()
                  . "returned with status=" . $result->getStatus() . " and "
                  . "response body=" . $result->getBody());
         }
-    } catch (Zend_Http_Client_Adapter_Exception $e) {
+    } catch (Zend_Http_Client_Exception $e) {
         debug('Error in retrieving latest Omeka version: ' . $e->getMessage());
     }
     return false;
@@ -1364,7 +1393,7 @@ function latest_omeka_version()
  * Get the maximum file upload size.
  *
  * @package Omeka\Function\Utility
- * @return Zend_Measure_Binary
+ * @return string
  */
 function max_file_size()
 {
@@ -1449,9 +1478,14 @@ function tag_attributes($attributes)
 
     $attr = array();
     foreach ($toProcess as $key => $attribute) {
-        // Only include the attribute if its value is a string.
+        // Reject weird attribute names (a little more restrictively than necessary)
+        if (preg_match('/[^A-Za-z0-9_:.-]/', $key)) {
+            continue;
+        }
         if (is_string($attribute)) {
             $attr[$key] = $key . '="' . html_escape( $attribute ) . '"';
+        }  else if ($attribute === true) {
+            $attr[$key] = $key;
         }
     }
     return join(' ',$attr);
@@ -2080,7 +2114,7 @@ function get_previous_item($item = null)
  * @param array $props HTML attributes for the img tag
  * @return string
  */
-function record_image($record, $imageType, $props = array())
+function record_image($record, $imageType = null, $props = array())
 {
     if (is_string($record)) {
         $record = get_current_record($record);
@@ -2089,7 +2123,6 @@ function record_image($record, $imageType, $props = array())
     if (!($record instanceof Omeka_Record_AbstractRecord)) {
         throw new InvalidArgumentException('An Omeka record must be passed to record_image.');
     }
-
     $fileMarkup = new Omeka_View_Helper_FileMarkup;
     return $fileMarkup->image_tag($record, $props, $imageType);
 }
@@ -2105,7 +2138,7 @@ function record_image($record, $imageType, $props = array())
  *  is the first file.
  * @param Item|null Check for this specific item record (current item if null).
  */
-function item_image($imageType, $props = array(), $index = 0, $item = null)
+function item_image($imageType = null, $props = array(), $index = 0, $item = null)
 {
     if (!$item) {
         $item = get_current_record('item');
@@ -2481,8 +2514,7 @@ function link_to_file_show($attributes = array(), $text = null, $file = null)
         $file = get_current_record('file');
     }
     if (!$text) {
-        $fileTitle = strip_formatting(metadata($file, array('Dublin Core', 'Title')));
-        $text = $fileTitle ? $fileTitle : metadata($file, 'Original Filename');
+        $text = metadata($file, 'display_title');
     }
     return link_to($file, 'show', $text, $attributes);
 }
@@ -2508,7 +2540,9 @@ function link_to_item($text = null, $props = array(), $action = 'show', $item = 
     if (!$item) {
         $item = get_current_record('item');
     }
-    $text = (!empty($text) ? $text : strip_formatting(metadata($item, array('Dublin Core', 'Title'))));
+    if (empty($text)) {
+        $text = metadata($item, 'display_title');
+    }
     return link_to($item, $action, $text, $props);
 }
 
@@ -3114,6 +3148,8 @@ function tag_string($recordOrTags = null, $link = 'items/browse', $delimiter = n
  *  Omeka-relative link. So, passing 'items' would create a link to the items
  *  page. If an array is passed (or no argument given), it is treated as options
  *  to be passed to Omeka's routing system.
+ *  Note that in the Url Helper, if the first argument is a string, the second
+ *  argument, not the third, is the queryParams
  * @param string $route The route to use if an array is passed in the first argument.
  * @param mixed $queryParams A set of query string parameters to append to the URL
  * @param bool $reset Whether Omeka should discard the current route when generating the URL.
@@ -3411,7 +3447,12 @@ function theme_header_background()
  */
 function is_allowed($resource, $privilege)
 {
-    $acl = Zend_Controller_Front::getInstance()->getParam('bootstrap')->acl;
+    $acl = get_acl();
+
+    if (!$acl) {
+        return true;
+    }
+
     $user = current_user();
 
     if (is_string($resource)) {
