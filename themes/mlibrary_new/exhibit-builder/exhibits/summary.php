@@ -37,7 +37,7 @@
   </div>
 
   <div id="primary">
-    <div class="col-xs- 12 col-sm-3">
+    <div class="col-xs-12 col-sm-3">
       <nav class="exhibit-navigation">
         <h3 class="element-invisible">Exhibit Contents</h3>
 
@@ -57,7 +57,7 @@
 
   <section id="summary-view" class="exhibit-content cf">
 
-    <div class="col-xs- 12 col-sm-9">
+    <div class="col-xs-12 col-sm-9">
       <h2> Introduction </h2>
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <div class = "exhibit-theme">
