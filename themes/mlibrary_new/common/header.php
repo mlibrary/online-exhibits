@@ -58,8 +58,8 @@
         </div>
     </div>
 
-    <?php if ((get_theme_option('display_header') !== '0')): ?>
-    <header id="banner" class="<?php echo get_theme_option('header_flow'); ?> page-header" style="background-size:cover;background-image:url('<?php 
+<?php if (((get_theme_option('display_header') !== '0')) and (end(explode('/',$_SERVER['REQUEST_URI']))!='about')) : ?>   
+     <header id="banner" class="<?php echo get_theme_option('header_flow'); ?> page-header" style="background-size:cover;background-image:url('<?php 
 		if ((get_theme_option('Header Background Image') === null)){
 			echo img('defaulthbg.jpg');
 		}			
