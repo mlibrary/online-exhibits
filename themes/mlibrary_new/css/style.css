@@ -465,6 +465,7 @@ body>.navbar {
 
 .page-header {
     margin-top:0;
+    background-size:cover;
 }
 
 .header-row {
