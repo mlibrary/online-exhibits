@@ -63,21 +63,12 @@ function recent_exhibits_bootstrap($recentExhibits) {
     return $html;
 }
 
-
-function bs_link_logo_to_navbar($text = null, $props = array())
+function bs_link_logo_to_navbar($text = null)
 {
     if (!$text) {
-        $text = option('site_title');
+      return '<a href="' . html_escape(WEB_ROOT) . '">' . 'Online Exhibits' . '</a>' ;
     }
-    
-    if (theme_logo()) {
-       $logo = "";
-    } else 
-       $logo="onlytext";
-    
-       return '<ul> <li class="site-logo" > <a '.$logo.'" href="http://lib.umich.edu" '. tag_attributes($props) . '>'.theme_logo(). "</a> </li>\n" . '<li class="site-logo-text" >' . '<a " href="' . html_escape(WEB_ROOT) . '">'.$text . '</a>' . '</li>' . '</ul>' ;
 }
-
 
 function bs_header_bg()
 {
