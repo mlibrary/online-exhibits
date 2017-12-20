@@ -68,29 +68,25 @@
     </div>
 
     <?php if ((get_theme_option('display_header') !== '0')): ?>
-     <header id="banner" class="<?php echo get_theme_option('header_flow'); ?> page-header" style="background-size:cover;background-image:url('<?php 
+    <header
+        id="banner"
+        class="<?php echo get_theme_option('header_flow'); ?> page-header"
+        style="background-size:cover;background-image:url('<?php  echo bs_header_bg(); ?>');">
+        <div class="row header-row">
+            <div id="header-claim-holder">
+                <div>
+                    <?php if ((get_theme_option('header_image_heading') !== '')): ?>
+                        <h1><?php echo get_theme_option('header_image_heading'); ?></h1>
+                    <?php endif; ?>
+                    <?php if ((get_theme_option('header_image_text') !== '')): ?>
+                        <p><?php echo get_theme_option('header_image_text'); ?></p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </header>
+    <?php endif; ?>
 
-		if ((get_theme_option('Header Background Image') === null)){
-			echo img('defaulthbg.jpg');
-		}			
-		else echo bs_header_bg(); 
-		?>');">
-
-		<div class="row header-row">
-			<div id="header-claim-holder">
-				<div>
-				<?php if ((get_theme_option('header_image_heading') !== '')): ?>
-					<h1><?php echo get_theme_option('header_image_heading'); ?></h1>
-				<?php endif; ?>
-				<?php if ((get_theme_option('header_image_text') !== '')): ?>
-					<p><?php echo get_theme_option('header_image_text'); ?></p>
-				<?php endif; ?>
-				</div>			
-			</div>
-		</div>
-    </header> 
-    <?php endif; ?>  
-    
     <main id="content">
       <div class="container">
           <?php fire_plugin_hook('public_content_top', array('view'=>$this)); ?>

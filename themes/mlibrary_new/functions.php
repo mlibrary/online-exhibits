@@ -77,6 +77,8 @@ function bs_header_bg()
         $storage = Zend_Registry::get('storage');
         $headerImage = $storage->getUri($storage->getPathByType($headerImage, 'theme_uploads'));
         return $headerImage;
+    } else {
+        return img('defaulthbg.jpg');
     }
 }
 
