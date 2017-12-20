@@ -20,6 +20,32 @@ require_once dirname(__FILE__) . '/functions.php';
 * Create the information in cards in introduction page, image with title and text
 *
 **/
+
+function get_most_used_tags_in_exhibits()
+{
+  $db = get_db();
+  $select = "
+             select t.name, count(t.name)  As name_occurrence from {$db->prefix}tags t
+             INNER JOIN {$db->prefix}records_tags tg on tg.tag_id = t.id
+             INNER JOIN {$db->prefix}exhibits e on tg.record_id = e.id group by t.name order by name_occurrence DESC limit 10";
+   
+  $tags = get_db()->getTable('Tag')->fetchObjects($select);
+  return $tags;
+}
+
+function mlibrary_display_popular_tags() 
+{
+  $tagsExhibit = get_most_used_tags_in_exhibits(); 
+  $html = '<div>';
+  if ($tagsExhibit) {
+       $html .= get_view()->partial('exhibit-builder/exhibits/tags.php', array('tags' => $tagsExhibit));
+  } else {
+       $html .= '<p>' . __('You have no tags in exhibits.') . '</p>';
+  }
+  $html .= '</div>';
+  return $html;
+}
+
 function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
 {  // to see if there is no image attached to the first page.
   if (empty($rawAttachment)) {
@@ -33,10 +59,8 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
      $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
    }
    
-
    $page_title = metadata($exhibitPage, 'title');
    $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
-
    $page_card_info = array('image' => $page_image,
                            'title' => $page_title,
                            'description' => $page_description);

@@ -1,4 +1,5 @@
 <?php 
+        set_theme_option('display_header','1');
 	echo head(array('bodyid'=>'home')); 
 	$sidebar_pos=get_theme_option('sidebar_position');
 	$main_add="";

@@ -3,6 +3,7 @@
   * Copyright (c) 2016, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
+  set_theme_option('display_header','1');
   echo head(
     array(
       'title' => 'Summary of ' . metadata('exhibit','title'),
