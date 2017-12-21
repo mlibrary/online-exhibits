@@ -224,11 +224,39 @@ div.browse-index {
   width: calc(100% - 1.5em);
 }
 
-.index-exhibits h3.panel-card-title {
-  padding: .5em;
+.index-featured-exhibit .panel-heading  {
+  position: relative;
+  height: 30em;
+  width: 100%;
+  overflow: hidden;
 }
 
-.index-exhibits h3.panel-card-title a {
+.index-exhibits .panel-heading  {
+  position: relative;
+  height: 15em;
+  width: 100%;
+  overflow: hidden;
+}
+
+.index-exhibits .image-card,
+.index-featured-exhibit .image-card {
+   width: 100%;
+   height: auto;
+   overflow: hidden;
+}
+
+.index-featured-exhibit-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.index-exhibits .panel-body,
+.index-featured-exhibit .panel-body {
+    padding: 1em;
+}
+
+.index-exhibits h3.panel-card-title a, .index-featured-exhibit h3.panel-card-title a  {
   color: #3D3D3D;
 }
 
@@ -501,6 +529,12 @@ body>.navbar {
     padding-bottom: .5em;
     margin: 0 auto;
   }
+
+  .index-exhibits {
+  margin: .75em;
+  width: calc(100% - 1.5em);
+}
+
 }
 
 #sort-links-list {

@@ -1,4 +1,8 @@
-<div class ="exhibit record">
-  <?php echo $exhibitImage; ?>
-  <h3><?php echo link_to($exhibit, 'show', strip_formatting($title)); ?></h3>
-</div>
+	<div class ="exhibit record panel panel-default index-exhibits">
+		<div class="panel-heading">
+			<?php echo $exhibitImage; ?>
+		</div>
+		<div class ="card-info panel-body">
+	  	<h3 class="panel-card-title"><?php echo link_to($exhibit, 'show', strip_formatting($title)); ?></h3>
+		</div>
+	</div>
