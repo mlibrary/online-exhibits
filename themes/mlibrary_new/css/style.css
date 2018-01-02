@@ -83,6 +83,11 @@ ul.site-header-nav-list a {
   flex-wrap: wrap;
 }
 
+main#content {
+  background-color: #f2f2f2;
+  padding-bottom: 2em;
+}
+
 /** Breadcrumbs + Share This **/
 
 ol.breadcrumb {
@@ -91,9 +96,30 @@ ol.breadcrumb {
   background-color: #f2f2f2;
 }
 
-main#content {
-  background-color: #f2f2f2;
-  padding-bottom: 2em;
+li.breadcrumb-item {
+  color: #333;
+  padding-left: 0;
+}
+
+li.breadcrumb-item a,
+#simple-pages-breadcrumbs a  {
+  color: #333;
+}
+
+.breadcrumb > .active {
+  color: #333;
+  font-weight: bold;
+}
+
+.breadcrumb > li + li::before {
+  content: "\003e";
+  padding: 0 5px;
+  color: #ccc;
+}
+
+ul.share-this {
+  margin-left: 0;
+  text-align: right;
 }
 
 ul.share-this > li {
@@ -102,7 +128,20 @@ ul.share-this > li {
   padding: 0;
   margin: 0;
 }
- 
+
+a.twitter-share-button {
+  padding-left: .25em;
+}
+
+a.twitter-share-button:after {
+    background: url("../images/twitter-i.png") no-repeat;
+    background-size: 20px 20px;
+    display: inline-block;
+    width: 20px; 
+    height: 20px;
+    content:"";
+}
+
 /** Exhibit Navigation **/
 
 .exhibit-nav-list {
@@ -134,10 +173,6 @@ div.browse-index {
 
 .detail-nav-border {
   border-bottom: 2px solid #CCCCCC;
-}
-
-.detail-nav-border hr {
-  margin: 0;
 }
 
 .detail-nav ul {
@@ -475,8 +510,13 @@ body>.navbar {
     #banner {
         text-align: center
     }
+
+    ul.share-this {
+      margin-left: 0;
+      text-align: left;
 }
 
+}
 
 .navbar {
     margin-bottom: 0;
