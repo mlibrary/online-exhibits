@@ -23,7 +23,7 @@
     	</div>
     </div>
     <div class="col-xs-12 ">
-      <div class="detail-nav-border"><hr></div>
+      <div class="detail-nav-border"></div>
     </div>
     </div>
 

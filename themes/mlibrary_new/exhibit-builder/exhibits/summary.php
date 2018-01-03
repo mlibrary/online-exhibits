@@ -13,19 +13,17 @@
 
 ?>
 <!--Breadcrumb and Share Bar-->
-  <div class="col-xs-9">
+  <div class="col-xs-12 col-sm-8">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
         <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
       </ol>
   </div>
 
-  <div class="col-xs-3">
+  <div class="col-xs-12 col-sm-4">
     <ul class="share-this">
       <li>Share this Exhibit:</li>
-      <li><div class="fb-like" data-send="false" data-layout="button_count" data-show-faces="false" data-font="arial"></div></li>
-      <li><div class="twitter-share">
-      <a  href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" > Tweet</a></div></li>
+      <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
     </ul>
    </div>
 <!--End breadcrumb and share bar-->
