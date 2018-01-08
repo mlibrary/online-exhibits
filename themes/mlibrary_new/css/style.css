@@ -235,6 +235,82 @@ div.browse-index {
   padding: 0 .5em .5em;
 }
 
+/** Exhibit Show Page **/
+
+.exhibit-overview a {
+  color: #6E6E6E;
+}
+
+.show-wrapper {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  padding: 2em 3em;
+}
+
+.section-nav {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding-top: 1em;
+}
+
+.section-nav-panel {
+  display: grid;
+  grid-template-columns: 25% auto;
+  grid-template-rows: 1fr 2fr;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  width: calc(50% - .5em);
+  max-height: 7rem;
+}
+
+div.section-nav-image {
+  grid-column: 1 / 2 ;
+  grid-row: 1 / 3;
+}
+
+.section-link-prev,
+.section-link-next {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  padding-left: .5em;
+}
+
+.section-nav-text {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  padding-left: .5em;
+}
+
+.section-link-prev:before {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_left.svg);
+  position: relative;
+  top: 6px;
+  display: inline-block;
+}
+
+.section-link-next:after {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_right.svg);
+  position: relative;
+  top: 6px;
+  display: inline-block;
+}
+
+.section-title,
+.section-caption {
+  margin: 0;
+}
+
+.section-title {
+  font-weight: bold;
+}
+
+.section-caption {
+  color: #6E6E6E;
+}
+
 /** Home Page Featured Panels **/
 
 .index-exhibits-container {
@@ -301,6 +377,11 @@ footer.site-footer {
   display: flex;
   justify-content: flex-start;
   margin-top: 0;
+}
+/** Utilities **/
+
+.padding-0 {
+  padding: 0;
 }
 
 /** Packaged Theme Files **/
@@ -573,6 +654,11 @@ body>.navbar {
   .index-exhibits {
   margin: .75em;
   width: calc(100% - 1.5em);
+}
+
+  .section-nav-panel {
+  width: calc(100%);
+  margin-top: .5em;
 }
 
 }
