@@ -32,7 +32,7 @@
     </div>
     <div class="col-xs-12">	
         
-        <?php echo mlibrary_exhibit_builder_display_random_featured_exhibit(); ?>           
+        <?php echo mlibrary_new_exhibit_builder_display_random_featured_exhibit(); ?>           
      </div>
   
        <div class="col-xs-12 index-exhibits-container">

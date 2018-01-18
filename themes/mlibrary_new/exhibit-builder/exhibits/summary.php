@@ -51,6 +51,9 @@
             }
           ?>
         </ul>
+        <ul>
+           <?php echo link_to($exhibit,'Gallery','Gallery'); ?>
+        </ul>
       </nav>
     </div>
 
@@ -61,13 +64,10 @@
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <div class = "exhibit-theme">
         <?php  set_exhibit_pages_for_loop_by_exhibit();
-               foreach (loop('exhibit_page') as $exhibitPage) {
-                            $block = $exhibitPage->getPageBlocks();
-                            $rawAttachment = $exhibitPage->getAllAttachments();?>
-                           
+               foreach (loop('exhibit_page') as $exhibitPage) {?>
                               <div id = "exhibit-theme-item" class="panel panel-default">
                                <?php
-                                  $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
+                                  $page_card_info = mlibrary_new_display_exhibit_card_info($exhibitPage);
                                   $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
                                   <a href= <?php echo html_escape($uri);?> >
                                     <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>

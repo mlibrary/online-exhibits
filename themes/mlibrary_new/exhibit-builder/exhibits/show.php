@@ -61,37 +61,43 @@
       </h2>
 
       <div>
-        <?php echo exhibit_builder_render_exhibit_page($exhibit_page); ?>
+        <?php exhibit_builder_render_exhibit_page($exhibit_page);?>
       </div>
-  </div>
-  
+      <?php $children = $exhibit_page->getChildPages();
+               if ($children) {
+                 foreach ($children as $child) {?>
+                   <h3> <?php echo metadata($child, 'title');?></h3>
+                    <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
+                    <?php release_object($child);
+                 }
+              }
+         ?>
+  </div> 
   <div class="col-xs-12 col-sm-9 col-sm-offset-3 padding-0">
     <div class="section-nav">
-          <div class="section-nav-panel">
-            <div class="section-nav-image"></div>
-            <div class="section-link-prev">
-              <?php
-                echo exhibit_builder_link_to_previous_page("Previous Section");
-              ?>
-            </div>
-            <div class="section-nav-text">
-              <p class="section-title">Section Title</p>
-              <p class="section-caption"></p>
-            </div>
-          </div>
-
-          <div class="section-nav-panel">
-            <div class="section-nav-image"></div>
-              <div class="section-link-next">
-              <?php
-                echo exhibit_builder_link_to_next_page("Next Section");
-              ?>
-            </div>
-            <div class="section-nav-text">
-              <p class="section-title">Section Title</p>
-              <p class="section-caption"></p>
-            </div>
-          </div>
+          <?php $navigate_previous_exhibit = mlibrary_new_exhibit_builder_previous_link_to_exhibit($exhibit, $exhibit_page);?>
+          <?php if (!empty($navigate_previous_exhibit)){ ?>  
+                    <div class="section-nav-panel">
+                         <div class="section-nav-image"><?php echo $navigate_previous_exhibit["image"]; ?></div>
+                         <div class="section-link-prev"><?php echo $navigate_previous_exhibit["url-link"]; ?></div>
+                         <div class="section-nav-text">
+                              <p class="section-title"><?php echo $navigate_previous_exhibit["title"];;?></p>
+                              <p class="section-caption"><?php echo $navigate_previous_exhibit["caption"];?></p>
+                         </div>
+                    </div> 
+          <?php } ?>
+          
+          <?php $navigate_next_exhibit = mlibrary_new_exhibit_builder_next_link_to_exhibit($exhibit, $exhibit_page);?>
+          <?php if (!empty($navigate_next_exhibit)) { ?>
+                  <div class="section-nav-panel">
+                      <div class="section-nav-image"><?php echo $navigate_next_exhibit["image"]; ?></div>
+                      <div class="section-link-next"><?php echo $navigate_next_exhibit["url-link"];?></div>
+                      <div class="section-nav-text">
+                           <p class="section-title"><?php echo $navigate_next_exhibit["title"]; ?></p>
+                           <p class="section-caption"><?php echo $navigate_next_exhibit["caption"];?></p>
+                      </div>
+                  </div> 
+          <?php } ?>
     </div>
    </div>
   </section>
