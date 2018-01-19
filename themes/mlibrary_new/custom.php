@@ -98,7 +98,7 @@ function mlibrary_new_display_popular_tags()
   return $html;
 }
 
-function mlibrary_new_get_page_image($rawAttachment) 
+function mlibrary_new_get_page_image($rawAttachment = null) 
 {
      $default_image = img("defaulthbg.jpg");
      $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
@@ -123,7 +123,7 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
  
   // Each page must have at least one Block and an Image must be added.
   if (empty($exhibitPage->getPageBlocks())) {      
-      $page_image = mlibrary_new_get_page_image('');
+      $page_image = mlibrary_new_get_page_image();
       $page_card_info = array('image' => $page_image,
                               'title' => $page_title,
                               'description' => $page_description);      
