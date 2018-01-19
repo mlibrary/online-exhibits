@@ -70,32 +70,6 @@ function mlibrary_new_exhibit_builder_next_link_to_exhibit($exhibit, $exhibit_pa
 }
 
 
-function mlibrary_exhibit_builder_render_exhibit_page($exhibitPage = null)
-{
-  if ($exhibitPage === null) {
-        $exhibitPage = get_current_record('exhibit_page');
-    }
-    
-    $blocks = $exhibitPage->ExhibitPageBlocks;
-    $rawAttachments = $exhibitPage->getAllAttachments();
-    $attachments = array();
-    foreach ($rawAttachments as $attachment) {
-        $attachments[$attachment->block_id][] = $attachment;
-    }
-    foreach ($blocks as $index => $block) {
-        $layout = $block->getLayout();
-        echo '<div class="exhibit-block layout-' . html_escape($layout->id) . '">';
-        echo get_view()->partial($layout->getViewPartial(), array(
-            'index' => $index,
-            'options' => $block->getOptions(),
-            'text' => get_view()->shortcodes($block->text),
-            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array(),
-            'block' => $block,
-        ));
-        echo '</div>';
-    }
-}
-
 function mlibrary_new_get_most_used_tags_in_exhibits()
 {
   $db = get_db();
@@ -127,11 +101,21 @@ function mlibrary_new_display_popular_tags()
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
 {  // to see if there is no image attached to the first page.
+  $page_card_info = [];
+  $page_description = '';
+  $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
+
+  // Each page must have at least one Block and an Image must be added.
+  if ((!empty($exhibitPage->getPageBlocks())) and (!empty($exhibitPage->getAllAttachments()))) {
+       $block = $exhibitPage->getPageBlocks();
+       $rawAttachment = $exhibitPage->getAllAttachments(); 
+  } else {
+        return $page_card_info =  array('image' => '',
+                                    'title' => 'Error in'.' '.$page_title,
+                                    'description' => 'Each page must have at least one image'); 
+  }
   
-  $block = $exhibitPage->getPageBlocks();
-  $rawAttachment = $exhibitPage->getAllAttachments();
-  
-  if (empty($rawAttachment)) {
+if (empty($rawAttachment)) {
      $page_image = img("defaulthbg.jpg");
      $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
    } elseif (mlibrary_new_display_exhibit_type_of_item($rawAttachment) != 'Video') {
@@ -142,8 +126,10 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
      $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
    }
    
-   $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
    $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..'));
+   if (empty($page_description))
+   $page_description = "There is no description added to the first page?"; 
+   
    $page_card_info = array('image' => $page_image,
                            'title' => $page_title,
                            'description' => $page_description);
