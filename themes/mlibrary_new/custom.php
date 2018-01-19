@@ -100,36 +100,36 @@ function mlibrary_new_display_popular_tags()
 
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
-{  // to see if there is no image attached to the first page.
-  $page_card_info = [];
+{ 
+   // to see if there is no image attached to the first page.
   $page_description = '';
   $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
-
+  $default_image = img("defaulthbg.jpg");
+  $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
+  $page_card_info =  array('image' => $page_image,
+                           'title' => $page_title,
+                           'description' => '');
+ 
   // Each page must have at least one Block and an Image must be added.
-  if ((!empty($exhibitPage->getPageBlocks())) and (!empty($exhibitPage->getAllAttachments()))) {
-       $block = $exhibitPage->getPageBlocks();
-       $rawAttachment = $exhibitPage->getAllAttachments(); 
-  } else {
-        return $page_card_info =  array('image' => '',
-                                    'title' => 'Error in'.' '.$page_title,
-                                    'description' => 'Each page must have at least one image'); 
+  if (empty($exhibitPage->getPageBlocks())) {
+      return $page_card_info; 
   }
-  
-if (empty($rawAttachment)) {
-     $page_image = img("defaulthbg.jpg");
-     $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
-   } elseif (mlibrary_new_display_exhibit_type_of_item($rawAttachment) != 'Video') {
-      // if it is not video, display the original image of the first item attached
-     $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
-   } else {
-     // if it is a video, get the thumbnail image and display it
-     $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+ 
+  $block = $exhibitPage->getPageBlocks();
+  $rawAttachment = $exhibitPage->getAllAttachments(); 
+
+  switch (mlibrary_new_display_exhibit_type_of_item($rawAttachment)) {
+
+    case "Still Image":
+       $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
+        break;
+    case "Video":
+       $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+       break;
    }
    
    $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..'));
-   if (empty($page_description))
-   $page_description = "There is no description added to the first page?"; 
-   
+ 
    $page_card_info = array('image' => $page_image,
                            'title' => $page_title,
                            'description' => $page_description);
@@ -142,7 +142,7 @@ function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
    if ($rawAttachment[0]->getItem()->getItemType()!=null) {
        $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
    }else{
-       $itemType =  '';
+       $itemType =  'Still Image';
    }
    
    return $itemType;
