@@ -24,7 +24,7 @@ $title = __('Browse Exhibits');
 
 
   <?php
-    $html = mlibrary_display_popular_tags();
+    $html = mlibrary_new_display_popular_tags();
     echo $html;
   ?>
 
@@ -45,19 +45,19 @@ $title = __('Browse Exhibits');
             <div class="item-body">
               <?php
 
-              if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
-                    $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
+               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
+                  $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
                } else {
-                      $Exhibit_image = '';
-                    }
+                  $Exhibit_image = '';
+               }
 
-                echo '<div class="img-wrap">';
+               echo '<div class="img-wrap">';
 
-                  if (!empty($Exhibit_image)) {
+               if (!empty($Exhibit_image)) {
                       echo $Exhibit_image;//$Exhibit_image['image_name'];
-                  } else {
+               } else {
                       echo('<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>');                  
-                  }
+               }
 
                 echo '</div>';?>
  

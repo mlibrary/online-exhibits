@@ -83,6 +83,11 @@ ul.site-header-nav-list a {
   flex-wrap: wrap;
 }
 
+main#content {
+  background-color: #f2f2f2;
+  padding-bottom: 2em;
+}
+
 /** Breadcrumbs + Share This **/
 
 ol.breadcrumb {
@@ -91,9 +96,30 @@ ol.breadcrumb {
   background-color: #f2f2f2;
 }
 
-main#content {
-  background-color: #f2f2f2;
-  padding-bottom: 2em;
+li.breadcrumb-item {
+  color: #333;
+  padding-left: 0;
+}
+
+li.breadcrumb-item a,
+#simple-pages-breadcrumbs a  {
+  color: #333;
+}
+
+.breadcrumb > .active {
+  color: #333;
+  font-weight: bold;
+}
+
+.breadcrumb > li + li::before {
+  content: "\003e";
+  padding: 0 5px;
+  color: #ccc;
+}
+
+ul.share-this {
+  margin-left: 0;
+  text-align: right;
 }
 
 ul.share-this > li {
@@ -102,7 +128,20 @@ ul.share-this > li {
   padding: 0;
   margin: 0;
 }
- 
+
+a.twitter-share-button {
+  padding-left: .25em;
+}
+
+a.twitter-share-button:after {
+    background: url("../images/twitter-i.png") no-repeat;
+    background-size: 20px 20px;
+    display: inline-block;
+    width: 20px; 
+    height: 20px;
+    content:"";
+}
+
 /** Exhibit Navigation **/
 
 .exhibit-nav-list {
@@ -134,10 +173,6 @@ div.browse-index {
 
 .detail-nav-border {
   border-bottom: 2px solid #CCCCCC;
-}
-
-.detail-nav-border hr {
-  margin: 0;
 }
 
 .detail-nav ul {
@@ -200,6 +235,82 @@ div.browse-index {
   padding: 0 .5em .5em;
 }
 
+/** Exhibit Show Page **/
+
+.exhibit-overview a {
+  color: #6E6E6E;
+}
+
+.show-wrapper {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  padding: 2em 3em;
+}
+
+.section-nav {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  padding-top: 1em;
+}
+
+.section-nav-panel {
+  display: grid;
+  grid-template-columns: 25% auto;
+  grid-template-rows: 1fr 2fr;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  width: calc(50% - .5em);
+  max-height: 7rem;
+}
+
+div.section-nav-image {
+  grid-column: 1 / 2 ;
+  grid-row: 1 / 3;
+}
+
+.section-link-prev,
+.section-link-next {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  padding-left: .5em;
+}
+
+.section-nav-text {
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  padding-left: .5em;
+}
+
+.section-link-prev:before {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_left.svg);
+  position: relative;
+  top: 6px;
+  display: inline-block;
+}
+
+.section-link-next:after {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_right.svg);
+  position: relative;
+  top: 6px;
+  display: inline-block;
+}
+
+.section-title,
+.section-caption {
+  margin: 0;
+}
+
+.section-title {
+  font-weight: bold;
+}
+
+.section-caption {
+  color: #6E6E6E;
+}
+
 /** Home Page Featured Panels **/
 
 .index-exhibits-container {
@@ -224,11 +335,39 @@ div.browse-index {
   width: calc(100% - 1.5em);
 }
 
-.index-exhibits h3.panel-card-title {
-  padding: .5em;
+.index-featured-exhibit .panel-heading  {
+  position: relative;
+  height: 30em;
+  width: 100%;
+  overflow: hidden;
 }
 
-.index-exhibits h3.panel-card-title a {
+.index-exhibits .panel-heading  {
+  position: relative;
+  height: 15em;
+  width: 100%;
+  overflow: hidden;
+}
+
+.index-exhibits .image-card,
+.index-featured-exhibit .image-card {
+   width: 100%;
+   height: auto;
+   overflow: hidden;
+}
+
+.index-featured-exhibit-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.index-exhibits .panel-body,
+.index-featured-exhibit .panel-body {
+    padding: 1em;
+}
+
+.index-exhibits h3.panel-card-title a, .index-featured-exhibit h3.panel-card-title a  {
   color: #3D3D3D;
 }
 
@@ -238,6 +377,11 @@ footer.site-footer {
   display: flex;
   justify-content: flex-start;
   margin-top: 0;
+}
+/** Utilities **/
+
+.padding-0 {
+  padding: 0;
 }
 
 /** Packaged Theme Files **/
@@ -447,8 +591,13 @@ body>.navbar {
     #banner {
         text-align: center
     }
+
+    ul.share-this {
+      margin-left: 0;
+      text-align: left;
 }
 
+}
 
 .navbar {
     margin-bottom: 0;
@@ -501,6 +650,17 @@ body>.navbar {
     padding-bottom: .5em;
     margin: 0 auto;
   }
+
+  .index-exhibits {
+  margin: .75em;
+  width: calc(100% - 1.5em);
+}
+
+  .section-nav-panel {
+  width: calc(100%);
+  margin-top: .5em;
+}
+
 }
 
 #sort-links-list {

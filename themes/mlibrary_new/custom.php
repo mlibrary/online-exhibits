@@ -1,10 +1,10 @@
 ﻿<?php
 require_once dirname(__FILE__) . '/functions.php';
 
- /**
-  * Copyright (c) 2016, Regents of the University of Michigan.
-  * All rights reserved. See LICENSE.txt for details.
-  */
+/**
+* Copyright (c) 2016, Regents of the University of Michigan.
+* All rights reserved. See LICENSE.txt for details.
+*/
 
 // Use this file to define customized helper functions, filters or 'hacks' defined
 // specifically for use in your Omeka theme. Note that helper functions that are
@@ -12,16 +12,91 @@ require_once dirname(__FILE__) . '/functions.php';
 // possible.
 
 /**
- * Extends featured exhibit function to include snippet from description for exhibits and
- * read more link
- **/
+* Extends featured exhibit function to include snippet from description for exhibits and
+* read more link
+**/
 
 /**
 * Create the information in cards in introduction page, image with title and text
 *
 **/
 
-function get_most_used_tags_in_exhibits()
+function mlibrary_new_exhibit_builder_previous_link_to_exhibit($exhibit, $exhibit_page)
+{
+   $previoustargetPage = $exhibit_page->previous();
+   $navigate_previous_exhibit = ""; 
+   if ($previoustargetPage) {
+      if (!isset($props['class'])) {
+            $props['class'] = 'previous-page';
+      }
+   
+   $link =  exhibit_builder_link_to_exhibit($exhibit, 'Previous Section', $props, $previoustargetPage);
+   $page_card_info = mlibrary_new_display_exhibit_card_info($previoustargetPage);
+   $caption = snippet_by_word_count($page_card_info['description'],10,'..');
+   $navigate_previous_exhibit = array(
+                                 'title'=>$page_card_info['title'],
+                                 'url-link'=>$link,
+                                 'caption'=>$caption,
+                                 'image'=>$page_card_info['image']);
+
+   }
+
+   return $navigate_previous_exhibit;
+}
+
+
+function mlibrary_new_exhibit_builder_next_link_to_exhibit($exhibit, $exhibit_page)
+{
+   $nexttargetPage = $exhibit_page->next();
+   $navigate_next_exhibit = "";
+
+   if ($nexttargetPage) {
+      if (!isset($props['class'])) {
+           $props['class'] = 'next-page';
+      }
+
+   $link = exhibit_builder_link_to_exhibit($exhibit, 'Next Section', $props, $nexttargetPage);
+   $page_card_info = mlibrary_new_display_exhibit_card_info($nexttargetPage);
+   $caption = snippet_by_word_count($page_card_info['description'],10,'..');   
+   $navigate_next_exhibit = array(
+                                 'title'=>$page_card_info['title'], 
+                                 'url-link'=>$link, 
+                                 'caption'=>$caption,
+                                 'image'=>$page_card_info['image']);
+
+   }   
+   
+   return $navigate_next_exhibit;
+}
+
+
+function mlibrary_exhibit_builder_render_exhibit_page($exhibitPage = null)
+{
+  if ($exhibitPage === null) {
+        $exhibitPage = get_current_record('exhibit_page');
+    }
+    
+    $blocks = $exhibitPage->ExhibitPageBlocks;
+    $rawAttachments = $exhibitPage->getAllAttachments();
+    $attachments = array();
+    foreach ($rawAttachments as $attachment) {
+        $attachments[$attachment->block_id][] = $attachment;
+    }
+    foreach ($blocks as $index => $block) {
+        $layout = $block->getLayout();
+        echo '<div class="exhibit-block layout-' . html_escape($layout->id) . '">';
+        echo get_view()->partial($layout->getViewPartial(), array(
+            'index' => $index,
+            'options' => $block->getOptions(),
+            'text' => get_view()->shortcodes($block->text),
+            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array(),
+            'block' => $block,
+        ));
+        echo '</div>';
+    }
+}
+
+function mlibrary_new_get_most_used_tags_in_exhibits()
 {
   $db = get_db();
   $select = "
@@ -30,12 +105,14 @@ function get_most_used_tags_in_exhibits()
              INNER JOIN {$db->prefix}exhibits e on tg.record_id = e.id group by t.name order by name_occurrence DESC limit 10";
    
   $tags = get_db()->getTable('Tag')->fetchObjects($select);
+  
   return $tags;
 }
 
-function mlibrary_display_popular_tags() 
+
+function mlibrary_new_display_popular_tags() 
 {
-  $tagsExhibit = get_most_used_tags_in_exhibits(); 
+  $tagsExhibit = mlibrary_new_get_most_used_tags_in_exhibits(); 
   $html = '<div>';
   if ($tagsExhibit) {
        $html .= get_view()->partial('exhibit-builder/exhibits/tags.php', array('tags' => $tagsExhibit));
@@ -43,24 +120,30 @@ function mlibrary_display_popular_tags()
        $html .= '<p>' . __('You have no tags in exhibits.') . '</p>';
   }
   $html .= '</div>';
+  
   return $html;
 }
 
-function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
+
+function mlibrary_new_display_exhibit_card_info($exhibitPage)
 {  // to see if there is no image attached to the first page.
+  
+  $block = $exhibitPage->getPageBlocks();
+  $rawAttachment = $exhibitPage->getAllAttachments();
+  
   if (empty($rawAttachment)) {
      $page_image = img("defaulthbg.jpg");
      $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
-   } elseif (mlibrary_display_exhibit_type_of_item($rawAttachment) != 'Video') {
+   } elseif (mlibrary_new_display_exhibit_type_of_item($rawAttachment) != 'Video') {
       // if it is not video, display the original image of the first item attached
      $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
    } else {
      // if it is a video, get the thumbnail image and display it
-     $page_image = mlibrary_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+     $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
    }
    
-   $page_title = metadata($exhibitPage, 'title');
-   $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
+   $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
+   $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..'));
    $page_card_info = array('image' => $page_image,
                            'title' => $page_title,
                            'description' => $page_description);
@@ -68,20 +151,21 @@ function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
 }
 
 // get the type of the item
-function mlibrary_display_exhibit_type_of_item($rawAttachment)
+function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 {
    if ($rawAttachment[0]->getItem()->getItemType()!=null) {
        $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
    }else{
        $itemType =  '';
    }
-
+   
    return $itemType;
 }
 
-function mlibrary_exhibit_builder_display_random_featured_exhibit()
+
+function mlibrary_new_exhibit_builder_display_random_featured_exhibit()
 {
-    $html = '<div id="featured-exhibit"><h2>Featured Exhibits</h2>';
+    $html = '<div id="featured-exhibit" class="featured-exhibit-container">';
     $featuredExhibit = exhibit_builder_random_featured_exhibit();
     if ($featuredExhibit) {
         $html .= get_view()->partial('exhibit-builder/exhibits/single.php', array('exhibit' => $featuredExhibit));
@@ -90,6 +174,7 @@ function mlibrary_exhibit_builder_display_random_featured_exhibit()
     }
     $html .= '</div>';
     $html = apply_filters('exhibit_builder_display_random_featured_exhibit', $html);
+    
     return $html;
 }
 /**
@@ -127,7 +212,7 @@ function mlibrary_link_to_related_exhibits($id) {
      	$data[] = link_to_exhibit(null, array(), null, $exhibit);
      }
   }
-   return $data;
+  return $data;
 }
 
 /**
@@ -309,7 +394,7 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
  * Retrieve a thumnail image for a video item type
  *  It is not used in this installation, but it can be used in the future.
  **/
-function mlibrary_exhibit_builder_video_attachment($item) {
+function mlibrary_new_exhibit_builder_video_attachment($item) {
 $remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
@@ -347,7 +432,7 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                         if (($item !== null) and (!empty($item->getItemType()))) {
                             $item_type = $item->getItemType();
                               if (($item_type['name'] =='Video')) {
-                                 $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
+                                 $html = mlibrary_new_exhibit_builder_video_attachment($item, $thumnail_image);
                                     if (!empty($compact['attachment']['caption'])) {
                                         $html .= $compact['attachment']['caption'];
                                     }
@@ -397,8 +482,8 @@ function mlibrary_exhibit_item_query_string_settings() {
  * This function is necessary to keep consistence with Navigation look on Omeka 1.5
  * called by exhibits/show.php
  **/
-function mlibrary_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) {
-  if (!$exhibitPage) {
+function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) {
+if (!$exhibitPage) {
        $exhibitPage = get_current_record('exhibit_page');
   }
   $parents = $current_page->getAncestors();
