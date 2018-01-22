@@ -117,29 +117,21 @@ function mlibrary_new_get_page_image($rawAttachment = null)
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
 { 
-   // to see if there is no image attached to the first page.
-  $page_description = '';
+  $page_image = mlibrary_new_get_page_image($exhibitPage->getAllAttachments());
   $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
  
-  // Each page must have at least one Block and an Image must be added.
-  if (empty($exhibitPage->getPageBlocks())) {      
-      $page_image = mlibrary_new_get_page_image();
-      $page_card_info = array('image' => $page_image,
-                              'title' => $page_title,
-                              'description' => $page_description);      
-      
-      return $page_card_info;
+  if (empty($exhibitPage->getPageBlocks())) {
+    $page_description = '';
+  } else {
+    $block = $exhibitPage->getPageBlocks()[0];
+    $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block, 'text',['no_escape' => true]),20,'..'));
   }
  
-  $block = $exhibitPage->getPageBlocks();
-  $page_image = mlibrary_new_get_page_image($exhibitPage->getAllAttachments());
-
-  $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..'));
- 
-  $page_card_info = array('image' => $page_image,
-                           'title' => $page_title,
-                           'description' => $page_description);
-  return $page_card_info;
+  return [
+    'image'       => $page_image,
+    'title'       => $page_title,
+    'description' => $page_description
+  ];
 }
 
 // get the type of the item
