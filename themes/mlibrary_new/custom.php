@@ -114,23 +114,19 @@ function mlibrary_new_get_page_image($rawAttachment = null)
      return $page_image;
 }
 
+function mlibrary_new_get_page_description($blocks) {
+  if (empty($blocks)) {
+    return '';
+  }
+  return get_view()->shortcodes(snippet_by_word_count(metadata($blocks[0], 'text',['no_escape' => true]),20,'..'));
+}
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
 { 
-  $page_image = mlibrary_new_get_page_image($exhibitPage->getAllAttachments());
-  $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
- 
-  if (empty($exhibitPage->getPageBlocks())) {
-    $page_description = '';
-  } else {
-    $block = $exhibitPage->getPageBlocks()[0];
-    $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block, 'text',['no_escape' => true]),20,'..'));
-  }
- 
   return [
-    'image'       => $page_image,
-    'title'       => $page_title,
-    'description' => $page_description
+    'image'       => mlibrary_new_get_page_image($exhibitPage->getAllAttachments()),
+    'title'       => get_view()->shortcodes(metadata($exhibitPage, 'title')),
+    'description' => mlibrary_new_get_page_description($exhibitPage->getPageBlocks()),
   ];
 }
 
