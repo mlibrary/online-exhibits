@@ -4,23 +4,12 @@
 }
 
 .layout-double-image .exhibit-items {
-    display: block;
     vertical-align: top;
     float: left;
     width: 45%;
-    text-align: center;
     padding: 10px 10px 0px 10px !important
 }
 
-
-.exhibit-items > * {
-    max-width: 100%;
-    margin-bottom: 1em;
-}
-
-.exhibit-items > *:last-child {
-    margin-bottom: 0;
-}
 
 .exhibit-items .download-file {
     clear: both;
@@ -28,9 +17,6 @@
     overflow: visible;
 }
 
-.exhibit-items .download-file:nth-of-type(2n) {
-    margin-right: 0;
-}
 
 .exhibit-items .fullsize img {
     max-width: 100%;
