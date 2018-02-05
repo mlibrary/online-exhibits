@@ -50,7 +50,7 @@ $title = __('Browse Exhibits');
       ?>
           <?php $theme_options_array = $exhibit->getThemeOptions(); ?>
 
-         <section>
+         <article>
           <div class="col-xs-12 browse-wrap">
            
               <?php
@@ -81,7 +81,7 @@ $title = __('Browse Exhibits');
 
                   echo '</div></div>';
               ?>
-          </section>
+          </article>
 
       <?php
         endforeach;
