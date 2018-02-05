@@ -1,8 +1,8 @@
 /* Custom MLibrary Exhibits Theme Styles */
 
 .feature-banner-image {
-  width:57rem;
-  height:19rem;
+  width: 100%;
+  height: auto;
 }
 
 .exhibit.record {
@@ -173,6 +173,7 @@ div.browse-index {
 
 .detail-nav-border {
   border-bottom: 2px solid #CCCCCC;
+  margin-bottom: 1em;
 }
 
 .detail-nav ul {
@@ -369,6 +370,66 @@ div.section-nav-image {
 
 .index-exhibits h3.panel-card-title a, .index-featured-exhibit h3.panel-card-title a  {
   color: #3D3D3D;
+}
+
+/** Browse Page **/
+
+.browse-wrap {
+  padding: 1em 0;
+}
+
+.tag-cloud li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.btn-tags {
+  color: #0C5292;
+  font-weight: 600;
+  background-color: #F2F9FF;
+  border: 2px solid #CCE6FF;
+  border-radius: 99px;
+  padding: .5em;
+}
+
+.btn-tags:hover {
+  background-color: #126DC1;
+  border: 2px solid #126DC1;
+  color: #fff;
+  text-decoration: none;
+}
+
+.img-wrap img {
+  max-width: 100%;
+  height: auto;
+}
+
+h2.item-heading {
+  margin-top: 0;
+}
+
+.item-heading a {
+   color: #4E4E4E;
+   text-decoration: underline;
+}
+
+p.item-description {
+  color: #4E4E4E;
+}
+
+.tag-list {
+  list-style: none;
+  margin: 0;
+}
+
+.tag-list li {
+  display: inline-block;
+  padding: 1em .25em;
+  margin: 0;
+  font-weight: bold;
 }
 
 /** Footer **/

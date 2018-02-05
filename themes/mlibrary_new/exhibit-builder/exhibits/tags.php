@@ -1,23 +1,12 @@
-<div id="primary"  class="browse tags" >
- <h1>Browse by Tag</h1>
-   <ul class="navigation exhibit-tags" id="secondary-nav">
+  <div class="col-sm-12 tag-cloud">
+     <li>Browse by Popular Tags</li>
       <?php echo nav(array(
                 array(
-                    'label' => __('Browse All Tags'),
+                    'label' => __('Show All Tags'),
                     'uri' => url('exhibits/browse?tags=all')
                 )
             )
         ); ?>
-   </ul>
-</div>
-      <?php echo tag_string($tags,'exhibits/browse');?>
+  </div>
 
-
-
-
-
-
-
-
-
-
+<ul class="tag-list"><?php echo tag_string($tags,'exhibits/browse');?></ul>
