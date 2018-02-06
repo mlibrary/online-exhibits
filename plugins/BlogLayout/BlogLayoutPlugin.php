@@ -3,8 +3,7 @@
   * Copyright (c) 2018, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
-/**
-*/
+
 class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_filters = array('exhibit_layouts');
