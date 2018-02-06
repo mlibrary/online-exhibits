@@ -54,9 +54,12 @@
                     
                   </ul>
                 </div>
-                <nav class="site-header-nav">
-                  <?php echo public_nav_main_bootstrap(); ?>
-                </nav>
+		<nav class="site-header-nav">
+                  <ul class="site-header-nav-list">
+                      <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
+                      <li><a href="<?php echo url('about'); ?>">About</a></li>
+                  </ul>
+		</nav>
             </div>
         </div>
     </div>
