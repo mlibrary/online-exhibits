@@ -70,32 +70,6 @@ function mlibrary_new_exhibit_builder_next_link_to_exhibit($exhibit, $exhibit_pa
 }
 
 
-function mlibrary_exhibit_builder_render_exhibit_page($exhibitPage = null)
-{
-  if ($exhibitPage === null) {
-        $exhibitPage = get_current_record('exhibit_page');
-    }
-    
-    $blocks = $exhibitPage->ExhibitPageBlocks;
-    $rawAttachments = $exhibitPage->getAllAttachments();
-    $attachments = array();
-    foreach ($rawAttachments as $attachment) {
-        $attachments[$attachment->block_id][] = $attachment;
-    }
-    foreach ($blocks as $index => $block) {
-        $layout = $block->getLayout();
-        echo '<div class="exhibit-block layout-' . html_escape($layout->id) . '">';
-        echo get_view()->partial($layout->getViewPartial(), array(
-            'index' => $index,
-            'options' => $block->getOptions(),
-            'text' => get_view()->shortcodes($block->text),
-            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array(),
-            'block' => $block,
-        ));
-        echo '</div>';
-    }
-}
-
 function mlibrary_new_get_most_used_tags_in_exhibits()
 {
   $db = get_db();
@@ -124,40 +98,46 @@ function mlibrary_new_display_popular_tags()
   return $html;
 }
 
+function mlibrary_new_get_page_image($rawAttachment = null) 
+{
+     $default_image = img("defaulthbg.jpg");
+     $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
+     
+     if (!empty($rawAttachment)) {
+         if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
+             $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+          } else {
+              $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
+          }
+     } 
+
+     return $page_image;
+}
+
+function mlibrary_new_get_page_description($blocks) {
+  if (empty($blocks)) {
+    return '';
+  }
+  return get_view()->shortcodes(snippet_by_word_count(metadata($blocks[0], 'text',['no_escape' => true]),20,'..'));
+}
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
-{  // to see if there is no image attached to the first page.
-  
-  $block = $exhibitPage->getPageBlocks();
-  $rawAttachment = $exhibitPage->getAllAttachments();
-  
-  if (empty($rawAttachment)) {
-     $page_image = img("defaulthbg.jpg");
-     $page_image = "<img class='image-card' alt='' src='{$page_image}'/>";
-   } elseif (mlibrary_new_display_exhibit_type_of_item($rawAttachment) != 'Video') {
-      // if it is not video, display the original image of the first item attached
-     $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
-   } else {
-     // if it is a video, get the thumbnail image and display it
-     $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
-   }
-   
-   $page_title = get_view()->shortcodes(metadata($exhibitPage, 'title'));
-   $page_description = get_view()->shortcodes(snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..'));
-   $page_card_info = array('image' => $page_image,
-                           'title' => $page_title,
-                           'description' => $page_description);
-   return $page_card_info;
+{ 
+  return [
+    'image'       => mlibrary_new_get_page_image($exhibitPage->getAllAttachments()),
+    'title'       => get_view()->shortcodes(metadata($exhibitPage, 'title')),
+    'description' => mlibrary_new_get_page_description($exhibitPage->getPageBlocks()),
+  ];
 }
 
 // get the type of the item
 function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 {
+   $itemType = 'Still Image';
+
    if ($rawAttachment[0]->getItem()->getItemType()!=null) {
        $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
-   }else{
-       $itemType =  '';
-   }
+ }
    
    return $itemType;
 }
