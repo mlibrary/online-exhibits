@@ -1,6 +1,6 @@
 <?php
  /**
-  * Copyright (c) 2016, Regents of the University of Michigan.
+  * Copyright (c) 2018, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
 /**
@@ -11,8 +11,6 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterExhibitLayouts($layouts)
     {
-       $layouts = array();
-        
         $layouts['single-image'] = array(
             'name' => 'Single Image',
             'description' => 'Display single image centered with caption under text.'
@@ -22,8 +20,6 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
             'name' => 'Double images',
             'description' => 'Display double images centered with caption under text.'
         );
-
-
 
         return $layouts;
     }
