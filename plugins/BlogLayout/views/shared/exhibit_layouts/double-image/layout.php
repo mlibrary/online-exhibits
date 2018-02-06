@@ -1,13 +1,8 @@
 <?php
-$position ='center';
-$size = 'fullsize';
-$image_size_css = 'fullsize';
-$captionPosition ='center';
-?>
-
-    <?php echo $text; ?>
-    <?php foreach ($attachments as $attachment): ?>
-         <div class="exhibit-items">       
-              <?php echo $this->exhibitAttachment($attachment, array('imageSize' => $size)); ?>
-         </div>
-    <?php endforeach; ?>
+  $size = 'fullsize';
+  echo $text;
+  foreach ($attachments as $attachment): ?>
+     <div class="exhibit-items">       
+         <?php echo $this->exhibitAttachment($attachment, array('imageSize' => $size)); ?>
+     </div>
+  <?php endforeach; ?>
