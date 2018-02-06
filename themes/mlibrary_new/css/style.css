@@ -1,4 +1,16 @@
 /* Custom MLibrary Exhibits Theme Styles */
+.exhibit-block.layout-double-image .exhibit-items {
+    vertical-align: top;
+    float: left;
+    width: 45%;
+    padding: 10px 10px 0px 10px !important
+}
+
+.exhibit-block.layout-double-image::after{
+display: table;
+clear: both;
+content: "";
+}
 
 .feature-banner-image {
   width: 100%;
