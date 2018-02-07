@@ -44,7 +44,7 @@
           $exhibit_page = get_current_record('exhibit_page', false);
           set_exhibit_pages_for_loop_by_exhibit();
           foreach (loop('exhibit_page') as $exhibitPage) {
-             echo exhibit_builder_page_summary($exhibitPage, $exhibit_page);
+             echo mlibrary_new_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
           }
         ?>
       </ul>
@@ -66,7 +66,10 @@
       <?php $children = $exhibit_page->getChildPages();
                if ($children) {
                  foreach ($children as $child) {?>
-                   <h3> <?php echo metadata($child, 'title');?></h3>
+                   <header>
+                       <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
+                          <?php echo metadata($child, 'title');?></h3>
+                   </header>
                     <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
                     <?php release_object($child);
                  }

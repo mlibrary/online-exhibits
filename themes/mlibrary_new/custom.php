@@ -458,12 +458,24 @@ function mlibrary_exhibit_item_query_string_settings() {
 }
 
 /**
+* function to build anchor link for subsections instead of url
+*
+*/
+function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $current_page=null) {
+  $html  = '<li>'
+           . '<a href="' .'#'.$exhibitPage['slug']. '">'
+           . metadata($exhibitPage, 'title') .'</a>';
+
+  return $html;
+}
+
+/**
  * This function creates the Vertical Navigation on the left hand side of any Exhibit page.
  * This function is necessary to keep consistence with Navigation look on Omeka 1.5
  * called by exhibits/show.php
  **/
 function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) {
-if (!$exhibitPage) {
+  if (!$exhibitPage) {
        $exhibitPage = get_current_record('exhibit_page');
   }
   $parents = $current_page->getAncestors();
@@ -480,14 +492,14 @@ if (!$exhibitPage) {
             } else {
                 $html  = '<li>'
                   	  . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-                      . metadata($exhibitPage, 'title') .'</a>';
+                          . metadata($exhibitPage, 'title') .'</a>';
             }
           //Add Children to navigation.
- $children = $exhibitPage->getChildPages();
- if ($children) {
-    $html .= '<ul>';
-    foreach ($children as $child) {
-       $html .= mlibrary_exhibit_builder_page_summary($child,$current_page);
+   $children = $exhibitPage->getChildPages();
+   if ($children) {
+     $html .= '<ul>';
+     foreach ($children as $child) {
+       $html .= mlibrary_new_exhibit_builder_child_page_summary($child,$current_page);
        release_object($child);
     }
     $html .= '</ul>';
