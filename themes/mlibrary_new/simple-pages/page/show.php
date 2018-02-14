@@ -6,9 +6,8 @@ $top = simple_pages_earliest_ancestor_page(null);
 // Build appropriate page titles
 if (!$top) {
     $top = get_current_record('simple_pages_page');
-$title = metadata('simple_pages_page', 'title');    
-$topSlug = metadata($top, 'slug');
-$subtitle = metadata('simple_pages_page', 'title');
+    $title = metadata('simple_pages_page', 'title');    
+    $topSlug = metadata($top, 'slug');
 } else {
 	$title = metadata('simple_pages_page', 'title');
 	$subtitle = metadata('simple_pages_page', 'title');
@@ -16,7 +15,6 @@ $subtitle = metadata('simple_pages_page', 'title');
 echo head(array( 'title' => $title, 
 	'bodyclass' => $bodyclass, 
 	'bodyid' => metadata('simple_pages_page', 'slug'),
-	'subtitle' => $subtitle,
 	'currentUriOverride' => url($topSlug)
 ));
 
@@ -26,7 +24,7 @@ $fname = dirname(__FILE__) . '/' . metadata('simple_pages_page', 'slug') . '.php
 if (is_file( $fname )):
     include( $fname );
 else :
-echo "Under construction";
+echo "The page is under construction";
 // Close your PHP tags and add your show.php content here.
 
 endif;
