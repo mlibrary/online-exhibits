@@ -14,6 +14,16 @@
   );
 ?>
 
+<?php
+// If there is a file that matches the slug of this page, display that as the template
+// Otherwise, use the template below on show.php
+$fname = dirname(__FILE__) . '/' . metadata('exhibit_page', 'slug') . '.php';
+if (is_file( $fname )){
+    include( $fname );
+}
+else {    
+//Close your PHP tags and add your show.php content here.
+?>
 <!--Breadcrumb and Share Bar-->
   <div class="col-xs-12 col-sm-8">
       <ol class="breadcrumb">
@@ -106,4 +116,6 @@
   </section>
 
 </div>
+
+<?php }?>
 <?php echo foot(); ?>
