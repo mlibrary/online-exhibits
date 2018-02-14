@@ -1,7 +1,8 @@
 <?php 
 echo $this->form('search-form', $options['form_attributes']); ?>
     <div class="form-group"> 
-        <?php echo $this->formText('query', $filters['query'], array('class'=>'form-control', 'size'=> '50', 'placeholder'=>'Search Online Exhibits')); ?>
+        <label class="sr-only" for="search-form"><span>Search Online Exhibits</span></label>
+      <?php echo $this->formText('query', $filters['query'], array('class'=>'form-control', 'id'=>'search-form', 'size'=> '50', 'placeholder'=>'Search Online Exhibits')); ?>
         <button type="submit" class="button search-button"> <span class="glyphicon glyphicon-search"></span> Search</button>
     </div>
     <?php if ($options['show_advanced']): ?>
