@@ -3,4 +3,4 @@
 </div>
 
 <ul class="tag-list"><?php
-echo $tags = str_replace(';', '',tag_string($tags,'exhibits/browse'));?></ul>
+echo $tags = tag_string($tags,'exhibits/browse');?></ul>

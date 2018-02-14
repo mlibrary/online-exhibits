@@ -14,16 +14,6 @@
   );
 ?>
 
-<?php
-// If there is a file that matches the slug of this page, display that as the template
-// Otherwise, use the template below on show.php
-$fname = dirname(__FILE__) . '/' . metadata('exhibit_page', 'slug') . '.php';
-if (is_file( $fname )){
-    include( $fname );
-}
-else {    
-//Close your PHP tags and add your show.php content here.
-?>
 <!--Breadcrumb and Share Bar-->
   <div class="col-xs-12 col-sm-8">
       <ol class="breadcrumb">
@@ -76,10 +66,7 @@ else {
       <?php $children = $exhibit_page->getChildPages();
                if ($children) {
                  foreach ($children as $child) {?>
-                   <header>
-                       <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
                           <?php echo metadata($child, 'title');?></h3>
-                   </header>
                     <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
                     <?php release_object($child);
                  }
@@ -117,5 +104,4 @@ else {
 
 </div>
 
-<?php }?>
 <?php echo foot(); ?>
