@@ -22,10 +22,9 @@ echo head(array( 'title' => $title,
 // Otherwise, use the template below on show.php
 $fname = dirname(__FILE__) . '/' . metadata('simple_pages_page', 'slug') . '.php';
 if (is_file( $fname )):
-    include( $fname );
+   include( $fname );
 else :
 echo "The page is under construction";
 // Close your PHP tags and add your show.php content here.
-
 endif;
 echo foot();
