@@ -424,7 +424,6 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                                   mlibrary_exhibit_item_query_string_settings()
                                 );
                  }
-  
   return $html;
 }
 
@@ -462,11 +461,9 @@ function mlibrary_exhibit_item_query_string_settings() {
 *
 */
 function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $current_page=null) {
-  $html  = '<li>'
+  return '<li>'
            . '<a href="' .'#'.$exhibitPage['slug']. '">'
            . metadata($exhibitPage, 'title') .'</a>';
-
-  return $html;
 }
 
 /**
