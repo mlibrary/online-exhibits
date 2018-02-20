@@ -43,18 +43,18 @@
             <?php echo link_to_exhibit('Introduction'); ?>
           </div>
 
-          <ul id="exhibit-pages" class="exhibit-nav-list">
-            <?php
-              $exhibit_page = get_current_record('exhibit_page', false);
-              set_exhibit_pages_for_loop_by_exhibit();
-              foreach (loop('exhibit_page') as $exhibitPage) {
-                 echo exhibit_builder_page_summary($exhibitPage, $exhibit_page);
-              }
-            ?>
-          </ul>
-        </nav>
-      </div>
-    </section>
+      <ul id="exhibit-pages" class="exhibit-nav-list">
+        <?php
+          $exhibit_page = get_current_record('exhibit_page', false);
+          set_exhibit_pages_for_loop_by_exhibit();
+          foreach (loop('exhibit_page') as $exhibitPage) {
+             echo mlibrary_new_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
+          }
+        ?>
+      </ul>
+    </nav>
+  </div>
+ </section>
 
  <section class="exhibit-content cf">
     <div class="col-sm-12 col-md-9 show-wrapper">
@@ -71,7 +71,7 @@
       <?php $children = $exhibit_page->getChildPages();
                if ($children) {
                  foreach ($children as $child) {?>
-                   <h3> <?php echo metadata($child, 'title');?></h3>
+                          <?php echo metadata($child, 'title');?></h3>
                     <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
                     <?php release_object($child);
                  }
@@ -109,4 +109,5 @@
 </div>
 
 </div>
+
 <?php echo foot(); ?>
