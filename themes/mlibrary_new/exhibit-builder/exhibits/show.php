@@ -107,7 +107,5 @@
    </div>
   </section>
 </div>
-
 </div>
-
 <?php echo foot(); ?>
