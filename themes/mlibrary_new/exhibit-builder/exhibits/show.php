@@ -66,12 +66,14 @@
       <?php $children = $exhibit_page->getChildPages();
                if ($children) {
                  foreach ($children as $child) {?>
-                   <header>
-                       <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
-                          <?php echo metadata($child, 'title');?></h3>
-                   </header>
-                    <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
-                    <?php release_object($child);
+                  <section>
+                      <header>
+                           <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
+                           <?php echo metadata($child, 'title');?></h3>
+                      </header>
+                      <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
+                      <?php release_object($child);?>
+                  </section><?php
                  }
               }
          ?>
