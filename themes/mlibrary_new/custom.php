@@ -496,8 +496,8 @@ function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current
    if ($children) {
      $html .= '<ul>';
      foreach ($children as $child) {
-       $html .= mlibrary_new_exhibit_builder_page_summary($child,$current_page);
-       release_object($child);
+       $html .= mlibrary_new_exhibit_builder_child_page_summary($child,$current_page);
+        release_object($child);
     }
     $html .= '</ul>';
   }
