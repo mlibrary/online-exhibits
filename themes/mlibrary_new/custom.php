@@ -142,6 +142,33 @@ function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
    return $itemType;
 }
 
+//gallery
+
+function mlibrary_new_display_item_card($attachments = null) { 
+$html='';
+ foreach ($attachments as $attachment) {
+                     $sectionpage_card_info = mlibrary_new_display_exhibit_section_page_cards($attachment);
+                                  //$uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
+                    $html = '<div id = "exhibit-theme-item" class="panel panel-default">';
+                    $html .= '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>';
+                    $html .= '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>';
+                    $html .= '</div>';
+echo $html;
+}
+ }
+
+function mlibrary_new_get_all_item_images_section($attachment = null)
+{
+           return record_image($attachment->getFile(),'original',array('class' => 'image-card'));
+}
+
+function mlibrary_new_display_exhibit_section_page_cards($attachment)
+{
+         return [
+           'image' => mlibrary_new_get_all_item_images_section($attachment),
+           'title' => get_view()->shortcodes(metadata($attachment,'caption')),
+         ];
+}
 
 function mlibrary_new_exhibit_builder_display_random_featured_exhibit()
 {
@@ -424,7 +451,6 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                                   mlibrary_exhibit_item_query_string_settings()
                                 );
                  }
-  
   return $html;
 }
 
@@ -457,6 +483,15 @@ function mlibrary_exhibit_item_query_string_settings() {
            'page'    => get_current_record('exhibit_page')->id ];
 }
 
+/**
+* function to build anchor link for subsections instead of url
+*
+*/
+function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $current_page=null) {
+  return '<li>'
+           . '<a href="' .'#'.$exhibitPage['slug']. '">'
+           . metadata($exhibitPage, 'title') .'</a>';
+}
 
 /**
  * This function creates the Vertical Navigation on the left hand side of any Exhibit page.
@@ -488,8 +523,8 @@ function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current
    if ($children) {
      $html .= '<ul>';
      foreach ($children as $child) {
-       $html .= mlibrary_new_exhibit_builder_page_summary($child,$current_page);
-       release_object($child);
+       $html .= mlibrary_new_exhibit_builder_child_page_summary($child,$current_page);
+        release_object($child);
     }
     $html .= '</ul>';
   }
