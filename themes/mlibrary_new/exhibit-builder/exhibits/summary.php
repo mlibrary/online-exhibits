@@ -51,9 +51,6 @@
             }
           ?>
         </ul>
-        <ul>
-           <?php echo link_to($exhibit,'Gallery','Gallery'); ?>
-        </ul>
       </nav>
     </div>
 
