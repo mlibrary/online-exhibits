@@ -98,21 +98,35 @@ function mlibrary_new_display_popular_tags()
   return $html;
 }
 
+// get the type of the item
+function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
+{
+   $itemType = 'Still Image';
+
+   if ($rawAttachment[0]->getItem()->getItemType()!=null) {
+       $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
+ }
+
+   return $itemType;
+}
+
+//
 function mlibrary_new_get_page_image($rawAttachment = null) 
 {
-     $default_image = img("defaulthbg.jpg");
-     $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
+   $default_image = img("defaulthbg.jpg");
+   $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
      
-     if (!empty($rawAttachment)) {
-         if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
-             $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
-          } else {
-              $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
-          }
-     } 
+   if (!empty($rawAttachment)) {
+       if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
+           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+        } else {
+           $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
+        }
+   } 
 
-     return $page_image;
+   return $page_image;
 }
+
 
 function mlibrary_new_get_page_description($blocks) {
   if (empty($blocks)) {
@@ -120,6 +134,7 @@ function mlibrary_new_get_page_description($blocks) {
   }
   return get_view()->shortcodes(snippet_by_word_count(metadata($blocks[0], 'text',['no_escape' => true]),20,'..'));
 }
+
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
 { 
@@ -130,45 +145,44 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
   ];
 }
 
-// get the type of the item
-function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
-{
-   $itemType = 'Still Image';
-
-   if ($rawAttachment[0]->getItem()->getItemType()!=null) {
-       $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
- }
-   
-   return $itemType;
-}
-
 //gallery
-
-function mlibrary_new_display_item_card($attachments = null) { 
-$html='';
- foreach ($attachments as $attachment) {
-                     $sectionpage_card_info = mlibrary_new_display_exhibit_section_page_cards($attachment);
-                                  //$uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);
-                    $html = '<div id = "exhibit-theme-item" class="panel panel-default">';
-                    $html .= '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>';
-                    $html .= '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>';
-                    $html .= '</div>';
-echo $html;
-}
- }
-
-function mlibrary_new_get_all_item_images_section($attachment = null)
+function mlibrary_new_get_image_for_gallery($attachment = null)
 {
-           return record_image($attachment->getFile(),'original',array('class' => 'image-card'));
+   return record_image($attachment->getFile(),'original',array('class' => 'image-card'));
 }
 
-function mlibrary_new_display_exhibit_section_page_cards($attachment)
+function mlibrary_new_create_card_for_gallery($attachment)
 {
-         return [
-           'image' => mlibrary_new_get_all_item_images_section($attachment),
-           'title' => get_view()->shortcodes(metadata($attachment,'caption')),
-         ];
+   return [
+     'image' => mlibrary_new_get_image_for_gallery($attachment),
+     'title' => get_view()->shortcodes(metadata($attachment,'caption',array('no_escape' => true))),
+   ];
 }
+
+function mlibrary_new_render_gallery_section($sectionpage_cards_info){
+  foreach ($sectionpage_cards_info as $sectionpage_card_info) {
+      $html = '<div id = "exhibit-theme-item" class="panel panel-default">';
+      $html .= '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>';
+      $html .= '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>';
+      $html .= '</div>';
+      echo $html;
+  }
+}
+
+
+function mlibrary_new_get_cards_in_section_gallery($attachments = null) 
+{ 
+  $html='';
+  $sectionpage_card_info = array();
+  if (!empty($attachments)) {
+     foreach ($attachments as $attachment) {
+            $sectionpage_card_info[] = mlibrary_new_create_card_for_gallery($attachment);
+     }
+  }
+  mlibrary_new_render_gallery_section($sectionpage_card_info);
+  return $sectionpage_card_info;
+}
+
 
 function mlibrary_new_exhibit_builder_display_random_featured_exhibit()
 {

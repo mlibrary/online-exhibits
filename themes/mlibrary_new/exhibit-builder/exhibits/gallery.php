@@ -1,52 +1,45 @@
-<?php
-echo "Exhibit Image Gallery";
-?>
-<br> 
-<?php
+
+<section class="row">
+  <div class="col-xs-12 col-sm-9">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?php echo link_to_exhibit(metadata('exhibit','title',array('no_escape' => true)));?></li>
+        <li class="breadcrumb-item active"><?php echo 'Exhibit Image'. metadata('exhibit_page','title',array('no_escape' => true)); ?></li>
+      </ol>
+  </div>
+  <div class="col-xs-12 col-sm-3">
+    <ul class="share-this">
+      <li>Share this Gallery:</li>
+      <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
+    </ul>
+   </div>
+</section>
+
+<div>
+<?php echo "Exhibit Image Gallery";
 echo "Browse all images in this exhibit by section and by the order they appear within each section.";
 echo "The University of Michigan Library has placed copies of these works online for educational and.";
-echo "research purposes. For more information about using images from this exhibit please visit the Rights Statement page.";
-?>
-<br>
+echo "research purposes. For more information about using images from this exhibit please visit the Rights Statement page.";?>
+</div>
 
-<?php 
+<?php set_exhibit_pages_for_loop_by_exhibit();
 
-set_exhibit_pages_for_loop_by_exhibit();
-foreach (loop('exhibit_page') as $exhibitsection) {?>
-    <?php
-          echo $exhibitsection->title;
-          if (!empty($exhibitsection->getAllAttachments())) {
-mlibrary_new_display_item_card($exhibitsection->getAllAttachments());
-              //display all images in section page first
-               //foreach ($exhibitsection->getAllAttachments() as $attachment) {
-                 //    $sectionpage_card_info = mlibrary_new_display_exhibit_section_page_cards($attachment);
-                   // ?>
-                  <!-- <div id = "exhibit-theme-item" class="panel panel-default">
-                        <a href= <?php //echo html_escape($uri);?> >
-                            <div class="panel-heading"><?php  //echo $sectionpage_card_info["image"];?></div>
-                            <div class="card-info panel-body"><h3 class="panel-card-title"><?php //echo $sectionpage_card_info["title"];?></h3></div>
-                        </a>
-                     </div>-->
-               <?php }
-          // loop through subsections
-          if (!empty($exhibitsection->getChildPages())){
-              
-                 foreach ($exhibitsection->getChildPages() as $child) {
-                    if (!empty($child->getAllAttachments())) {
-mlibrary_new_display_item_card($child->getAllAttachments());          
-    //display all images in section page first
-               //foreach ($child->getAllAttachments() as $attachment) {
-                 //    $sectionpage_card_info = mlibrary_new_display_exhibit_section_page_cards($attachment);
-                                  //$uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
-                   <!--  <div id = "exhibit-theme-item" class="panel panel-default">
-                        <a href= <?php //echo html_escape($uri);?> >
-                            <div class="panel-heading"><?php  //echo $sectionpage_card_info["image"];?></div>
-                            <div class="card-info panel-body"><h3 class="panel-card-title"><?php //echo $sectionpage_card_info["title"];?></h3></div>
-                        </a>
-                     </div>-->
-               <?php }
+foreach (loop('exhibit_page') as $exhibitsection) {
+$cards_in_subsection = '';
+$cards_in_section = '';
+ ?>
+ <section>  
+  <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());
+
+        if (!empty($exhibitsection->getChildPages())){
+           foreach ($exhibitsection->getChildPages() as $child) {
+             $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments());              
            }
-//                    release_object($child);
-                 }
-}
+        } 
+        
+        if(!empty($cards_in_subsection || $cards_in_section)) {
+           // title for the section will be displayed if there are items in section or subsection
+           echo $exhibitsection->title;
+       }?>
+  </section>
+<?php }?>
   
