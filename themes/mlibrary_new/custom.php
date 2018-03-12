@@ -160,21 +160,15 @@ function mlibrary_new_create_card_for_gallery($attachment)
 }
 
 function mlibrary_new_render_gallery_section($sectionpage_cards_info){
-  $card = array();
-  foreach ($sectionpage_cards_info as $sectionpage_card_info) {
-      $html = '<div id = "exhibit-theme-item" class="panel panel-default">';
-      $html .= '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>';
-      $html .= '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>';
-      $html .= '</div>';
-      $cards[] = $html;
-  }
-return $card;
+ return array_map(function ($sectionpage_card_info) {
+   return '<div id = "exhibit-theme-item" class="panel panel-default">'
+     . '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'
+     . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
+     . '</div>';
+ }, $sectionpage_cards_info);
 }
 
-
-function mlibrary_new_get_cards_in_section_gallery($attachments = null) 
-{ 
-  $html='';
+function mlibrary_new_get_cards_in_section_gallery($attachments = null){ 
   $sectionpage_card_info = array();
   if (!empty($attachments)) {
      foreach ($attachments as $attachment) {
@@ -182,12 +176,10 @@ function mlibrary_new_get_cards_in_section_gallery($attachments = null)
      }
   }
   return mlibrary_new_render_gallery_section($sectionpage_card_info);
-  //return $sectionpage_card_info;
 }
 
 
-function mlibrary_new_exhibit_builder_display_random_featured_exhibit()
-{
+function mlibrary_new_exhibit_builder_display_random_featured_exhibit(){
     $html = '<div id="featured-exhibit" class="featured-exhibit-container">';
     $featuredExhibit = exhibit_builder_random_featured_exhibit();
     if ($featuredExhibit) {
