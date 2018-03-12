@@ -160,13 +160,15 @@ function mlibrary_new_create_card_for_gallery($attachment)
 }
 
 function mlibrary_new_render_gallery_section($sectionpage_cards_info){
+  $card = array();
   foreach ($sectionpage_cards_info as $sectionpage_card_info) {
       $html = '<div id = "exhibit-theme-item" class="panel panel-default">';
       $html .= '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>';
       $html .= '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>';
       $html .= '</div>';
-      echo $html;
+      $cards[] = $html;
   }
+return $card;
 }
 
 
@@ -179,8 +181,8 @@ function mlibrary_new_get_cards_in_section_gallery($attachments = null)
             $sectionpage_card_info[] = mlibrary_new_create_card_for_gallery($attachment);
      }
   }
-  mlibrary_new_render_gallery_section($sectionpage_card_info);
-  return $sectionpage_card_info;
+  return mlibrary_new_render_gallery_section($sectionpage_card_info);
+  //return $sectionpage_card_info;
 }
 
 

@@ -25,18 +25,18 @@ echo "research purposes. For more information about using images from this exhib
 
 foreach (loop('exhibit_page') as $exhibitsection) {
 $cards_in_subsection = '';
-$cards_in_section = '';
  ?>
  <section>  
   <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());
-
+        echo implode($cards_in_section);
         if (!empty($exhibitsection->getChildPages())){
            foreach ($exhibitsection->getChildPages() as $child) {
              $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments());              
+             echo implode($cards_in_subsection);
            }
         } 
         
-        if(!empty($cards_in_subsection || $cards_in_section)) {
+        if($cards_in_subsection || $cards_in_section) {
            // title for the section will be displayed if there are items in section or subsection
            echo $exhibitsection->title;
        }?>
