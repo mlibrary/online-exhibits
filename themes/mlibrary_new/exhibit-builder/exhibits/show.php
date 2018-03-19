@@ -46,7 +46,7 @@ else {
 
 <section class="row">
     <section>
-      <div class="col-sm-12 col-md-3">
+      <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="575" data-offset-bottom="100">
           <div class="nav-text-inline">
             <h3 class="nav-text-inline-heading">Exhibit Contents</h3>
@@ -56,7 +56,7 @@ else {
           </div>
 
           <div class="exhibit-overview collapse navbar-collapse" id="nav-toggle">
-            <ul id="exhibit-pages" class="exhibit-nav-list">
+            <ul id="exhibit-pages" class="exhibit-nav-list exhibit-pages-show">
               <?php echo link_to_exhibit('Introduction'); ?>
               <?php
                 $exhibit_page = get_current_record('exhibit_page', false);
@@ -72,7 +72,7 @@ else {
     </section>
 
   <section class="exhibit-content cf">
-    <div class="col-sm-12 col-md-9 show-wrapper">
+    <div class="col-xs-12 col-sm-9 show-wrapper">
       <h2 class="section-title--large">
         <?php
           set_current_record('exhibit_page', $exhibit_page);
@@ -96,7 +96,7 @@ else {
               }
          ?>
   </div> 
-  <div class="col-sm-12 col-md-9 col-md-offset-3 padding-0">
+  <div class="col-xs-12 col-sm-9 col-sm-offset-3 padding-0">
     <div class="section-nav">
           <?php $navigate_previous_exhibit = mlibrary_new_exhibit_builder_previous_link_to_exhibit($exhibit, $exhibit_page);?>
           <?php if (!empty($navigate_previous_exhibit)){ ?>  

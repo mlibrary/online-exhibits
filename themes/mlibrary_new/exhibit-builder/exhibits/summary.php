@@ -42,7 +42,7 @@
 
   <div id="primary">
     <section>
-      <div class="col-xs-12 col-md-3">
+      <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="650" data-offset-bottom="100">
           <div class="nav-text-inline">
           <h3 class="nav-text-inline-heading">Exhibit Contents</h3>
@@ -51,12 +51,12 @@
             </button>
           </div>
         <div class="exhibit-overview collapse navbar-collapse" id="summary-nav-toggle">
-        <ul id="exhibit-pages" class="exhibit-nav-list">
-           <?php echo link_to_exhibit('Introduction'); ?>
+        <ul id="exhibit-pages" class="exhibit-nav-list exhibit-pages-summary">
+           <li class="active"><?php echo link_to_exhibit('Introduction'); ?></li>
           <?php
             set_exhibit_pages_for_loop_by_exhibit();
             foreach (loop('exhibit_page') as $exhibitPage) {
-              echo exhibit_builder_pages($exhibitPage);
+              echo exhibit_builder_page_summary($exhibitPage);
             }
           ?>
         </ul>
@@ -66,7 +66,7 @@
 
   <section id="summary-view" class="exhibit-content cf">
 
-    <div class="col-xs-12 col-md-9">
+    <div class="col-xs-12 col-sm-9">
       <h2 class="section-title--large"> Introduction </h2>
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <div class = "exhibit-theme">
