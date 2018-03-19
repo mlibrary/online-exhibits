@@ -1,6 +1,6 @@
 <?php
  /**
-  * Copyright (c) 2017, Regents of the University of Michigan.
+  * Copyright (c) 2018, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
 
@@ -26,6 +26,7 @@ else {
 ?>
 <!--Breadcrumb and Share Bar-->
 <section class="row">
+  <div class="col-xs-12">
   <div class="col-xs-12 col-sm-9">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
@@ -39,36 +40,40 @@ else {
       <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
     </ul>
    </div>
+ </div>
 </section>
 <!--End breadcrumb and share bar-->
 
-<div id="primary">
-  <div class="col-xs-12">
+<section class="row">
     <section>
       <div class="col-sm-12 col-md-3">
-        <nav class="exhibit-navigation">
-          <h3 class="element-invisible">Exhibit Contents </h3>
-
-          <div class="exhibit-overview">
-            <?php echo link_to_exhibit('Introduction'); ?>
+        <nav class="exhibit-navigation" data-spy="affix" data-offset-top="575" data-offset-bottom="100">
+          <div class="nav-text-inline">
+            <h3 class="nav-text-inline-heading">Exhibit Contents</h3>
+            <button class="navbar-toggler nav-text-inline-button" type="button" data-toggle="collapse" data-target="#nav-toggle" aria-controls="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>  
+            </button>
           </div>
 
-      <ul id="exhibit-pages" class="exhibit-nav-list">
-        <?php
-          $exhibit_page = get_current_record('exhibit_page', false);
-          set_exhibit_pages_for_loop_by_exhibit();
-          foreach (loop('exhibit_page') as $exhibitPage) {
-             echo mlibrary_new_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
-          }
-        ?>
-      </ul>
-    </nav>
-  </div>
- </section>
+          <div class="exhibit-overview collapse navbar-collapse" id="nav-toggle">
+            <ul id="exhibit-pages" class="exhibit-nav-list">
+              <?php echo link_to_exhibit('Introduction'); ?>
+              <?php
+                $exhibit_page = get_current_record('exhibit_page', false);
+                set_exhibit_pages_for_loop_by_exhibit();
+                foreach (loop('exhibit_page') as $exhibitPage) {
+                   echo exhibit_builder_page_summary($exhibitPage, $exhibit_page);
+                }
+              ?>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </section>
 
- <section class="exhibit-content cf">
+  <section class="exhibit-content cf">
     <div class="col-sm-12 col-md-9 show-wrapper">
-      <h2>
+      <h2 class="section-title--large">
         <?php
           set_current_record('exhibit_page', $exhibit_page);
           echo metadata('exhibit_page', 'title');
@@ -82,10 +87,8 @@ else {
                if ($children) {
                  foreach ($children as $child) {?>
                   <section>
-                      <header>
-                           <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
-                           <?php echo metadata($child, 'title');?></h3>
-                      </header>
+                      <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
+                      <?php echo metadata($child, 'title');?></h3>
                       <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
                       <?php release_object($child);?>
                   </section><?php
@@ -101,8 +104,7 @@ else {
                          <figure class="section-nav-image"><?php echo $navigate_previous_exhibit["image"]; ?></figure>
                          <div class="section-link-prev"><?php echo $navigate_previous_exhibit["url-link"]; ?></div>
                          <div class="section-nav-text">
-                              <p class="section-title"><?php echo $navigate_previous_exhibit["title"];;?></p>
-                              <p class="section-caption"><?php echo $navigate_previous_exhibit["caption"];?></p>
+                            <p class="section-title"><?php echo $navigate_previous_exhibit["title"];;?></p>
                          </div>
                     </section> 
           <?php } ?>
@@ -114,7 +116,6 @@ else {
                       <div class="section-link-next"><?php echo $navigate_next_exhibit["url-link"];?></div>
                       <div class="section-nav-text">
                            <p class="section-title"><?php echo $navigate_next_exhibit["title"]; ?></p>
-                           <p class="section-caption"><?php echo $navigate_next_exhibit["caption"];?></p>
                       </div>
                   </section> 
           <?php } ?>
