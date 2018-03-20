@@ -62,7 +62,7 @@ else {
                 $exhibit_page = get_current_record('exhibit_page', false);
                 set_exhibit_pages_for_loop_by_exhibit();
                 foreach (loop('exhibit_page') as $exhibitPage) {
-                   echo exhibit_builder_page_summary($exhibitPage, $exhibit_page);
+                   echo mlibrary_new_exhibit_builder_page_summary($exhibitPage, $exhibit_page);
                 }
               ?>
             </ul>
