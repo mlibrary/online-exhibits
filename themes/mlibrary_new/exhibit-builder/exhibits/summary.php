@@ -1,6 +1,6 @@
 <?php
  /**
-  * Copyright (c) 2016, Regents of the University of Michigan.
+  * Copyright (c) 2018, Regents of the University of Michigan.
   * All rights reserved. See LICENSE.txt for details.
   */
   set_theme_option('display_header','1');
@@ -12,20 +12,25 @@
   );
 
 ?>
+
 <!--Breadcrumb and Share Bar-->
-  <div class="col-xs-12 col-sm-8">
+<section class="row">
+ <div class="col-xs-12">
+  <div class="col-xs-12 col-sm-9">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
         <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
       </ol>
   </div>
 
-  <div class="col-xs-12 col-sm-4">
+  <div class="col-xs-12 col-sm-3">
     <ul class="share-this">
       <li>Share this Exhibit:</li>
       <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
     </ul>
    </div>
+ </div>
+</section>
 <!--End breadcrumb and share bar-->
 
   <div class="exhibit-introduction">
@@ -36,14 +41,18 @@
   </div>
 
   <div id="primary">
-    <div class="col-xs-12 col-sm-3">
-      <nav class="exhibit-navigation">
-        <h3 class="element-invisible">Exhibit Contents</h3>
-
-        <div class="exhibit-overview active">
-          <?php echo link_to_exhibit('Introduction'); ?>
-        </div>
-        <ul id="exhibit-pages" class="exhibit-nav-list">
+    <section>
+      <div class="col-xs-12 col-sm-3">
+        <nav class="exhibit-navigation" data-spy="affix" data-offset-top="650" data-offset-bottom="100">
+          <div class="nav-text-inline">
+          <h3 class="nav-text-inline-heading">Exhibit Contents</h3>
+           <button class="navbar-toggler nav-text-inline-button" type="button" data-toggle="collapse" data-target="#summary-nav-toggle" aria-controls="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>  
+            </button>
+          </div>
+        <div class="exhibit-overview collapse navbar-collapse" id="summary-nav-toggle">
+        <ul id="exhibit-pages" class="exhibit-nav-list exhibit-pages-summary">
+           <li class="active"><?php echo link_to_exhibit('Introduction'); ?></li>
           <?php
             set_exhibit_pages_for_loop_by_exhibit();
             foreach (loop('exhibit_page') as $exhibitPage) {
@@ -51,13 +60,14 @@
             }
           ?>
         </ul>
-      </nav>
-    </div>
+        </nav>
+      </div>
+    </section>
 
   <section id="summary-view" class="exhibit-content cf">
 
     <div class="col-xs-12 col-sm-9">
-      <h2> Introduction </h2>
+      <h2 class="section-title--large"> Introduction </h2>
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <div class = "exhibit-theme">
         <?php  set_exhibit_pages_for_loop_by_exhibit();

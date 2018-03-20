@@ -312,13 +312,13 @@ function exhibit_builder_page_summary($exhibitPage = null)
         $exhibitPage = get_current_record('exhibit_page');
     }
 
-    $html = '<li class="exhibit-nav-list-items">'
-          . '<a class="exhibit-nav-list-items" href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+    $html = '<li>'
+          . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
           . metadata($exhibitPage, 'title') .'</a>';
 
     $children = $exhibitPage->getChildPages();
     if ($children) {
-        $html .= '<ul class="exhibit-nav-list">';
+        $html .= '<ul>';
         foreach ($children as $child) {
             $html .= exhibit_builder_page_summary($child);
             release_object($child);
