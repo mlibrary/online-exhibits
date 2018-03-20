@@ -83,11 +83,8 @@ else {
                  foreach ($children as $child) {?>
                   <section>
                       <header>
-                           <h3 class="sub-section">
-                             <a name=<?php echo $child["slug"];?>>  
+                               <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
                                <?php echo metadata($child, 'title');?>
-                             </a>
-                           </h3>
                       </header>
                       <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
                       <?php release_object($child);?>
