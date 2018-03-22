@@ -30,10 +30,6 @@
    ?>
    <section class="exhibit-gallery-cards">  
     <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());
-          if($cards_in_subsection || $cards_in_section) {
-             // title for the section will be displayed if there are items in section or subsection
-             echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
-
           echo implode($cards_in_section);
           if (!empty($exhibitsection->getChildPages())){
              foreach ($exhibitsection->getChildPages() as $child) {
@@ -41,6 +37,10 @@
                echo implode($cards_in_subsection);
              }
           }  
+
+          if($cards_in_subsection || $cards_in_section) {
+             // title for the section will be displayed if there are items in section or subsection
+             echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
          }?>
     </section>
   <?php }?>
