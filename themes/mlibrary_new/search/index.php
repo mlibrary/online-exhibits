@@ -36,6 +36,6 @@
         </table>
         <?php echo pagination_links(); ?>
     <?php else: ?>
-        <p><?php echo __('Your query returned no results.');?></p>
+        <p><?php //echo __('Your query returned no results.');?></p>
     <?php endif; ?>
 <?php echo foot(); ?>
