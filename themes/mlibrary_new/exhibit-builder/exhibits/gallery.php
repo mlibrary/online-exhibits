@@ -27,21 +27,29 @@
 
   foreach (loop('exhibit_page') as $exhibitsection) {
   $cards_in_subsection = '';
+  $cards_in_section_flag = false;
    ?>
    <section class="exhibit-gallery-cards">  
-    <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());
-          echo implode($cards_in_section);
+    <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());          
+          if (!empty($cards_in_section)) {
+             echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
+             echo implode($cards_in_section);
+             $cards_in_section_flag = true;
+          }
           if (!empty($exhibitsection->getChildPages())){
              foreach ($exhibitsection->getChildPages() as $child) {
                $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments());              
-               echo implode($cards_in_subsection);
+               if (!$cards_in_section_flag) {
+                   echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
+                   $cards_in_section_flag = true;
+               }
+                echo implode($cards_in_subsection);
              }
           }  
-
-          if($cards_in_subsection || $cards_in_section) {
+          /*if($cards_in_subsection || $cards_in_section) {
              // title for the section will be displayed if there are items in section or subsection
              echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
-         }?>
+         }*/?>
     </section>
   <?php }?>
 </section>
