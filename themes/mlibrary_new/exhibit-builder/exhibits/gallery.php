@@ -39,7 +39,7 @@
           if (!empty($exhibitsection->getChildPages())){
              foreach ($exhibitsection->getChildPages() as $child) {
                $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments());              
-               if (!$cards_in_section_flag) {
+               if ((!$cards_in_section_flag) and (!empty($cards_in_subsection))) {
                    echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
                    $cards_in_section_flag = true;
                }
