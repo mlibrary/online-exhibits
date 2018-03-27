@@ -72,17 +72,19 @@
       <div class = "exhibit-theme">
         <?php  set_exhibit_pages_for_loop_by_exhibit();
                foreach (loop('exhibit_page') as $exhibitPage) {?>
-                              <div id = "exhibit-theme-item" class="panel panel-default">
                                <?php
-                                  $page_card_info = mlibrary_new_display_exhibit_card_info($exhibitPage);
-                                  $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
-                                  <a href= <?php echo html_escape($uri);?> >
-                                    <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>
-                                    <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo html_escape($page_card_info["title"]);?></h3>
-                                    <p class="panel-card-text"><?php echo html_escape($page_card_info["description"]);?></p></div>
-                                  </a>                           
-                           </div>
-               <?php }?>  
+                                  if (metadata('exhibit_page','title')!= 'Gallery') {
+                                      $page_card_info = mlibrary_new_display_exhibit_card_info($exhibitPage);
+                                      if(!empty($page_card_info)) {
+                                        $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
+                                         <div id = "exhibit-theme-item" class="panel panel-default">
+                                             <a href= <?php echo html_escape($uri);?> >
+                                               <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>
+                                               <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo html_escape($page_card_info["title"]);?></h3>
+                                               <p class="panel-card-text"><?php echo html_escape($page_card_info["description"]);?></p></div>
+                                             </a>                           
+                                         </div>
+                                    <?php }}}?>  
       </div>
     </div>
   </section>
