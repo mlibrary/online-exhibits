@@ -24,7 +24,7 @@ $title = __('Browse Exhibits');
   </div>
 
   <div class="col-xs-12">
-    <h2>Browse Exhibits</h2>
+    <h1>Browse Exhibits</h1>
     <p>Explore and discover inspiring collections of art, literature, culture, and history</p>
     <div class="detail-nav-border"></div>
     
@@ -35,7 +35,7 @@ $title = __('Browse Exhibits');
   ?>
   </section>
 
-<h3><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h3>
+<h2><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h2>
 
 <div class="detail-nav-border"></div>
 
@@ -88,7 +88,7 @@ $title = __('Browse Exhibits');
       ?>
 
       <?php
-        echo '<h2 class="sr-only">Pagination</h2>' . pagination_links();
+        echo '<p class="sr-only">Pagination</p>' . pagination_links();
       ?>
 
   

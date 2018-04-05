@@ -161,7 +161,7 @@ function mlibrary_new_create_card_for_gallery($attachment)
 
 function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  return array_map(function ($sectionpage_card_info) {
-   return '<div id = "exhibit-gallery-theme-item" class="panel panel-default">'
+   return '<div class="exhibit-gallery-theme-item panel panel-default">'
      . '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'
      . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
      . '</div>';

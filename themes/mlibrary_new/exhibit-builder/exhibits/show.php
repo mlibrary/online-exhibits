@@ -49,7 +49,7 @@ else {
       <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="250" data-offset-bottom="100">
           <div class="nav-text-inline">
-            <h3 class="nav-text-inline-heading">Exhibit Contents</h3>
+            <h2 class="nav-text-inline-heading">Exhibit Contents</h2>
             <button class="navbar-toggler nav-text-inline-button" type="button" data-toggle="collapse" data-target="#nav-toggle" aria-controls="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
               <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>  
             </button>
@@ -57,7 +57,7 @@ else {
 
           <div class="exhibit-overview collapse navbar-collapse" id="nav-toggle">
             <ul id="exhibit-pages" class="exhibit-nav-list exhibit-pages-show">
-              <?php echo link_to_exhibit('Introduction'); ?>
+              <li><?php echo link_to_exhibit('Introduction'); ?></li>
               <?php
                 $exhibit_page = get_current_record('exhibit_page', false);
                 set_exhibit_pages_for_loop_by_exhibit();
@@ -73,12 +73,12 @@ else {
 
   <section class="exhibit-content cf">
     <div class="col-xs-12 col-sm-9 show-wrapper">
-      <h2 class="section-title--large">
+      <h1 class="section-title--large">
         <?php
           set_current_record('exhibit_page', $exhibit_page);
           echo metadata('exhibit_page', 'title');
         ?>
-      </h2>
+      </h1>
 
       <div>
         <?php exhibit_builder_render_exhibit_page($exhibit_page);?>

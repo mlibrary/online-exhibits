@@ -18,7 +18,7 @@
 
 <section>
     <div class="gallery-intro">
-      <h2 class="exhibit-gallery-heading">Exhibit Image Gallery</h2>
+      <h1 class="exhibit-gallery-heading">Exhibit Image Gallery</h1>
         <p class="exhibit-gallery-subheading">Browse all images in this exhibit by section and by the order they appear within each section.</p>
         <p class="exhibit-gallery-subheading">The University of Michigan Library has placed copies of these works online for educational and research purposes. For more information about using images from this exhibit please visit the <a href="">Rights Statement page</a>.</p>
     </div>
@@ -32,7 +32,7 @@
    <section class="exhibit-gallery-cards">  
     <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments());          
           if (!empty($cards_in_section)) {
-             echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
+             echo '<h2 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h2>';
              echo implode($cards_in_section);
              $cards_in_section_flag = true;
           }
@@ -40,7 +40,7 @@
              foreach ($exhibitsection->getChildPages() as $child) {
                $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments());              
                if ((!$cards_in_section_flag) and (!empty($cards_in_subsection))) {
-                   echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
+                   echo '<h2 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h2>';
                    $cards_in_section_flag = true;
                }
                 echo implode($cards_in_subsection);
