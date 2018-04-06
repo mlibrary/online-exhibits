@@ -16,7 +16,7 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
            );         
            
            $db->update($db->exhibits, $update_new_theme,
-                array('theme = ?' => 'mlibrary'));
+                array('theme != ?' => 'mlibrary_new'));
                 
            $default_options = array(
             'file-position' => 'center',
