@@ -1,6 +1,5 @@
 .layout-double-image {
     width: 100%;
-    text-align: center;
 }
 
 .layout-double-image .exhibit-items {
@@ -23,13 +22,13 @@
     margin-bottom: 1em;
 }
 
-.layout-double-image .exhibit-item-caption p {
+.layout-double-image .exhibit-items .exhibit-item-caption p {
     margin: 0;
     clear: both;
 }
 
-.layout-double-image .captions-center .exhibit-item-caption {
-    text-align: center;
+.layout-double-image .exhibit-items .exhibit-item-caption {
+    text-align: left;
 }
 
 
