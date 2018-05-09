@@ -1,7 +1,6 @@
 
 .layout-single-image {
     width: 100%;
-    text-align: center;
 }
 
 .layout-single-image .exhibit-items {
@@ -29,8 +28,8 @@
     clear: both;
 }
 
-.layout-single-image .captions-center .exhibit-item-caption {
-    text-align: center;
+.layout-single-image .exhibit-items .exhibit-item-caption {
+   text-align: left;
 }
 
 
