@@ -120,10 +120,9 @@ function mlibrary_new_get_page_image($rawAttachment = null)
        if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
            $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
         } else {
-           $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card'));
+           $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card','alt'=>''));
         }
    } 
-
    return $page_image;
 }
 
@@ -148,14 +147,15 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
 //gallery
 function mlibrary_new_get_image_for_gallery($attachment = null)
 {
-   return record_image($attachment->getFile(),'original',array('class' => 'image-card'));
+  $alt_text = mlibrary_new_alt_text($attachment->getItem());
+  return record_image($attachment->getFile(),'original',array('class' => 'image-card','alt'=>$alt_text));
 }
 
 function mlibrary_new_create_card_for_gallery($attachment)
 {
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
-     'title' => get_view()->shortcodes(metadata($attachment,'caption',array('no_escape' => true))),
+     //'title' => get_view()->shortcodes(metadata($attachment,'caption',array('no_escape' => true))),
    ];
 }
 
@@ -163,7 +163,7 @@ function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  return array_map(function ($sectionpage_card_info) {
    return '<div class="exhibit-gallery-theme-item panel panel-default">'
      . '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'
-     . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
+    // . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
      . '</div>';
  }, $sectionpage_cards_info);
 }
@@ -405,6 +405,11 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
   }
 }
 
+function mlibrary_new_alt_text($item) {
+     return (strip_formatting(metadata($item,array('Dublin Core', 'Title'))));
+}
+
+
 /**
  * Retrieve a thumnail image for a video item type
  *  It is not used in this installation, but it can be used in the future.
@@ -413,11 +418,12 @@ function mlibrary_new_exhibit_builder_video_attachment($item) {
 $remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
-	if (!empty($elementids_youtube_video)) {
+	$alt_text = mlibrary_new_alt_text($item);
+        if (!empty($elementids_youtube_video)) {
 		foreach ($elementids_youtube_video as $elementid_youtube_video) {
 			$videoid = str_replace($remove, "", $elementid_youtube_video);
 			if (!empty($videoid)) {
-				$video_thumnail_image = "<img src='//i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:152px'/>";
+				$video_thumnail_image = "<img src='//i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:152px' alt='".$alt_text."'/>";
 			}
 		}
         }//if
@@ -425,7 +431,7 @@ $remove[] = "'";
   	        $data = $elementvideos_kultura_VCM[0];
 		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
                 $partnerId = 1038472;
-                $video_thumnail_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100"/>';
+                $video_thumnail_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/" alt="'.$alt_text.'"/>';
         }//if
         $html = exhibit_builder_link_to_exhibit_item($video_thumnail_image,'',$item);
   return $html;
@@ -437,7 +443,7 @@ $remove[] = "'";
  **/
 add_filter('exhibit_attachment_markup', 'mlibrary_exhibit_builder_attachment');
 function mlibrary_exhibit_builder_attachment($html, $compact) {
-  $remove[] = "'";
+ $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
   $thumnail_image = false;

@@ -46,10 +46,7 @@
                 echo implode($cards_in_subsection);
              }
           }  
-          /*if($cards_in_subsection || $cards_in_section) {
-             // title for the section will be displayed if there are items in section or subsection
-             echo '<h3 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h3>';
-         }*/?>
+       ?>
     </section>
   <?php }?>
 </section>
