@@ -68,10 +68,9 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
   
           $db->update($db->exhibit_page_blocks, $update_gallery,
                 array('layout = ?' =>'gallery'));
-
-          // add Gallery page to all exhibits
+          
+            // add Gallery page to all exhibits
            $sql = "SELECT id FROM `{$db->prefix}exhibits` ORDER BY id";
-
            $id_for_exhibits = $db->query($sql)->fetchAll();
            
            foreach ($id_for_exhibits as $exhibit_id) {
@@ -85,6 +84,6 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
            'slug' => 'gallery',
            'order' =>$max_order+1,
            );
-           $db->getAdapter()->insert($db->exhibit_pages,$newPageData);      
-    }}
+           $db->getAdapter()->insert($db->exhibit_pages,$newPageData); 
+   }}
 }
