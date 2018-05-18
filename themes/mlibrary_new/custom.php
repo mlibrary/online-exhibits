@@ -155,14 +155,15 @@ function mlibrary_new_create_card_for_gallery($attachment)
 {
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
+     'url' => exhibit_builder_exhibit_item_uri($attachment->getItem()),
      //'title' => get_view()->shortcodes(metadata($attachment,'caption',array('no_escape' => true))),
    ];
 }
 
 function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  return array_map(function ($sectionpage_card_info) {
-   return '<div class="exhibit-gallery-theme-item panel panel-default">'
-     . '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'
+   return '<div class="exhibit-gallery-theme-item panel panel-default">'.
+     '<a href='.$sectionpage_card_info["url"].'>'. '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'.'</a>'
     // . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
      . '</div>';
  }, $sectionpage_cards_info);
