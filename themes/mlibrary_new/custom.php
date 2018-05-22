@@ -103,24 +103,23 @@ function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 {
    $itemType = 'Still Image';
 
-   if ($rawAttachment[0]->getItem()->getItemType()!=null) {
-       $itemType = $rawAttachment[0]->getItem()->getItemType()->name;
+   if ($rawAttachment->getItem()->getItemType()!=null) {
+       $itemType = $rawAttachment->getItem()->getItemType()->name;
  }
 
    return $itemType;
 }
 
 //
-function mlibrary_new_get_page_image($rawAttachment = null) 
+function mlibrary_new_get_image_card($rawAttachment = null, $alt = '') 
 {
    $default_image = img("defaulthbg.jpg");
-   $page_image = "<img class='image-card' alt='' src='{$default_image}'/>";
-     
+   $page_image = "<img class='image-card' alt='".$alt."' src='{$default_image}'/>";
    if (!empty($rawAttachment)) {
        if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
-           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment[0]->getItem());
+           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment->getItem(),$alt);
         } else {
-           $page_image = record_image($rawAttachment[0]->getFile(),'original',array('class' => 'image-card','alt'=>''));
+           $page_image = record_image($rawAttachment->getFile(),'original',array('class' => 'image-card','alt'=>$alt));
         }
    } 
    return $page_image;
@@ -136,9 +135,9 @@ function mlibrary_new_get_page_description($blocks) {
 
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
-{ 
+{
   return [
-    'image'       => mlibrary_new_get_page_image($exhibitPage->getAllAttachments()),
+    'image'       => mlibrary_new_get_image_card(reset($exhibitPage->getAllAttachments())),
     'title'       => get_view()->shortcodes(metadata($exhibitPage, 'title')),
     'description' => mlibrary_new_get_page_description($exhibitPage->getPageBlocks()),
   ];
@@ -148,7 +147,7 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
 function mlibrary_new_get_image_for_gallery($attachment = null)
 {
   $alt_text = mlibrary_new_alt_text($attachment->getItem());
-  return record_image($attachment->getFile(),'original',array('class' => 'image-card','alt'=>$alt_text));
+  return mlibrary_new_get_image_card($attachment,$alt_text);
 }
 
 function mlibrary_new_create_card_for_gallery($attachment)
@@ -156,7 +155,6 @@ function mlibrary_new_create_card_for_gallery($attachment)
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
      'url' => exhibit_builder_exhibit_item_uri($attachment->getItem()),
-     //'title' => get_view()->shortcodes(metadata($attachment,'caption',array('no_escape' => true))),
    ];
 }
 
@@ -164,7 +162,6 @@ function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  return array_map(function ($sectionpage_card_info) {
    return '<div class="exhibit-gallery-theme-item panel panel-default">'.
      '<a href='.$sectionpage_card_info["url"].'>'. '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'.'</a>'
-    // . '<div class="card-info panel-body"><h3 class="panel-card-title">'.$sectionpage_card_info["title"].'</h3></div>'
      . '</div>';
  }, $sectionpage_cards_info);
 }
@@ -415,16 +412,16 @@ function mlibrary_new_alt_text($item) {
  * Retrieve a thumnail image for a video item type
  *  It is not used in this installation, but it can be used in the future.
  **/
-function mlibrary_new_exhibit_builder_video_attachment($item) {
+function mlibrary_new_exhibit_builder_video_attachment($item,$alt) {
 $remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
-	$alt_text = mlibrary_new_alt_text($item);
+	//$alt_text = mlibrary_new_alt_text($item);
         if (!empty($elementids_youtube_video)) {
 		foreach ($elementids_youtube_video as $elementid_youtube_video) {
 			$videoid = str_replace($remove, "", $elementid_youtube_video);
 			if (!empty($videoid)) {
-				$video_thumnail_image = "<img src='//i4.ytimg.com/vi/".$videoid."/default.jpg' style='width:200px; height:152px' alt='".$alt_text."'/>";
+				$video_gallery_image = "<img src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' style='width:326px; height:326px' alt=$alt/>";
 			}
 		}
         }//if
@@ -432,10 +429,10 @@ $remove[] = "'";
   	        $data = $elementvideos_kultura_VCM[0];
 		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
                 $partnerId = 1038472;
-                $video_thumnail_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/" alt="'.$alt_text.'"/>';
+                $video_gallery_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
         }//if
-        $html = exhibit_builder_link_to_exhibit_item($video_thumnail_image,'',$item);
-  return $html;
+        //$html = exhibit_builder_link_to_exhibit_item($video_gallery_image,'',$item);
+  return $video_gallery_image;
 }
 
 /**
@@ -447,14 +444,15 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
  $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
-  $thumnail_image = false;
+  $gallery_image = false;
   $exhibitPage = get_current_record('exhibit_page', false);
                  if ($exhibitPage->layout != 'mlibrary-custom-layout') {
                         $item = $compact['attachment']->getItem();
                         if (($item !== null) and (!empty($item->getItemType()))) {
                             $item_type = $item->getItemType();
                               if (($item_type['name'] =='Video')) {
-                                 $html = mlibrary_new_exhibit_builder_video_attachment($item, $thumnail_image);
+                                 $video_gallery_image = mlibrary_new_exhibit_builder_video_attachment($item, $gallery_image);
+                                 $html = exhibit_builder_link_to_exhibit_item($video_gallery_image,'',$item); 
                                     if (!empty($compact['attachment']['caption'])) {
                                         $html .= $compact['attachment']['caption'];
                                     }
