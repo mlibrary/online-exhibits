@@ -10,6 +10,11 @@ p {
   font-size: 1.1em;
 }
 
+*:focus {
+  outline: 3px solid #ffcb05;
+  outline-offset: 0; 
+}
+
 /** Header **/
 
 .site-heading ul {
@@ -21,7 +26,7 @@ p {
 }
 
 .search-panel {
-  padding: .75em 0;
+  padding: .85em 0;
   background: #e6f3ff;
   border-bottom: 2px solid #cce6ff;
 }
@@ -52,7 +57,7 @@ background: #00274c;
 .logo-link {
   height: 2.5rem;
   display: inline-block;
-vertical-align: top;
+  vertical-align: top;
 }
 
 .logo-list {
@@ -329,7 +334,8 @@ a.twitter-share-button:after {
   color: #6E6E6E;
 }
 
-.show header {
+.show header,
+.simple-page header {
   display: none;
 }
 
@@ -597,6 +603,25 @@ p.item-description {
   padding: 1em .25em;
   margin: 0;
   font-weight: bold;
+}
+
+/** About Online Exhibits **/
+
+.about-online-exhibits {
+  padding-top: 1em;
+}
+
+.about-online-exhibits h1,
+.about-online-exhibits h2 {
+  font-weight: 600;
+}
+
+.about-contact {
+  background-color: #fafafa;
+  border-radius: 4px;
+  border: 1px solid #eee;
+  padding: 1.5em;
+  margin-top: 3em;
 }
 
 /** Footer **/
