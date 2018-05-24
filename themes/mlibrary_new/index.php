@@ -1,5 +1,5 @@
 <?php 
-        set_theme_option('display_header','1');
+  set_theme_option('display_header','1');
 	echo head(array('bodyid'=>'home')); 
 ?>
 <div class="row">
@@ -38,7 +38,7 @@
        <div class="col-xs-12 index-exhibits-container">
          <?php
            if (plugin_is_active('ExhibitBuilder') && function_exists('recent_exhibits_bootstrap')) { 
-              echo recent_exhibits_bootstrap(4);
+              echo recent_exhibits_bootstrap(6);
            }?>
        </div>
 
