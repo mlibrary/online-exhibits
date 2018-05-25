@@ -70,23 +70,26 @@
         </div>
     </div>
 
-    <?php if ((get_theme_option('display_header') !== '0')): ?>
+    <?php if (($bodyid === 'home')): ?>
+    <header>
+        <div class="col-sm-12 banner" style="background-image:url('<?php  echo img('header.jpg'); ?>');">
+            <div id="header-claim-holder">
+                <div class="container container-medium">
+                     <h1 class="banner-text--large">Online Exhibits</h1>
+                        <p class="banner-text--medium">Brought to you by the <a href="http://lib.umich.edu">University of Michigan Library</a></p>
+                        <p class="banner-text--caption">Image: Rotunda Reading Room of the Old General Library from <a href="<?php echo url('exhibits/show/library-bicentennial'); ?>"> Stories of the University Library: A Bicentennial Exhibit</a></p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <?php endif; ?>
+
+    <?php if ((get_theme_option('display_header') !== '0') and ($bodyid !== 'home')) : ?>
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
         style="background-size:cover;background-image:url('<?php  echo bs_header_bg(); ?>');">
-        <div class="row header-row">
-            <div id="header-claim-holder">
-                <div>
-                    <?php if ((get_theme_option('header_image_heading') !== '')): ?>
-                        <h1><?php echo get_theme_option('header_image_heading'); ?></h1>
-                    <?php endif; ?>
-                    <?php if ((get_theme_option('header_image_text') !== '')): ?>
-                        <p><?php echo get_theme_option('header_image_text'); ?></p>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
+
     </header>
     <?php endif; ?>
 
