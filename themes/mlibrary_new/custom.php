@@ -420,7 +420,7 @@ $remove[] = "'";
 		foreach ($elementids_youtube_video as $elementid_youtube_video) {
 			$videoid = str_replace($remove, "", $elementid_youtube_video);
 			if (!empty($videoid)) {
-				$video_gallery_image = "<img src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' style='width:326px; height:326px' alt=$alt>";
+				$video_gallery_image = "<img class='image-card' src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' alt=$alt>";
 			}
 		}
         }//if
@@ -428,7 +428,7 @@ $remove[] = "'";
   	        $data = $elementvideos_kultura_VCM[0];
 		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
                 $partnerId = 1038472;
-                $video_gallery_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
+                $video_gallery_image = '<img class="image-card" src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
         }//if
   return $video_gallery_image;
 }
