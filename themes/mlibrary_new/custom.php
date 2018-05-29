@@ -416,12 +416,11 @@ function mlibrary_new_exhibit_builder_video_attachment($item,$alt) {
 $remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
-	//$alt_text = mlibrary_new_alt_text($item);
         if (!empty($elementids_youtube_video)) {
 		foreach ($elementids_youtube_video as $elementid_youtube_video) {
 			$videoid = str_replace($remove, "", $elementid_youtube_video);
 			if (!empty($videoid)) {
-				$video_gallery_image = "<img src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' style='width:326px; height:326px' alt=$alt/>";
+				$video_gallery_image = "<img src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' style='width:326px; height:326px' alt=$alt>";
 			}
 		}
         }//if
@@ -431,7 +430,6 @@ $remove[] = "'";
                 $partnerId = 1038472;
                 $video_gallery_image = '<img src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
         }//if
-        //$html = exhibit_builder_link_to_exhibit_item($video_gallery_image,'',$item);
   return $video_gallery_image;
 }
 
@@ -451,7 +449,8 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                         if (($item !== null) and (!empty($item->getItemType()))) {
                             $item_type = $item->getItemType();
                               if (($item_type['name'] =='Video')) {
-                                 $video_gallery_image = mlibrary_new_exhibit_builder_video_attachment($item, $gallery_image);
+                                $alt_text = mlibrary_new_alt_text($item); 
+                                 $video_gallery_image = mlibrary_new_exhibit_builder_video_attachment($item, $alt_text);
                                  $html = exhibit_builder_link_to_exhibit_item($video_gallery_image,'',$item); 
                                     if (!empty($compact['attachment']['caption'])) {
                                         $html .= $compact['attachment']['caption'];
