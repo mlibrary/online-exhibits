@@ -78,7 +78,7 @@ Omeka.Items = {};
                     var form = $('#type-metadata-form');
                     form.hide();
                     form.find('textarea').each(function () {
-                        tinyMCE.execCommand('mceRemoveControl', true, this.id);
+                        tinyMCE.EditorManager.execCommand('mceRemoveEditor', true, this.id);
                     });
                     form.html(response);
                     form.trigger('omeka:elementformload');
@@ -102,7 +102,7 @@ Omeka.Items = {};
 
         var undoButton = $('<span class="undo-remove-tag"><a href="#">Undo</a></span>').appendTo(tagLi);
         var deleteButton = $('<span class="remove-tag"><a href="#">Remove</a></span>').appendTo(tagLi);
-        tagLi.prepend('<span class="tag">' + tag + '</span>');
+        $('<span></span>', {'class': 'tag', 'text': tag}).appendTo(tagLi);
 
         if($('#all-tags-list').length != 0) {
             $('#all-tags-list').append(tagLi);

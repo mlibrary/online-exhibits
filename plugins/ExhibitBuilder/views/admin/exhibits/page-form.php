@@ -24,6 +24,15 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
         </div>
         <div class="field">
             <div class="two columns alpha">
+            <?php echo $this->formLabel('short_title', __('Menu Link Title')); ?>
+            </div>
+            <div class="inputs five columns omega">
+            <p class="explanation"><?php echo __('Optionally use a shorter title in the exhibit menu'); ?></p>
+            <?php echo $this->formText('short_title', $exhibit_page->short_title); ?>
+            </div>
+        </div>
+        <div class="field">
+            <div class="two columns alpha">
                 <?php echo $this->formLabel('slug', __('Page Slug')); ?>
             </div>
             <div class="inputs five columns omega">
@@ -81,7 +90,6 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
         </div>
     </div>
 </form>
-<?php //This item-select div must be outside the <form> tag for this page, b/c IE7 can't handle nested form tags. ?>
 <div id="attachment-panel" title="<?php echo html_escape(__('Attach an Item')); ?>">
     <div id="item-form">
         <button type="button" id="revert-selected-item"><?php echo __('Revert to Selected Item'); ?></button>
@@ -139,7 +147,7 @@ jQuery(document).ready(function () {
     jQuery(document).on('exhibit-builder-refresh-wysiwyg', function (event) {
         // Add tinyMCE to all textareas in the div where the item was attached.
         jQuery(event.target).find('textarea').each(function () {
-            tinyMCE.execCommand('mceAddControl', false, this.id);
+            tinyMCE.EditorManager.execCommand('mceAddEditor', false, this.id);
         });
     });
 });

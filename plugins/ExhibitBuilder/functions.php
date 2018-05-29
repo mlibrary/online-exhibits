@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS `{$db->prefix}exhibit_pages` (
     `exhibit_id` INT UNSIGNED NOT NULL,
     `parent_id` INT UNSIGNED DEFAULT NULL,
     `title` VARCHAR(255) DEFAULT NULL,
+    `short_title` VARCHAR(255) DEFAULT NULL,
     `slug` VARCHAR(30) NOT NULL,
     `order` SMALLINT UNSIGNED DEFAULT NULL,
     `added` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
@@ -294,13 +295,18 @@ ALTER TABLE `{$db->prefix}exhibits`
 SQL;
         $db->query($sql);
     }
-    
+
     if (version_compare($oldVersion, '3.3.3', '<')) {
         $sql = <<<SQL
 ALTER TABLE `{$db->prefix}exhibit_pages`
               ADD `added` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00',
               ADD `modified` TIMESTAMP NOT NULL DEFAULT '2000-01-01 00:00:00'
 SQL;
+        $db->query($sql);
+    }
+
+    if (version_compare($oldVersion, '3.3.4', '<')) {
+        $sql = "ALTER TABLE `{$db->prefix}exhibit_pages` ADD `short_title` VARCHAR(255) DEFAULT NULL";
         $db->query($sql);
     }
 }
@@ -416,7 +422,7 @@ function exhibit_builder_admin_head()
     // Check if using Exhibits controller, and add the stylesheet for general display of exhibits
     if ($module == 'exhibit-builder' && $controller == 'exhibits') {
         queue_css_file('exhibits', 'screen');
-        queue_js_file(array('vendor/tiny_mce/tiny_mce', 'exhibits'));
+        queue_js_file(array('vendor/tinymce/tinymce.min', 'exhibits'));
     }
 }
 
@@ -505,7 +511,7 @@ function exhibit_builder_public_theme_name($themeName)
 
     $request = Zend_Controller_Front::getInstance()->getRequest();
 
-    if ($request->getModuleName() == 'exhibit-builder') {
+    if ($request && $request->getModuleName() == 'exhibit-builder') {
         $slug = $request->getParam('slug');
         $exhibit = get_db()->getTable('Exhibit')->findBySlug($slug);
         if ($exhibit && $exhibit->theme) {
@@ -621,16 +627,13 @@ function exhibit_builder_items_browse_sql($args)
 
 /**
  * Form element for advanced search.
+ *
+ * @internal Themed partial should go to "my_theme/exhibits".
  */
-function exhibit_builder_items_search()
+function exhibit_builder_items_search($args)
 {
-    $view = get_view();
-    $html = '<div class="field"><div class="two columns alpha">'
-          . $view->formLabel('exhibit', __('Search by Exhibit'))
-          . '</div><div class="five columns omega inputs">'
-          . $view->formSelect('exhibit', @$_GET['exhibit'], array(), get_table_options('Exhibit'))
-          . '</div></div>';
-    echo $html;
+    $view = $args['view'];
+    echo $view->partial('exhibits/exhibit-builder-advanced-search.php');
 }
 
 function exhibit_builder_search_record_types($recordTypes)
