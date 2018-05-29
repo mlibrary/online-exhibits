@@ -11,47 +11,40 @@
  * 
  * @package Omeka\Captcha
  */
-class Omeka_Captcha {
-
+class Omeka_Captcha
+{
     const PUBLIC_KEY_OPTION = 'recaptcha_public_key';
     const PRIVATE_KEY_OPTION = 'recaptcha_private_key';
-    
+
     /**
      * Get a captcha object implementing Zend's captcha API.
      *
-     * @internal Currently returns a Zend_Captcha_ReCaptcha object.
+     * @internal Currently returns a Zend_Captcha_ReCaptcha or Ghost_Captcha_Recaptcha2 object.
      *
      * @return Zend_Captcha_Adapter|null
      */
-    static function getCaptcha()
+    public static function getCaptcha()
     {
         $publicKey = get_option(self::PUBLIC_KEY_OPTION);
         $privateKey = get_option(self::PRIVATE_KEY_OPTION);
 
         if (empty($publicKey) || empty($privateKey)) {
-           return null;
+            return null;
         }
 
-        $ssl = false;
-        if ($request = Zend_Controller_Front::getInstance()->getRequest()) {
-            $ssl = $request->isSecure();
-        }
-
-        $captcha = new Zend_Captcha_ReCaptcha(array(
+        return new Ghost_Captcha_ReCaptcha2(array(
             'pubKey' => $publicKey,
             'privKey' => $privateKey,
-            'ssl' => $ssl));
-
-        return $captcha;
+        ));
     }
 
     /**
      * Return whether the captcha is configured.
      * If this returns true, getCaptcha will not return null.
      *
-     * @return boolean
+     * @return bool
      */
-    static function isConfigured()
+    public static function isConfigured()
     {
         $publicKey = get_option(self::PUBLIC_KEY_OPTION);
         $privateKey = get_option(self::PRIVATE_KEY_OPTION);

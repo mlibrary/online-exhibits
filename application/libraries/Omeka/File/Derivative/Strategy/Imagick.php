@@ -13,8 +13,7 @@
  *
  * @package Omeka\File\Derivative\Strategy
  */
-class Omeka_File_Derivative_Strategy_Imagick
-    extends Omeka_File_Derivative_AbstractStrategy
+class Omeka_File_Derivative_Strategy_Imagick extends Omeka_File_Derivative_AbstractStrategy
 {
     /**
      * Check for the imagick extension at creation.
@@ -41,7 +40,7 @@ class Omeka_File_Derivative_Strategy_Imagick
             return false;
         }
 
-        if ($this->getOption('autoOrient', false)) {
+        if ($this->getOption('autoOrient', true)) {
             $this->_autoOrient($imagick);
         }
 
