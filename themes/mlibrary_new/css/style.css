@@ -548,27 +548,42 @@ width: calc(33% - 3em);
 }
 
 .tag-cloud ul {
-  margin-left: 0;
+  margin: 0;
 }
 
 .tag-cloud li {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: .5em 0 1em;
   display: inline-block;
   font-weight: bold;
 }
 
-.btn-tags {
+.tag-cloud {
+  padding-bottom: 1em;
+}
+
+.tag-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.tag-list a {
   color: #0C5292;
   font-weight: 600;
   background-color: #F2F9FF;
   border: 2px solid #CCE6FF;
   border-radius: 99px;
   padding: .5em;
+  margin: .5em;
 }
 
-.btn-tags:hover {
+.tag-cloud > .tag-list a {
+  margin: .5em 1em;
+}
+
+.tag-list a:hover {
   background-color: #126DC1;
   border: 2px solid #126DC1;
   color: #fff;
