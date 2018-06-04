@@ -28,7 +28,7 @@ $title = __('Browse Exhibits');
     <p>Explore and discover inspiring collections of art, literature, culture, and history</p>
     <div class="detail-nav-border"></div>
     
-  <section>
+  <section class="tag-cloud row">
   <?php
     $html = mlibrary_new_display_popular_tags();
     echo $html;
