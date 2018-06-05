@@ -6,7 +6,7 @@
 
 class ExhibitGalleryPagePlugin extends Omeka_Plugin_AbstractPlugin
 {
-    protected $_hooks = array('install');
+    protected $_hooks = array('install','uninstall');
 
     public function hookInstall() {
            $db = get_db();
@@ -30,4 +30,5 @@ class ExhibitGalleryPagePlugin extends Omeka_Plugin_AbstractPlugin
               $db->getAdapter()->insert($db->exhibit_pages,$newPageData); 
            }
    }
+   
 }
