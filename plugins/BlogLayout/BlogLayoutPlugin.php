@@ -69,21 +69,5 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
           $db->update($db->exhibit_page_blocks, $update_gallery,
                 array('layout = ?' =>'gallery'));
           
-            // add Gallery page to all exhibits
-           $sql = "SELECT id FROM `{$db->prefix}exhibits` ORDER BY id";
-           $id_for_exhibits = $db->query($sql)->fetchAll();
-           
-           foreach ($id_for_exhibits as $exhibit_id) {
-           $id = $exhibit_id['id'];
-           $sql_order = "select MAX(`order`) FROM `{$db->prefix}exhibit_pages` b WHERE b.exhibit_id = $id";
-           $max_order = $db->fetchOne($sql_order);
-           $newPageData = array (
-           'parent_id' => null, 
-           'exhibit_id' => $id,
-           'title' => 'Gallery',
-           'slug' => 'gallery',
-           'order' =>$max_order+1,
-           );
-           $db->getAdapter()->insert($db->exhibit_pages,$newPageData); 
-   }}
+   }
 }
