@@ -80,7 +80,6 @@
 		}
 	}
 
-print_r("I am here");
 
 exit;
 ?>
