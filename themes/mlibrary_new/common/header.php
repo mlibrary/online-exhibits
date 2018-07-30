@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <?php if (($bodyid === 'home')): ?>
+    <?php if (isset($bodyid) and ($bodyid === 'home')): ?>
     <header>
         <div class="col-sm-12 banner" style="background-image:url('<?php  echo img('header.jpg'); ?>');">
             <div id="header-claim-holder">
@@ -84,7 +84,7 @@
     </header>
     <?php endif; ?>
 
-    <?php if ((get_theme_option('display_header') !== '0') and ($bodyid !== 'home')) : ?>
+    <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid !== 'home')) : ?>
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
