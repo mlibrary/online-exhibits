@@ -7,7 +7,7 @@
 class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
 {
     protected $_filters = array('exhibit_layouts');
-    protected $_hooks = array('install');
+    protected $_hooks = array('install','uninstall');
 
 
     public function filterExhibitLayouts($layouts)
@@ -45,14 +45,10 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
            );
            
            $encodedOptions = json_encode($default_options);
-           $update_file_text = array(
-             'options' => $encodedOptions,
-              'layout' => 'single-image'
-           ); 
            $update_file = array(
              'options' => $encodedOptions,
               'layout' => 'single-image'
-           );
+           ); 
     
           $update_gallery = array(
              'options' => $encodedOptions,
@@ -60,7 +56,7 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
           );
 
          // update layout pages with new pages
-          $db->update($db->exhibit_page_blocks, $update_file_text,
+          $db->update($db->exhibit_page_blocks, $update_file,
                 array('layout = ?' =>'file-text'));
           
           $db->update($db->exhibit_page_blocks, $update_file,
@@ -70,4 +66,38 @@ class BlogLayoutPlugin extends Omeka_Plugin_AbstractPlugin
                 array('layout = ?' =>'gallery'));
           
    }
+
+   public function hookUninstall() {
+      $db = get_db();
+      $default_options_file = array(
+            'file-position' => 'center',
+            'file-size' => 'fullsize',
+            'captions-position' => 'left'
+           );
+
+      $default_options_gallery = array(
+           "showcase-position" => "none",
+           "gallery-position" => "left",
+           "gallery-file-size" => "square_thumbnail",
+           "captions-position" => "center"
+          );
+
+           //$encodedOptions = json_encode($default_options_file);
+           $update_file_text = array(
+             'options' => json_encode($default_options_file),
+              'layout' => 'file-text'
+           );
+
+          $update_gallery = array(
+             'options' => json_encode($default_options_gallery),
+             'layout' => 'gallery'
+          );
+
+         $db->update($db->exhibit_page_blocks, $update_file_text,
+                array('layout = ?' =>'single-image'));
+
+          $db->update($db->exhibit_page_blocks, $update_gallery,
+                array('layout = ?' =>'double-image'));  
+    }
+
 }
