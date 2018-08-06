@@ -12,7 +12,6 @@
     </div>
     <h1>
       <?php if (isset($_GET['query'])) { $query = $_GET['query'];}
-
       $pageSummary =  __('%s ', $total_results) . __('Online Exhibits containing') . __(' "%s"', $query);
       ?> 
     </h1>
@@ -22,9 +21,7 @@
     </div>
 
     <div id="primary" class="search">
-
     <?php if ($total_results > 0): ?>
-
       <div id="exhibits" class="pretty-list">
       <?php
           $filter = new Zend_Filter_Word_CamelCaseToDash; 
@@ -32,33 +29,32 @@
               $record = get_record_by_id($searchText['record_type'], $searchText['record_id']);
               $recordType = $searchText['record_type'];
               set_current_record($recordType, $record);
-      ?>
-
+       ?>
           <article>
             <div class="col-xs-12 browse-wrap">
               <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';
                     if ($recordImage = record_image($recordType, 'square_thumbnail')):
                         echo link_to($record, 'show', $recordImage, array('class' => 'image')); 
                     endif;
-                    echo '</div></div>'?>
+                    echo '</div></div>';
+                    ?>
                     <div class="col-xs-12 col-sm-9"><h2 class="item-heading">
                          <a href="<?php echo record_url($record, 'show'); ?>">
                             <?php echo $searchText['title'] ? $searchText['title'] : '[Unknown]'; ?>
                          </a></h2>
-                         <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
+                         <?php 
+                               if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                                echo '<p class="item-description">' .$exhibitDescription. '</p>';
                          }
                          $tags = str_replace(';', '', tag_string($record, '/exhibits/browse'));
-                         echo '<div class="tags"><ul class="tag-list"> <li>Tags:</li>'.$tags. '</ul></div>'; 
-                         $results_in_exhibit = 'test';
-                         echo '<div class="tags"><ul class="tag-list"> <li>results in exhibit</li>'.$results_in_exhibit. '</ul></div>';?>
+                         echo '<div class="tags"><ul class="tag-list"> <li>Tags:</li>'.$tags. '</ul></div>';?>
                     </div>
             </div>
          </article>
        <?php
        endforeach;
        echo pagination_links();
-       else:?>
+    else:?>
      <div id="no-results">
       <p><?php echo __('Your query returned no results.');?></p>
      </div>
