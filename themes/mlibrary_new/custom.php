@@ -136,10 +136,11 @@ function mlibrary_new_get_page_description($blocks) {
 
 function mlibrary_new_display_exhibit_card_info($exhibitPage)
 {  
-  $rawAttachment = reset($exhibitPage->getAllAttachments());
+  $rawAttachment = $exhibitPage->getAllAttachments();
+  $rawAttachment_reset = reset($rawAttachment);
   
   return [
-    'image'       => mlibrary_new_get_image_card($rawAttachment),
+    'image'       => mlibrary_new_get_image_card($rawAttachment_reset),
     'title'       => get_view()->shortcodes(metadata($exhibitPage, 'title')),
     'description' => mlibrary_new_get_page_description($exhibitPage->getPageBlocks()),
   ];
