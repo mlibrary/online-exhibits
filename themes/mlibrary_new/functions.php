@@ -78,7 +78,7 @@ function bs_header_bg()
         $headerImage = $storage->getUri($storage->getPathByType($headerImage, 'theme_uploads'));
         return $headerImage;
     } else {
-        return img('defaulthbg.jpg');
+        return img('header-default-banner.jpg');
     }
 }
 
