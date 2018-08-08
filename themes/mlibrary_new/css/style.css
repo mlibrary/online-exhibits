@@ -15,11 +15,18 @@ p {
   outline-offset: 0; 
 }
 
+body {
+  background-color: #f2f2f2;
+}
+
 /** Header **/
 
 .site-heading ul {
   padding: 0;
   margin: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   align-items: center;
   vertical-align: baseline;
@@ -32,6 +39,9 @@ p {
 }
 
 .search-box {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   justify-content: center;
   flex-wrap: row;
@@ -51,7 +61,7 @@ input#query.form-control {
 }
 
 div.site-header {
-background: #00274c;
+  background: #00274c;
 }
 
 .logo-link {
@@ -87,6 +97,8 @@ ul.site-header-nav-list a {
 }
 
 .site-header-container {
+  display: -webkit-box;
+  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: justify;
@@ -236,7 +248,7 @@ a.twitter-share-button:after {
 }
 
 #exhibit-pages .active > a {
-    color: #126DC1;
+  color: #126DC1;
 }
 
 .exhibit-overview {
@@ -262,6 +274,9 @@ a.twitter-share-button:after {
 }
 
 .section-nav {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
@@ -342,6 +357,9 @@ a.twitter-share-button:after {
 /** Exhibit Card Panels **/
 
 .exhibit-theme {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -430,6 +448,9 @@ div.browse-index {
 }
 
 .index-exhibits-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -467,7 +488,7 @@ div.browse-index {
 
 .index-exhibits .panel-heading  {
   position: relative;
-  height: 15em;
+  height: 13em;
   width: 100%;
   overflow: hidden;
 }
@@ -484,6 +505,9 @@ div.browse-index {
 }
 
 .index-featured-exhibit-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -491,7 +515,7 @@ div.browse-index {
 
 .index-exhibits .panel-body,
 .index-featured-exhibit .panel-body {
-    padding: 1em;
+  padding: 1em;
 }
 
 .index-exhibits h3.panel-card-title a, .index-featured-exhibit h3.panel-card-title a  {
@@ -514,17 +538,20 @@ div.browse-index {
 }
 
 .exhibit-gallery-cards {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: start;
 }
 
 .exhibit-gallery-theme-item {
-background-color: #FFFFFF;
-border-radius: 4px;
-box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
-margin: 1em;
-width: calc(33% - 3em);
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  margin: 1em;
+  width: calc(33% - 3em);
 }
 
 .exhibit-gallery-theme-item > a > .panel-heading {
@@ -564,6 +591,9 @@ width: calc(33% - 3em);
 }
 
 .tag-list {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
@@ -642,9 +672,12 @@ p.item-description {
 /** Footer **/
 
 footer.site-footer {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   justify-content: flex-start;
-  margin-top: 0;
+  margin-top: 7em;
 }
 /** Utilities **/
 
@@ -934,6 +967,9 @@ body>.navbar {
       margin-left: 0;
       text-align: left;
     }
+    .exhibit-theme-item {
+    width: calc(50% - 1.5em);
+  }
 }
 
 @media only screen and (max-width: 767px) {
@@ -944,6 +980,9 @@ body>.navbar {
 	}
 
   nav.site-header-nav {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
     display: flex;
     margin: 0 auto;
     padding-bottom: .5em;
@@ -984,6 +1023,9 @@ body>.navbar {
   }
 
  .search-form-group{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   justify-content: space-around;
   margin: 0;
@@ -994,12 +1036,19 @@ body>.navbar {
   }
 
   .exhibit-gallery-theme-item {
-  width: calc(100%);
+    width: calc(100%);
   }
 
   .index-featured-exhibit .panel-heading {
-    position: relative;
-    height: 13em;
+    height: 11em;
+  }
+
+  .index-exhibits .panel-heading {
+    height: 11em;
+  }
+
+  .banner {
+    height: 25em;
   }
 
 }

@@ -9,14 +9,14 @@
     		<div class="col-xs-12 col-sm-6">
     			<ul>
     			<li class="detail-nav-heading">Browse</li>
-    			<li>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</li>
+    			<li>Explore and discover inspiring collections of art, literature, culture, and history.</li>
     			<li><a href="<?php echo url('exhibits'); ?>">Browse online exhibits</a></li>
     			</ul>
 	    	</div>
 	    	<div class="col-xs-12 col-sm-6">
 	    		<ul>
     			<li class="detail-nav-heading">About</li>
-    			<li>Etiam porta sem malesuada magna mollis euismod.</li>
+    			<li>The University of Michigan Library builds compelling digital exhibits using resources from our extensive collections in our Online Exhibits.</li>
     			<li><a href="<?php echo url('about'); ?>">About online exhibits</a></li>
     			</ul>
 	    	</div>
