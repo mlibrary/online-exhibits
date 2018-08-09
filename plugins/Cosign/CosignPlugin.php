@@ -11,7 +11,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     /**
     * @var array Hooks for the plugin.
     */
-    protected $_hooks = array('define_routes','config_form','config', 'initialize');
+    protected $_hooks = ['define_routes','config_form','config', 'initialize'];
 
     protected $_filters = ['admin_whitelist'];
 
@@ -43,20 +43,31 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterAdminWhitelist($list)
     {
-      array_push($list, [
-        'module' => 'admin',
-        'controller' => 'redirector',
-        'action' => 'index',
-      ]);
-      return $list;
+        array_push(
+            $list,
+            [
+                'module' => 'admin',
+                'controller' => 'redirector',
+                'action' => 'index',
+            ]
+        );
+        return $list;
     }
 
-    public function hookInitialize() {
+    public function hookInitialize()
+    {
         if (!empty($_SERVER['REMOTE_USER'])) {
             $auth = Zend_Auth::getInstance();
             if (!$auth->hasIdentity()) {
-                $adapter = new Omeka_Auth_Adapter_Cosign($_SERVER['REMOTE_USER'], '');
-                $auth->authenticate($adapter);
+                $adapter = new Omeka_Auth_Adapter_Cosign(
+                    $_SERVER['REMOTE_USER'],
+                    ''
+                );
+                $userId = $auth->authenticate($adapter)->getIdentity();
+                $user = get_db()->getTable('User')->find($userId);
+                Zend_Registry::get('bootstrap')
+                  ->getContainer()
+                  ->currentuser = $user;
             }
         }
     }
@@ -106,7 +117,8 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     private function redirectedURL()
     {
-        return (isset($_SERVER['HTTPS']) ? 'https' : 'http') . "://{$_SERVER['HTTP_HOST']}/login?dest=/admin";
+        return (isset($_SERVER['HTTPS']) ? 'https' : 'http') .
+           "://{$_SERVER['HTTP_HOST']}/login?dest=/admin";
     }
 }
 
