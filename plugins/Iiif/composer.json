@@ -1,0 +1,12 @@
+{
+    "name": "bertrama/iiif-server",
+    "authors": [
+        {
+            "name": "Albert Bertram",
+            "email": "bertrama@umich.edu"
+        }
+    ],
+    "require": {
+        "conlect/image-iiif": "^0.1.0"
+    }
+}
