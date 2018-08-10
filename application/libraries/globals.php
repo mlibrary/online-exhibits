@@ -3152,7 +3152,7 @@ function tag_string($recordOrTags = null, $link = 'items/browse', $delimiter = n
         if (!$link) {
             $tagStrings[] = html_escape($name);
         } else {
-            $tagStrings[] = '<li><a href="' . html_escape(url($link, array('tags' => $name))) . '" rel="tag">' . html_escape($name) . '</a></li>';
+            $tagStrings[] = '<a href="' . html_escape(url($link, array('tags' => $name))) . '" rel="tag">' . html_escape($name) . '</a>';
         }
     }
     return join(html_escape($delimiter), $tagStrings);
