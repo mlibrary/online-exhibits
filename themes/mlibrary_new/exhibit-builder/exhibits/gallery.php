@@ -20,7 +20,7 @@
     <div class="gallery-intro">
       <h1 class="exhibit-gallery-heading">Exhibit Image Gallery</h1>
         <p class="exhibit-gallery-subheading">Browse all images in this exhibit by section and by the order they appear within each section.</p>
-        <p class="exhibit-gallery-subheading">The University of Michigan Library has placed copies of these works online for educational and research purposes. For more information about using images from this exhibit please visit the <a href="">Rights Statement page</a>.</p>
+        <p class="exhibit-gallery-subheading">The University of Michigan Library has placed copies of these works online for educational and research purposes. For more information about using images from this exhibit please see the <a href="<?php echo url('about/#image-rights'); ?>">Rights Statement</a>.</p>
     </div>
 
   <?php set_exhibit_pages_for_loop_by_exhibit();

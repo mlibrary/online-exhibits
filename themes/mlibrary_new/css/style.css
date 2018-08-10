@@ -19,6 +19,10 @@ body {
   background-color: #f2f2f2;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 /** Header **/
 
 .site-heading ul {
@@ -225,6 +229,10 @@ a.twitter-share-button:after {
   font-size: 1.1em;
 }
 
+.affix-bottom { 
+  position: absolute; 
+}
+
 #exhibit-pages li {
   margin: .45em 0;
   padding: 0;
@@ -232,14 +240,34 @@ a.twitter-share-button:after {
 }
 
 .exhibit-pages-summary li > ul {
-  display: none;
+  display: none; /*Doesn't display sub-pages on Exhibit Summary page*/
 }
 
 .exhibit-pages-show li > ul {
   list-style: none;
   margin: 0;
-  padding-left: .5em;
+  padding-left: .25em;
   font-size: 1em;
+}
+
+.exhibit-pages-show li.current a {
+  color: #126DC1;
+  border-left: 4px solid #126DC1;
+  padding-left: .25em;
+} 
+
+.exhibit-pages-show li > ul li {
+  display: none; /* Will not display the sub-page list items if aren't on current page*/
+} 
+
+.exhibit-pages-show li.current > ul li {
+  display: block;
+}
+
+.exhibit-pages-show li.current > ul li a {
+  color: #6E6E6E;
+  border: none;
+  padding-left: 0;
 }
 
 #exhibit-pages .active {
@@ -570,6 +598,11 @@ div.browse-index {
 
 /** Browse Page **/
 
+.browse-tag--heading {
+  font-size: 1.25em;
+  font-weight: bold;
+}
+
 .browse-wrap {
   padding: 1em 0;
 }
@@ -648,6 +681,71 @@ p.item-description {
   padding: 1em .25em;
   margin: 0;
   font-weight: bold;
+}
+
+/** Pagination **/
+
+.pagination,
+li.page-input {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+li.page-input form {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 150px;
+}
+
+li.page-input form input {
+  width: 50% !important;
+  border: 1px solid #126DC1;
+  color: #0C5292;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+li.page-input .num-label {
+  width: 50%;
+  padding: .5em;
+  border: 1px solid #126DC1;
+  color: #0C5292;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-left: .25em;
+}
+
+.pagination li a {
+  border: 1px solid #126DC1;
+  color: #0C5292;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: #f2f9ff;
+}
+
+.pagination li a:hover {
+  background-color: #126DC1;
+  border: 2px solid #126DC1;
+  color: #fff;
+  text-decoration: none;
+}
+
+/** Search results page **/
+
+.search-page--heading {
+  font-size: 1.5em;
+  color: #333;
+  font-weight: normal;
+}
+
+#no-results {
+  text-align: center;
+  font-size: 1.5em;
 }
 
 /** About Online Exhibits **/
@@ -912,7 +1010,7 @@ body>.navbar {
 
 @media(min-width: 767px) and (max-width: 991px ) {
   .section-nav-panel {
-  width: calc(100%);
+  width: 100%;
   margin-top: .5em;
   }
 
@@ -1006,7 +1104,7 @@ body>.navbar {
 }
 
   .section-nav-panel {
-  width: calc(100%);
+  width: 100%;
   margin-top: .5em;
 }
 
@@ -1036,7 +1134,7 @@ body>.navbar {
   }
 
   .exhibit-gallery-theme-item {
-    width: calc(100%);
+    width: 100%;
   }
 
   .index-featured-exhibit .panel-heading {
@@ -1049,6 +1147,10 @@ body>.navbar {
 
   .banner {
     height: 25em;
+  }
+
+  li.page-input form {
+    width: 100px;
   }
 
 }

@@ -12,11 +12,11 @@
     </div>
     <h1>
       <?php if (isset($_GET['query'])) { $query = $_GET['query'];}
-      $pageSummary =  __('%s ', $total_results) . __('Online Exhibits containing') . __(' "%s"', $query);
+      $pageSummary =  __('%s ', $total_results) . __('Online Exhibits containing') . __(' "<span class="bold">%s</span>"', $query);
       ?> 
     </h1>
     <div class="col-xs-12">
-       <h1><?php echo $pageSummary;?></h1>
+       <h1 class="search-page--heading"><?php echo $pageSummary;?></h1>
        <div class="detail-nav-border"></div>
     </div>
 

@@ -33,7 +33,7 @@ else {?>
                                         <p>University of Michigan Library Online Exhibits are proudly brought to you by <a href='https://omeka.org/'>Omeka</a>.</p>
                                        &nbsp ";
 
-          $about_using_images = "<h2>Using images from this website</h2>
+          $about_using_images = "<h2 id='image-rights'>Using images from this website</h2>
                                       <p>The University of Michigan Library has placed copies of these works online for educational and research purposes. 
                                          These works may be under copyright. If you decide to use any of these works, you are responsible for making your own 
                                          legal assessment and securing any necessary permission.</p>";
