@@ -42,7 +42,7 @@
     $image_index = 0;
     $audio_file = false;
     $item_type = (empty($item->getItemType()->name)) ? 'Image' : $item->getItemType()->name;
-    $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary';
+    $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary_new';
 
 
     $audio = array(
@@ -90,7 +90,7 @@
                 $tile_count_up_to_tier = [0];
                 $resolution = 1;
                 $resolutions = [];
-         while ($width > $tile_size || $height > $tile_size) {
+                while ($width > $tile_size || $height > $tile_size) {
                   $resolutions[] = $resolution;
                   $width_in_tiles = ceil($width / $tile_size);
                   $height_in_tiles = ceil($height / $tile_size);
@@ -107,7 +107,6 @@
                     $tile_count_up_to_tier[count($tile_count_up_to_tier) - 1] +
                     $width_in_tiles * $height_in_tiles;
                 }
-
                 $tile_sources[] = [
                   'tileUrl' => $tile_url,
                   'origUrl' => file_display_url($file, 'original'),
@@ -117,10 +116,8 @@
                   'resolutions' => array_reverse($resolutions),
                   'tileCountUpToTier' => $tile_count_up_to_tier,
                 ];
-
               } //endif
               else {  //zoom option not selected
-
                 $html_fullsize_image .= file_markup(
                   $file,
                    array(
@@ -146,7 +143,7 @@
               <?php
                 $os = [
                   'id' => 'image-zoomer-os',
-                  'prefixUrl' => WEB_ROOT.'/themes/mlibrary/items/openseadragon/images/',
+                  'prefixUrl' => WEB_ROOT.'/themes/mlibrary_new/items/openseadragon/images/',
                   'showNavigator' => false,
                   'animationTime' => 0.5,
                   'showRotationControl' => false,
@@ -260,7 +257,7 @@
 
     if (!$fullsizeimage && ($audio_file || ($item_type == 'Sound'))) {
        // if first file is an audio file then display a default image for sound file.
-       echo '<img src="' . img('audio_default02.gif') . '" alt="Oops" /></div>'; //item-images
+     echo '<img src="' . img('audio_default02.gif') . '" alt="Oops" /></div>'; //item-images
     } elseif ($item_type == 'Video') {
        echo mlibrary_display_video('item');
     }?>
