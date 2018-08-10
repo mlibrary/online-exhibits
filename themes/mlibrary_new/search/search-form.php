@@ -1,5 +1,6 @@
 <?php 
 echo $this->form('search-form', $options['form_attributes']); ?>
+    <div role="search">
     <div class="form-group search-form-group"> 
         <label class="sr-only" for="search-form"><span>Search Online Exhibits</span></label>
       <?php echo $this->formText('query', $filters['query'], array('class'=>'form-control', 'id'=>'search-form', 'size'=> '50', 'placeholder'=>'Search Online Exhibits')); ?>
@@ -24,4 +25,5 @@ echo $this->form('search-form', $options['form_attributes']); ?>
             <p><?php echo link_to_item_search(__('Advanced Search (Items only)')); ?></p>
         </fieldset>
     <?php endif; ?>
+    </div>
 </form>
