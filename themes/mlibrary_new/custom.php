@@ -52,12 +52,20 @@ function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL)
 
 function mlibrary_new_item_sequence_prev($exhibitId, $pageId, $itemId) {
   $order = mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId);
-  return mlibrary_new_item_sequence($exhibitId, $order, 'prev')[0];
+  $sequence = mlibrary_new_item_sequence($exhibitId, $order, 'prev');
+  if ($sequence) {
+    return $sequence[0];
+  }
+  return null;
 }
 
 function mlibrary_new_item_sequence_next($exhibitId, $pageId, $itemId) {
   $order = mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId);
-  return mlibrary_new_item_sequence($exhibitId, $order, 'next')[0];
+  $sequence = mlibrary_new_item_sequence($exhibitId, $order, 'next');
+  if ($sequence) {
+    return $sequence[0];
+  }
+  return null;
 }
 
 function mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId) {
