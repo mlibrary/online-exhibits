@@ -56,7 +56,7 @@
                     
                   </ul>
                 </div>
-		<nav class="site-header-nav">
+		<nav class="site-header-nav" role="navigation">
                   <ul class="site-header-nav-list">
                       <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
                       <li><a href="<?php echo url('about'); ?>">About</a></li>
@@ -95,6 +95,6 @@
     </header>
     <?php endif; ?>
 
-    <main id="content">
+    <main id="content" role="main">
       <div class="container">
           <?php fire_plugin_hook('public_content_top', array('view'=>$this)); ?>

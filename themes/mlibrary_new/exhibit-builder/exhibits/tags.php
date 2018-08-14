@@ -1,7 +1,5 @@
   <div class="col-sm-12">
-  	<ul>
-     <li>Browse by Popular Tags</li>
-   	</ul>
+     <h2 class="browse-tag--heading">Browse by Popular Tags</h2>
   </div>
   <div class="col-sm-12 tag-list">
       <?php

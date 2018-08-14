@@ -11,6 +11,82 @@ require_once dirname(__FILE__) . '/functions.php';
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
+function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL) {
+  $db = get_db();
+  $itemTable = $db->getTable('Item');
+  $select = $itemTable->getSelect()
+    ->joinInner(
+      ['attachments' => $db->ExhibitBlockAttachment],
+      'attachments.item_id = items.id',
+      ['block_id']
+    )
+    ->joinInner(
+      ['blocks' => $db->ExhibitPageBlock],
+      'attachments.block_id = blocks.id',
+      ['page_id']
+    )
+    ->joinInner(
+      ['pages' => $db->ExhibitPage],
+      'blocks.page_id = pages.id',
+      ['exhibit_id']
+    )
+    ->where('pages.exhibit_id = ?', $exhibitId);
+
+  if ($direction && $from) {
+    if ($direction == 'next') {
+      $select->where('(pages.order * 65536 + blocks.order * 256 + attachments.order) > ?', $from);
+      $select->order(['pages.order', 'blocks.order',  'attachments.order']);
+      $select->limit(1);
+    }
+    else {
+      $select->where('(pages.order * 65536 + blocks.order * 256 + attachments.order) < ?', $from);
+      $select->order(['pages.order DESC', 'blocks.order DESC', 'attachments.order DESC']);
+      $select->limit(1);
+    }
+  }
+  else {
+    $select->order(['pages.order', 'blocks.order', 'attachments.order']);
+  }
+  return $itemTable->fetchObjects($select);
+}
+
+function mlibrary_new_item_sequence_prev($exhibitId, $pageId, $itemId) {
+  $order = mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId);
+  $sequence = mlibrary_new_item_sequence($exhibitId, $order, 'prev');
+  if ($sequence) {
+    return $sequence[0];
+  }
+  return null;
+}
+
+function mlibrary_new_item_sequence_next($exhibitId, $pageId, $itemId) {
+  $order = mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId);
+  $sequence = mlibrary_new_item_sequence($exhibitId, $order, 'next');
+  if ($sequence) {
+    return $sequence[0];
+  }
+  return null;
+}
+
+function mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId) {
+  $db = get_db();
+  $sql = <<<EOF
+SELECT
+  pages.order * 65536 + blocks.order * 256 + attachments.order
+FROM
+  {$db->ExhibitPage} pages JOIN
+  {$db->ExhibitPageBlock} blocks ON blocks.page_id = pages.id JOIN
+  {$db->ExhibitBlockAttachment} attachments ON  attachments.block_id = blocks.id
+WHERE
+  pages.exhibit_id = ? AND
+  pages.id         = ? AND
+  attachments.item_id = ?
+ORDER BY
+  pages.order, blocks.order, attachments.order
+EOF;
+  return $db->query($sql, [$exhibitId, $pageId, $itemId])->fetchColumn();
+}
+
 /**
 * Extends featured exhibit function to include snippet from description for exhibits and
 * read more link
