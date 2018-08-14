@@ -21,11 +21,11 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
     $factory = new \Conlect\ImageIIIF\ImageFactory;
 
-    $file = $factory()->load($file)
+    $file = $factory($config)->load($file)
       ->withParameters($params)
       ->stream();
-    if (isset($config['mime'][$params['format']])) {
-      header('Content-Type: ' . $config['mime'][$params['format']]);
+    if (isset($config->get('mime')[$params['format']])) {
+      header('Content-Type: ' . $config->get('mime')[$params['format']]);
     }
     print $file;
     exit;
@@ -33,6 +33,7 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
   public function infoAction()
   {
+    $config = $this->loadConfig();
     $params = $this->getRequest()->getParams();
     $file = $this->getPath($params['identifier']);
     if (is_null($file)) {
@@ -41,7 +42,7 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
     $factory = new \Conlect\ImageIIIF\ImageFactory;
 
-    $info = $factory()->load($file)->info($params['identifier']);
+    $info = $factory($config)->load($file)->info($params['identifier']);
 
     print json_encode($info);
     exit;
@@ -74,8 +75,8 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
   private function loadConfig()
   {
-    return include(
-        PLUGIN_DIR . '/Iiif/vendor/conlect/image-iiif/config/iiif.php'
-    );
+    $config = new Config(PLUGIN_DIR . '/Iiif/vendor/conlect/image-iiif/config');
+    $config->set('base_url', WEB_ROOT);
+    return $config;
   }
 }
