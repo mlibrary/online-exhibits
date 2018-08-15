@@ -17,7 +17,7 @@
  if (isset($_GET['exhibit']) && isset($_GET['page'])) {
     $pageClean = html_escape($_GET['page']);
     $exhibitClean = html_escape($_GET['exhibit']);
-    echo '<div class="button exhibit-item-back-button"><a href="' .
+    echo '<div class="exhibit-item-back-button"><a href="' .
         exhibit_builder_exhibit_uri(
           get_record_by_id('exhibit', $exhibitClean),
           get_record_by_id('exhibit_page', $pageClean)
@@ -33,96 +33,24 @@
     $item_type = (empty($item->getItemType()->name)) ? 'Image' : $item->getItemType()->name;
     $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary_new';
 
-
-    $audio = array(
-      'application/ogg',
-      'audio/aac',
-      'audio/aiff',
-      'audio/midi',
-      'audio/mp3',
-      'audio/mp4',
-      'audio/mpeg',
-      'audio/mpeg3',
-      'audio/mpegaudio',
-      'audio/mpg',
-      'audio/ogg',
-      'audio/x-mp3',
-      'audio/x-mp4',
-      'audio/x-mpeg',
-      'audio/x-mpeg3',
-      'audio/x-midi',
-      'audio/x-mpegaudio',
-      'audio/x-mpg',
-      'audio/x-ogg',
-      'application/octet-stream'
-    );
-
     if ($item_type != 'Video') { ?>
        <div id="item-images">
+<button id="action-zoom-in">Zoom In</button>
+<span id="span-zoom-status"></span>
+<button id="action-zoom-out">Zoom Out</button>
+<button id="action-reset-viewer">Reset View</button>
+<button id="action-rotate-left">Rotate left</button>
+<button id="action-rotate-right">Rotate Right</button>
          <?php
-              $filePath = FILES_DIR.'/'.$file->getStoragePath('original');?>
+               $file = $item->getFiles();
+              $filePath = FILES_DIR.'/'.$file[0]->getStoragePath('original');?>
               <div id="fsize_images">
-              <div id="image-zoomer-os" style="height: 600px; width: 100%;"></div>
-              <script type="text/javascript">
-              var $map = document.querySelector("#image-zoomer-os");
-             // var $preview = $("#image-zoomer-os");
-              var $toolbar;
-
-              var identifier = $map.dataset.identifier;
-              var image_base;
-
-              var viewer; var mode;
-                  // -- info_url is the URL to the IIIF info end point for the image
-              //var info_url = '/online-exhibits-2.5.1/iiif/002b7e2b8a64911b76bb8d35535e39ed.jpg/info.json';
-              var info_url = 'https://quod.lib.umich.edu/cgi/i/image/api/tile/sclaudubon:B6719890:29376_0019/info.json';
-    viewer = OpenSeadragon({
-        id: "image-zoomer-os",
-        prefixUrl: "//openseadragon.github.io/openseadragon/images/",
-        gestureSettingsMouse: {
-          scrollToZoom: false,
-          clickToZoom: false,
-          dblClickToZoom: true,
-          flickEnabled: true,
-          pinchRotate: true
-        },
-        gestureSettingsTouch: {
-    pinchRotate: true
-        },
-        showNavigationControl: true,
-zoomInButton: 'action-zoom-in',
-        zoomOutButton: 'action-zoom-out',
-        rotateLeftButton: 'action-rotate-left',
-        rotateRightButton: 'action-rotate-right',
-        homeButton: 'action-reset-viewer'
-    });
-
-    viewer.addHandler('zoom', function(e) {
-      //$(".span-zoom-status").text(Math.floor(e.zoom * 100) + '%');
-    })
-
-    viewer.open(info_url);
-
-      function onViewerScroll(event) {
-                  // Disable mousewheel zoom on the viewer and let the original mousewheel events bubble
-        if (!event.isTouchEvent) {
-             event.preventDefaultAction = true;
-             return true;
-         }
-      }
-      var rotateViewer = function(delta) {
-          var deg = viewer.viewport.getRotation();
-          var next_deg = deg + delta;
-          if ( next_deg < 0 ) { next_deg = 360 + next_deg; }
-          viewer.viewport.setRotation(next_deg);     
-      }
-              </script>
+             <!-- <div id="image-zoomer-os"  data-identifier='https://bertrama.www.lib.umich.edu/online-exhibits-2.3/iiif/002b7e2b8a64911b76bb8d35535e39ed.jpg/info.json' 
+                   style="height: 600px; width: 100%;"></div> -->         
+             <div id = "image-zoomer-os"  data-identifier = 'https://quod.lib.umich.edu/cgi/i/image/api/tile/sclaudubon:B6719890:29376_0019/info.json' style = 'height: 600px; width: 100%;'></div> 
             </div> <!--fsize_images-->
     <?php echo '</div>'; //item-images
-   }
 
-    if (!$fullsizeimage && ($audio_file || ($item_type == 'Sound'))) {
-       // if first file is an audio file then display a default image for sound file.
-     echo '<img src="' . img('audio_default02.gif') . '" alt="Oops" /></div>'; //item-images
     } elseif ($item_type == 'Video') {
        echo mlibrary_display_video('item');
     }?>
