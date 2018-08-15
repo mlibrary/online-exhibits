@@ -28,7 +28,7 @@ class QualityFilter implements FilterInterface
     public function applyFilter(Image $image)
     {
         if ($this->quality === 'default') {
-            $this->quality = config('iiif.quality_default');
+            $this->quality = 'color';
         }
 
         if ($this->quality === 'gray') {
