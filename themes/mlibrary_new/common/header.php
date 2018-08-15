@@ -34,6 +34,9 @@
     <?php
         queue_js_file('lib/bootstrap.min');
         queue_js_file('globals');
+        queue_js_file('image_viewer');
+        queue_js_file('openseadragon/openseadragon.min');
+        queue_js_file('openseadragon/openseadragon-viewerinputhook.min');
         echo head_js();
     ?>
     <!--[if lt IE 9]>
