@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
         homeButton: 'action-reset-viewer'
     });
 
-viewer.addHandler('zoom', function(e) {
-//     document.querySelector(".span-zoom-status").innerText = Math.floor(e.zoom * 10) + '%';
-})
+   viewer.addHandler('zoom', function(e) {
+      document.querySelector("#span-zoom-status").innerText = Math.floor(e.zoom * 10) + '%';
+   })
 
     viewer.open(info_url);
     var rotateViewer = function(delta) {

@@ -5,7 +5,6 @@
   */
   $item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
   if (empty($item_title)) { $item_title = __('[Untitled]'); }
-
   echo head(
     array(
       'title'     => $item_title,
@@ -13,106 +12,95 @@
       'bodyclass' => 'show item'
     )
   );
- // if the item is part of the exhibit builder layout
- if (isset($_GET['exhibit']) && isset($_GET['page'])) {
-    $pageClean = html_escape($_GET['page']);
-    $exhibitClean = html_escape($_GET['exhibit']);
-    echo '<div class="exhibit-item-back-button"><a href="' .
+ $exhibit_page = get_record_by_id('exhibit_page',html_escape($_GET['page']));
+  echo '<div class="exhibit-item-back-button"><a href="' .
         exhibit_builder_exhibit_uri(
-          get_record_by_id('exhibit', $exhibitClean),
-          get_record_by_id('exhibit_page', $pageClean)
+          get_record_by_id('exhibit', $exhibit->id),
+          get_record_by_id('exhibit_page', $exhibit_page->id)
         ) .
       '">Return to Exhibit</a></div>';
-  }
 ?>
 <h1><?php echo $item_title; ?></h1>
 <div id="primary">
   <?php
-    $index_file = 0;
-    $audio_file = false;
+    $file = null;
+    $iiifImage_path = null;
     $item_type = (empty($item->getItemType()->name)) ? 'Image' : $item->getItemType()->name;
-    $theme_name = (isset($exhibit->theme)) ? $exhibit->theme : 'mlibrary_new';
-
+    
     if ($item_type != 'Video') { ?>
        <div id="item-images">
-<button id="action-zoom-in">Zoom In</button>
-<span id="span-zoom-status"></span>
-<button id="action-zoom-out">Zoom Out</button>
-<button id="action-reset-viewer">Reset View</button>
-<button id="action-rotate-left">Rotate left</button>
-<button id="action-rotate-right">Rotate Right</button>
          <?php
-               $file = $item->getFiles();
-              $filePath = FILES_DIR.'/'.$file[0]->getStoragePath('original');?>
+               $files = $item->getFiles();
+               if ($files) {
+                   $file = $files[0];
+                   $iiifImage_path = WEB_ROOT . "/iiif/{$file->id}/info.json"; 
+               }?>                
               <div id="fsize_images">
-             <!-- <div id="image-zoomer-os"  data-identifier='https://bertrama.www.lib.umich.edu/online-exhibits-2.3/iiif/002b7e2b8a64911b76bb8d35535e39ed.jpg/info.json' 
-                   style="height: 600px; width: 100%;"></div> -->         
-             <div id = "image-zoomer-os"  data-identifier = 'https://quod.lib.umich.edu/cgi/i/image/api/tile/sclaudubon:B6719890:29376_0019/info.json' style = 'height: 600px; width: 100%;'></div> 
-            </div> <!--fsize_images-->
-    <?php echo '</div>'; //item-images
-
-    } elseif ($item_type == 'Video') {
-       echo mlibrary_display_video('item');
+                 <button id="action-zoom-in">Zoom In</button>
+                 <span id="span-zoom-status"></span>
+                 <button id="action-zoom-out">Zoom Out</button>
+                 <button id="action-reset-viewer">Reset View</button>
+                 <button id="action-rotate-left">Rotate left</button>
+                 <button id="action-rotate-right">Rotate Right</button>
+                 <div id = "image-zoomer-os"  data-identifier = "<?php print html_escape($iiifImage_path);?>" 
+                      style = "height: 600px; width: 100%;">
+                 </div> 
+              </div> <!--fsize_images-->
+        </div> <!--item-images-->
+    <?php } elseif ($item_type == 'Video') {
+             echo mlibrary_display_video('item');
     }?>
-
 </div> <!--primary-->
 
-<?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
-
-// The page isn't injected by the controller
-$page = get_db()->getTable('ExhibitPage')->find($_GET['page']);
-
+<?php
 // Navigation
-$next = mlibrary_new_item_sequence_next($exhibit->id, $page->id, $item->id);
+$next = mlibrary_new_item_sequence_next($exhibit->id, $exhibit_page->id, $item->id);
 if ($next) {
   $nextUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
   "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}";
 }
 
-$prev = mlibrary_new_item_sequence_prev($exhibit->id, $page->id, $item->id);
+$prev = mlibrary_new_item_sequence_prev($exhibit->id, $exhibit_page->id, $item->id);
 if ($prev) {
 $prevUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
   "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}";
 }
 
 // Metadata
-$title = metadata('item', array('Dublin Core', 'Title'));
 $creator = metadata('item', array('Dublin Core', 'Creator'));
 $date = metadata('item', array('Dublin Core', 'Date'));
 $source = metadata('item', array('Dublin Core', 'Source'));
+$description = metadata('item', array('Dublin Core', 'Description'));
+$publisher = metadata('item', array('Dublin Core', 'Publisher'));
+$contributor = metadata('item', array('Dublin Core', 'Contributor'));
+$language = metadata('item', array('Dublin Core', 'Language'));
+$type = metadata('item', array('Dublin Core', 'Type'));
 $format = metadata('item', array('Dublin Core', 'Format'));
 $rights = metadata('item', array('Dublin Core', 'Rights'));
-$files = $item->getFiles();
-if ($files) {
-  $file = $files[0];
-} else {
-  $file = null;
-}
-$itemType = (empty($item->getItemType()->name)) ?
-  'Image' :
-  $item->getItemType()->name;
 
 ?>
-<h1><?php print $title; ?></h1>
+<h1><?php print $item_title; ?></h1>
 <dl>
-  <dt>Item Type</dt>
-  <dd><?php print $itemType; ?></dd>
   <dt>Creator</dt>
   <dd><?php print $creator; ?></dd>
   <dt>Date</dt>
   <dd><?php print $date; ?></dd>
   <dt>Source</dt>
   <dd><?php print $source; ?></dd>
+  <dt>Description</dt>
+  <dd><?php print $description; ?></dd>
+  <dt>Publisher</dt>
+  <dd><?php print $publisher; ?></dd>
+  <dt>Contributor</dt>
+  <dd><?php print $contributor; ?></dd>
+  <dt>Language</dt>
+  <dd><?php print $language; ?></dd>
+  <dt>Type</dt>
+  <dd><?php print $type; ?></dd>
   <dt>Format</dt>
   <dd><?php print $format; ?></dd>
   <dt>rights</dt>
   <dd><?php print $rights; ?></dd>
-    <dt>file</dt>
-  <?php if ($file) { ?>
-    <dd><?php print $file->id; ?></dd>
-  <?php } else { ?>
-    <dd>No file attached to item</dd>
-  <?php } ?>
   <dt>prev</dt>
   <?php if ($prev) { ?>
     <dd>
@@ -142,4 +130,6 @@ $itemType = (empty($item->getItemType()->name)) ?
     <dd>No next item</dd>
   <?php } ?>
 </dl>
-<?php echo foot();
+
+<?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
+echo foot();
