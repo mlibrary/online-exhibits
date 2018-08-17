@@ -10,10 +10,15 @@
       'title'     => $item_title,
       'bodyid'    => 'items',
       'bodyclass' => 'show item'
-    )
-  );
+    
+    ));
 
- $exhibit_page = get_record_by_id('exhibit_page',$_GET['page']);
+  if(!empty($_GET['page'])){
+       $page_id = (int)$_GET['page']; 
+  }
+
+ $exhibit_page = get_record_by_id('exhibit_page',$page_id);
+
  echo '<div class="exhibit-item-back-button"><a href="' .
         html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
       '">Return to Exhibit</a></div>';
@@ -52,18 +57,23 @@
 
 <?php
 // Navigation
-$next = mlibrary_new_item_sequence_next($exhibit->id, $exhibit_page->id, $item->id);
-if ($next) {
+
+if (isset($exhibit_page)){
+  $next = mlibrary_new_item_sequence_next($exhibit->id, $exhibit_page->id, $item->id);
+  if ($next) {
   $nextUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
   "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}";
-}
+  }
 
-$prev = mlibrary_new_item_sequence_prev($exhibit->id, $exhibit_page->id, $item->id);
+  $prev = mlibrary_new_item_sequence_prev($exhibit->id, $exhibit_page->id, $item->id);
 if ($prev) {
 $prevUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
   "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}";
 }
-
+}else {
+$prev ='';
+$next ='';
+}
 // Metadata
 $creator = metadata('item', array('Dublin Core', 'Creator'));
 $date = metadata('item', array('Dublin Core', 'Date'));
