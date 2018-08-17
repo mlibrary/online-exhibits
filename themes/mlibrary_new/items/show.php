@@ -87,7 +87,6 @@ $format = metadata('item', array('Dublin Core', 'Format'));
 $rights = metadata('item', array('Dublin Core', 'Rights'));
 
 ?>
-<h1><?php print $item_title; ?></h1>
 <dl>
   <dt>Creator</dt>
   <dd><?php print $creator; ?></dd>
