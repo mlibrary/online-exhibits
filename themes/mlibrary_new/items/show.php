@@ -12,12 +12,10 @@
       'bodyclass' => 'show item'
     )
   );
- $exhibit_page = get_record_by_id('exhibit_page',html_escape($_GET['page']));
-  echo '<div class="exhibit-item-back-button"><a href="' .
-        exhibit_builder_exhibit_uri(
-          get_record_by_id('exhibit', $exhibit->id),
-          get_record_by_id('exhibit_page', $exhibit_page->id)
-        ) .
+
+ $exhibit_page = get_record_by_id('exhibit_page',$_GET['page']);
+ echo '<div class="exhibit-item-back-button"><a href="' .
+        html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
       '">Return to Exhibit</a></div>';
 ?>
 <h1><?php echo $item_title; ?></h1>
