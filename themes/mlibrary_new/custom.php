@@ -229,11 +229,15 @@ function mlibrary_new_get_image_for_gallery($attachment = null)
   return mlibrary_new_get_image_card($attachment,$alt_text);
 }
 
-function mlibrary_new_create_card_for_gallery($attachment)
+
+function mlibrary_new_create_card_for_gallery($attachment, $slug)
 {
+   $item_link = exhibit_builder_exhibit_item_uri($attachment->getItem());
+   set_current_record('exhibit_page',$slug);
+   $url_item = $item_link.'?'.http_build_query(mlibrary_new_exhibit_item_query_string_settings());
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
-     'url' => exhibit_builder_exhibit_item_uri($attachment->getItem()),
+     'url' => $url_item,
    ];
 }
 
@@ -245,11 +249,11 @@ function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  }, $sectionpage_cards_info);
 }
 
-function mlibrary_new_get_cards_in_section_gallery($attachments = null){ 
+function mlibrary_new_get_cards_in_section_gallery($attachments = null, $slug = null){
   $sectionpage_card_info = array();
   if (!empty($attachments)) {
      foreach ($attachments as $attachment) {
-            $sectionpage_card_info[] = mlibrary_new_create_card_for_gallery($attachment);
+            $sectionpage_card_info[] = mlibrary_new_create_card_for_gallery($attachment, $slug);
      }
   }
   return mlibrary_new_render_gallery_section($sectionpage_card_info);
@@ -269,56 +273,9 @@ function mlibrary_new_exhibit_builder_display_random_featured_exhibit(){
     
     return $html;
 }
-/**
- * This function returns the style sheet for the theme. It will use the argument
- * passed to the function first, then the theme_option for Style Sheet, then
- * a default style sheet.
- *
- * @param $styleSheet The name of the style sheet to use. (null by default)
- *
- **/
-function mlibrary_get_stylesheet($styleSheet = null)
-{
-   /* set stylesheet to omeka-mibrary default */
-   $styleSheet = 'omeka-mlibrary';
-   return $styleSheet;
-}
-
-/**
- * Called by mlibrary_display_related_exhibits() to display a link to related exhibits for
- * a particular item if the Related Exhibit option is set in the config page of the exhibit.
- **/
-function mlibrary_link_to_related_exhibits($id) {
-  require_once "Exhibit.php";
-  $db = get_db();
-  $select = "
-	    SELECT DISTINCT e.* FROM {$db->prefix}exhibits e
-	    INNER JOIN {$db->prefix}exhibit_pages ep on ep.exhibit_id = e.id
-	    INNER JOIN {$db->prefix}exhibit_page_entries epe ON epe.page_id = ep.id
-	    WHERE epe.item_id = ?";
-
-  $exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($id));
-  $i= 0;
-  if(!empty($exhibits)) {
-     foreach($exhibits as $exhibit) {
-     	$data[] = link_to_exhibit(null, array(), null, $exhibit);
-     }
-  }
-  return $data;
-}
-
-/**
- * This is the function that is actually used on items/show...
- **/
-function mlibrary_display_related_exhibits($item) {
-  $related_exhibits_setting = get_theme_option('Related Exhibits');
-  if ($related_exhibits_setting == 'yes') {
-     return mlibrary_link_to_related_exhibits(get_current_record('item')->id);
-  }
-}
 
 // Used in items/show.php and exhibits/item.php
-function mlibrary_display_video() {
+function mlibrary_new_display_video() {
 $html_video = '';
 $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
                                                                                    'no_escape' => true,
@@ -425,23 +382,6 @@ function mlibrary_metadata_sideinfo($item){
   return (empty($html)) ? '' : '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
 }
 
-/**
- * If audio will be used in exhibit, set the Exhibit Audio configuration option.
- * This function is not used anywhere
- **/
-function mlibrary_exhibit_audio() {
-	$exhibit_audio_setting=get_theme_option('Exhibit Audio');
-	return $exhibit_audio_setting;
-}
-
-/**
- * If video will be used in exhibit, set the Exhibit video configuration option.
- * this function is not used anywhere
- **/
-function mlibrary_exhibit_video() {
-	$exhibit_video_setting=get_theme_option('Exhibit Video');
-	return $exhibit_video_setting;
-}
 
 /**
  * This function returns the Header Image based on selection in Exhibit Theme Configurations.
@@ -464,7 +404,7 @@ function mlibrary_header_banner() {
 }
 
 /** New exhibits feed to RSS **/
-function mlibrary_display_rss($feedUrl, $num = 3) {
+function mlibrary_new_display_rss($feedUrl, $num = 3) {
   try {
    $feed = Zend_Feed_Reader::import($feedUrl);
   } catch (Zend_Feed_Exception $e) {
@@ -516,8 +456,8 @@ $remove[] = "'";
  * This function will attach item of type video to Exhibit builder out of the box layouts,
  * this filter is used at Exhibit builder
  **/
-add_filter('exhibit_attachment_markup', 'mlibrary_exhibit_builder_attachment');
-function mlibrary_exhibit_builder_attachment($html, $compact) {
+add_filter('exhibit_attachment_markup', 'mlibrary_new_exhibit_builder_attachment');
+function mlibrary_new_exhibit_builder_attachment($html, $compact) {
  $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
@@ -537,9 +477,9 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                               }
                         }
                         // Add a query string to then end of the href so we know which exhibit you came from
-                        $html = mlibrary_add_vars_to_href(
+                        $html = mlibrary_new_add_vars_to_href(
                                   $html,
-                                  mlibrary_exhibit_item_query_string_settings()
+                                  mlibrary_new_exhibit_item_query_string_settings()
                                 );
                  }
   return $html;
@@ -549,7 +489,7 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
  * A helped function that takes a string, finds the "href" attribute in it,
  * and appends variables to the end
  */
-function mlibrary_add_vars_to_href($html, $variables) {
+function mlibrary_new_add_vars_to_href($html, $variables) {
   return preg_replace(
     '/href=["\']([^"\']*)/',
     'href="$1?' . http_build_query($variables),
@@ -557,19 +497,12 @@ function mlibrary_add_vars_to_href($html, $variables) {
   );
 }
 
-// called by items/browse.php
-function mlibrary_link_to_item_with_return($text, $attributes = []) {
-  return mlibrary_add_vars_to_href(
-    link_to_item($text, $attributes),
-    [ 'page' => (isset($_GET['page'])) ? $_GET['page'] : '1' ]
-  );
-}
 
 /**
  * Function to return common settings for exhibit item link query strings
  * called by mlibrary_exhibit_builder_attachment
  */
-function mlibrary_exhibit_item_query_string_settings() {
+function mlibrary_new_exhibit_item_query_string_settings() {
   return [ 'exhibit' => get_current_record('exhibit_page')->exhibit_id,
            'page'    => get_current_record('exhibit_page')->id ];
 }
@@ -622,3 +555,83 @@ function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current
   $html .= '</li>';
   return $html;
  }
+
+
+// called by items/browse.php
+/*function mlibrary_link_to_item_with_return($text, $attributes = []) {
+  return mlibrary_new_add_vars_to_href(
+    link_to_item($text, $attributes),
+    [ 'page' => (isset($_GET['page'])) ? $_GET['page'] : '1' ]
+  );
+}*/
+
+/**
+ * This function returns the style sheet for the theme. It will use the argument
+ * passed to the function first, then the theme_option for Style Sheet, then
+ * a default style sheet.
+ *
+ * @param $styleSheet The name of the style sheet to use. (null by default)
+ *
+ **/
+
+/*function mlibrary_get_stylesheet($styleSheet = null)
+{
+   $styleSheet = 'mlibrary_new';
+   return $styleSheet;
+}*/
+
+/**
+ * Called by mlibrary_display_related_exhibits() to display a link to related exhibits for
+ * a particular item if the Related Exhibit option is set in the config page of the exhibit.
+ **/
+
+/*function mlibrary_link_to_related_exhibits($id) {
+  require_once "Exhibit.php";
+  $db = get_db();
+  $select = "
+            SELECT DISTINCT e.* FROM {$db->prefix}exhibits e
+            INNER JOIN {$db->prefix}exhibit_pages ep on ep.exhibit_id = e.id
+            INNER JOIN {$db->prefix}exhibit_page_entries epe ON epe.page_id = ep.id
+            WHERE epe.item_id = ?";
+
+  $exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($id));
+  /*$i= 0;
+  if(!empty($exhibits)) {
+     foreach($exhibits as $exhibit) {
+        $data[] = link_to_exhibit(null, array(), null, $exhibit);
+     }
+  }
+  return $data;
+}*/
+
+/**
+ * This is the function that is actually used on items/show...
+ **/
+
+/*function mlibrary_display_related_exhibits($item) {
+  $related_exhibits_setting = get_theme_option('Related Exhibits');
+  if ($related_exhibits_setting == 'yes') {
+     return mlibrary_link_to_related_exhibits(get_current_record('item')->id);
+  }
+}*/
+
+/**
+ * If audio will be used in exhibit, set the Exhibit Audio configuration option.
+ * This function is not used anywhere
+ **/
+
+/*function mlibrary_exhibit_audio() {
+        $exhibit_audio_setting=get_theme_option('Exhibit Audio');
+        return $exhibit_audio_setting;
+}*/
+
+/**
+ * If video will be used in exhibit, set the Exhibit video configuration option.
+ * this function is not used anywhere
+ **/
+
+/*function mlibrary_exhibit_video() {
+        $exhibit_video_setting=get_theme_option('Exhibit Video');
+        return $exhibit_video_setting;
+}*/
+

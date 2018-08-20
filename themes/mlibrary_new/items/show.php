@@ -18,10 +18,11 @@
   }
 
  $exhibit_page = get_record_by_id('exhibit_page',$page_id);
+ $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Gallery': 'Return to Exhibit'; 
 
  echo '<div class="exhibit-item-back-button"><a href="' .
         html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
-      '">Return to Exhibit</a></div>';
+      '">'.$return_link.'</a></div>';
 ?>
 <h1><?php echo $item_title; ?></h1>
 <div id="primary">
@@ -51,7 +52,7 @@
               </div> <!--fsize_images-->
         </div> <!--item-images-->
     <?php } elseif ($item_type == 'Video') {
-             echo mlibrary_display_video('item');
+             echo mlibrary_new_display_video('item');
     }?>
 </div> <!--primary-->
 
