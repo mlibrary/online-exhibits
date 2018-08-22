@@ -17,14 +17,24 @@
        $page_id = (int)$_GET['page']; 
   }
 
+ // dipslay the Back link
  $exhibit_page = get_record_by_id('exhibit_page',$page_id);
- $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Gallery': 'Return to Exhibit'; 
+ $return_link = ($exhibit_page['slug']=='gallery') ? 'Back to Image Gallery': 'Back to Exhibit'; 
 
  echo '<div class="exhibit-item-back-button"><a href="' .
         html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
       '">'.$return_link.'</a></div>';
 ?>
 <h1><?php echo $item_title; ?></h1>
+<?php // display the View Exhibit Image Gallery
+
+ if (plugin_is_active('ExhibitGalleryPage')) {
+      echo '<div class="exhibit-item-back-button"><a href="'.
+            html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
+           '">View Exhibit Image Gallery</a></div>';
+  }
+?>
+
 <div id="primary">
   <?php
     $file = null;
