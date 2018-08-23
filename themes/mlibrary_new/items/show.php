@@ -17,22 +17,31 @@
        $page_id = (int)$_GET['page']; 
   }
 
- // dipslay the Back link
- $exhibit_page = get_record_by_id('exhibit_page',$page_id);
- $return_link = ($exhibit_page['slug']=='gallery') ? 'Back to Image Gallery': 'Back to Exhibit'; 
+ if (isset($_GET['exhibit'])){
+      // dipslay the Back link for exhibit and gallery page
+     $exhibit_page = get_record_by_id('exhibit_page',$page_id);
+     $return_link = ($exhibit_page['slug']=='gallery') ? 'Back to Image Gallery': 'Back to Exhibit';
 
- echo '<div class="exhibit-item-back-button"><a href="' .
+     echo '<div class="exhibit-item-back-button"><a href="' .
         html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
       '">'.$return_link.'</a></div>';
+
+     $image_gallery_link = '<div class="exhibit-item-back-button"><a href="'.
+                           html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
+                           '">View Exhibit Image Gallery</a></div>';
+
+     $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
+
+     $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';
+   }
+
 ?>
 <h1><?php echo $item_title; ?></h1>
 <?php // display the View Exhibit Image Gallery
+ if (isset($exhibit_image_gallery_set)) {
+     echo $exhibit_image_gallery_set;
+ }
 
- if (plugin_is_active('ExhibitGalleryPage')) {
-      echo '<div class="exhibit-item-back-button"><a href="'.
-            html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
-           '">View Exhibit Image Gallery</a></div>';
-  }
 ?>
 
 <div id="primary">
