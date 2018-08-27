@@ -449,7 +449,6 @@ div.browse-index {
 
 .detail-nav-heading {
   font-size: 1.25em;
-  color: ;
 }
 
 .detail-nav li {
@@ -746,6 +745,70 @@ li.page-input .num-label {
 #no-results {
   text-align: center;
   font-size: 1.5em;
+}
+
+/** Item Page **/
+
+#fsize_images {
+  text-align: center;
+  border: 1px solid #CCCCCC !important;
+  margin-top: .5em;
+  padding-top: .25em;
+  background-color:#e5e5e5;
+}
+
+#action-zoom-in,
+#action-zoom-out,
+#action-reset-viewer,
+#action-rotate-left,
+#action-rotate-right {
+  background-color: #333333;
+  border: #333;
+  border-radius: 4px;
+  color: #fff;
+  padding: .25em .5em;
+}
+
+h1.item-title {
+  text-align: center;
+  padding: .5em 0;
+  margin-bottom: 0;
+}
+
+h2.metadata--heading {
+  padding-top: 1em;
+}
+
+.metadata--list dd {
+  padding-bottom: .75em;
+}
+
+.metadata--list dd, .metadata--list dt {
+  font-size: 1.15em;
+}
+
+.next-item--icon::after {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_right.svg);
+  position: relative;
+  top: 5px;
+}
+
+.next-item--nav {
+  text-align: right;
+}
+
+.previous-item--icon::before {
+  content: url(https://www.lib.umich.edu/falafel/v0/icons/grey_1/arrow_left.svg);
+  position: relative;
+  top: 5px;
+}
+
+.view-exhibit--link {
+  text-align: center;
+}
+
+.exhibit-item-back-button {
+  padding-top: .5em;;
 }
 
 /** About Online Exhibits **/

@@ -36,14 +36,28 @@
    }
 
 ?>
-<h1><?php echo $item_title; ?></h1>
+
+<!--Breadcrumb Bar-->
+<section class="row">
+  <div class="col-xs-12">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
+        <li class="breadcrumb-item"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
+        <li class="breadcrumb-item active"><?php echo $item_title; ?></li>
+      </ol>
+  </div>
+</section>
+<!--End breadcrumb bar-->
+
+<div class="col-xs-12">
+<h1 class="item-title"><?php echo $item_title; ?></h1>
+<div class="view-exhibit--link">
 <?php // display the View Exhibit Image Gallery
  if (isset($exhibit_image_gallery_set)) {
      echo $exhibit_image_gallery_set;
  }
-
 ?>
-
+</div>
 <div id="primary">
   <?php
     $file = null;
@@ -107,56 +121,64 @@ $format = metadata('item', array('Dublin Core', 'Format'));
 $rights = metadata('item', array('Dublin Core', 'Rights'));
 
 ?>
-<dl>
-  <dt>Creator</dt>
-  <dd><?php print $creator; ?></dd>
-  <dt>Date</dt>
-  <dd><?php print $date; ?></dd>
-  <dt>Source</dt>
-  <dd><?php print $source; ?></dd>
-  <dt>Description</dt>
-  <dd><?php print $description; ?></dd>
-  <dt>Publisher</dt>
-  <dd><?php print $publisher; ?></dd>
-  <dt>Contributor</dt>
-  <dd><?php print $contributor; ?></dd>
-  <dt>Language</dt>
-  <dd><?php print $language; ?></dd>
-  <dt>Type</dt>
-  <dd><?php print $type; ?></dd>
-  <dt>Format</dt>
-  <dd><?php print $format; ?></dd>
-  <dt>rights</dt>
-  <dd><?php print $rights; ?></dd>
-  <dt>prev</dt>
-  <?php if ($prev) { ?>
-    <dd>
-      <a href="<?php print html_escape($prevUrl); ?>">
-        <?php print html_escape($prevUrl); ?>
-      </a>
-    </dd>
-    <dd><?php print $prev->id; ?></dd>
-    <dd><?php print $prev->block_id; ?></dd>
-    <dd><?php print $prev->page_id; ?></dd>
-    <dd><?php print $prev->exhibit_id; ?></dd>
-  <?php } else { ?>
-    <dd>No prev item</dd>
-  <?php } ?>
-  <?php if ($next) { ?>
-    <dt>next</dt>
-    <dd>
-      <a href="<?php print html_escape($nextUrl); ?>">
-        <?php print html_escape($nextUrl); ?>
-      </a>
-    </dd>
-    <dd><?php print $next->id; ?></dd>
-    <dd><?php print $next->block_id; ?></dd>
-    <dd><?php print $next->page_id; ?></dd>
-    <dd><?php print $next->exhibit_id; ?></dd>
-  <?php } else { ?>
-    <dd>No next item</dd>
-  <?php } ?>
-</dl>
+
+<div class="row">
+  <dl>
+  <div class="previous-item--nav  col-xs-12 col-sm-6 col-md-4">
+    <dt class="previous-item--icon">Previous item</dt>
+      <?php if ($prev) { ?>
+        <dd>
+          <a href="<?php print html_escape($prevUrl); ?>">
+            <?php print html_escape($prevUrl); ?>
+          </a>
+        </dd>
+      <?php } else { ?>
+        <dd>No previous item</dd>
+      <?php } ?>
+      </div>
+
+      <div class="next-item--nav col-xs-12 col-sm-6 col-md-4 col-md-offset-4">
+      <?php if ($next) { ?>
+        <dt class="next-item--icon">Next item</dt>
+        <dd>
+          <a href="<?php print html_escape($nextUrl); ?>">
+            <?php print html_escape($nextUrl); ?>
+          </a>
+        </dd>
+      <?php } else { ?>
+        <dd>No next item</dd>
+      <?php } ?>
+      </div>
+  </dl>
+</div>
+
+<div class="col-md-6 col-md-offset-3">
+  <h2 class="metadata--heading">Item Data</h2>
+  <div class="detail-nav-border"></div>
+  <dl class="metadata--list">
+    <dt>Creator</dt>
+    <dd><?php print $creator; ?></dd>
+    <dt>Date</dt>
+    <dd><?php print $date; ?></dd>
+    <dt>Source</dt>
+    <dd><?php print $source; ?></dd>
+    <dt>Description</dt>
+    <dd><?php print $description; ?></dd>
+    <dt>Publisher</dt>
+    <dd><?php print $publisher; ?></dd>
+    <dt>Contributor</dt>
+    <dd><?php print $contributor; ?></dd>
+    <dt>Language</dt>
+    <dd><?php print $language; ?></dd>
+    <dt>Type</dt>
+    <dd><?php print $type; ?></dd>
+    <dt>Format</dt>
+    <dd><?php print $format; ?></dd>
+    <dt>Rights</dt>
+    <dd><?php print $rights; ?></dd>
+  </dl>
+</div>
+</div>
 
 <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
 echo foot();
