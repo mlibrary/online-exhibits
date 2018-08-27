@@ -123,8 +123,8 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
 ?>
 
 <div class="row">
-  <dl>
   <div class="previous-item--nav  col-xs-12 col-sm-6 col-md-4">
+    <dl>
     <dt class="previous-item--icon">Previous item</dt>
       <?php if ($prev) { ?>
         <dd>
@@ -135,9 +135,11 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
       <?php } else { ?>
         <dd>No previous item</dd>
       <?php } ?>
+      </dl>
       </div>
 
       <div class="next-item--nav col-xs-12 col-sm-6 col-md-4 col-md-offset-4">
+      <dl>
       <?php if ($next) { ?>
         <dt class="next-item--icon">Next item</dt>
         <dd>
@@ -148,8 +150,8 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
       <?php } else { ?>
         <dd>No next item</dd>
       <?php } ?>
+      </dl>
       </div>
-  </dl>
 </div>
 
 <div class="col-md-6 col-md-offset-3">
