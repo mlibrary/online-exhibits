@@ -33,6 +33,7 @@
      $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
 
      $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';?>
+     
      <!--Breadcrumb Bar-->
      <section class="row">
       <div class="col-xs-12">
@@ -117,14 +118,14 @@ $language = metadata('item', array('Dublin Core', 'Language'));
 $type = metadata('item', array('Dublin Core', 'Type'));
 $format = metadata('item', array('Dublin Core', 'Format'));
 $rights = metadata('item', array('Dublin Core', 'Rights'));
-
 ?>
 
+<?php if (isset($_GET['exhibit'])){?>
 <div class="row">
   <div class="previous-item--nav  col-xs-12 col-sm-6 col-md-4">
     <dl>
-    <dt class="previous-item--icon">Previous item</dt>
       <?php if ($prev) { ?>
+        <dt class="previous-item--icon">Previous item</dt>
         <dd>
           <a href="<?php print html_escape($prevUrl); ?>">
             <?php print html_escape($prevUrl); ?>
@@ -151,6 +152,7 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
       </dl>
       </div>
 </div>
+<?php }?>
 
 <div class="col-md-6 col-md-offset-3">
   <h2 class="metadata--heading">Item Data</h2>
