@@ -91,7 +91,7 @@
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
-        style="background-size:cover;background-image:url('<?php  echo bs_header_bg(); ?>');">
+        style="background-size:cover;background-position: center center;background-image:url('<?php  echo bs_header_bg(); ?>');">
 
     </header>
     <?php endif; ?>
