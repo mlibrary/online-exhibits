@@ -32,22 +32,20 @@
 
      $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
 
-     $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';
-   }
+     $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';?>
+     <!--Breadcrumb Bar-->
+     <section class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
+          <li class="breadcrumb-item"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
+          <li class="breadcrumb-item active"><?php echo $item_title; ?></li>
+        </ol>
+      </div>
+     </section>
+     <!--End breadcrumb bar-->
+ <?php }?>
 
-?>
-
-<!--Breadcrumb Bar-->
-<section class="row">
-  <div class="col-xs-12">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-        <li class="breadcrumb-item"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
-        <li class="breadcrumb-item active"><?php echo $item_title; ?></li>
-      </ol>
-  </div>
-</section>
-<!--End breadcrumb bar-->
 
 <div class="col-xs-12">
 <h1 class="item-title"><?php echo $item_title; ?></h1>
