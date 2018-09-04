@@ -53,24 +53,42 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
     throw new Omeka_Controller_Exception_404;
   }
 
-  private function constructPath($identifier)
+  private static function constructPath($dir, $identifier)
   {
-    return FILES_DIR . '/original/' . $identifier;
+    return FILES_DIR . "/{$dir}/{$identifier}";
   }
 
   private function getPath($identifier)
   {
-    if (file_exists($file = $this->constructPath($identifier))) {
-      return $file;
+    $candidate = static::constructPath('original', $identifier);
+    if (file_exists($candidate)) {
+      return $candidate;
     }
+    $candidate = static::constructPath('fullsize', $identifier);
+    if (file_exists($candidate)) {
+      return $candidate;
+    }
+
     $file = get_db()->getTable('File')->find($identifier);
     if (empty($file) || empty($file->filename)) {
       return NULL;
     }
-    if (!file_exists($file = $this->constructPath($file->filename))) {
-      return NULL;
+
+    if ($file->has_derivative_image) {
+      $candidate = static::constructPath(
+          'fullsize',
+          $file->getDerivativeFilename()
+      );
+      if (file_exists($candidate)) {
+        return $candidate;
+      }
+    } else {
+      $candidate = static::constructPath('original', $file->filename);
+      if (file_exists($candidate)) {
+        return $candidate;
+      }
     }
-    return $file;
+    return NULL;
   }
 
   private function loadConfig()
