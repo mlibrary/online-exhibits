@@ -328,15 +328,24 @@ $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code
 }
 
 // Display the Item source from the Identifier field. If it is valid url it will be displayed as a link other wise it will be displayed not as url.
-// Used in items/show.php & exhibits/item.php
-function mlibrary_metadata_sideinfo($item){
+// Used in items/show.php
+function mlibrary_new_metadata_sideinfo($item){
   $html = '';
   $item = get_current_record('item');
 
   $elementInfos = array(
     array('Dublin Core', 'Creator'),
     array('Dublin Core', 'Date'),
-    array('Dublin Core', 'Identifier'),
+    array('Dublin Core', 'Source'),
+    array('Dublin Core', 'Description'),
+    array('Dublin Core', 'Identifier'),    
+    array('Dublin Core', 'Publisher'),
+    array('Dublin Core', 'Contributor'),
+    array('Dublin Core', 'Rights'),  
+    array('Dublin Core', 'Relation'), 
+    array('Dublin Core', 'Format'),  
+    array('Dublin Core', 'Language'),
+    array('Dublin Core', 'Type'),
   );
 
   foreach($elementInfos as $elementInfo) {
@@ -349,37 +358,16 @@ function mlibrary_metadata_sideinfo($item){
     );
 
     if (!empty($elementTexts)) {
-        $name = ($elementName == 'Identifier') ? 'Item Source' : $elementName;
+        $name = ($elementName == 'Identifier' ? 'Source' : ($elementName == 'Source' ? 'Item Source' : $elementName));
         $html .= '<dt>' . $name . '</dt>';
 
       foreach($elementTexts as $elementText) {
-        //$array_items = array("5947","5945","5941","5929","5927","5925","5923","5921","5913");
-        //if ((in_array($item->id, $array_items)) && ($elementName == 'Identifier')) {
-            //  $data = $elementText;
-          // }
-        //else {
-	$data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Item Source</a>' : $elementText;
-        //}
+	$data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Source</a>' : $elementText;
         $html .= '<dd>' . $data . '</dd>';
       }
     }
-  }
-
-  if (metadata('item', 'Collection Name')) {
-    $Collection = get_collection_for_item();
-    $title = metadata($Collection, array('Dublin Core', 'Title'));
-    $html .= '<dt>Collection</dt> <dd>' .
-               $title .
-             '</dd>';
-  }
-
-  if (metadata('item', 'has tags')) {
-    $html .= '<dt>Tags</dt> <dd class="tags">' .
-               str_replace(';', '', tag_string('item')) .
-             '</dd>';
-  }
-
-  return (empty($html)) ? '' : '<dl id="sidebar" class="record-metadata-list">' . $html . '</dl>';
+   } 
+  return (empty($html)) ? '' : $html;
 }
 
 

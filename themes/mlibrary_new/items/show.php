@@ -110,17 +110,9 @@ if (isset($exhibit_page)) {
   $next = false;
 }
 
+//echo mlibrary_new_metadata_sideinfo('item');
 // Metadata
-$creator = metadata('item', array('Dublin Core', 'Creator'));
-$date = metadata('item', array('Dublin Core', 'Date'));
-$source = metadata('item', array('Dublin Core', 'Source'));
-$description = metadata('item', array('Dublin Core', 'Description'));
-$publisher = metadata('item', array('Dublin Core', 'Publisher'));
-$contributor = metadata('item', array('Dublin Core', 'Contributor'));
-$language = metadata('item', array('Dublin Core', 'Language'));
-$type = metadata('item', array('Dublin Core', 'Type'));
-$format = metadata('item', array('Dublin Core', 'Format'));
-$rights = metadata('item', array('Dublin Core', 'Rights'));
+$item_metadata = mlibrary_new_metadata_sideinfo('item');
 
 if (isset($_GET['exhibit'])) { ?>
 <div class="row">
@@ -154,34 +146,14 @@ if (isset($_GET['exhibit'])) { ?>
       </dl>
       </div>
 </div>
-<?php } ?>
-
-<div class="col-md-6 col-md-offset-3">
-  <h2 class="metadata--heading">Item Data</h2>
-  <div class="detail-nav-border"></div>
-  <dl class="metadata--list">
-    <dt>Creator</dt>
-    <dd><?php print $creator; ?></dd>
-    <dt>Date</dt>
-    <dd><?php print $date; ?></dd>
-    <dt>Source</dt>
-    <dd><?php print $source; ?></dd>
-    <dt>Description</dt>
-    <dd><?php print $description; ?></dd>
-    <dt>Publisher</dt>
-    <dd><?php print $publisher; ?></dd>
-    <dt>Contributor</dt>
-    <dd><?php print $contributor; ?></dd>
-    <dt>Language</dt>
-    <dd><?php print $language; ?></dd>
-    <dt>Type</dt>
-    <dd><?php print $type; ?></dd>
-    <dt>Format</dt>
-    <dd><?php print $format; ?></dd>
-    <dt>Rights</dt>
-    <dd><?php print $rights; ?></dd>
-  </dl>
+<?php } 
+if (isset($item_metadata)) {?>
+<div class="col-md-6 col-md-offset-3"> 
+      <h2 class="metadata--heading">Item Data</h2>
+      <div class="detail-nav-border"></div>
+      <dl class="metadata--list"><?php echo $item_metadata;?></dl>
 </div>
+<?php }?>
 </div>
 
 <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
