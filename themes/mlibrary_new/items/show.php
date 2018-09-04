@@ -91,22 +91,25 @@
 <?php
 // Navigation
 
-if (isset($exhibit_page)){
+if (isset($exhibit_page)) {
   $next = mlibrary_new_item_sequence_next($exhibit->id, $exhibit_page->id, $item->id);
   if ($next) {
-  $nextUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
-  "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}";
+    $nextUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
+      "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}";
+    $nextTitle = metadata($next, ['Dublin Core', 'Title']);
   }
 
   $prev = mlibrary_new_item_sequence_prev($exhibit->id, $exhibit_page->id, $item->id);
-if ($prev) {
-$prevUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
-  "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}";
+  if ($prev) {
+    $prevUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
+      "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}";
+    $prevTitle = metadata($prev, ['Dublin Core', 'Title']);
+  }
+} else {
+  $prev = false;
+  $next = false;
 }
-}else {
-$prev ='';
-$next ='';
-}
+
 // Metadata
 $creator = metadata('item', array('Dublin Core', 'Creator'));
 $date = metadata('item', array('Dublin Core', 'Date'));
@@ -118,9 +121,8 @@ $language = metadata('item', array('Dublin Core', 'Language'));
 $type = metadata('item', array('Dublin Core', 'Type'));
 $format = metadata('item', array('Dublin Core', 'Format'));
 $rights = metadata('item', array('Dublin Core', 'Rights'));
-?>
 
-<?php if (isset($_GET['exhibit'])){?>
+if (isset($_GET['exhibit'])) { ?>
 <div class="row">
   <div class="previous-item--nav  col-xs-12 col-sm-6 col-md-4">
     <dl>
@@ -128,7 +130,7 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
         <dt class="previous-item--icon">Previous item</dt>
         <dd>
           <a href="<?php print html_escape($prevUrl); ?>">
-            <?php print html_escape($prevUrl); ?>
+            <?php print $prevTitle; ?>
           </a>
         </dd>
       <?php } else { ?>
@@ -143,7 +145,7 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
         <dt class="next-item--icon">Next item</dt>
         <dd>
           <a href="<?php print html_escape($nextUrl); ?>">
-            <?php print html_escape($nextUrl); ?>
+            <?php print $nextTitle; ?>
           </a>
         </dd>
       <?php } else { ?>
@@ -152,7 +154,7 @@ $rights = metadata('item', array('Dublin Core', 'Rights'));
       </dl>
       </div>
 </div>
-<?php }?>
+<?php } ?>
 
 <div class="col-md-6 col-md-offset-3">
   <h2 class="metadata--heading">Item Data</h2>
