@@ -18,6 +18,7 @@
   }
 
  if (isset($_GET['exhibit'])){
+     $exhibit_image_gallery_set = '';
       // dipslay the Back link for exhibit and gallery page
      $exhibit_page = get_record_by_id('exhibit_page',$page_id);
      $return_link = ($exhibit_page['slug']=='gallery') ? 'Back to Image Gallery': 'Back to Exhibit';
@@ -31,8 +32,7 @@
                            '">View Exhibit Image Gallery</a></div>';
 
      $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
-
-     $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';?>
+     $exhibit_image_gallery_set = ($gallery_plugin_active == '1')? $image_gallery_link : '';?>
      
      <!--Breadcrumb Bar-->
      <section class="row">
@@ -53,7 +53,7 @@
 <div class="view-exhibit--link">
 <?php // display the View Exhibit Image Gallery
  if (isset($exhibit_image_gallery_set)) {
-     echo $exhibit_image_gallery_set;
+     echo$exhibit_image_gallery_set;
  }
 ?>
 </div>
