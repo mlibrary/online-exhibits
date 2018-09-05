@@ -37,8 +37,8 @@
   
        <div class="col-xs-12 index-exhibits-container">
          <?php
-           if (plugin_is_active('ExhibitBuilder') && function_exists('recent_exhibits_bootstrap')) { 
-              echo recent_exhibits_bootstrap(6);
+           if (plugin_is_active('ExhibitBuilder') && function_exists('mlibrary_new_recent_exhibits_bootstrap')) { 
+              echo mlibrary_new_recent_exhibits_bootstrap(6);
            }?>
        </div>
 

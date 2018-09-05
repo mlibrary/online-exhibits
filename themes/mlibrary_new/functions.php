@@ -41,7 +41,7 @@ function recent_items_bootstrap($recentItems,$type){
 }
 
 
-function recent_exhibits_bootstrap($recentExhibits) {
+/*function recent_exhibits_bootstrap($recentExhibits) {
     $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
     $html = '';
     if ($exhibits) {
@@ -61,7 +61,7 @@ function recent_exhibits_bootstrap($recentExhibits) {
         $html = '<p>' . __('No recent exhibits available.') . '</p>';
     }
     return $html;
-}
+}*/
 
 function bs_link_logo_to_navbar($text = null)
 {
