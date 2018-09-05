@@ -329,28 +329,29 @@ $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code
 
 // Display the Item source from the Identifier field. If it is valid url it will be displayed as a link other wise it will be displayed not as url.
 // Used in items/show.php
-function mlibrary_new_metadata_sideinfo($item){
+function mlibrary_new_metadata($item){
   $html = '';
   $item = get_current_record('item');
 
   $elementInfos = array(
-    array('Dublin Core', 'Creator'),
-    array('Dublin Core', 'Date'),
-    array('Dublin Core', 'Source'),
-    array('Dublin Core', 'Description'),
-    array('Dublin Core', 'Identifier'),    
-    array('Dublin Core', 'Publisher'),
-    array('Dublin Core', 'Contributor'),
-    array('Dublin Core', 'Rights'),  
-    array('Dublin Core', 'Relation'), 
-    array('Dublin Core', 'Format'),  
-    array('Dublin Core', 'Language'),
-    array('Dublin Core', 'Type'),
+    array('Dublin Core', 'Creator','Creator'),
+    array('Dublin Core', 'Date','Date'),
+    array('Dublin Core', 'Source','Item Source'),
+    array('Dublin Core', 'Description','Description'),
+    array('Dublin Core', 'Identifier','Source'),    
+    array('Dublin Core', 'Publisher','Publisher'),
+    array('Dublin Core', 'Contributor','Contributor'),
+    array('Dublin Core', 'Rights','Right'),  
+    array('Dublin Core', 'Relation','Relation'), 
+    array('Dublin Core', 'Format','Format'),  
+    array('Dublin Core', 'Language','Language'),
+    array('Dublin Core', 'Type','Type'),
   );
 
   foreach($elementInfos as $elementInfo) {
     $elementSetName = $elementInfo[0];
     $elementName = $elementInfo[1];
+    $labelName = $elementInfo[2];
     $elementTexts = metadata(
       'item',
       array($elementSetName, $elementName),
@@ -358,8 +359,8 @@ function mlibrary_new_metadata_sideinfo($item){
     );
 
     if (!empty($elementTexts)) {
-        $name = ($elementName == 'Identifier' ? 'Source' : ($elementName == 'Source' ? 'Item Source' : $elementName));
-        $html .= '<dt>' . $name . '</dt>';
+        //$name = ($elementName == 'Identifier' ? 'Source' : ($elementName == 'Source' ? 'Item Source' : $elementName));
+        $html .= '<dt>' . $labelName . '</dt>';
 
       foreach($elementTexts as $elementText) {
 	$data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Source</a>' : $elementText;
@@ -367,7 +368,7 @@ function mlibrary_new_metadata_sideinfo($item){
       }
     }
    } 
-  return (empty($html)) ? '' : $html;
+  return $html;
 }
 
 

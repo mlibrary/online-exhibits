@@ -110,9 +110,8 @@ if (isset($exhibit_page)) {
   $next = false;
 }
 
-//echo mlibrary_new_metadata_sideinfo('item');
 // Metadata
-$item_metadata = mlibrary_new_metadata_sideinfo('item');
+$item_metadata = mlibrary_new_metadata('item');
 
 if (isset($_GET['exhibit'])) { ?>
 <div class="row">
