@@ -18,6 +18,7 @@
   }
 
  if (isset($_GET['exhibit'])){
+     $exhibit_image_gallery_set = '';
       // dipslay the Back link for exhibit and gallery page
      $exhibit_page = get_record_by_id('exhibit_page',$page_id);
      $return_link = ($exhibit_page['slug']=='gallery') ? 'Back to Image Gallery': 'Back to Exhibit';
@@ -31,8 +32,7 @@
                            '">View Exhibit Image Gallery</a></div>';
 
      $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
-
-     $exhibit_image_gallery_set = isset($gallery_plugin_active)? $image_gallery_link : '';?>
+     $exhibit_image_gallery_set = ($gallery_plugin_active == '1')? $image_gallery_link : '';?>
      
      <!--Breadcrumb Bar-->
      <section class="row">
@@ -54,6 +54,7 @@
 <?php // display the View Exhibit Image Gallery
  if (isset($exhibit_image_gallery_set)) {
      echo $exhibit_image_gallery_set;
+
  }
 ?>
 </div>
@@ -111,16 +112,7 @@ if (isset($exhibit_page)) {
 }
 
 // Metadata
-$creator = metadata('item', array('Dublin Core', 'Creator'));
-$date = metadata('item', array('Dublin Core', 'Date'));
-$source = metadata('item', array('Dublin Core', 'Source'));
-$description = metadata('item', array('Dublin Core', 'Description'));
-$publisher = metadata('item', array('Dublin Core', 'Publisher'));
-$contributor = metadata('item', array('Dublin Core', 'Contributor'));
-$language = metadata('item', array('Dublin Core', 'Language'));
-$type = metadata('item', array('Dublin Core', 'Type'));
-$format = metadata('item', array('Dublin Core', 'Format'));
-$rights = metadata('item', array('Dublin Core', 'Rights'));
+$item_metadata = mlibrary_new_metadata('item');
 
 if (isset($_GET['exhibit'])) { ?>
 <div class="row">
@@ -154,34 +146,14 @@ if (isset($_GET['exhibit'])) { ?>
       </dl>
       </div>
 </div>
-<?php } ?>
-
-<div class="col-md-6 col-md-offset-3">
-  <h2 class="metadata--heading">Item Data</h2>
-  <div class="detail-nav-border"></div>
-  <dl class="metadata--list">
-    <dt>Creator</dt>
-    <dd><?php print $creator; ?></dd>
-    <dt>Date</dt>
-    <dd><?php print $date; ?></dd>
-    <dt>Source</dt>
-    <dd><?php print $source; ?></dd>
-    <dt>Description</dt>
-    <dd><?php print $description; ?></dd>
-    <dt>Publisher</dt>
-    <dd><?php print $publisher; ?></dd>
-    <dt>Contributor</dt>
-    <dd><?php print $contributor; ?></dd>
-    <dt>Language</dt>
-    <dd><?php print $language; ?></dd>
-    <dt>Type</dt>
-    <dd><?php print $type; ?></dd>
-    <dt>Format</dt>
-    <dd><?php print $format; ?></dd>
-    <dt>Rights</dt>
-    <dd><?php print $rights; ?></dd>
-  </dl>
+<?php } 
+if (!empty($item_metadata)) {?>
+<div class="col-md-6 col-md-offset-3"> 
+      <h2 class="metadata--heading">Item Data</h2>
+      <div class="detail-nav-border"></div>
+      <dl class="metadata--list"><?php echo $item_metadata;?></dl>
 </div>
+<?php }?>
 </div>
 
 <?php fire_plugin_hook('public_items_show', array('view' => $this, 'item' => $item));
