@@ -40,29 +40,6 @@ function recent_items_bootstrap($recentItems,$type){
 		}
 }
 
-
-/*function recent_exhibits_bootstrap($recentExhibits) {
-    $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
-    $html = '';
-    if ($exhibits) {
-        foreach ($exhibits as $exhibit) {
-            $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
-            $exhibitImage = record_image($exhibit, 'original', array('alt' => $exhibit->title,
-                                                                     'class' => 'image-card'));
-            if ($exhibitImage == Null) {
-                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>';
-            }
-
-            $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
-                                                                                    'exhibit' => $exhibit,
-                                                                                    'title' => $title ));
-        }
-    } else {
-        $html = '<p>' . __('No recent exhibits available.') . '</p>';
-    }
-    return $html;
-}*/
-
 function bs_link_logo_to_navbar($text = null)
 {
     if (!$text) {
