@@ -11,6 +11,28 @@ require_once dirname(__FILE__) . '/functions.php';
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
+function mlibrary_new_recent_exhibits_bootstrap($recentExhibits) {
+    $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
+    $html = '';
+    if ($exhibits) {
+        foreach ($exhibits as $exhibit) {
+            $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
+            $exhibitImage = record_image($exhibit, 'original', array('alt' => $exhibit->title,
+                                                                     'class' => 'image-card'));
+            if ($exhibitImage == Null) {
+                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>';
+            }
+
+            $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
+                                                                                    'exhibit' => $exhibit,
+                                                                                    'title' => $title ));
+        }
+    } else {
+        $html = '<p>' . __('No recent exhibits available.') . '</p>';
+    }
+    return $html;
+}
+
 function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL) {
   $db = get_db();
   $itemTable = $db->getTable('Item');
