@@ -53,7 +53,8 @@
 <div class="view-exhibit--link">
 <?php // display the View Exhibit Image Gallery
  if (isset($exhibit_image_gallery_set)) {
-     echo$exhibit_image_gallery_set;
+     echo $exhibit_image_gallery_set;
+
  }
 ?>
 </div>
@@ -146,7 +147,7 @@ if (isset($_GET['exhibit'])) { ?>
       </div>
 </div>
 <?php } 
-if (isset($item_metadata)) {?>
+if (!empty($item_metadata)) {?>
 <div class="col-md-6 col-md-offset-3"> 
       <h2 class="metadata--heading">Item Data</h2>
       <div class="detail-nav-border"></div>

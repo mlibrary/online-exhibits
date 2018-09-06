@@ -359,7 +359,6 @@ function mlibrary_new_metadata($item){
     );
 
     if (!empty($elementTexts)) {
-        //$name = ($elementName == 'Identifier' ? 'Source' : ($elementName == 'Source' ? 'Item Source' : $elementName));
         $html .= '<dt>' . $labelName . '</dt>';
 
       foreach($elementTexts as $elementText) {
