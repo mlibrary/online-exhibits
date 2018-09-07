@@ -38,14 +38,15 @@ function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL)
     `pages`.`parent_id` IS NULL,
     `pages`.`order`,
     `parents`.`order`
-  ) * 256 * 256';
+  ) * 256 * 256 * 256';
   $pages_order = 'IF(
     `pages`.`parent_id` IS NULL,
     0,
     `pages`.`order` + 1
-  ) * 256';
-  $blocks_order = '`blocks`.`order`';
-  $sequence = "($parents_order + $pages_order + $blocks_order)";
+  ) * 256 * 256';
+  $blocks_order = '`blocks`.`order` * 256';
+  $attachments_order = '`attachments`.`order`';
+  $sequence = "($parents_order + $pages_order + $blocks_order + $attachments_order)";
   $db = get_db();
   $itemTable = $db->getTable('Item');
   $select = $itemTable->getSelect()
@@ -114,14 +115,15 @@ function mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId) {
     `pages`.`parent_id` IS NULL,
     `pages`.`order`,
     `parents`.`order`
-  ) * 256 * 256';
+  ) * 256 * 256 * 256';
   $pages_order = 'IF(
     `pages`.`parent_id` IS NULL,
-     0,
-     `pages`.`order` + 1
-  ) * 256';
-  $blocks_order = '`blocks`.`order`';
-  $sequence = "($parents_order + $pages_order + $blocks_order)";
+    0,
+    `pages`.`order` + 1
+  ) * 256 * 256';
+  $blocks_order = '`blocks`.`order` * 256';
+  $attachments_order = '`attachments`.`order`';
+  $sequence = "($parents_order + $pages_order + $blocks_order + $attachments_order)";
   $db = get_db();
   $select = $db->select()
     ->from(['pages' => $db->ExhibitPage], [])
