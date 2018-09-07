@@ -12,41 +12,60 @@ require_once dirname(__FILE__) . '/functions.php';
 // possible.
 
 function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL) {
+  $parents_order = 'IF(
+    `pages`.`parent_id` IS NULL,
+    `pages`.`order`,
+    `parents`.`order`
+  ) * 256 * 256';
+  $pages_order = 'IF(
+    `pages`.`parent_id` IS NULL,
+    0,
+    `pages`.`order` + 1
+  ) * 256';
+  $blocks_order = '`blocks`.`order`';
+  $sequence = "($parents_order + $pages_order + $blocks_order)";
   $db = get_db();
   $itemTable = $db->getTable('Item');
   $select = $itemTable->getSelect()
+    ->columns(['sequence' => $sequence])
     ->joinInner(
       ['attachments' => $db->ExhibitBlockAttachment],
-      'attachments.item_id = items.id',
+      '`attachments`.`item_id` = `items`.`id`',
       ['block_id']
     )
     ->joinInner(
       ['blocks' => $db->ExhibitPageBlock],
-      'attachments.block_id = blocks.id',
+      '`attachments`.`block_id` = `blocks`.`id`',
       ['page_id']
     )
     ->joinInner(
       ['pages' => $db->ExhibitPage],
-      'blocks.page_id = pages.id',
+      '`blocks`.`page_id` = `pages`.`id`',
       ['exhibit_id']
+    )
+    ->joinLeft(
+      ['parents' => $db->ExhibitPage],
+      '`pages`.`parent_id` = `parents`.`id`',
+      []
     )
     ->where('pages.exhibit_id = ?', $exhibitId);
 
   if ($direction && $from) {
     if ($direction == 'next') {
-      $select->where('(pages.order * 65536 + blocks.order * 256 + attachments.order) > ?', $from);
-      $select->order(['pages.order', 'blocks.order',  'attachments.order']);
+      $select->where("$sequence > ?", $from);
+      $select->order(['sequence']);
       $select->limit(1);
     }
     else {
-      $select->where('(pages.order * 65536 + blocks.order * 256 + attachments.order) < ?', $from);
-      $select->order(['pages.order DESC', 'blocks.order DESC', 'attachments.order DESC']);
+      $select->where("$sequence < ?", $from);
+      $select->order(['sequence DESC']);
       $select->limit(1);
     }
   }
   else {
-    $select->order(['pages.order', 'blocks.order', 'attachments.order']);
+    $select->order(['sequence']);
   }
+
   return $itemTable->fetchObjects($select);
 }
 
@@ -69,22 +88,42 @@ function mlibrary_new_item_sequence_next($exhibitId, $pageId, $itemId) {
 }
 
 function mlibrary_new_item_sequence_order($exhibitId, $pageId, $itemId) {
+  $parents_order = 'IF(
+    `pages`.`parent_id` IS NULL,
+    `pages`.`order`,
+    `parents`.`order`
+  ) * 256 * 256';
+  $pages_order = 'IF(
+    `pages`.`parent_id` IS NULL,
+     0,
+     `pages`.`order` + 1
+  ) * 256';
+  $blocks_order = '`blocks`.`order`';
+  $sequence = "($parents_order + $pages_order + $blocks_order)";
   $db = get_db();
-  $sql = <<<EOF
-SELECT
-  pages.order * 65536 + blocks.order * 256 + attachments.order
-FROM
-  {$db->ExhibitPage} pages JOIN
-  {$db->ExhibitPageBlock} blocks ON blocks.page_id = pages.id JOIN
-  {$db->ExhibitBlockAttachment} attachments ON  attachments.block_id = blocks.id
-WHERE
-  pages.exhibit_id = ? AND
-  pages.id         = ? AND
-  attachments.item_id = ?
-ORDER BY
-  pages.order, blocks.order, attachments.order
-EOF;
-  return $db->query($sql, [$exhibitId, $pageId, $itemId])->fetchColumn();
+  $select = $db->select()
+    ->from(['pages' => $db->ExhibitPage], [])
+    ->columns(['sequence' => $sequence])
+    ->join(
+      ['blocks' => $db->ExhibitPageBlock],
+      '`blocks`.`page_id` = `pages`.`id`',
+      []
+    )
+    ->join(
+      ['attachments' => $db->ExhibitBlockAttachment],
+      '`attachments`.`block_id` = `blocks`.`id`',
+      []
+    )
+    ->joinLeft(
+      ['parents' => $db->ExhibitPage],
+      '`pages`.`parent_id` = `parents`.`id`',
+      []
+    )
+    ->where('`pages`.`exhibit_id`    = ?', $exhibitId)
+    ->where('`pages`.`id`            = ?', $pageId)
+    ->where('`attachments`.`item_id` = ?', $itemId)
+    ;
+  return $db->query($select)->fetchColumn();
 }
 
 /**
@@ -230,11 +269,19 @@ function mlibrary_new_get_image_for_gallery($attachment = null)
 }
 
 
-function mlibrary_new_create_card_for_gallery($attachment, $slug)
+function mlibrary_new_create_card_for_gallery($pageId, $attachment)
 {
-   $item_link = exhibit_builder_exhibit_item_uri($attachment->getItem());
-   set_current_record('exhibit_page',$slug);
-   $url_item = $item_link.'?'.http_build_query(mlibrary_new_exhibit_item_query_string_settings());
+   $item = $attachment->getItem();
+   if (!$item) {
+     return NULL;
+   }
+   $item_link = exhibit_builder_exhibit_item_uri($item);
+   $url_item = $item_link . '?' . http_build_query(
+     [
+       'exhibit' => get_current_record('exhibit_page')->exhibit_id,
+       'page'    => $pageId,
+     ]
+   );
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
      'url' => $url_item,
@@ -249,14 +296,16 @@ function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  }, $sectionpage_cards_info);
 }
 
-function mlibrary_new_get_cards_in_section_gallery($attachments = null, $slug = null){
-  $sectionpage_card_info = array();
-  if (!empty($attachments)) {
-     foreach ($attachments as $attachment) {
-            $sectionpage_card_info[] = mlibrary_new_create_card_for_gallery($attachment, $slug);
-     }
+function mlibrary_new_get_cards_in_section_gallery($pageId, $attachments = null)
+{
+  $cards = [];
+  if (empty($attachments)) {
+    return mlibrary_new_render_gallery_section([]);
   }
-  return mlibrary_new_render_gallery_section($sectionpage_card_info);
+  foreach ($attachments as $attachment) {
+    $cards[] = mlibrary_new_create_card_for_gallery($pageId, $attachment);
+  }
+  return mlibrary_new_render_gallery_section(array_filter($cards));
 }
 
 

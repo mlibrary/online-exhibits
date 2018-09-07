@@ -1,5 +1,5 @@
+<?php $galleryPage = get_current_record('exhibit_page'); ?>
 <!--Breadcrumb and Share Bar-->
-<?php $galleryobj = get_current_record('exhibit_page');?>
 <section class="row">
     <div class="col-xs-12 col-sm-9">
         <ol class="breadcrumb">
@@ -26,28 +26,37 @@
 
   <?php set_exhibit_pages_for_loop_by_exhibit();
 
-  foreach (loop('exhibit_page') as $exhibitsection) {
-  $cards_in_subsection = '';
-  $cards_in_section_flag = false;
-   ?>
-   <section class="exhibit-gallery-cards">  
-    <?php $cards_in_section = mlibrary_new_get_cards_in_section_gallery($exhibitsection->getAllAttachments(),$galleryobj);          
-          if (!empty($cards_in_section)) {
-             echo '<h2 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h2>';
-             echo implode($cards_in_section);
-             $cards_in_section_flag = true;
+  foreach (loop('exhibit_page') as $exhibitSection) {
+    $cardsInSubsection = '';
+    $cardsInSectionFlag = false;
+    ?>
+    <section class="exhibit-gallery-cards">
+      <?php
+        $cardsInSection = mlibrary_new_get_cards_in_section_gallery(
+          $exhibitSection->id,
+          $exhibitSection->getAllAttachments(),
+          $galleryPage
+        );
+        if (!empty($cardsInSection)) {
+          echo '<h2 class="exhibit-gallery-section-header">'.$exhibitSection->title.'</h2>';
+          echo implode($cardsInSection);
+          $cardsInSectionFlag = true;
+        }
+        if (!empty($childPages = $exhibitSection->getChildPages())) {
+          foreach ($childPages as $child) {
+            $cardsInSubsection = mlibrary_new_get_cards_in_section_gallery(
+              $child->id,
+              $child->getAllAttachments(),
+              $galleryPage
+            );
+            if ((!$cardsInSectionFlag) and (!empty($cardsInSubsection))) {
+              echo '<h2 class="exhibit-gallery-section-header">'.$exhibitSection->title.'</h2>';
+              $cardsInSectionFlag = true;
+            }
+            echo implode($cardsInSubsection);
           }
-          if (!empty($exhibitsection->getChildPages())){
-             foreach ($exhibitsection->getChildPages() as $child) {
-               $cards_in_subsection = mlibrary_new_get_cards_in_section_gallery($child->getAllAttachments(),$galleryobj);             
-               if ((!$cards_in_section_flag) and (!empty($cards_in_subsection))) {
-                   echo '<h2 class="exhibit-gallery-section-header">'.$exhibitsection->title.'</h2>';
-                   $cards_in_section_flag = true;
-               }
-                echo implode($cards_in_subsection);
-             }
-          }  
-       ?>
+        }
+      ?>
     </section>
   <?php }?>
 </section>
