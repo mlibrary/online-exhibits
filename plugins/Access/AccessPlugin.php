@@ -18,8 +18,7 @@ class AccessPlugin extends Omeka_Plugin_AbstractPlugin
                     'define_acl'
     );
 
-    protected $_filters = ['admin_whitelist'];
-   
+
     public function hookDefineAcl($args)
     {
         $acl = $args['acl'];
