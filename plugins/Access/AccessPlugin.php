@@ -46,7 +46,7 @@ class AccessPlugin extends Omeka_Plugin_AbstractPlugin
     public  function hookDefineRoutes($args)
     {
         $router = $args['router'];
-          $paths = ['items', 'items/browse', 'items/search', 'items/tags'];
+          $paths = ['collections','collections/browse','items', 'items/browse', 'items/search', 'items/tags'];
 
         if (!is_admin_theme()) {
           foreach ($paths as $path)
