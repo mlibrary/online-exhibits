@@ -264,11 +264,21 @@ function mlibrary_new_get_image_card($rawAttachment = null, $alt = '')
             $alt
         );
     }
-    return record_image(
-        $rawAttachment->getFile(),
-        'original',
-        ['class' => 'image-card', 'alt' => $alt]
-    );
+    $file = $rawAttachment->getFile();
+    if ($file->has_derivative_image) {
+        $src = implode(
+          '/',
+          [WEB_FILES, 'fullsize', $file->getDerivativeFilename()]
+        );
+    }
+    else {
+        $src = implode('/', [WEB_FILES, 'fullsize', $file->filename]);
+    }
+    return '<img src="' .
+        htmlentities($src, ENT_QUOTES, 'UTF-8') .
+        '" alt="' .
+        htmlentities($alt, ENT_QUOTES, 'UTF-8') .
+        '" class="image-card">';
 }
 
 
