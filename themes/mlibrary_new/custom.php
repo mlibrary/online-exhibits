@@ -252,16 +252,23 @@ function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 //
 function mlibrary_new_get_image_card($rawAttachment = null, $alt = '') 
 {
-   $default_image = img("defaulthbg.jpg");
-   $page_image = "<img class='image-card' alt='".$alt."' src='{$default_image}'/>";
-   if (!empty($rawAttachment)) {
-       if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
-           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment->getItem(),$alt);
-        } else {
-           $page_image = record_image($rawAttachment->getFile(),'original',array('class' => 'image-card','alt'=>$alt));
-        }
-   } 
-   return $page_image;
+    $default_image = img("defaulthbg.jpg");
+    if (empty($rawAttachment)) {
+        return "<img class='image-card' alt='" .
+            htmlentities($alt, ENT_QUOTES, 'UTF-8') .
+            "' src='{$default_image}'/>";
+    }
+    if (mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video') {
+        return mlibrary_new_exhibit_builder_video_attachment(
+            $rawAttachment->getItem(),
+            $alt
+        );
+    }
+    return record_image(
+        $rawAttachment->getFile(),
+        'original',
+        ['class' => 'image-card', 'alt' => $alt]
+    );
 }
 
 
@@ -484,33 +491,52 @@ function mlibrary_new_display_rss($feedUrl, $num = 3) {
 }
 
 function mlibrary_new_alt_text($item) {
-     return (strip_formatting(metadata($item,array('Dublin Core', 'Title'))));
+    return strip_formatting(
+        metadata($item, ['Dublin Core', 'Title'], ['no_escape' => true])
+    );
 }
 
 
 /**
  * Retrieve a thumnail image for a video item type
- *  It is not used in this installation, but it can be used in the future.
+ * It is not used in this installation, but it can be used in the future.
  **/
-function mlibrary_new_exhibit_builder_video_attachment($item,$alt) {
-$remove[] = "'";
-	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
-	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
-        if (!empty($elementids_youtube_video)) {
-		foreach ($elementids_youtube_video as $elementid_youtube_video) {
-			$videoid = str_replace($remove, "", $elementid_youtube_video);
-			if (!empty($videoid)) {
-				$video_gallery_image = "<img class='image-card' src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' alt=$alt>";
-			}
-		}
-        }//if
-        elseif (!empty($elementvideos_kultura_VCM)) {
-  	        $data = $elementvideos_kultura_VCM[0];
-		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
-                $partnerId = 1038472;
-                $video_gallery_image = '<img class="image-card" src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
-        }//if
-  return $video_gallery_image;
+function mlibrary_new_exhibit_builder_video_attachment($item, $alt) {
+    $remove = ["'"];
+    $elementids_youtube_video = metadata(
+        $item,
+        ['Item Type Metadata', 'Video_embeded_code'],
+        ['no_escape' => true, 'all' => true]
+    );
+    $elementvideos_kultura_VCM = metadata(
+        $item,
+        ['Item Type Metadata', 'video_embeded_code_VCM'],
+        ['no_escape' => true, 'all' => true]
+    );
+    if (!empty($elementids_youtube_video)) {
+        foreach ($elementids_youtube_video as $elementid_youtube_video) {
+            $videoid = str_replace($remove, "", $elementid_youtube_video);
+            if (!empty($videoid)) {
+                return "<img class='image-card' src='//i.ytimg.com/vi/" .
+                     htmlentities($videoid, ENT_QUOTES, 'UTF-8') .
+                     "/maxresdefault.jpg' alt='" .
+                     htmlentities($alt, ENT_QUOTES, 'UTF-8') .
+                     "'>";
+            }
+        }
+    }
+    elseif (!empty($elementvideos_kultura_VCM)) {
+        $data = $elementvideos_kultura_VCM[0];
+        if (preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match)) {
+            $partnerId = 1038472;
+            return '<img class="image-card" src="//cdn.kaltura.com/p/' .
+                htmlentities($partnerId, ENT_QUOTES, 'UTF-8') .
+                '/thumbnail/entry_id/' .
+                htmlentities($match[1], ENT_QUOTES, 'UTF-8') .
+                '/width/400/height/400/type/1/quality/100/"/>';
+        }
+    }
+    return '';
 }
 
 /**
