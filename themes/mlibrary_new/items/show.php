@@ -33,13 +33,16 @@
 
      $gallery_plugin_active = plugin_is_active('ExhibitGalleryPage');
      $exhibit_image_gallery_set = ($gallery_plugin_active == '1')? $image_gallery_link : '';?>
-     
+   
      <!--Breadcrumb Bar-->
      <section class="row">
       <div class="col-xs-12">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-          <li class="breadcrumb-item"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
+          <li class="breadcrumb-item">
+          <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit)); ?>">
+            <?php echo metadata('exhibit','title',array('no_escape' => true)); ?>
+          </a></li>
           <li class="breadcrumb-item active"><?php echo $item_title; ?></li>
         </ol>
       </div>

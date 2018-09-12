@@ -164,6 +164,10 @@ main#content {
 
 /** Breadcrumbs + Share This **/
 
+.bc-share-row {
+  padding-left: 0;
+}
+
 ol.breadcrumb {
   padding: 0;
   margin: 0;
@@ -291,6 +295,10 @@ a.twitter-share-button:after {
 
 .section-title--large {
   font-size: 1.85em;
+}
+
+h2.sub-section {
+  padding-left: 0;
 }
 
 .show-wrapper {
@@ -657,8 +665,9 @@ div.browse-index {
   height: auto;
 }
 
-h2.item-heading {
+h3.item-heading {
   margin-top: 0;
+  font-size: 1.5rem;
 }
 
 .item-heading a {
