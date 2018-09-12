@@ -17,7 +17,7 @@ function mlibrary_new_recent_exhibits_bootstrap($recentExhibits) {
     if ($exhibits) {
         foreach ($exhibits as $exhibit) {
             $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
-            $exhibitImage = record_image($exhibit, 'original', array('alt' => $exhibit->title,
+            $exhibitImage = record_image($exhibit, 'original', array('alt' => '',
                                                                      'class' => 'image-card'));
             if ($exhibitImage == Null) {
                 $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>';

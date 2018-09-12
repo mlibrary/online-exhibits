@@ -71,7 +71,7 @@ $title = __('Browse Exhibits');
 
                 echo '</div></div>';?>
  
-                <div class="col-xs-12 col-sm-9"><h2 class="item-heading"><?php echo link_to_exhibit(); ?></h2>
+                <div class="col-xs-12 col-sm-9"><h3 class="item-heading"><?php echo link_to_exhibit(); ?></h3>
                 <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                   echo '<p class="item-description">' . $exhibitDescription . '</p>';
                 }

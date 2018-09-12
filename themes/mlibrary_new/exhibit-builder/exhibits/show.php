@@ -27,7 +27,7 @@ else {
 <!--Breadcrumb and Share Bar-->
 <section class="row">
   <div class="col-xs-12">
-  <div class="col-xs-12 col-sm-9">
+  <div class="col-xs-12 col-sm-9 bc-share-row">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
         <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
@@ -45,7 +45,6 @@ else {
 <!--End breadcrumb and share bar-->
 
 <section class="row">
-    <section>
       <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="250" data-offset-bottom="120">
           <div class="nav-text-inline">
@@ -69,7 +68,6 @@ else {
           </div>
         </nav>
       </div>
-    </section>
 
   <section class="exhibit-content cf">
     <div class="col-xs-12 col-sm-9 show-wrapper">
@@ -80,16 +78,14 @@ else {
         ?>
       </h1>
 
-      <div>
-        <?php exhibit_builder_render_exhibit_page($exhibit_page);?>
-      </div>
+     <?php exhibit_builder_render_exhibit_page($exhibit_page);?>
       <?php $children = $exhibit_page->getChildPages();
                if ($children) {
                  foreach ($children as $child) {?>
                   <section>
-                      <h3 class="sub-section" id =<?php echo $child["slug"];?>> 
-                      <?php echo metadata($child, 'title');?></h3>
-                      <div> <?php echo exhibit_builder_render_exhibit_page($child);?> </div>
+                      <h2 class="sub-section col-xs-12" id =<?php echo $child["slug"];?>> 
+                      <?php echo metadata($child, 'title');?></h2>
+                      <?php echo exhibit_builder_render_exhibit_page($child);?>
                       <?php release_object($child);?>
                   </section><?php
                  }
