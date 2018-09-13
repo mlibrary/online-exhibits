@@ -13,9 +13,13 @@
     
     ));
 
-  if(!empty($_GET['page'])){
-       $page_id = (int)$_GET['page']; 
-  }
+ if (isset($_GET['return'])) {
+   $page_id = (int) $_GET['return'];
+ } elseif (isset($_GET['page'])) {
+   $page_id = (int)$_GET['page'];
+ } else {
+   $page_id = 0;
+ }
 
  if (isset($_GET['exhibit'])){
      $exhibit_image_gallery_set = '';

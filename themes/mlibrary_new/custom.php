@@ -310,22 +310,23 @@ function mlibrary_new_get_image_for_gallery($attachment = null)
 }
 
 
-function mlibrary_new_create_card_for_gallery($pageId, $attachment)
+function mlibrary_new_create_card_for_gallery($pageId, $attachment, $galleryPage)
 {
    $item = $attachment->getItem();
    if (!$item) {
      return NULL;
    }
-   $item_link = exhibit_builder_exhibit_item_uri($item);
-   $url_item = $item_link . '?' . http_build_query(
+   $itemLink = exhibit_builder_exhibit_item_uri($item);
+   $url = $itemLink . '?' . http_build_query(
      [
        'exhibit' => get_current_record('exhibit_page')->exhibit_id,
        'page'    => $pageId,
+       'return'  => $galleryPage->id,
      ]
    );
    return [
      'image' => mlibrary_new_get_image_for_gallery($attachment),
-     'url' => $url_item,
+     'url' => $url,
    ];
 }
 
@@ -337,14 +338,14 @@ function mlibrary_new_render_gallery_section($sectionpage_cards_info){
  }, $sectionpage_cards_info);
 }
 
-function mlibrary_new_get_cards_in_section_gallery($pageId, $attachments = null)
+function mlibrary_new_get_cards_in_section_gallery($pageId, $attachments, $galleryPage)
 {
   $cards = [];
   if (empty($attachments)) {
     return mlibrary_new_render_gallery_section([]);
   }
   foreach ($attachments as $attachment) {
-    $cards[] = mlibrary_new_create_card_for_gallery($pageId, $attachment);
+    $cards[] = mlibrary_new_create_card_for_gallery($pageId, $attachment, $galleryPage);
   }
   return mlibrary_new_render_gallery_section(array_filter($cards));
 }
