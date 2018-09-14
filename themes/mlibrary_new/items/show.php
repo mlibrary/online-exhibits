@@ -48,9 +48,9 @@
             <?php echo metadata('exhibit','title',array('no_escape' => true)); ?>
           </a></li>
          <li class="breadcrumb-item">
-          <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page));?>">
-            <?php echo $exhibit_page['title']; ?>
-          </a></li>
+           <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)); ?>">
+            <?php echo htmlentities($exhibit_page['title'], ENT_QUOTES, 'UTF-8'); ?>
+        </a></li>
           <li class="breadcrumb-item active">Item page</li>
         </ol>
       </div>
