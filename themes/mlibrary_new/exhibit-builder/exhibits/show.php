@@ -30,7 +30,10 @@ else {
   <div class="col-xs-12 col-sm-9 bc-share-row">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-        <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
+        <li class="breadcrumb-item active"><a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit)); ?>">
+            <?php echo metadata('exhibit','title',array('no_escape' => true)); ?>
+          </a></li>
+        <li class="breadcrumb-item active"><?php echo $exhibit_page['title']; ?></li>
       </ol>
   </div>
 
