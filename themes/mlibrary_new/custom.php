@@ -574,11 +574,6 @@ function mlibrary_new_exhibit_builder_attachment($html, $compact) {
                                     }
                               }
                         }
-                        // Add a query string to then end of the href so we know which exhibit you came from
-                        $html = mlibrary_new_add_vars_to_href(
-                                  $html,
-                                  mlibrary_new_exhibit_item_query_string_settings()
-                                );
                  }
   return $html;
 }
@@ -595,14 +590,16 @@ function mlibrary_new_add_vars_to_href($html, $variables) {
   );
 }
 
-
 /**
  * Function to return common settings for exhibit item link query strings
  * called by mlibrary_exhibit_builder_attachment
  */
-function mlibrary_new_exhibit_item_query_string_settings() {
-  return [ 'exhibit' => get_current_record('exhibit_page')->exhibit_id,
-           'page'    => get_current_record('exhibit_page')->id ];
+function mlibrary_new_exhibit_item_query_string_settings($exhibit_page = null) {
+  if (empty($exhibit_page)) {
+    $exhibit_page = get_current_record('exhibit_page');
+  }
+  return [ 'exhibit' => $exhibit_page->exhibit_id,
+           'page'    => $exhibit_page->id ];
 }
 
 /**
@@ -654,5 +651,17 @@ function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current
   return $html;
  }
 
-
-
+/**
+ * Function to render an exhibit page.
+ *
+ * Buffer the default rendering, so we can insert exhibit and page ids
+ * in the item href.
+ */
+function mlibrary_new_render_exhibit_page($page) {
+  ob_start();
+  exhibit_builder_render_exhibit_page($page);
+  return mlibrary_new_add_vars_to_href(
+    ob_get_clean(),
+    mlibrary_new_exhibit_item_query_string_settings($page)
+  );
+}
