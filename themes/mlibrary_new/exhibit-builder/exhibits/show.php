@@ -78,19 +78,25 @@ else {
         ?>
       </h1>
 
-     <?php exhibit_builder_render_exhibit_page($exhibit_page);?>
-      <?php $children = $exhibit_page->getChildPages();
-               if ($children) {
-                 foreach ($children as $child) {?>
-                  <section>
-                      <h2 class="sub-section col-xs-12" id =<?php echo $child["slug"];?>> 
-                      <?php echo metadata($child, 'title');?></h2>
-                      <?php echo exhibit_builder_render_exhibit_page($child);?>
-                      <?php release_object($child);?>
-                  </section><?php
-                 }
-              }
-         ?>
+    <?php
+      print mlibrary_new_render_exhibit_page($exhibit_page);
+
+      $children = $exhibit_page->getChildPages();
+      foreach ((array) $children as $child) {
+        $slug = html_escape($child['slug']);
+        $title = metadata($child, 'title');
+        $page_html = mlibrary_new_render_exhibit_page($child);
+        release_object($child);
+        ?>
+        <section>
+          <h2 class="sub-section col-xs-12" id="<?php echo $slug; ?>">
+            <?php echo $title; ?>
+          </h2>
+          <?php echo $page_html ?>
+        </section>
+        <?php
+      }
+    ?>
   </div> 
   <div class="col-xs-12 col-sm-9 col-sm-offset-3 padding-0">
     <div class="section-nav">
