@@ -5,7 +5,7 @@
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
           <li class="breadcrumb-item"><?php echo link_to_exhibit(metadata('exhibit','title',array('no_escape' => true)));?></li>
-          <li class="breadcrumb-item active"><?php echo 'Exhibit Image '. metadata('exhibit_page','title',array('no_escape' => true)); ?></li>
+          <li class="breadcrumb-item active"><?php echo metadata('exhibit_page','title',array('no_escape' => true)); ?></li>
         </ol>
     </div>
     <div class="col-xs-12 col-sm-3">
@@ -19,7 +19,7 @@
 
 <section>
     <div class="gallery-intro">
-      <h1 class="exhibit-gallery-heading">Exhibit Image Gallery</h1>
+      <h1 class="exhibit-gallery-heading">Gallery</h1>
         <p class="exhibit-gallery-subheading">Browse all images in this exhibit by section and by the order they appear within each section.</p>
         <p class="exhibit-gallery-subheading">The University of Michigan Library has placed copies of these works online for educational and research purposes. For more information about using images from this exhibit please see the <a href="<?php echo url('about/#image-rights'); ?>">Rights Statement</a>.</p>
     </div>
