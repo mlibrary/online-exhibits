@@ -34,7 +34,7 @@
           <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
           <li class="breadcrumb-item">
           <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit)); ?>">
-            <?php echo metadata('exhibit','title',array('no_escape' => true)); ?>
+            <?php echo  snippet_by_word_count(metadata('exhibit','title',array('no_escape' => true)),5,'..');?>
           </a></li>
          <li class="breadcrumb-item">
            <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)); ?>">

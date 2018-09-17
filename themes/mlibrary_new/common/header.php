@@ -94,7 +94,7 @@
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
         <?php if ($bodyclass =='show') {?>
               <li class="breadcrumb-item active"><a href="<?php echo html_escape(exhibit_builder_exhibit_uri(get_current_record('exhibit')));?>">
-                                                          <?php echo metadata('exhibit','title',array('no_escape' => true)); ?></a></li>
+                                                          <?php echo snippet_by_word_count(metadata('exhibit','title',array('no_escape' => true)),5,'..'); ?></a></li>
               <li class="breadcrumb-item active"><?php echo metadata('exhibit_page','title',array('no_escape' => true));?></li>
         <?php } else {?> 
               <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true));?></li><?php }?>
