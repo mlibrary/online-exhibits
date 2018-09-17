@@ -1,38 +1,48 @@
 <?php
- /**
-  * Copyright (c) 2016, Regents of the University of Michigan.
-  * All rights reserved. See LICENSE.txt for details.
-  */
-  $item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
-  if (empty($item_title)) { $item_title = __('[Untitled]'); }
-  echo head(
-    array(
-      'title'     => $item_title,
-      'bodyid'    => 'items',
-      'bodyclass' => 'show item'
-    
-    ));
+/**
+ * Copyright (c) 2016, Regents of the University of Michigan.
+ * All rights reserved. See LICENSE.txt for details.
+ */
+$item_title = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
+if (empty($item_title)) {
+   $item_title = __('[Untitled]');
+}
 
- if (isset($_GET['return'])) {
-   $page_id = (int) $_GET['return'];
- } elseif (isset($_GET['page'])) {
-   $page_id = (int)$_GET['page'];
- } else {
-   $page_id = 0;
- }
+echo head(
+  array(
+    'title'     => $item_title,
+    'bodyid'    => 'items',
+    'bodyclass' => 'show item'
+  )
+);
+
+if (isset($_GET['page'])) {
+  $page_id = (int) $_GET['page'];
+} else {
+  $page_id = 0;
+}
+
+if (isset($_GET['return'])) {
+  $return_id = (int) $_GET['return'];
+} else {
+  $return_id = $page_id;
+}
+
+$page = get_record_by_id('exhibit_page', $page_id);
+$return = get_record_by_id('exhibit_page', $return_id);
+
 
  if (isset($_GET['exhibit'])){
      $exhibit_image_gallery_set = '';
       // dipslay the Back link for exhibit and gallery page
-     $exhibit_page = get_record_by_id('exhibit_page',$page_id);
-     $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';
+     $return_link = ($return['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';
 
      echo '<div class="exhibit-item-back-button"><a href="' .
-        html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
+        html_escape(exhibit_builder_exhibit_uri($exhibit, $return)) .
       '">'.$return_link.'</a></div>';
      
      // display link to gallery only if this page is visited from Exhibit page and the gallery plugin is installed
-     if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($exhibit_page['slug']!='gallery')){
+     if (plugin_is_active('ExhibitGalleryPage') == '1' && $return['slug'] != 'gallery') {
      echo '<div class="exhibit-item-back-button"><a href="'.
                            html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
                            '">View Exhibit Image Gallery</a></div>';
@@ -46,11 +56,12 @@
           <li class="breadcrumb-item">
           <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit)); ?>">
             <?php echo metadata('exhibit','title',array('no_escape' => true)); ?>
-          </a></li>
+          </a>
+         </li>
          <li class="breadcrumb-item">
-           <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)); ?>">
-            <?php echo htmlentities($exhibit_page['title'], ENT_QUOTES, 'UTF-8'); ?>
-        </a></li>
+           <a href="<?php echo html_escape(exhibit_builder_exhibit_uri($exhibit, $return)); ?>">
+             <?php echo html_escape($return['title']); ?>
+           </a></li>
           <li class="breadcrumb-item active">Item page</li>
         </ol>
       </div>
@@ -97,18 +108,18 @@
 <?php
 // Navigation
 
-if (isset($exhibit_page)) {
-  $next = mlibrary_new_item_sequence_next($exhibit->id, $exhibit_page->id, $item->id);
+if (isset($page)) {
+  $next = mlibrary_new_item_sequence_next($exhibit->id, $page_id, $item->id);
   if ($next) {
     $nextUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
-      "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}";
+      "/item/{$next->id}?exhibit={$exhibit->id}&page={$next->page_id}&return={$return_id}";
     $nextTitle = metadata($next, ['Dublin Core', 'Title']);
   }
 
-  $prev = mlibrary_new_item_sequence_prev($exhibit->id, $exhibit_page->id, $item->id);
+  $prev = mlibrary_new_item_sequence_prev($exhibit->id, $page_id, $item->id);
   if ($prev) {
     $prevUrl = WEB_ROOT . "/exhibits/show/{$exhibit->slug}" .
-      "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}";
+      "/item/{$prev->id}?exhibit={$exhibit->id}&page={$prev->page_id}&return={$return_id}";
     $prevTitle = metadata($prev, ['Dublin Core', 'Title']);
   }
 } else {
