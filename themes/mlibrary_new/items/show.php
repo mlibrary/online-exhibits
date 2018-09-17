@@ -25,21 +25,10 @@
      $exhibit_image_gallery_set = '';
       // dipslay the Back link for exhibit and gallery page
      $exhibit_page = get_record_by_id('exhibit_page',$page_id);
-     $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';
+     $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';?>
 
-     echo '<div class="exhibit-item-back-button"><a href="' .
-        html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
-      '">'.$return_link.'</a></div>';
-     
-     // display link to gallery only if this page is visited from Exhibit page and the gallery plugin is installed
-     if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($exhibit_page['slug']!='gallery')){
-     echo '<div class="exhibit-item-back-button"><a href="'.
-                           html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
-                           '">View Exhibit Image Gallery</a></div>';
-     }
-  ?> 
      <!--Breadcrumb Bar-->
-     <section class="row">
+     <section class="row"> 
       <div class="col-xs-12">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
@@ -55,9 +44,19 @@
         </ol>
       </div>
      </section>
-     <!--End breadcrumb bar-->
- <?php }?>
+     <!--End breadcrumb bar--> 
 
+     <?php echo '<div class="exhibit-item-back-button"><a href="' .
+        html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
+      '">'.$return_link.'</a></div>';
+     
+     // display link to gallery only if this page is visited from Exhibit page and the gallery plugin is installed
+     if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($exhibit_page['slug']!='gallery')){
+     echo '<div class="exhibit-item-back-button"><a href="'.
+                           html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
+                           '">View Exhibit Image Gallery</a></div>';
+     }}
+  ?> 
 
 <div class="col-xs-12">
 <h1 class="item-title"><?php echo $item_title; ?></h1>
