@@ -61,7 +61,7 @@
                                             <div class="exhibit-theme-item panel panel-default">
                                               <a href= <?php echo html_escape($uri);?> >
                                                <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>
-                                               <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo html_escape($page_card_info["title"]);?></h3>
+                                               <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo $page_card_info["title"];?></h3>
                                                <p class="panel-card-text"><?php echo html_escape($page_card_info["description"]);?></p></div>
                                              </a>                           
                                             </div>
