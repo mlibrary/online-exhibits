@@ -35,8 +35,7 @@ $return = get_record_by_id('exhibit_page', $return_id);
  if (isset($_GET['exhibit'])){
      $exhibit_image_gallery_set = '';
       // dipslay the Back link for exhibit and gallery page
-     $exhibit_page = get_record_by_id('exhibit_page',$page_id);
-     $return_link = ($exhibit_page['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';?>
+     $return_link = ($return['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';?>
      <!--Breadcrumb Bar-->
      <section class="row"> 
       <div class="col-xs-12">
@@ -58,11 +57,11 @@ $return = get_record_by_id('exhibit_page', $return_id);
      <!--End breadcrumb bar--> 
 
      <?php echo '<div class="exhibit-item-back-button"><a href="' .
-        html_escape(exhibit_builder_exhibit_uri($exhibit,$exhibit_page)).
+        html_escape(exhibit_builder_exhibit_uri($exhibit,$return)).
       '">'.$return_link.'</a></div>';
      
      // display link to gallery only if this page is visited from Exhibit page and the gallery plugin is installed
-     if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($exhibit_page['slug']!='gallery')){
+     if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($return['slug']!='gallery')){
      echo '<div class="exhibit-item-back-button"><a href="'.
                            html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
                            '">View Exhibit Image Gallery</a></div>';
