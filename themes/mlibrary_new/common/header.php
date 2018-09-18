@@ -72,7 +72,6 @@
          <?php echo search_form(array('show_advanced' => false, 'form_attributes'=>array('id'=>'navbar-search', 'class'=>'form-inline'))); ?>
         </div>
     </div>
-
     <?php if (isset($bodyid) and ($bodyid === 'home')): ?>
     <header>
         <div class="col-sm-12 banner" style="background-image:url('<?php  echo img('header.jpg'); ?>');">
@@ -87,14 +86,42 @@
     </header>
     <?php endif; ?>
 
-    <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid !== 'home')) : ?>
+    <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid =='exhibit')) :?>
+    <section class="row">
+    <div class="col-xs-12">
+    <div class="col-xs-12 col-sm-9">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
+        <?php if ($bodyclass =='show') {?>
+              <li class="breadcrumb-item active"><a href="<?php echo html_escape(exhibit_builder_exhibit_uri(get_current_record('exhibit')));?>">
+                                                          <?php echo snippet_by_word_count(metadata('exhibit','title',array('no_escape' => true)),5,'..'); ?></a></li>
+              <li class="breadcrumb-item active"><?php echo metadata('exhibit_page','title',array('no_escape' => true));?></li>
+        <?php } else {?> 
+              <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true));?></li><?php }?>
+      </ol>
+    </div>
+  <div class="col-xs-12 col-sm-3">
+    <ul class="share-this">
+      <li>Share this Exhibit:</li>
+      <li><a href="https://twitter.com/share" class="twitter-share-button" 
+                                              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" >
+                                              <span class="sr-only">Tweet</span> </a>
+      </li>
+    </ul>
+   </div>
+ </div>
+</section>
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
         style="background-size:cover;background-position: center center;background-image:url('<?php  echo bs_header_bg(); ?>');">
 
     </header>
-    <?php endif; ?>
+    <!--Breadcrumb and Share Bar-->
+<!--End breadcrumb and share bar-->
+<?php endif;?>
+    <!--Breadcrumb and Share Bar-->
+<!--End breadcrumb and share bar-->
 
     <main id="content" role="main">
       <div class="container">

@@ -1,21 +1,4 @@
 <?php $galleryPage = get_current_record('exhibit_page'); ?>
-<!--Breadcrumb and Share Bar-->
-<section class="row">
-    <div class="col-xs-12 col-sm-9">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-          <li class="breadcrumb-item"><?php echo link_to_exhibit(metadata('exhibit','title',array('no_escape' => true)));?></li>
-          <li class="breadcrumb-item active"><?php echo metadata('exhibit_page','title',array('no_escape' => true)); ?></li>
-        </ol>
-    </div>
-    <div class="col-xs-12 col-sm-3">
-      <ul class="share-this">
-        <li>Share this Gallery:</li>
-        <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
-      </ul>
-     </div>
-</section>
-<!--End breadcrumb and share bar-->
 
 <section>
     <div class="gallery-intro">

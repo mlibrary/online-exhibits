@@ -13,26 +13,6 @@
 
 ?>
 
-<!--Breadcrumb and Share Bar-->
-<section class="row">
- <div class="col-xs-12">
-  <div class="col-xs-12 col-sm-9">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-        <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></li>
-      </ol>
-  </div>
-
-  <div class="col-xs-12 col-sm-3">
-    <ul class="share-this">
-      <li>Share this Exhibit:</li>
-      <li><a href="https://twitter.com/share" class="twitter-share-button" data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" ><span class="sr-only">Tweet</span> </a></li>
-    </ul>
-   </div>
- </div>
-</section>
-<!--End breadcrumb and share bar-->
-
   <div class="exhibit-introduction">
     <div class="col-xs-12">
       <h1><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></h1>
@@ -81,7 +61,7 @@
                                             <div class="exhibit-theme-item panel panel-default">
                                               <a href= <?php echo html_escape($uri);?> >
                                                <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>
-                                               <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo html_escape($page_card_info["title"]);?></h3>
+                                               <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo $page_card_info["title"];?></h3>
                                                <p class="panel-card-text"><?php echo html_escape($page_card_info["description"]);?></p></div>
                                              </a>                           
                                             </div>
