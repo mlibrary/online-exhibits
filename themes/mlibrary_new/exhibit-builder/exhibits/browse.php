@@ -52,25 +52,17 @@ $title = __('Browse Exhibits');
 
          <article>
           <div class="col-xs-12 browse-wrap">
-           
+           <div class="col-xs-12 col-sm-3"> <div class="img-wrap">
               <?php
-
                if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
-                  $Exhibit_image = $exhibitImage;//array('image_name'=>$exhibitImage);
-               } else {
-                  $Exhibit_image = '';
-               }
-
-               echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';
-
-               if (!empty($Exhibit_image)) {
-                      echo $Exhibit_image;//$Exhibit_image['image_name'];
-               } else {
-                      echo('<img src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>');                  
-               }
-
-                echo '</div></div>';?>
- 
+                  echo link_to($exhibit, 'show', $exhibitImage, array('class' => 'image'));
+               } else {?>
+                  <a href="<?php echo record_url($exhibit); ?>">
+                      <img src="<?php echo img("defaulthbg.jpg");?>" alt="Mlibrary default image"/>
+                  </a>
+               <?php }?>
+            </div>
+           </div>
                 <div class="col-xs-12 col-sm-9"><h3 class="item-heading"><?php echo link_to_exhibit(); ?></h3>
                 <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                   echo '<p class="item-description">' . $exhibitDescription . '</p>';
