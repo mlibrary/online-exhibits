@@ -2,6 +2,7 @@
   set_theme_option('display_header','1');
 	echo head(array('bodyid'=>'home')); 
 ?>
+<div class="container">
 <div class="row">
     <div class="col-xs-12">
     <div class="row detail-nav">

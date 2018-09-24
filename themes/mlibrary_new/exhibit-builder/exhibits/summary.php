@@ -13,15 +13,18 @@
 
 ?>
 
-  <div class="exhibit-introduction">
-    <div class="col-xs-12">
+<section>
+  <div class="col-xs-12 exhibit-introduction">
+    <div class="container">
       <h1><?php echo metadata('exhibit','title',array('no_escape' => true)); ?></h1>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
     </div>
   </div>
-
+</section>
+  <div class="container">
   <div id="primary">
-    <section>
+  
+  <section class="exhibit-side-navigation">
       <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="650" data-offset-bottom="120">
           <div class="nav-text-inline">

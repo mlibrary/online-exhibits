@@ -5,7 +5,7 @@
 }
 else {?>
  <div>
-
+<div class="container">
 <section>
   <!--Breadcrumb and Share Bar-->
  <div class="col-xs-12">

@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Copyright (c) 2016, Regents of the University of Michigan.
@@ -34,9 +35,10 @@ $return = get_record_by_id('exhibit_page', $return_id);
 
  if (isset($_GET['exhibit'])){
      $exhibit_image_gallery_set = '';
-      // dipslay the Back link for exhibit and gallery page
+      // display the Back link for exhibit and gallery page
      $return_link = ($return['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';?>
      <!--Breadcrumb Bar-->
+    <div class="container">
      <section class="row"> 
       <div class="col-xs-12">
         <ol class="breadcrumb">
@@ -67,6 +69,7 @@ $return = get_record_by_id('exhibit_page', $return_id);
                            '">View Exhibit Image Gallery</a></div>';
      }}
   ?> 
+
 
 <div class="col-xs-12">
 <h1 class="item-title"><?php echo $item_title; ?></h1>

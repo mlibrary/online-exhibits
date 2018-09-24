@@ -1,11 +1,4 @@
-/*  MLibrary Exhibits Theme Styles */
-
-.exhibit.record {
-  display: inline-block;
-}
-
 /** Base styles **/
-
 p {
   font-size: 1.1em;
 }
@@ -21,6 +14,10 @@ body {
 
 .bold {
   font-weight: bold;
+}
+
+.exhibit.record {
+  display: inline-block;
 }
 
 /** Header **/
@@ -173,7 +170,7 @@ main#content {
 }
 
 ol.breadcrumb {
-  padding: 1em 0 .75em;
+  padding: 1.25em 0;
   margin: 0;
   background-color: #f2f2f2;
 }
@@ -299,6 +296,23 @@ a.twitter-share-button:after {
 }
 
 /** Exhibit Show/Summary Page **/
+
+.exhibit-introduction {
+  background: #fff;
+  margin-bottom: 1em;
+}
+
+.exhibit-side-navigation > * {
+  padding-left: 0;
+}
+
+.exhibit-introduction h1 {
+  margin-bottom: .25em;
+}
+p.credits {
+  color: #6E6E6E;
+  margin-top: .25em;
+}
 
 .exhibit-overview a {
   color: #6E6E6E;
@@ -1159,6 +1173,10 @@ body>.navbar {
 }
 
 @media only screen and (max-width: 767px) {
+
+  .share-this {
+    margin-top: 0;
+  }
 
 	div#header-claim-holder .held, div#header-claim-holder p
 	{
