@@ -74,14 +74,15 @@
     </div>
     <?php if (isset($bodyid) and ($bodyid === 'home')): ?>
     <header>
-        <div class="col-sm-12 banner" style="background-image:url('<?php  echo img('header.jpg'); ?>');">
+        <div class="col-sm-12 banner" style="background-image:linear-gradient(rgba(0,0,0,.2), rgba(0,0,0,.5)), url('<?php  echo img('header.jpg'); ?>');">
             <div id="header-claim-holder">
-                <div class="container container-medium">
+                <div class="container container-medium banner-container">
                      <h1 class="banner-text--large">Online Exhibits</h1>
                         <p class="banner-text--medium">Brought to you by the <a href="http://lib.umich.edu">University of Michigan Library</a></p>
-                        <p class="banner-text--caption">Image: Rotunda Reading Room of the Old General Library from <a href="<?php echo url('exhibits/show/library-bicentennial'); ?>"> Stories of the University Library: A Bicentennial Exhibit</a></p>
+                       
                 </div>
             </div>
+             <p class="banner-text--caption">Image: Japser Francis Cropsey's painting of the University of Michigan campus from <a href="<?php echo url('exhibits/show/creating-a-campus/'); ?>"> Creating a Campus: A Cartographic Celebration of U-M's Bicentennial</a></p>
         </div>
     </header>
     <?php endif; ?>
@@ -117,11 +118,7 @@
         style="background-size:cover;background-position: center center;background-image:url('<?php  echo bs_header_bg(); ?>');">
 
     </header>
-    <!--Breadcrumb and Share Bar-->
-<!--End breadcrumb and share bar-->
 <?php endif;?>
-    <!--Breadcrumb and Share Bar-->
-<!--End breadcrumb and share bar-->
 
     <main id="content" role="main">
     
