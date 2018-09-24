@@ -24,7 +24,7 @@ if (is_file( $fname )){
 else {
 //Close your PHP tags and add your show.php content here.
 ?>
-
+<div class="container">
 <section class="row">
       <div class="col-xs-12 col-sm-3">
         <nav class="exhibit-navigation" data-spy="affix" data-offset-top="250" data-offset-bottom="120">
