@@ -56,13 +56,13 @@ $return = get_record_by_id('exhibit_page', $return_id);
      </section>
      <!--End breadcrumb bar--> 
 
-     <?php echo '<div class="exhibit-item-back-button"><a href="' .
+     <?php echo '<div class="exhibit-item-back-button col-sm-6"><a href="' .
         html_escape(exhibit_builder_exhibit_uri($exhibit,$return)).
       '">'.$return_link.'</a></div>';
      
      // display link to gallery only if this page is visited from Exhibit page and the gallery plugin is installed
      if ((plugin_is_active('ExhibitGalleryPage')=='1') and ($return['slug']!='gallery')){
-     echo '<div class="exhibit-item-back-button"><a href="'.
+     echo '<div class="view-exhibit--link col-sm-6"><a href="'.
                            html_escape(exhibit_builder_exhibit_uri($exhibit).'/gallery').
                            '">View Exhibit Image Gallery</a></div>';
      }}
@@ -70,8 +70,7 @@ $return = get_record_by_id('exhibit_page', $return_id);
 
 <div class="col-xs-12">
 <h1 class="item-title"><?php echo $item_title; ?></h1>
-<div class="view-exhibit--link">
-</div>
+
 <div id="primary">
   <?php
     $file = null;
@@ -87,10 +86,11 @@ $return = get_record_by_id('exhibit_page', $return_id);
                    $iiifImage_path = WEB_ROOT . "/iiif/{$file->id}/info.json"; 
                }?>                
               <div id="fsize_images">
+                <button id="action-reset-viewer">Reset View</button>
                  <button id="action-zoom-in">Zoom In</button>
                  <span id="span-zoom-status"></span>
                  <button id="action-zoom-out">Zoom Out</button>
-                 <button id="action-reset-viewer">Reset View</button>
+                 
                  <button id="action-rotate-left">Rotate left</button>
                  <button id="action-rotate-right">Rotate Right</button>
                  <div id = "image-zoomer-os"  data-identifier = "<?php print html_escape($iiifImage_path);?>" 
@@ -130,7 +130,7 @@ $item_metadata = mlibrary_new_metadata('item');
 
 if (isset($_GET['exhibit'])) { ?>
 <div class="row">
-  <div class="previous-item--nav  col-xs-12 col-sm-6 col-md-4">
+  <div class="previous-item--nav col-xs-12 col-sm-6 col-md-4">
     <dl>
       <?php if ($prev) { ?>
         <dt class="previous-item--icon">Previous item</dt>
@@ -162,11 +162,11 @@ if (isset($_GET['exhibit'])) { ?>
 </div>
 <?php } 
 if (!empty($item_metadata)) {?>
-<div class="col-md-6 col-md-offset-3"> 
+<section class="col-md-8 col-md-offset-2 panel item-panel"> 
       <h2 class="metadata--heading">Item Data</h2>
       <div class="detail-nav-border"></div>
       <dl class="metadata--list"><?php echo $item_metadata;?></dl>
-</div>
+</section>
 <?php }?>
 </div>
 

@@ -168,8 +168,12 @@ main#content {
   padding-left: 0;
 }
 
+.container.breadcrumb-container {
+  padding-left: 0;
+}
+
 ol.breadcrumb {
-  padding: 0;
+  padding: 1em 0 .75em;
   margin: 0;
   background-color: #f2f2f2;
 }
@@ -177,16 +181,23 @@ ol.breadcrumb {
 li.breadcrumb-item {
   color: #333;
   padding-left: 0;
+  margin-top: 0;
+}
+
+.breadcrumb-item:first-child a {
+  text-decoration: none;
 }
 
 li.breadcrumb-item a,
 #simple-pages-breadcrumbs a  {
   color: #333;
+  text-decoration: underline;
 }
 
 .breadcrumb > .active {
   color: #333;
   font-weight: bold;
+  text-decoration: none;
 }
 
 .breadcrumb > li + li::before {
@@ -784,10 +795,6 @@ h1.item-title {
   margin-bottom: 0;
 }
 
-h2.metadata--heading {
-  padding-top: 1em;
-}
-
 .metadata--list dd {
   padding-bottom: .75em;
 }
@@ -813,11 +820,20 @@ h2.metadata--heading {
 }
 
 .view-exhibit--link {
-  text-align: center;
+  padding-top: .5em;
+  text-align: right;
 }
 
 .exhibit-item-back-button {
-  padding-top: .5em;;
+  padding-top: .5em;
+  padding-left: 0;
+}
+
+.item-panel {
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+  margin-top: 1em;
 }
 
 /** About Online Exhibits **/
@@ -1224,5 +1240,11 @@ body>.navbar {
   li.page-input form {
     width: 100px;
   }
+
+  .view-exhibit--link,
+  .exhibit-item-back-button {
+  text-align: left;
+  padding-left: 0;
+}
 
 }

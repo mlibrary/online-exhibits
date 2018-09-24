@@ -87,8 +87,8 @@
     <?php endif; ?>
 
     <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid =='exhibit')) :?>
-    <section class="row">
-    <div class="col-xs-12">
+    <section>
+    <div class="container breadcrumb-container">
     <div class="col-xs-12 col-sm-9">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
@@ -109,8 +109,8 @@
       </li>
     </ul>
    </div>
- </div>
-</section>
+    </div>
+    </section>
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
