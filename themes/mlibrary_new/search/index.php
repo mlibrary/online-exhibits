@@ -4,6 +4,7 @@
     echo head(array('title' => $pageTitle, 'bodyid' => 'search', 'bodyclass' => 'search'));
     $searchRecordTypes = get_search_record_types();
 ?>
+ <div class="container">
     <div class="col-xs-12">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>

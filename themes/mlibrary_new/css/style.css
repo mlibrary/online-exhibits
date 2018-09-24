@@ -116,10 +116,17 @@ main#content {
 
 .banner {
   margin: 0;
-  padding: 5em 0;
-  height: 20em;
+  height: 22em;
   background-size: cover;
-  background-position: center bottom;
+  background-position: center center;
+}
+
+.banner-container {
+  padding: 6.5em 0 0;
+}
+
+#header-claim-holder {
+    padding-bottom: 3em;
 }
 
 .banner a {
@@ -138,7 +145,7 @@ main#content {
 
  .banner-text--large {
   font-weight: bold;
-  font-size: 2.75em;
+  font-size: 3.5em;
  }
 
  .banner-text--medium {
@@ -155,8 +162,10 @@ main#content {
  }
 
  .banner-text--caption {
+  color: #fff;
   font-size: .75em;
   padding-right: .5em;
+  text-align: right;
 }
 
 /** Breadcrumbs + Share This **/
@@ -911,7 +920,7 @@ body>.navbar {
 }
 
 #banner {
-    min-height: 300px;
+    min-height: 360px;
     border-bottom: none
 }
 
@@ -1111,15 +1120,15 @@ body>.navbar {
 /** Media Queries **/
 
 @media(min-width: 767px) and (max-width: 991px ) {
+
   .section-nav-panel {
   width: 100%;
   margin-top: .5em;
   }
 
   .exhibit-gallery-theme-item {
-  width: calc(45%);
+  width: 45%;
   }
-
 
   .exhibit-navigation h3 {
   font-size: 1.2em;
@@ -1147,6 +1156,7 @@ body>.navbar {
 }
 
 @media (max-width:767px) {
+
    .section-preview .image img {
         width: 100%
     }
@@ -1156,6 +1166,7 @@ body>.navbar {
     .splash .logo {
         width: 100px
     }
+
     .splash h1 {
         font-size: 2em
     }
@@ -1174,10 +1185,20 @@ body>.navbar {
 
 @media only screen and (max-width: 767px) {
 
+  .tag-list a {
+    padding: 1em .25em .5em;
+    margin: .15em;
+    font-size: .75em;
+}
+
   .share-this {
     margin-top: 0;
   }
 
+  .banner {
+  height: 30em;
+  }
+ 
 	div#header-claim-holder .held, div#header-claim-holder p
 	{
 		max-width: 100%;
@@ -1249,10 +1270,6 @@ body>.navbar {
 
   .index-exhibits .panel-heading {
     height: 11em;
-  }
-
-  .banner {
-    height: 25em;
   }
 
   li.page-input form {

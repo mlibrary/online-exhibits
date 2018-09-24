@@ -21,7 +21,8 @@
     </div>
   </div>
 </section>
-  <div class="container">
+
+<div class="container">
   <div id="primary">
   
   <section class="exhibit-side-navigation">
@@ -48,7 +49,6 @@
     </section>
 
   <section id="summary-view" class="exhibit-content cf">
-
     <div class="col-xs-12 col-sm-9">
       <h2 class="section-title--large"> Introduction </h2>
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
@@ -61,13 +61,13 @@
                                          $page_card_info = mlibrary_new_display_exhibit_card_info($exhibitPage);
                                          if(!empty($page_card_info)) {
                                             $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
-                                            <div class="exhibit-theme-item panel panel-default">
+                                            <section class="exhibit-theme-item panel panel-default">
                                               <a href= <?php echo html_escape($uri);?> >
                                                <div class="panel-heading"><?php  echo $page_card_info["image"];?></div>
                                                <div class="card-info panel-body"><h3 class="panel-card-title"><?php echo $page_card_info["title"];?></h3>
                                                <p class="panel-card-text"><?php echo html_escape($page_card_info["description"]);?></p></div>
                                              </a>                           
-                                            </div>
+                                         </section>
                                     <?php }}}}?>  
       </div>
     </div>
