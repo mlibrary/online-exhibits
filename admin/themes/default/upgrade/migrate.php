@@ -10,9 +10,9 @@ endif;
 <head>
     <meta charset="utf-8">
     <title><?php echo html_escape($title); ?></title>
-    <link rel="stylesheet" media="all" href="<?php echo WEB_VIEW_SCRIPTS . '/css/style.css'; ?>">
-    <link rel="stylesheet" media="all" href="<?php echo WEB_VIEW_SCRIPTS . '/css/skeleton.css'; ?>">
-    <link rel="stylesheet" media="all" href="<?php echo WEB_VIEW_SCRIPTS . '/css/layout.css'; ?>">
+    <link rel="stylesheet" media="all" href="<?php echo WEB_RELATIVE_VIEW_SCRIPTS . '/css/style.css'; ?>">
+    <link rel="stylesheet" media="all" href="<?php echo WEB_RELATIVE_VIEW_SCRIPTS . '/css/skeleton.css'; ?>">
+    <link rel="stylesheet" media="all" href="<?php echo WEB_RELATIVE_VIEW_SCRIPTS . '/css/layout.css'; ?>">
     <link href='//fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Cabin:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 </head>
 
@@ -24,11 +24,13 @@ endif;
             <p><?php echo link_to_admin_home_page(__('Return to Dashboard')); ?></p>
 <?php else: ?>
             <p class="error_text"><?php echo html_escape($error); ?></p>
+    <?php if (isset($exception)): ?>
             <pre id="backtrace"><?php echo utf8_htmlspecialchars($exception); ?></pre>
             <p class="instruction">
                 <?php echo __('Please restore from your database backup and try again.'); ?>
                 <?php echo __('If you have any questions please refer to <a href="http://omeka.org/codex">Omeka documentation</a> or post a message on the <a href="http://omeka.org/forums">Omeka forums</a>.'); ?>
             </p>
+    <?php endif; ?>
 <?php endif; ?>
         </section>
     </div>

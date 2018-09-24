@@ -13,6 +13,29 @@
  * Extends featured exhibit function to include snippet from description for exhibits and
  * read more link
  **/
+
+/**
+* Create the information in cards in introduction page, image with title and text
+*
+**/
+function mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage)
+{
+       if ($rawAttachment[0]->getFile()) {
+       $file = $rawAttachment[0]->getFile();
+       $page_image = file_image('original', array('class' => 'image-card','alt' => ''), $file);
+   } else {
+       $page_image = '../images/mlibrary_galleryDefault.jpg/'; 
+   }
+   $page_title = metadata($exhibitPage, 'title');
+   $page_description = snippet_by_word_count(metadata($block[0], 'text',array('no_escape' => true)),20,'..');
+
+   $page_card_info = array('image' => $page_image,
+                           'title' => $page_title,
+                           'description' => $page_description);
+
+   return $page_card_info;
+}
+
 function mlibrary_exhibit_builder_display_random_featured_exhibit()
 {
   $exhibits = get_records('Exhibit' , array ('featured'=>true),$num=4);
@@ -70,7 +93,8 @@ function mlibrary_display_related_exhibits($item) {
 
 // Used in items/show.php and exhibits/item.php
 function mlibrary_display_video() {
- $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
+$html_video = '';
+$elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
                                                                                    )
@@ -237,7 +261,7 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
  *  It is not used in this installation, but it can be used in the future.
  **/
 function mlibrary_exhibit_builder_video_attachment($item, $thumnail_image) {
-	$remove[] = "'";
+$remove[] = "'";
 	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
 	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
 	if (!empty($elementids_youtube_video)) {
@@ -269,26 +293,24 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
   $elementvideos_VCM = "";
   $thumnail_image = false;
   $exhibitPage = get_current_record('exhibit_page', false);
-  $imageSize = $compact['fileOptions']['imageSize'];
-
-  // All Exhibit builder layout out of the box. Only customization for those layouts is adding video item type
-  if ($exhibitPage->layout != 'mlibrary-custom-layout') {
-    $item = $compact['attachment']->getItem();
-    if (($item !== null) and (!empty($item->getItemType()))) {
-      $item_type = $item->getItemType();
-      if (($item_type =='Video')) {
-        $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
-        if (!empty($compact['attachment']['caption'])) {
-           $html .= $compact['attachment']['caption'];
-        }
-      }
-  }
-  // Add a query string to then end of the href so we know which exhibit you came from
-  $html = mlibrary_add_vars_to_href(
-          $html,
-          mlibrary_exhibit_item_query_string_settings()
-        );
-  }
+                 if ($exhibitPage->layout != 'mlibrary-custom-layout') {
+                        $item = $compact['attachment']->getItem();
+                        if (($item !== null) and (!empty($item->getItemType()))) {
+                            $item_type = $item->getItemType();
+                              if (($item_type['name'] =='Video')) {
+                                 $html = mlibrary_exhibit_builder_video_attachment($item, $thumnail_image);
+                                    if (!empty($compact['attachment']['caption'])) {
+                                        $html .= $compact['attachment']['caption'];
+                                    }
+                              }
+                        }
+                        // Add a query string to then end of the href so we know which exhibit you came from
+                        $html = mlibrary_add_vars_to_href(
+                                  $html,
+                                  mlibrary_exhibit_item_query_string_settings()
+                                );
+                 }
+  
   return $html;
 }
 

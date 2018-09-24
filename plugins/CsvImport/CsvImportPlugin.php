@@ -197,9 +197,9 @@ class CsvImportPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookDefineAcl($args)
     {
         $acl = $args['acl']; // get the Zend_Acl
-
-        $acl->addResource('CsvImport_Index');
-
+        if (!($acl->has('CsvImport_Index'))) {
+           $acl->addResource('CsvImport_Index');
+        }
         // Hack to disable CRUD actions.
         $acl->deny(null, 'CsvImport_Index', array('show', 'add', 'edit', 'delete'));
         $acl->deny('admin', 'CsvImport_Index');

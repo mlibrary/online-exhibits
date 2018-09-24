@@ -16,8 +16,8 @@ class ItemsController extends Omeka_Controller_AbstractActionController
     protected $_browseRecordsPerPage = self::RECORDS_PER_PAGE_SETTING;
 
     public $contexts = array(
-            'browse' => array('json', 'dcmes-xml', 'rss2', 'omeka-xml', 'omeka-json', 'atom'),
-            'show'   => array('json', 'dcmes-xml', 'omeka-xml', 'omeka-json', 'atom')
+            'browse' => array('json', 'dcmes-xml', 'rss2', 'omeka-xml', 'atom'),
+            'show' => array('json', 'dcmes-xml', 'omeka-xml', 'atom')
     );
 
     private $_ajaxRequiredActions = array(
@@ -28,10 +28,10 @@ class ItemsController extends Omeka_Controller_AbstractActionController
         'modify-tags' => array('POST'),
         'power-edit' => array('POST'),
         'change-type' => array('POST'),
-        'batch-edit-save'   => array('POST'),
+        'batch-edit-save' => array('POST'),
     );
 
-    public function init() 
+    public function init()
     {
         $this->_helper->db->setDefaultModelName('Item');
     }
@@ -51,22 +51,20 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             }
         }
     }
-    
+
     /**
      * This shows the search form for items by going to the correct URI.
      * 
      * This form can be loaded as a partial by calling items_search_form().
-     * 
-     * @return void
      */
     public function searchAction()
     {
         // Only show this form as a partial if it's being pulled via XmlHttpRequest
-        if($this->getRequest()->isXmlHttpRequest()) {
+        if ($this->getRequest()->isXmlHttpRequest()) {
             $this->render('search-form');
         }
     }
-    
+
     /**
      * Gets the element sets for the 'Item' record type.
      * 
@@ -76,10 +74,9 @@ class ItemsController extends Omeka_Controller_AbstractActionController
     {
         return $this->_helper->db->getTable('ElementSet')->findByRecordType('Item');
     }
-    
+
     /**
      * Adds an additional permissions check to the built-in edit action.
-     * 
      */
     public function editAction()
     {
@@ -90,7 +87,7 @@ class ItemsController extends Omeka_Controller_AbstractActionController
         }
         parent::editAction();
     }
-    
+
     protected function _getAddSuccessMessage($item)
     {
         $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
@@ -98,9 +95,9 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             return __('The item "%s" was successfully added!', $itemTitle);
         } else {
             return __('The item #%s was successfully added!', strval($item->id));
-        }        
+        }
     }
-    
+
     protected function _getEditSuccessMessage($item)
     {
         $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
@@ -111,7 +108,7 @@ class ItemsController extends Omeka_Controller_AbstractActionController
         }
     }
 
-    protected function  _getDeleteSuccessMessage($item)
+    protected function _getDeleteSuccessMessage($item)
     {
         $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
         if ($itemTitle != '') {
@@ -120,11 +117,11 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             return __('The item #%s was successfully deleted!', strval($item->id));
         }
     }
-    
+
     protected function _getDeleteConfirmMessage($item)
     {
         $itemTitle = $this->_getElementMetadata($item, 'Dublin Core', 'Title');
-        if ($itemTitle != '') {        
+        if ($itemTitle != '') {
             return __('This will delete the item "%s" and its associated metadata. It will '
                  . 'also delete all files and file metadata associated with this '
                  . 'item.', $itemTitle);
@@ -134,13 +131,13 @@ class ItemsController extends Omeka_Controller_AbstractActionController
                  . 'item.', strval($item->id));
         }
     }
-    
-    protected function _getElementMetadata($item, $elementSetName, $elementName) 
+
+    protected function _getElementMetadata($item, $elementSetName, $elementName)
     {
         $m = new Omeka_View_Helper_Metadata;
         return strip_formatting($m->metadata($item, array($elementSetName, $elementName)));
     }
-    
+
     public function addAction()
     {
         // Get all the element sets that apply to the item.
@@ -153,22 +150,18 @@ class ItemsController extends Omeka_Controller_AbstractActionController
 
     /**
      * Finds all tags associated with items (used for tag cloud)
-     * 
-     * @return void
      */
     public function tagsAction()
     {
-        $params = array_merge($this->_getAllParams(), array('type'=>'Item'));
+        $params = array_merge($this->_getAllParams(), array('type' => 'Item'));
         $tags = $this->_helper->db->getTable('Tag')->findBy($params);
         $this->view->assign(compact('tags'));
     }
-    
+
     /**
      * Browse the items.  Encompasses search, pagination, and filtering of
      * request parameters.  Should perhaps be split into a separate
      * mechanism.
-     * 
-     * @return void
      */
     public function browseAction()
     {
@@ -179,7 +172,7 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             // also remove these.
             unset($_GET['user'], $_POST['user']);
         }
-        
+
         parent::browseAction();
     }
 
@@ -187,12 +180,11 @@ class ItemsController extends Omeka_Controller_AbstractActionController
     {
         return array('added', 'd');
     }
-    
+
     ///// AJAX ACTIONS /////
-    
+
     /**
      * Find or create an item for this mini-form
-     *
      */
     public function changeTypeAction()
     {
@@ -201,27 +193,63 @@ class ItemsController extends Omeka_Controller_AbstractActionController
         } else {
             $item = new Item;
         }
-        
+
         $item->item_type_id = (int) $_POST['type_id'];
         $this->view->assign(compact('item'));
     }
-    
+
     ///// END AJAX ACTIONS /////
-    
+
     /**
      * Batch editing of Items. If this is an AJAX request, it will
      * render the 'batch-edit' as a partial.
-     * 
-     * @return void
      */
     public function batchEditAction()
     {
-        /**
+        /*
          * Only show this view as a partial if it's being pulled via
          * XmlHttpRequest
          */
         $this->view->isPartial = $this->getRequest()->isXmlHttpRequest();
-        
+
+        $delete = (boolean) $this->_getParam('submit-batch-delete');
+
+        $batchAll = (boolean) $this->_getParam('batch-all');
+        // Process all searched items.
+        if ($batchAll) {
+            $params = json_decode($this->_getParam('params'), true) ?: array();
+            unset($params['admin']);
+            unset($params['module']);
+            unset($params['controller']);
+            unset($params['action']);
+            unset($params['submit_search']);
+            unset($params['page']);
+
+            $totalRecords = $this->_helper->db->count($params);
+
+            if (empty($totalRecords)) {
+                $this->_helper->flashMessenger(__('No item to batch edit.'), 'error');
+                $this->_helper->redirector('browse', 'items', null, $params);
+                return;
+            }
+
+            // Special check to avoid the deletion of all the base.
+            if ($delete && total_records('Item') == $totalRecords) {
+                $this->_helper->flashMessenger(__('The deletion of all items is forbidden.'), 'error');
+                $this->_helper->redirector('browse', 'items', null, $params);
+                return;
+            }
+
+            $this->view->assign(array('params' => $params, 'totalRecords' => $totalRecords));
+            if ($delete) {
+                $this->render('batch-delete-all');
+            } else {
+                $this->render('batch-edit-all');
+            }
+            return;
+        }
+
+        // Process only selected items.
         $itemIds = $this->_getParam('items');
         if (empty($itemIds)) {
             $this->_helper->flashMessenger(__('You must choose some items to batch edit.'), 'error');
@@ -230,15 +258,13 @@ class ItemsController extends Omeka_Controller_AbstractActionController
         }
 
         $this->view->assign(compact('itemIds'));
-        if ($this->_getParam('submit-batch-delete')) {
+        if ($delete) {
             $this->render('batch-delete');
         }
     }
-    
+
     /**
      * Processes batch edit information. Only accessible via POST.
-     * 
-     * @return void
      */
     public function batchEditSaveAction()
     {
@@ -248,7 +274,12 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             throw new Omeka_Controller_Exception_403;
         }
 
-        if ($itemIds = $this->_getParam('items')) {
+        if ($this->_getParam('all')) {
+            return $this->_batchEditAllSave();
+        }
+
+        $itemIds = $this->_getParam('items');
+        if ($itemIds) {
             $metadata = $this->_getParam('metadata');
             $removeMetadata = $this->_getParam('removeMetadata');
             $delete = $this->_getParam('delete');
@@ -257,7 +288,7 @@ class ItemsController extends Omeka_Controller_AbstractActionController
             // Set metadata values to null for "removed" metadata keys.
             if ($removeMetadata && is_array($removeMetadata)) {
                 foreach ($removeMetadata as $key => $value) {
-                    if($value) {
+                    if ($value) {
                         $metadata[$key] = null;
                     }
                 }
@@ -265,14 +296,14 @@ class ItemsController extends Omeka_Controller_AbstractActionController
 
             $errorMessage = null;
             $aclHelper = $this->_helper->acl;
-            
+
             if ($metadata && array_key_exists('public', $metadata) && !$aclHelper->isAllowed('makePublic')) {
-                $errorMessage = 
+                $errorMessage =
                     __('User is not allowed to modify visibility of items.');
             }
 
             if ($metadata && array_key_exists('featured', $metadata) && !$aclHelper->isAllowed('makeFeatured')) {
-                $errorMessage = 
+                $errorMessage =
                     __('User is not allowed to modify featured status of items.');
             }
 
@@ -294,20 +325,19 @@ class ItemsController extends Omeka_Controller_AbstractActionController
                             $errorMessage = __('User is not allowed to tag selected items.');
                             break;
                         }
-                        
-                        
+
                         release_object($item);
                     }
                 }
             }
 
             $errorMessage = apply_filters(
-                'items_batch_edit_error', 
-                $errorMessage, 
+                'items_batch_edit_error',
+                $errorMessage,
                 array(
-                    'metadata' => $metadata, 
-                    'custom' => $custom, 
-                    'item_ids' => $itemIds, 
+                    'metadata' => $metadata,
+                    'custom' => $custom,
+                    'item_ids' => $itemIds,
                 )
             );
 
@@ -315,23 +345,91 @@ class ItemsController extends Omeka_Controller_AbstractActionController
                 $this->_helper->flashMessenger($errorMessage, 'error');
             } else {
                 $dispatcher = Zend_Registry::get('job_dispatcher');
-                $dispatcher->send(
-                    'Job_ItemBatchEdit', 
-                    array(
-                        'itemIds' => $itemIds, 
-                        'delete' => $delete, 
-                        'metadata'  => $metadata, 
-                        'custom' => $custom
-                    )
+                $options = array(
+                    'itemIds' => $itemIds,
+                    'delete' => $delete,
+                    'metadata' => $metadata,
+                    'custom' => $custom,
                 );
-                if ($delete) {
-                  $message = __('The items were successfully deleted!');
-                } else {
-                  $message = __('The items were successfully changed!');
-                }
-                $this->_helper->flashMessenger($message, 'success');            }
-         }
+                $dispatcher->send('Job_ItemBatchEdit', $options);
 
-         $this->_helper->redirector('browse', 'items');
+                if ($delete) {
+                    $message = __('The items were successfully deleted!');
+                } else {
+                    $message = __('The items were successfully changed!');
+                }
+                $this->_helper->flashMessenger($message, 'success');
+            }
+        } else {
+            $this->_helper->flashMessenger(__('No item to batch edit.'), 'error');
+        }
+
+        $this->_helper->redirector('browse', 'items');
+    }
+
+    /**
+     * Processes batch edit all information. Only accessible via POST.
+     */
+    protected function _batchEditAllSave()
+    {
+        // Get the record ids filtered to Omeka_Db_Table::applySearchFilters().
+        $params = json_decode($this->_getParam('params'), true) ?: array();
+        $totalRecords = $this->_helper->db->count($params);
+        if ($totalRecords) {
+            $metadata = $this->_getParam('metadata');
+            $removeMetadata = $this->_getParam('removeMetadata');
+            $delete = $this->_getParam('delete');
+            $custom = $this->_getParam('custom');
+
+            // Set metadata values to null for "removed" metadata keys.
+            if ($removeMetadata && is_array($removeMetadata)) {
+                foreach ($removeMetadata as $key => $value) {
+                    if ($value) {
+                        $metadata[$key] = null;
+                    }
+                }
+            }
+
+            $errorMessage = null;
+            $aclHelper = $this->_helper->acl;
+
+            if ($metadata && array_key_exists('public', $metadata) && !$aclHelper->isAllowed('makePublic')) {
+                $errorMessage =
+                    __('User is not allowed to modify visibility of items.');
+            }
+
+            if ($metadata && array_key_exists('featured', $metadata) && !$aclHelper->isAllowed('makeFeatured')) {
+                $errorMessage =
+                    __('User is not allowed to modify featured status of items.');
+            }
+
+            // With the mode "Edit All", individual checks will be processed by
+            // item via the job.
+
+            if ($errorMessage) {
+                $this->_helper->flashMessenger($errorMessage, 'error');
+            } else {
+                $dispatcher = Zend_Registry::get('job_dispatcher');
+                $options = array(
+                    'params' => $params,
+                    'delete' => $delete,
+                    'metadata' => $metadata,
+                    'custom' => $custom,
+                );
+                $dispatcher->sendLongRunning('Job_ItemBatchEditAll', $options);
+
+                if ($delete) {
+                    $message = __('The items are checked and deleted one by one in the background.');
+                } else {
+                    $message = __('The items are checked and changed one by one in the background.');
+                }
+                $message .= ' ' . __('Check logs for success and errors.');
+                $this->_helper->flashMessenger($message, 'success');
+            }
+        } else {
+            $this->_helper->flashMessenger(__('No item to batch edit.'), 'error');
+        }
+
+        $this->_helper->redirector('browse', 'items');
     }
 }

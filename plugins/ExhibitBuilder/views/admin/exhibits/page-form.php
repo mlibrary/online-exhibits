@@ -9,6 +9,9 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
 </div>
 <?php echo flash(); ?>
 <form id="exhibit-page-form" method="post">
+    <?php if($exhibit_page->exists()): ?>
+    <input type='hidden' name='record_last_modified' value='<?php echo $exhibit_page->modified; ?>'></input>
+    <?php endif; ?>
     <div class="seven columns alpha">
     <fieldset>
         <div class="field">
@@ -17,6 +20,15 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
             </div>
             <div class="inputs five columns omega">
             <?php echo $this->formText('title', $exhibit_page->title); ?>
+            </div>
+        </div>
+        <div class="field">
+            <div class="two columns alpha">
+            <?php echo $this->formLabel('short_title', __('Menu Link Title')); ?>
+            </div>
+            <div class="inputs five columns omega">
+            <p class="explanation"><?php echo __('Optionally use a shorter title in the exhibit menu'); ?></p>
+            <?php echo $this->formText('short_title', $exhibit_page->short_title); ?>
             </div>
         </div>
         <div class="field">
@@ -78,7 +90,6 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
         </div>
     </div>
 </form>
-<?php //This item-select div must be outside the <form> tag for this page, b/c IE7 can't handle nested form tags. ?>
 <div id="attachment-panel" title="<?php echo html_escape(__('Attach an Item')); ?>">
     <div id="item-form">
         <button type="button" id="revert-selected-item"><?php echo __('Revert to Selected Item'); ?></button>
@@ -117,7 +128,7 @@ echo head(array('title'=> $title, 'bodyclass'=>'exhibits'));
 jQuery(document).ready(function () {
     Omeka.ExhibitBuilder.setUpBlocks(<?php echo json_encode(url('exhibits/block-form')); ?>);
     Omeka.ExhibitBuilder.setUpItemsSelect(<?php echo js_escape(url('exhibits/attachment-item-options')); ?>);
-    Omeka.ExhibitBuilder.setUpAttachments(<?php echo js_escape(url('exhibits/attachment')); ?>);
+    Omeka.ExhibitBuilder.setUpAttachments(<?php echo js_escape(url('exhibits/attachment')); ?>, <?php echo js_escape(url('exhibits/attachment-item-options')); ?>);
     <?php
     if ($exhibit_page->exists()) {
         $validateUrl = url(
@@ -136,7 +147,7 @@ jQuery(document).ready(function () {
     jQuery(document).on('exhibit-builder-refresh-wysiwyg', function (event) {
         // Add tinyMCE to all textareas in the div where the item was attached.
         jQuery(event.target).find('textarea').each(function () {
-            tinyMCE.execCommand('mceAddControl', false, this.id);
+            tinyMCE.EditorManager.execCommand('mceAddEditor', false, this.id);
         });
     });
 });

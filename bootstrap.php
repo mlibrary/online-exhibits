@@ -8,7 +8,7 @@
  */
 
 // Define the current version of Omeka.
-define('OMEKA_VERSION', '2.3.1');
+define('OMEKA_VERSION', '2.6.1');
 
 // Define the application environment.
 if (!defined('APPLICATION_ENV')) {
@@ -46,57 +46,34 @@ define('SCRIPTS_DIR', APP_DIR . '/scripts');
 // Define the web address constants.
 
 // Set the scheme.
-$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === true))
+    || (isset($_SERVER['HTTP_SCHEME']) && $_SERVER['HTTP_SCHEME'] == 'https')
+    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+) {
+    $scheme = 'https';
+} else {
+    $scheme = 'http';
+}
 
-// Set the domain.
+// Set the domain and port.
 if (!isset($_SERVER['HTTP_HOST'])) {
     $_SERVER['HTTP_HOST'] = null;
 }
-$base_url = $base_root .= '://' . preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
-
-// Set to port, if any.
-if (!isset($_SERVER['SERVER_PORT'])) {
-    $_SERVER['SERVER_PORT'] = null;
-}
-$port = $_SERVER['SERVER_PORT'];
-if (($base_root == 'http' && $port != '80') || ($base_root == 'https' && $port != '443')) {
-    $base_url .= ":$port";
-}
+$absoluteBase = $scheme . '://' . preg_replace('/[^a-z0-9-:._]/i', '', $_SERVER['HTTP_HOST']);
 
 // Set the path.
-if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
-    $base_path  = "/$dir";
-    $base_url  .= $base_path;
-    $base_path .= '/';
-} else {
-    $base_path = '/';
-}
+$dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/');
+// current path should be empty and not a '/' if there is no directory path.
+$currentPath = $dir ? "/$dir" : '';
+
+define('ADMIN_WEB_DIR', 'admin');
+define('INSTALL_WEB_DIR', 'install');
 
 // Remove the '/admin' part of the URL by regex, if necessary.
 if (defined('ADMIN')) {
     $dir = preg_replace('/(.*)admin$/', '$1', $dir, 1);
     $dir = rtrim($dir, '/');
-}
 
-// WEB_ROOT is always the root of the site, whereas WEB_DIR depends on the 
-// bootstrap used (public/admin)
-define('WEB_ROOT', $base_root . (!empty($dir) ? '/' . $dir : '') );
-define('WEB_DIR', $base_url);
-define('WEB_THEME', WEB_DIR . '/themes');
-define('WEB_PLUGIN', WEB_ROOT . '/plugins');
-define('WEB_FILES', WEB_ROOT . '/files');
-define('WEB_PUBLIC_THEME', WEB_ROOT . '/themes');
-define('WEB_VIEW_SCRIPTS', WEB_ROOT . '/application/views/scripts');
-
-// Get the directory that the bootstrap sits in.
-$dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/');
-
-// current path should be empty and not a '/' if there is no directory path.
-$currentPath = !empty($dir) ? "/$dir" : '';
-define('ADMIN_WEB_DIR', 'admin');
-
-// This is how we determine whether or not we are in the admin bootstrap.
-if (defined('ADMIN')) {
     $adminPath = $currentPath;
     // Strip off the admin directory to get the public dir.
     $publicPath = rtrim(preg_replace("/(.*)" . ADMIN_WEB_DIR . "$/", '$1', $currentPath, 1), '/');
@@ -110,8 +87,25 @@ if (defined('INSTALL')) {
     $adminPath = "$publicPath/" . ADMIN_WEB_DIR;
 }
 
-define('INSTALL_WEB_DIR', 'install');
 $installPath = "$publicPath/" . INSTALL_WEB_DIR;
+
+$rootPath = $dir ? "/$dir" : '';
+
+define('WEB_RELATIVE_THEME', $currentPath . '/themes');
+define('WEB_RELATIVE_PLUGIN', $rootPath . '/plugins');
+define('WEB_RELATIVE_FILES', $rootPath . '/files');
+define('WEB_RELATIVE_PUBLIC_THEME', $rootPath . '/themes');
+define('WEB_RELATIVE_VIEW_SCRIPTS', $rootPath . '/application/views/scripts');
+
+// WEB_ROOT is always the root of the site, whereas WEB_DIR depends on the 
+// bootstrap used (public/admin)
+define('WEB_ROOT', $absoluteBase . $rootPath);
+define('WEB_DIR', $absoluteBase . $currentPath);
+define('WEB_THEME', WEB_DIR . '/themes');
+define('WEB_PLUGIN', WEB_ROOT . '/plugins');
+define('WEB_FILES', WEB_ROOT . '/files');
+define('WEB_PUBLIC_THEME', WEB_ROOT . '/themes');
+define('WEB_VIEW_SCRIPTS', WEB_ROOT . '/application/views/scripts');
 
 define('ADMIN_BASE_URL', $adminPath);
 define('PUBLIC_BASE_URL', $publicPath);
@@ -123,7 +117,7 @@ define('CURRENT_BASE_URL', $currentPath);
 date_default_timezone_set(@date_default_timezone_get());
 
 // Set the zlib config values if the extension has been loaded.
-if (extension_loaded('zlib')) {
+if (PHP_SAPI !== 'cli' && extension_loaded('zlib')) {
     ini_set('zlib.output_compression', true);
     ini_set('zlib.output_compression_level', '5');
 }
@@ -139,14 +133,17 @@ if (get_magic_quotes_gpc()) {
 // Add the libraries and models directories to the include path.
 set_include_path(LIB_DIR. PATH_SEPARATOR . MODEL_DIR . PATH_SEPARATOR . get_include_path());
 
-// Set up the Zend_Loader autoloader to work for all classes. The Omeka 
-// namespace must be manually specified to avoid incompatibility with the
-// resource autoloader.
-require_once 'Zend/Loader/Autoloader.php';
-$autoloader = Zend_Loader_Autoloader::getInstance();
-$autoloader->registerNamespace('Omeka_');
-$autoloader->setFallbackAutoloader(true);
-$autoloader->suppressNotFoundWarnings(true);
+// Set up the Zend autoloader to work for all classes.
+require_once 'Zend/Loader/StandardAutoloader.php';
+$autoloader = new Zend_Loader_StandardAutoloader(array(
+    'prefixes' => array(
+        'Omeka_Form_' => APP_DIR . '/forms',
+        'Omeka_View_Helper_' => APP_DIR . '/views/helpers',
+        'Omeka_Controller_Action_Helper' => APP_DIR . '/controllers/helpers',
+    ),
+    'fallback_autoloader' => true,
+));
+$autoloader->register();
 
 // Define the theme directory path.
 define('THEME_DIR', defined('ADMIN') ? ADMIN_THEME_DIR : PUBLIC_THEME_DIR);

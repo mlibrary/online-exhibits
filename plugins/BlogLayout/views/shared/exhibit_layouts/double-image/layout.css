@@ -1,0 +1,36 @@
+.layout-double-image {
+    width: 100%;
+}
+
+.layout-double-image .exhibit-items {
+    vertical-align: top;
+    float: left;
+    width: 45%;
+    padding: 10px 10px 0px 10px !important
+}
+
+
+.exhibit-items .download-file {
+    clear: both;
+    border-bottom: 0;
+    overflow: visible;
+}
+
+
+.exhibit-items .fullsize img {
+    max-width: 100%;
+    margin-bottom: 1em;
+}
+
+.layout-double-image .exhibit-items .exhibit-item-caption p {
+    margin: 0;
+    clear: both;
+}
+
+.layout-double-image .exhibit-items .exhibit-item-caption {
+    text-align: left;
+}
+
+
+                                                                                                                                                                   62,1          Bot
+

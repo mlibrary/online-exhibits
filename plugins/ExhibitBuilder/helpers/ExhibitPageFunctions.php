@@ -28,8 +28,9 @@ function exhibit_builder_render_exhibit_page($exhibitPage = null)
         echo get_view()->partial($layout->getViewPartial(), array(
             'index' => $index,
             'options' => $block->getOptions(),
-            'text' => $block->text,
-            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array()
+            'text' => get_view()->shortcodes($block->text),
+            'attachments' => array_key_exists($block->id, $attachments) ? $attachments[$block->id] : array(),
+            'block' => $block,
         ));
         echo '</div>';
     }
@@ -91,18 +92,17 @@ function exhibit_builder_page_nav($exhibitPage = null)
     $levelNumber = 1;
     
     foreach ($pagesTrail as $page) {
-        $linkText = $page->title;
         $pageExhibit = $page->getExhibit();
         $pageParent = $page->getParent();
-        $pageSiblings = ($pageParent ? exhibit_builder_child_pages($pageParent) : $pageExhibit->getTopPages()); 
+        $pageSiblings = ($pageParent ? exhibit_builder_child_pages($pageParent) : $pageExhibit->getTopPages());
 
         $html .= "<li>\n<ul class=\"exhibit-nav-level-$levelNumber\">\n";
         $levelNumber +=1;
-        
+
         foreach ($pageSiblings as $pageSibling) {
             $html .= '<li' . ($pageSibling->id == $page->id ? ' class="current"' : '') . '>';
             $html .= '<a class="exhibit-page-title" href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $pageSibling)) . '">';
-            $html .= html_escape($pageSibling->title) . "</a></li>\n";
+            $html .= metadata($pageSibling, 'menu_title') . "</a></li>\n";
         }
         $html .= "</ul>\n</li>\n";
     }
@@ -127,7 +127,7 @@ function exhibit_builder_child_page_nav($exhibitPage = null)
     $children = exhibit_builder_child_pages($exhibitPage);
     $html = '<ul class="exhibit-child-nav navigation">' . "\n";
     foreach ($children as $child) {
-        $html .= '<li><a href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $child)) . '">' . html_escape($child->title) . '</a></li>';
+        $html .= '<li><a href="' . html_escape(exhibit_builder_exhibit_uri($exhibit, $child)) . '">' . metadata($child, 'menu_title') . '</a></li>';
     }
     $html .= '</ul>' . "\n";
     return $html;
@@ -153,12 +153,13 @@ function exhibit_builder_link_to_next_page($text = null, $props = array(), $exhi
 
     // if page object exists, grab link to the first child page if exists. If it doesn't, grab
     // a link to the next page
-    if ($targetPage = $exhibitPage->firstChildOrNext()) {
+    $targetPage = $exhibitPage->firstChildOrNext();
+    if ($targetPage) {
         if (!isset($props['class'])) {
             $props['class'] = 'next-page';
         }
         if ($text === null) {
-            $text = metadata($targetPage, 'title') . ' &rarr;';
+            $text = metadata($targetPage, 'menu_title') . ' &rarr;';
         }
         return exhibit_builder_link_to_exhibit($exhibit, $text, $props, $targetPage);
     }
@@ -183,12 +184,13 @@ function exhibit_builder_link_to_previous_page($text = null, $props = array(), $
 
     // If page object exists, grab link to previous exhibit page if exists. If it doesn't, grab
     // a link to the last page on the previous parent page, or the exhibit if at top level
-    if ($previousPage = $exhibitPage->previousOrParent()) {
+    $previousPage = $exhibitPage->previousOrParent();
+    if ($previousPage) {
         if(!isset($props['class'])) {
             $props['class'] = 'previous-page';
         }
         if ($text === null) {
-            $text = '&larr; ' . metadata($previousPage, 'title');
+            $text = '&larr; ' . metadata($previousPage, 'menu_title');
         }
         return exhibit_builder_link_to_exhibit($exhibit, $text, $props, $previousPage);
     }
@@ -218,13 +220,13 @@ function exhibit_builder_page_trail($exhibitPage = null)
 
     $html = '';
     foreach ($parents as $parent) {
-        $text = metadata($parent, 'title');
+        $text = metadata($parent, 'menu_title');
         $html .= exhibit_builder_link_to_exhibit($exhibit, $text, array(), $parent);
         $html .= '<br>';
         release_object($parent);
     }
 
-    $html .= '<span class="current-page">' . metadata($exhibitPage, 'title') . '</span>';
+    $html .= '<span class="current-page">' . metadata($exhibitPage, 'menu_title') . '</span>';
     return $html;
 }
 
@@ -249,7 +251,7 @@ function exhibit_builder_link_to_parent_page($text = null, $props = array(), $ex
             $props['class'] = 'parent-page';
         }
         if ($text === null) {
-            $text = '&uarr; ' . metadata($parentPage, 'title');
+            $text = '&uarr; ' . metadata($parentPage, 'menu_title');
         }
         return exhibit_builder_link_to_exhibit($exhibit, $text, $props, $parentPage);
     }
@@ -311,7 +313,7 @@ function exhibit_builder_page_summary($exhibitPage = null)
 
     $html = '<li>'
           . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-          . metadata($exhibitPage, 'title') .'</a>';
+          . metadata($exhibitPage, 'menu_title') .'</a>';
 
     $children = $exhibitPage->getChildPages();
     if ($children) {

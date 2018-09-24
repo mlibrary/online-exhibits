@@ -10,7 +10,6 @@
     )
   );
 
-  //$exhibit_image_object = new ImagBelongToExhibitRelationShip();
 ?>
 
 <div id="primary">
@@ -50,35 +49,29 @@
       </div>
     </div>
 
-    <h2 class="element-invisible">Exhibit Summary</h2>
-
-    <div class="exhibit_image">
-      <?php
-        $exhibit_record = get_current_record('exhibit', false);
-        $theme_options_array = $exhibit_record->getThemeOptions();
-
-        if ($exhibitImage = record_image($exhibit, 'fullsize', array('alt' => $exhibit->title))) {
-           $Exhibit_image = $exhibitImage;
-        } else {
-           $Exhibit_image = '';
-        }
-
-        if ($Exhibit_image) {
-         // echo '<img src="' . WEB_FILES.$exhibit_image['image_name'] . '" alt="' . $exhibit_image['image_title'] . '" />';
-            echo $Exhibit_image;
-        } else {
-          echo '<img src="' . img("mlibrary_galleryDefault.jpg") . '" alt="Mlibrary default image"/>';
-        }
-      ?>
-    </div>
-
+    <h2> Introduction </h2>
     <div id="summary-sidebar">
       <?php echo metadata('exhibit','description',array('no_escape' => true)); ?>
       <p class="credits">Curated by <?php echo metadata('exhibit','credits'); ?></p>
     </div>
-
+    <div class = "exhibit-theme">
+      <?php  set_exhibit_pages_for_loop_by_exhibit();
+             foreach (loop('exhibit_page') as $exhibitPage) {
+                          $block = $exhibitPage->getPageBlocks();
+                          $rawAttachment = $exhibitPage->getAllAttachments();?>
+                          <div id = "exhibit-theme-item">
+                           <?php
+                              $page_card_info = mlibrary_display_exhibit_card_info($rawAttachment,$block,$exhibitPage);
+                              $uri = exhibit_builder_exhibit_uri($exhibit, $exhibitPage);?>
+                              <a href= <?php echo html_escape($uri);?> >
+                                <div><?php  echo $page_card_info["image"];?></div>
+                                <div class="card-info"><h3><?php echo html_escape($page_card_info["title"]);?></h3>
+                                <?php echo html_escape($page_card_info["description"]);?></div>
+                              </a>                           
+                         </div>
+             <?php }?>  
+    </div>
   </section>
-
 </div>
 
 <?php echo foot(); ?>

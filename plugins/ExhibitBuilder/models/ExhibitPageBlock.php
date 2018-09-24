@@ -89,6 +89,8 @@ class ExhibitPageBlock extends Omeka_Record_AbstractRecord
 
         if (!empty($data['options'])) {
             $this->setOptions($data['options']);
+        } else {
+            $this->options = null;
         }
 
         if (!empty($data['text'])) {
@@ -160,7 +162,7 @@ class ExhibitPageBlock extends Omeka_Record_AbstractRecord
         $existingAttachments = $this->getAttachments();
         foreach ($attachmentsData as $i => $attachmentData) {
             if (!empty($existingAttachments)) {
-                $attachment = array_pop($existingAttachments);
+                $attachment = array_shift($existingAttachments);
             } else {
                 $attachment = new ExhibitBlockAttachment;
                 $attachment->block_id = $this->id;

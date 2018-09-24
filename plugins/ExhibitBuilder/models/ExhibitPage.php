@@ -41,11 +41,35 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
     public $title;
 
     /**
+     * The title for the page that will be displayed in the menu
+     *
+     * @var string
+     */
+    public $short_title;
+
+    /**
      * Order of the page underneath its parent/exhibit
      *
      * @var integer
      */
     public $order;
+
+    /**
+     * Timestamp the page was added.
+     *
+     * @var Timestamp
+     */
+    public $added;
+
+    /**
+     * Timestamp the page was modified.
+     *
+     * Useful to pass along to blocks that want to check whether the page
+     * has been modified by another user before it was loaded.
+     *
+     * @var Timestamp
+     */
+    public $modified;
 
     /**
      * Related record linkages.
@@ -75,6 +99,7 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
             'slugLengthErrorMessage' => __('A slug must be 30 characters or less.'),
             'slugUniqueErrorMessage' => __('This page slug has already been used.  Please modify the slug so that it is unique.')));
         $this->_mixins[] = new Mixin_Search($this);
+        $this->_mixins[] = new Mixin_Timestamp($this);
     }
 
     /**
@@ -122,6 +147,23 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
     }
 
     /**
+     * Before save callback
+     * 
+     * Checks whether data is about to be clobbered due to two people editing the page
+     * at the same time
+     */
+    protected function beforeSave($args)
+    {
+        $post = $args['post'];
+        if (isset($post['record_last_modified'])) {
+            $lastModified = $post['record_last_modified'];
+            if ($this->exists() && $this->modified != $lastModified) {
+                $this->addError('Edit Conflict', __('Someone has edited the page while you were working on it. Your changes have been discarded to prevent losing their changes.'));
+            }
+        }
+    }
+
+    /**
      * Get the previous page.
      *
      * @return ExhibitPage
@@ -148,7 +190,8 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
      */
     public function firstChildOrNext()
     {
-        if($firstChild = $this->getFirstChildPage()) {
+        $firstChild = $this->getFirstChildPage();
+        if ($firstChild) {
             return $firstChild;
         } else {
             //see if there's a next page on the same level
@@ -160,7 +203,8 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
             // keep going up until we hit the top
             $current = $this;
             while (($current = $current->getParent())) {
-                if (($parentNext = $current->next())) {
+                $parentNext = $current->next();
+                if ($parentNext) {
                     return $parentNext;
                 }
             }
@@ -327,7 +371,7 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
         $existingBlocks = $this->getPageBlocks();
         foreach ($blocksData as $i => $blockData) {
             if (!empty($existingBlocks)) {
-                $block = array_pop($existingBlocks);
+                $block = array_shift($existingBlocks);
             } else {
                 $block = new ExhibitPageBlock;
                 $block->page_id = $this->id;
@@ -367,5 +411,25 @@ class ExhibitPage extends Omeka_Record_AbstractRecord
     public function setFixChildrenOnDelete($fix)
     {
         $this->_fixChildrenOnDelete = (bool) $fix;
+    }
+
+    /**
+     * Get a property for display.
+     *
+     * @param string $property
+     * @return mixed
+     */
+    public function getProperty($property)
+    {
+        switch($property) {
+            case 'menu_title':
+                if(!empty($this->short_title)) {
+                    return $this->short_title;
+                } else {
+                    return $this->title;
+                }
+            default:
+                return parent::getProperty($property);
+        }
     }
 }
