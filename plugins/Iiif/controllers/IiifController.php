@@ -19,15 +19,15 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
     list($params['quality'], $params['format']) =
       explode('.', $params['quality_format'], 2);
 
-    $factory = new \Conlect\ImageIIIF\ImageFactory;
-
-    $file = $factory($config)->load($file)
-      ->withParameters($params)
-      ->stream();
     if (isset($config->get('mime')[$params['format']])) {
       header('Content-Type: ' . $config->get('mime')[$params['format']]);
     }
-    print $file;
+
+    $factory = new \Conlect\ImageIIIF\ImageFactory;
+
+    print $factory($config)->load($file)
+      ->withParameters($params)
+      ->stream($params['format']);
     exit;
   }
 
@@ -55,6 +55,10 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
   private function constructPath($identifier)
   {
+    if (preg_match('/\.pdf$/i', $identifier) &&
+        file_exists($file = FILES_DIR . '/fullsize/' . $identifier)) {
+      return $file;
+    }
     return FILES_DIR . '/original/' . $identifier;
   }
 
@@ -77,6 +81,9 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
   {
     $config = new Config(PLUGIN_DIR . '/Iiif/vendor/conlect/image-iiif/config');
     $config->set('base_url', WEB_ROOT);
+    if (extension_loaded('imagick')) {
+      $config->set('driver', 'imagick');
+    }
     return $config;
   }
 }
