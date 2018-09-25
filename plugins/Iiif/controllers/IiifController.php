@@ -9,11 +9,11 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 {
   public function imageAction()
   {
-    $config = $this->loadConfig();
+    $config = static::loadConfig();
     $params = $this->getRequest()->getParams();
-    $file = $this->getPath($params['identifier']);
+    $file = static::getPath($params['identifier']);
     if (is_null($file)) {
-      return $this->send404();
+      return static::send404();
     }
 
     list($params['quality'], $params['format']) =
@@ -33,11 +33,11 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
 
   public function infoAction()
   {
-    $config = $this->loadConfig();
+    $config = static::loadConfig();
     $params = $this->getRequest()->getParams();
-    $file = $this->getPath($params['identifier']);
+    $file = static::getPath($params['identifier']);
     if (is_null($file)) {
-      return $this->send404();
+      return static::send404();
     }
 
     $factory = new \Conlect\ImageIIIF\ImageFactory;
@@ -48,36 +48,38 @@ class Iiif_IiifController extends Omeka_Controller_AbstractActionController
     exit;
   }
 
-  private function send404()
+  private static function send404()
   {
     throw new Omeka_Controller_Exception_404;
   }
 
-  private function constructPath($identifier)
+  private static function constructPath($dir, $identifier)
   {
-    if (preg_match('/\.pdf$/i', $identifier) &&
-        file_exists($file = FILES_DIR . '/fullsize/' . $identifier)) {
-      return $file;
-    }
-    return FILES_DIR . '/original/' . $identifier;
+    return FILES_DIR . "/{$dir}/{$identifier}";
   }
 
-  private function getPath($identifier)
+  private static function getPath($identifier)
   {
-    if (file_exists($file = $this->constructPath($identifier))) {
-      return $file;
+    if (file_exists($candidate = static::constructPath('original', $identifier))) {
+      return $candidate;
     }
     $file = get_db()->getTable('File')->find($identifier);
     if (empty($file) || empty($file->filename)) {
       return NULL;
     }
-    if (!file_exists($file = $this->constructPath($file->filename))) {
+    if (!file_exists($candidate = static::constructPath('original', $file->filename))) {
       return NULL;
     }
-    return $file;
+    if (preg_match('/\.pdf$/i', $candidate) && $file->has_derivative_image) {
+      $candidate = static::constructPath(
+          'fullsize',
+          $file->getDerivativeFilename()
+      );
+    }
+    return $candidate;
   }
 
-  private function loadConfig()
+  private static function loadConfig()
   {
     $config = new Config(PLUGIN_DIR . '/Iiif/vendor/conlect/image-iiif/config');
     $config->set('base_url', WEB_ROOT);
