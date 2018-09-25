@@ -12,6 +12,7 @@
   );
 
 ?>
+</div>
 
 <section>
   <div class="col-xs-12 exhibit-introduction">

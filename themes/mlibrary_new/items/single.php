@@ -1,4 +1,4 @@
-  <div class="container">
+
 <div class="item record">
     <?php
     $title = metadata($item, array('Dublin Core', 'Title'));
