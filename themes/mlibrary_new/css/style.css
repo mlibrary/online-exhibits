@@ -1126,6 +1126,10 @@ body>.navbar {
   margin-top: .5em;
   }
 
+  iframe {
+    width: 100%;
+  }
+
   .exhibit-gallery-theme-item {
   width: 45%;
   }
@@ -1184,6 +1188,10 @@ body>.navbar {
 }
 
 @media only screen and (max-width: 767px) {
+
+  iframe {
+    width: 100%;
+  }
 
   .tag-list a {
     padding: 1em .25em .5em;

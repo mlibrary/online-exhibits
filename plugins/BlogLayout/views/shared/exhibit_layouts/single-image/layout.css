@@ -3,10 +3,10 @@
     width: 100%;
 }
 
-.layout-single-image .exhibit-items {
+.layout-single-image > .exhibit-items {
     vertical-align: top;
     margin-bottom: 0;
-    padding: 10px 10px 0px 10px !important;
+    padding: .5em .25em;
     width: 100%;
     float: left;
 }
@@ -16,7 +16,6 @@
     border-bottom: 0;
     overflow: visible;
 }
-
 
 .layout-single-image .exhibit-items .fullsize img {
     max-width: 100%;
@@ -31,7 +30,3 @@
 .layout-single-image .exhibit-items .exhibit-item-caption {
    text-align: left;
 }
-
-
-                                                                                                                                                                   62,1          Bot
-
