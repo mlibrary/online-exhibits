@@ -1,5 +1,5 @@
 <?php $galleryPage = get_current_record('exhibit_page'); ?>
-<div class="container">
+
 <section>
     <div class="gallery-intro">
       <h1 class="exhibit-gallery-heading">Gallery</h1>

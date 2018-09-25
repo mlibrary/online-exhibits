@@ -38,7 +38,7 @@ $return = get_record_by_id('exhibit_page', $return_id);
       // display the Back link for exhibit and gallery page
      $return_link = ($return['slug']=='gallery') ? 'Return to Exhibit Image Gallery': 'Return to Previous Page';?>
      <!--Breadcrumb Bar-->
-    <div class="container">
+    
      <section class="row"> 
       <div class="col-xs-12">
         <ol class="breadcrumb">

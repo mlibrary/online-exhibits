@@ -10,7 +10,7 @@
     ?>
     <div class="clearfix"></div>
     <hr>    
-  <div class="container">
+  
     <div class="browse-items">
         <?php if ($total_results > 0): ?>
         <?php
