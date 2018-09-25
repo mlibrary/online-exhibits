@@ -33,9 +33,9 @@ class ImageIIIF
         return $this;
     }
 
-    public function stream()
+    public function stream($format = 'jpg', $quality = 90)
     {
-        return $this->image->stream();
+        return $this->image->stream($format, $quality);
     }
 
     protected function applyParameters(array $parameters)
