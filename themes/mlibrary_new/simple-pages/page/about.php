@@ -1,9 +1,9 @@
 <?php 
 //if (metadata('simple_pages_page', 'text', array('no_escape'=>true))) {
-  if (metadata('simple_pages_page', 'is_published')) {
+/*  if (metadata('simple_pages_page', 'is_published')) {
      echo metadata('simple_pages_page', 'text', array('no_escape'=>true));
 }
-else {?>
+else {*/?>
  <div>
 
 <section>
@@ -47,4 +47,3 @@ else {?>
 </div>
 </div>
 </section> 
-<?php } ?>
