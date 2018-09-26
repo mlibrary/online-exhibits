@@ -1,11 +1,4 @@
-<?php 
-//if (metadata('simple_pages_page', 'text', array('no_escape'=>true))) {
-  if (metadata('simple_pages_page', 'is_published')) {
-     echo metadata('simple_pages_page', 'text', array('no_escape'=>true));
-}
-else {?>
  <div>
-
 <section>
   <!--Breadcrumb and Share Bar-->
  <div class="col-xs-12">
@@ -47,4 +40,3 @@ else {?>
 </div>
 </div>
 </section> 
-<?php } ?>
