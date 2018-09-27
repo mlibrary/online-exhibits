@@ -12,8 +12,6 @@ $title = __('Browse Exhibits');
                'bodyclass' => 'exhibits browse'
             )
        );
-
-
 ?>
 
   <div class="col-xs-12">
@@ -35,7 +33,15 @@ $title = __('Browse Exhibits');
   ?>
   </section>
 
-<h2><?php echo $title; ?> <?php echo __('(%s total)', $total_results); ?></h2>
+<h2><?php
+      $filterSummary='';
+      if (isset($_GET['tags'])) {
+         $filterSummary =  __('with') . __(' "<span class="bold">%s</span>"', $_GET['tags']). __(' tag');
+      }
+ 
+      $Browse_title = __('Browse All ') . __('%s', $total_results). " Exhibits " . __('%s', $filterSummary);
+      echo $Browse_title; ?>
+</h2>
 
 <div class="detail-nav-border"></div>
 
