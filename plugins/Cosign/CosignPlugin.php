@@ -118,7 +118,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     private function redirectedURL()
     {
         return (isset($_SERVER['HTTPS']) ? 'https' : 'http') .
-           "://{$_SERVER['HTTP_HOST']}/login?dest=/admin";
+           "://{$_SERVER['HTTP_HOST']}/login?dest={$GLOBALS['rootPath']}/admin";
     }
 }
 
