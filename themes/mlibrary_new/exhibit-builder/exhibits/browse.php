@@ -34,13 +34,17 @@ $title = __('Browse Exhibits');
   </section>
 
 <h2><?php
-      $filterSummary='';
+      $filterSummary = '';
+      $browseLink = '';
+
       if (isset($_GET['tags'])) {
          $filterSummary =  __('with') . __(' "<span class="bold">%s</span>"', $_GET['tags']). __(' tag');
+         $browseLink = '<a href="'.html_escape(WEB_ROOT).'/exhibits/browse">Browse All Exhibits</a>'; 
       }
  
       $Browse_title = __('Browse All ') . __('%s', $total_results). " Exhibits " . __('%s', $filterSummary);
-      echo $Browse_title; ?>
+      echo $Browse_title; 
+      echo $browseLink;?>
 </h2>
 
 <div class="detail-nav-border"></div>
