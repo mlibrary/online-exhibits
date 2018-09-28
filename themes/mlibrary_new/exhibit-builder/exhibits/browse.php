@@ -33,16 +33,16 @@ $title = __('Browse Exhibits');
   ?>
   </section>
 
-<h2><?php
+<h2 class="row"><?php
       $filterSummary = '';
       $browseLink = '';
 
       if (isset($_GET['tags'])) {
-         $filterSummary =  __('with') . __(' "<span class="bold">%s</span>"', $_GET['tags']). __(' tag');
-         $browseLink = '<a href="'.html_escape(WEB_ROOT).'/exhibits/browse">Browse All Exhibits</a>'; 
+         $filterSummary =  __('with') . __(' "<span class="tag-title">%s</span>"', $_GET['tags']). __(' tag');
+         $browseLink = '<div class="col-md-3 col-xs-12 browse-link--container"><a href="'.html_escape(WEB_ROOT).'/exhibits/browse" class="browse-all--link">Browse all exhibits</a></div>'; 
       }
  
-      $Browse_title = __('Browse All ') . __('%s', $total_results). " Exhibits " . __('%s', $filterSummary);
+      $Browse_title = '<div class="col-md-9 col-xs-12 browse--header">' . __('Browse all ') . __('%s', $total_results). " exhibits " . __('%s', $filterSummary) . '</div>';
       echo $Browse_title; 
       echo $browseLink;?>
 </h2>
