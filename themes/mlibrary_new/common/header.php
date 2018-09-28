@@ -46,7 +46,11 @@
 </head>
     <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
     <?php fire_plugin_hook('public_body', array('view'=>$this)); ?>
-   
+   <section class="update-alert">
+     <div class="container container-medium update-alert-container">
+				<p>Welcome to the updated U-M Library Online Exhibits website. We welcome your <a href="mailto:ask-omeka@umich.edu">comments, questions or feedback</a>.</p>
+		</div>
+   </section>
     <div class="site-header">
      <div class="container container-medium ">
             <div class="site-header-container">
@@ -54,14 +58,13 @@
                   <ul class="logo-list">
                     <li class="libary-logo"><a href="http://lib.umich.edu" class="logo-link"><img src="<?php echo img('logo.png'); ?>" alt="Link to Mlibrary website"></a></li>
                     <li class="exhibits-text"><?php echo bs_link_logo_to_navbar(); ?></li>
-                    
                   </ul>
                 </div>
 		<nav class="site-header-nav" role="navigation">
-                  <ul class="site-header-nav-list">
-                      <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
-                      <li><a href="<?php echo url('about'); ?>">About</a></li>
-                  </ul>
+       <ul class="site-header-nav-list">
+            <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
+            <li><a href="<?php echo url('about'); ?>">About</a></li>
+         </ul>
 		</nav>
             </div>
         </div>
