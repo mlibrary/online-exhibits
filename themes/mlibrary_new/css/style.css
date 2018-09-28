@@ -662,7 +662,7 @@ div.browse-index {
 /** Browse Page **/
 
 .browse-tag--heading {
-  font-size: 1.25em;
+  font-size: 1.1em;
   font-weight: bold;
 }
 
@@ -670,8 +670,21 @@ div.browse-index {
   padding: 1em 0;
 }
 
+.browse-link--container {
+  text-align: right;
+}
+
+.browse-all--link {
+  font-size: .75em;
+}
+
+.browse--header {
+  font-size: 1em;
+  font-weight: 400;
+}
+
 .browse-wrap .img-wrap img {
-  margin-top: 1rem;
+  margin-top: .75rem;
 }
 
 .tag-cloud ul {
@@ -1214,6 +1227,11 @@ body>.navbar {
 }
 
 @media only screen and (max-width: 767px) {
+
+  .browse--header {
+    font-size: .85em;
+    padding-bottom: .25em;
+  }
 
   li.page-input .num-label {
   padding: 1.25em .5em;
