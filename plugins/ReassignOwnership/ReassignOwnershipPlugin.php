@@ -50,14 +50,24 @@ class ReassignOwnershipPlugin extends Omeka_Plugin_AbstractPlugin
 
     private function _reassignOwnership($args)
     {
-
-    		if (isset($args['post']['reassign_ownership_id'])) {
+       if (isset($args['post']['reassign_ownership_id'])) 
+        {
 	        $newOwnerId = $args['post']['reassign_ownership_id'];
-  	      $record = $args['record'];
-    	    $newOwner = $this->_db->getTable('User')->find($newOwnerId);
-      	  $record->setOwner($newOwner);
-        }
-    }
+  	        $record = $args['record'];
+                $newOwner = $this->_db->getTable('User')->find($newOwnerId);
+                if ((get_class($record)) == 'Collection') 
+                {
+                    $number_items = $record->totalItems();
+                    $itemRecords = get_records('Item', array('collection'=>$record),$number_items);
+                      foreach ($itemRecords as $itemRecord) {
+                               $itemRecord->setOwner($newOwner);
+                               $itemRecord->save();
+                      }
+                }
+                $record->setOwner($newOwner);
+       }
+     }
+    
 
     private function _echoPanel($args)
     {
