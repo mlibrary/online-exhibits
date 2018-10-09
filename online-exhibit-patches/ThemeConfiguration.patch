@@ -1,0 +1,13 @@
+diff --git a/application/forms/ThemeConfiguration.php b/application/forms/ThemeConfiguration.php
+index d0cd128..777e0cb 100644
+--- a/application/forms/ThemeConfiguration.php
++++ b/application/forms/ThemeConfiguration.php
+@@ -14,7 +14,7 @@
+ class Omeka_Form_ThemeConfiguration extends Omeka_Form
+ {
+     const THEME_FILE_HIDDEN_FIELD_NAME_PREFIX = 'hidden_file_';
+-    const MAX_UPLOAD_SIZE = '300kB';
++    const MAX_UPLOAD_SIZE = '30MB';
+
+     public static $allowedMimeTypes = array(
+         'image/png',
