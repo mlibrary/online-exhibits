@@ -27,7 +27,7 @@ else {
 
   <section class="row">
     <div class="col-xs-12 col-sm-3">
-      <nav class="exhibit-navigation" data-spy="affix" data-offset-top="250" data-offset-bottom="120">
+      <nav class="exhibit-navigation" data-spy="affix" data-offset-top="315" data-offset-bottom="120">
         <div class="nav-text-inline">
           <h2 class="nav-text-inline-heading">Exhibit Contents</h2>
           <button class="navbar-toggler nav-text-inline-button" type="button" data-toggle="collapse" data-target="#nav-toggle" aria-controls="nav-toggle" aria-expanded="false" aria-label="Toggle navigation">
