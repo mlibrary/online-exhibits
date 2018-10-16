@@ -77,7 +77,7 @@
     </div>
     <?php if (isset($bodyid) and ($bodyid === 'home')): ?>
     <header>
-        <div class="col-sm-12 banner" style="background-image:linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,.5)), url('<?php  echo img('header.jpg'); ?>');">
+        <div class="col-sm-12 banner" style="background-image:linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.65)), url('<?php  echo img('header.jpg'); ?>');">
             <div id="header-claim-holder">
                 <div class="container container-medium banner-container">
                      <h1 class="banner-text--large">Online Exhibits</h1>
