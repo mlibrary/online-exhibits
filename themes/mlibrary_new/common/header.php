@@ -85,7 +85,7 @@
                        
                 </div>
             </div>
-             <p class="banner-text--caption">Image: Japser Francis Cropsey's painting of the University of Michigan campus from <a href="<?php echo url('exhibits/show/creating-a-campus/'); ?>"> Creating a Campus: A Cartographic Celebration of U-M's Bicentennial</a></p>
+             <p class="banner-text--caption">Image: Jasper Francis Cropsey's painting of the University of Michigan campus from <a href="<?php echo url('exhibits/show/creating-a-campus/'); ?>"> Creating a Campus: A Cartographic Celebration of U-M's Bicentennial</a></p>
         </div>
     </header>
     <?php endif; ?>
