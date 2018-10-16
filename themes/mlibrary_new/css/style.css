@@ -1,70 +1,5 @@
 /** Base styles **/
 
-.layout-single-image {
-    width: 100%;
-}
-
-.layout-single-image > .exhibit-items {
-    vertical-align: top;
-    margin-bottom: 0;
-    padding: .5em .25em;
-    width: 100%;
-    float: left;
-}
-
-.layout-double-image  {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-flow: row wrap;
-          flex-flow: row wrap;
-  -webkit-box-align: flex-start;
-      -ms-flex-align: flex-start;
-          align-items: flex-start;
-  justify-content: flex-start;
-}
-
-
-.layout-double-image > .exhibit-items {
-  width: 46%;
-  height: auto; 
-  padding: .5em .25em;
-}
-
-.layout-single-image .layout-double-image .exhibit-items .download-file {
-    clear: both;
-    border-bottom: 0;
-    overflow: visible;
-}
-
-.layout-single-image .layout-double-image .exhibit-items .fullsize img {
-    max-width: 100%;
-    margin-bottom: 1em;
-}
-
-.layout-single-image .layout-double-image .exhibit-items .exhibit-item-caption p {
-    margin: 0;
-    clear: both;
-}
-
-.layout-single-image .layout-double-image .exhibit-items .exhibit-item-caption {
-    text-align: left;
-}
-
-/**Media Queries for Blog Layout**/
-
-@media only screen and (max-width: 767px) {
-
-    .layout-double-image > .exhibit-items {
-    width: 100%;
-    height: auto; 
-    padding: .5em 0;
-}
-}
-
 p {
   font-size: 1.1em;
 }
@@ -702,6 +637,54 @@ div.browse-index {
 
 .index-exhibits h3.panel-card-title a, .index-featured-exhibit h3.panel-card-title a  {
   color: #3D3D3D;
+}
+
+/** Single and Double Layout for Blog plugin **/
+
+.layout-single-image {
+    width: 100%;
+}
+
+.layout-single-image > .exhibit-items {
+    vertical-align: top;
+    margin-bottom: 0;
+    padding: .5em .25em;
+    width: 100%;
+    float: left;
+}
+
+.layout-double-image  {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  -webkit-box-align: flex-start;
+      -ms-flex-align: flex-start;
+          align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.layout-double-image > .exhibit-items {
+  width: 46%;
+  height: auto; 
+  padding: .5em .25em;
+}
+
+.layout-double-image > p {
+  width: 100%;
+}
+
+/**Media Queries for Blog Layout**/
+
+@media only screen and (max-width: 767px) {
+
+    .layout-double-image > .exhibit-items {
+    width: 100%;
+}
 }
 
 /** Exhibit Gallery **/
