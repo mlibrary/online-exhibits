@@ -68,12 +68,10 @@ $title = __('Browse Exhibits');
           <div class="col-xs-12 browse-wrap">
            <div class="col-xs-12 col-sm-3"> <div class="img-wrap">
               <?php
-               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => $exhibit->title))) {
-                  echo link_to($exhibit, 'show', $exhibitImage, array('class' => 'image'));
+               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => ''))) {
+                  echo $exhibitImage;
                } else {?>
-                  <a href="<?php echo record_url($exhibit); ?>">
-                      <img src="<?php echo img("defaulthbg.jpg");?>" alt="Mlibrary default image"/>
-                  </a>
+                     <?php echo '<img src="<?php echo img("defaulthbg.jpg");?>" alt=" "/>';?>
                <?php }?>
             </div>
            </div>
