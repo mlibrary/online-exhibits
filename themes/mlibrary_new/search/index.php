@@ -33,16 +33,14 @@
        ?>
           <article>
             <div class="col-xs-12 browse-wrap">
-              <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';
-                    if ($recordImage = record_image($recordType, 'square_thumbnail')) {
+              <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';?>
+                    <?php if ($recordImage = record_image($recordType, 'square_thumbnail', array('alt'=>''))) {
                         echo link_to($record, 'show', $recordImage, array('class' => 'image')); 
                     } else {?>
-                       <a href="<?php echo record_url($record); ?>">
                          <img src="<?php echo img("defaulthbg.jpg");?>" alt="Mlibrary default image"/>
-                       </a>     
-                   <?php  }
-                    echo '</div></div>';
-                    ?>
+                   <?php  }?>
+                    </div></div>
+                    
                     <div class="col-xs-12 col-sm-9"><h2 class="item-heading">
                          <a href="<?php echo record_url($record, 'show'); ?>">
                             <?php echo $searchText['title'] ? $searchText['title'] : '[Unknown]'; ?>

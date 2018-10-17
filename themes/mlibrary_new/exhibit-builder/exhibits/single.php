@@ -1,6 +1,6 @@
 <section class="exhibit record panel panel-default index-featured-exhibit">
 	<div class="panel-heading">
-		<?php if ($exhibitImage = record_image($exhibit,'original',array('class' => 'feature-banner-image'))):
+		<?php if ($exhibitImage = record_image($exhibit,'original',array('alt' => '', 'class' => 'feature-banner-image'))):
 	         echo exhibit_builder_link_to_exhibit($exhibit, $exhibitImage); 
 	      endif; ?>
 	</div>
