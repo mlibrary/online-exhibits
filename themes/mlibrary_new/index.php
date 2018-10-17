@@ -1,5 +1,9 @@
 <?php 
-  set_theme_option('display_header','1');
+
+  add_filter('theme_options', function ($options, $args) {
+    return serialize(['display_header' => '1'] + unserialize($options));
+  });
+
 	echo head(array('bodyid'=>'home')); 
 ?>
 

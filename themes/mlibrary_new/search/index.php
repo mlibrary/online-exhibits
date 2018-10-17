@@ -1,6 +1,10 @@
 <?php
     $pageTitle = __('Search Online Exhibits ') . __('(%s total)', $total_results);
-    set_theme_option('display_header','0');
+
+    add_filter('theme_options', function ($options, $args) {
+      return serialize(['display_header' => '0'] + unserialize($options));
+    });
+
     echo head(array('title' => $pageTitle, 'bodyid' => 'search', 'bodyclass' => 'search'));
     $searchRecordTypes = get_search_record_types();
 ?>
