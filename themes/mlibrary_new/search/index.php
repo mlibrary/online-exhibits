@@ -39,9 +39,9 @@
             <div class="col-xs-12 browse-wrap">
               <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';?>
                     <?php if ($recordImage = record_image($recordType, 'square_thumbnail', array('alt'=>''))) {
-                        echo link_to($record, 'show', $recordImage, array('class' => 'image')); 
+                        echo $recordImage;
                     } else {?>
-                         <img src="<?php echo img("defaulthbg.jpg");?>" alt="Mlibrary default image"/>
+                         <img src="<?php echo img("defaulthbg.jpg");?>" alt=""/>
                    <?php  }?>
                     </div></div>
                     
