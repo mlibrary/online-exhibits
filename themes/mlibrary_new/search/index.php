@@ -40,9 +40,9 @@
               <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';?>
                     <?php if ($recordImage = record_image($recordType, 'square_thumbnail', array('alt'=>''))) {
                         echo $recordImage;
-                    } else {?>
-                         <img src="<?php echo img("defaulthbg.jpg");?>" alt=""/>
-                   <?php  }?>
+                    } else {
+                        echo '<img src="'.img("defaulthbg.jpg").'" alt="" />';
+                     }?>
                     </div></div>
                     
                     <div class="col-xs-12 col-sm-9"><h2 class="item-heading">

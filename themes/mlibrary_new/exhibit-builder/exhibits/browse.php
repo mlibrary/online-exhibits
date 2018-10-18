@@ -68,13 +68,12 @@ $title = __('Browse Exhibits');
           <div class="col-xs-12 browse-wrap">
            <div class="col-xs-12 col-sm-3"> <div class="img-wrap">
               <?php
-               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' => ''))) {
+               if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' =>''))) {
                   echo $exhibitImage;
-               } else {?>
-                     <?php echo '<img src="<?php echo img("defaulthbg.jpg");?>" alt=" "/>';?>
-               <?php }?>
-            </div>
-           </div>
+               } else {
+                    echo '<img src="'.img("defaulthbg.jpg").'" alt="" />';
+               }?>
+            </div></div>
                 <div class="col-xs-12 col-sm-9"><h3 class="item-heading"><?php echo link_to_exhibit(); ?></h3>
                 <?php if($exhibitDescription = metadata('exhibit', 'description', array('snippet'=>300,'no_escape' => true))) {
                   echo '<p class="item-description">' . $exhibitDescription . '</p>';

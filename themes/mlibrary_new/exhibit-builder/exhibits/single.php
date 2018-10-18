@@ -4,7 +4,9 @@
                  <div class="panel-heading">
 		      <?php if ($exhibitImage = record_image($exhibit,'original',array('alt' => '', 'class' => 'feature-banner-image'))):
 	                       echo $exhibitImage;  
-                            endif
+                            else:
+                               echo '<img src="'.img("defaulthbg.jpg").'" alt="" />';
+                            endif;
                       ?>
 	        </div>
 	        <div class="card-info panel-body">
