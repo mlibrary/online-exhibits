@@ -1,32 +1,11 @@
 
-.layout-single-image {
-    width: 100%;
-}
-
-.layout-single-image > .exhibit-items {
-    vertical-align: top;
-    margin-bottom: 0;
-    padding: .5em .25em;
-    width: 100%;
-    float: left;
-}
-
 .layout-single-image .exhibit-items .download-file {
     clear: both;
     border-bottom: 0;
     overflow: visible;
 }
 
-.layout-single-image .exhibit-items .fullsize img {
-    max-width: 100%;
-    margin-bottom: 1em;
-}
-
 .layout-single-image .exhibit-item-caption p {
     margin: 0;
     clear: both;
-}
-
-.layout-single-image .exhibit-items .exhibit-item-caption {
-   text-align: left;
 }

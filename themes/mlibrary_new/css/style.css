@@ -278,7 +278,7 @@ a.twitter-share-button:after {
   list-style: none;
   margin: 0;
   padding-right: .25em;
-  font-size: 1.1em;
+  font-size: 1.05em;
 }
 
 .affix-bottom { 
@@ -459,7 +459,7 @@ h2.sub-section {
 .section-title {
   font-weight: bold;
   padding-top: .25em;
-  font-size: 1.25em;
+  font-size: 1.15em;
 }
 
 .section-caption {
@@ -641,19 +641,24 @@ div.browse-index {
 
 /** Single and Double Layout for Blog plugin **/
 
-.layout-single-image {
-    width: 100%;
-}
-
 .layout-single-image > .exhibit-items {
-    vertical-align: top;
-    margin-bottom: 0;
-    padding: .5em .25em;
-    width: 100%;
-    float: left;
+  display: table;
+  margin: 0 auto;
+  min-width: 40%;
 }
 
-.layout-double-image  {
+.layout-single-image > .exhibit-items > a,
+.layout-double-image > .exhibit-items > a {
+  text-align: center;
+}
+
+.layout-single-image > .exhibit-items > .exhibit-item-caption {
+  display: table-caption;
+  caption-side: bottom;
+  text-align: left !important;
+}
+
+.layout-double-image {
   display: -webkit-box;
   display: -ms-flexbox;
   display: -ms-flexbox;
@@ -672,10 +677,28 @@ div.browse-index {
   width: 46%;
   height: auto; 
   padding: .5em .25em;
+  margin: 0 auto;
 }
 
-.layout-double-image > p {
+.layout-double-image > p,
+.layout-double-image > h1,
+.layout-double-image > h2,
+.layout-double-image > h3,
+.layout-double-image > h4,
+.layout-double-image > h5,
+.layout-double-image > h6,
+.layout-double-image > pre {
   width: 100%;
+}
+
+.exhibit-item-caption > *,
+.exhibit-item-caption > div > * {
+  text-align: left !important;
+}
+
+.exhibit-block iframe {
+  display: table;
+  margin: 0 auto;
 }
 
 /**Media Queries for Blog Layout**/
@@ -684,7 +707,7 @@ div.browse-index {
 
     .layout-double-image > .exhibit-items {
     width: 100%;
-}
+  }
 }
 
 /** Exhibit Gallery **/
@@ -1244,16 +1267,20 @@ body>.navbar {
   }
 
   .exhibit-gallery-theme-item {
-  width: 45%;
+    width: 45%;
   }
 
   .exhibit-navigation h3 {
-  font-size: 1.2em;
+    font-size: 1.2em;
   }
 
-  #exhibit-pages {
-  font-size: 1em;
-  width: 90%;
+  .nav-text-inline-heading {
+    font-size: 1.2em;
+  }
+
+   #exhibit-pages {
+    font-size: 1em;
+    width: 70%;
   }
   
   .exhibit-pages-show li > ul {
@@ -1297,7 +1324,7 @@ body>.navbar {
     }
     .exhibit-theme-item {
     width: calc(50% - 1.5em);
-  }
+    }
 }
 
 @media only screen and (max-width: 767px) {
@@ -1435,6 +1462,6 @@ body>.navbar {
   .exhibit-item-back-button {
   text-align: left;
   padding-left: 0;
-}
+  }
 
 }
