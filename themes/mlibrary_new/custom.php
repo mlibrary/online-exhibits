@@ -20,7 +20,7 @@ function mlibrary_new_recent_exhibits_bootstrap($recentExhibits) {
             $exhibitImage = record_image($exhibit, 'original', array('alt' => '',
                                                                      'class' => 'image-card'));
             if ($exhibitImage == Null) {
-                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt="Mlibrary default image"/>';
+                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt=""/>';
             }
 
             $html .= get_view()->partial('exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
