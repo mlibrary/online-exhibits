@@ -4,7 +4,7 @@ echo $this->form('search-form', $options['form_attributes']); ?>
     <div class="form-group search-form-group"> 
         <label class="sr-only" for="search-form"><span>Search Online Exhibits</span></label>
       <?php echo $this->formText('query', $filters['query'], array('class'=>'form-control', 'id'=>'search-form', 'size'=> '50', 'placeholder'=>'Search Online Exhibits')); ?>
-        <button type="submit" class="button search-button"> <span class="glyphicon glyphicon-search"></span><span class="search-button-text"> Search</span></button>
+        <button type="submit" class="button search-button" aria-label="Search button"> <span class="glyphicon glyphicon-search"></span><span class="search-button-text"> Search</span></button>
     </div>
     <?php if ($options['show_advanced']): ?>
         <fieldset id="advanced-form">
