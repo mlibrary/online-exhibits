@@ -22,7 +22,7 @@
                                                    selected, organized, described, and explained by the curator/creator.</p>";
 
          $about_online_exhibits = "<p>An Online Exhibit may or may not have a physical counterpart, but are often created to provide ongoing 
-                                           representations of physical exhibits that happen the library.</p>
+                                           representations of physical exhibits that happen in the library.</p>
                                         <p>University of Michigan Library Online Exhibits are proudly brought to you by <a href='https://omeka.org/'>Omeka</a>.</p>
                                        &nbsp ";
 
