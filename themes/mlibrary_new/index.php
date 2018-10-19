@@ -1,7 +1,10 @@
 <?php 
 
   add_filter('theme_options', function ($options, $args) {
-    return serialize(['display_header' => '1'] + unserialize($options));
+    return serialize(
+      ['display_header' => '1'] +
+      unserialize(exhibit_builder_theme_options($options, $args))
+    );
   });
 
 	echo head(array('bodyid'=>'home')); 
