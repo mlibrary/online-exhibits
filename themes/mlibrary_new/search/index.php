@@ -35,8 +35,9 @@
               $recordType = $searchText['record_type'];
               set_current_record($recordType, $record);
        ?>
+       <div class="col-xs-12">
           <article>
-            <div class="col-xs-12 browse-wrap">
+            <div class="col-xs-12 browse-wrap panel panel-default results-card">
               <?php echo '<div class="col-xs-12 col-sm-3"> <div class="img-wrap">';?>
                     <?php if ($recordImage = record_image($recordType, 'square_thumbnail', array('alt'=>''))) {
                         echo $recordImage;
@@ -58,6 +59,7 @@
                     </div>
             </div>
          </article>
+        </div>
        <?php
        endforeach;
        echo pagination_links();

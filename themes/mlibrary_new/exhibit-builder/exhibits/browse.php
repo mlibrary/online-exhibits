@@ -65,7 +65,7 @@ $title = __('Browse Exhibits');
           <?php $theme_options_array = $exhibit->getThemeOptions(); ?>
 
          <article>
-          <div class="col-xs-12 browse-wrap">
+          <div class="col-xs-12 browse-wrap panel panel-default results-card">
            <div class="col-xs-12 col-sm-3"> <div class="img-wrap">
               <?php
                if ($exhibitImage = record_image($exhibit, 'square_thumbnail', array('alt' =>''))) {
