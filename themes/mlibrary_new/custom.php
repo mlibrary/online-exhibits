@@ -32,7 +32,7 @@ function mlibrary_new_exhibit_builder_previous_link_to_exhibit($exhibit, $exhibi
    
    $link =  exhibit_builder_link_to_exhibit($exhibit, 'Previous Section', $props, $previoustargetPage);
    $page_card_info = mlibrary_new_display_exhibit_card_info($previoustargetPage);
-   $caption = snippet_by_word_count($page_card_info['description'],10,'..');
+   $caption = snippet_by_word_count($page_card_info['description'], 10, '..');
    $navigate_previous_exhibit = array(
                                  'title'=>$page_card_info['title'],
                                  'url-link'=>$link,
@@ -57,7 +57,7 @@ function mlibrary_new_exhibit_builder_next_link_to_exhibit($exhibit, $exhibit_pa
 
    $link = exhibit_builder_link_to_exhibit($exhibit, 'Next Section', $props, $nexttargetPage);
    $page_card_info = mlibrary_new_display_exhibit_card_info($nexttargetPage);
-   $caption = snippet_by_word_count($page_card_info['description'],10,'..');   
+   $caption = snippet_by_word_count($page_card_info['description'], 10, '..');   
    $navigate_next_exhibit = array(
                                  'title'=>$page_card_info['title'], 
                                  'url-link'=>$link, 
@@ -105,7 +105,7 @@ function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 
    if ($rawAttachment->getItem()->getItemType()!=null) {
        $itemType = $rawAttachment->getItem()->getItemType()->name;
- }
+   }
 
    return $itemType;
 }
@@ -117,20 +117,21 @@ function mlibrary_new_get_image_card($rawAttachment = null, $alt = '')
    $page_image = "<img class='image-card' alt='".$alt."' src='{$default_image}'/>";
    if (!empty($rawAttachment)) {
        if ((mlibrary_new_display_exhibit_type_of_item($rawAttachment) == 'Video')) {
-           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment->getItem(),$alt);
-        } else {
-           $page_image = record_image($rawAttachment->getFile(),'original',array('class' => 'image-card','alt'=>$alt));
-        }
+           $page_image = mlibrary_new_exhibit_builder_video_attachment($rawAttachment->getItem(), $alt);
+       } else {
+           $page_image = record_image($rawAttachment->getFile(), 'original', array('class' => 'image-card','alt'=>$alt));
+       }
    } 
    return $page_image;
 }
 
 
-function mlibrary_new_get_page_description($blocks) {
+function mlibrary_new_get_page_description($blocks) 
+{
   if (empty($blocks)) {
     return '';
   }
-  return get_view()->shortcodes(snippet_by_word_count(metadata($blocks[0], 'text',['no_escape' => true]),20,'..'));
+  return get_view()->shortcodes(snippet_by_word_count(metadata($blocks[0], 'text', ['no_escape' => true]), 20, '..'));
 }
 
 
@@ -147,7 +148,7 @@ function mlibrary_new_display_exhibit_card_info($exhibitPage)
 function mlibrary_new_get_image_for_gallery($attachment = null)
 {
   $alt_text = mlibrary_new_alt_text($attachment->getItem());
-  return mlibrary_new_get_image_card($attachment,$alt_text);
+  return mlibrary_new_get_image_card($attachment, $alt_text);
 }
 
 function mlibrary_new_create_card_for_gallery($attachment)
@@ -158,15 +159,19 @@ function mlibrary_new_create_card_for_gallery($attachment)
    ];
 }
 
-function mlibrary_new_render_gallery_section($sectionpage_cards_info){
- return array_map(function ($sectionpage_card_info) {
-   return '<div class="exhibit-gallery-theme-item panel panel-default">'.
+function mlibrary_new_render_gallery_section($sectionpage_cards_info)
+{
+ return array_map(
+     function ($sectionpage_card_info) {
+     return '<div class="exhibit-gallery-theme-item panel panel-default">'.
      '<a href='.$sectionpage_card_info["url"].'>'. '<div class="panel-heading">'.$sectionpage_card_info["image"].'</div>'.'</a>'
      . '</div>';
- }, $sectionpage_cards_info);
+     }, $sectionpage_cards_info
+ );
 }
 
-function mlibrary_new_get_cards_in_section_gallery($attachments = null){ 
+function mlibrary_new_get_cards_in_section_gallery($attachments = null)
+{ 
   $sectionpage_card_info = array();
   if (!empty($attachments)) {
      foreach ($attachments as $attachment) {
@@ -177,7 +182,8 @@ function mlibrary_new_get_cards_in_section_gallery($attachments = null){
 }
 
 
-function mlibrary_new_exhibit_builder_display_random_featured_exhibit(){
+function mlibrary_new_exhibit_builder_display_random_featured_exhibit()
+{
     $html = '<div id="featured-exhibit" class="featured-exhibit-container">';
     $featuredExhibit = exhibit_builder_random_featured_exhibit();
     if ($featuredExhibit) {
@@ -209,7 +215,8 @@ function mlibrary_get_stylesheet($styleSheet = null)
  * Called by mlibrary_display_related_exhibits() to display a link to related exhibits for
  * a particular item if the Related Exhibit option is set in the config page of the exhibit.
  **/
-function mlibrary_link_to_related_exhibits($id) {
+function mlibrary_link_to_related_exhibits($id) 
+{
   require_once "Exhibit.php";
   $db = get_db();
   $select = "
@@ -218,11 +225,11 @@ function mlibrary_link_to_related_exhibits($id) {
 	    INNER JOIN {$db->prefix}exhibit_page_entries epe ON epe.page_id = ep.id
 	    WHERE epe.item_id = ?";
 
-  $exhibits = $db->getTable("Exhibit")->fetchObjects($select,array($id));
+  $exhibits = $db->getTable("Exhibit")->fetchObjects($select, array($id));
   $i= 0;
   if(!empty($exhibits)) {
      foreach($exhibits as $exhibit) {
-     	$data[] = link_to_exhibit(null, array(), null, $exhibit);
+         $data[] = link_to_exhibit(null, array(), null, $exhibit);
      }
   }
   return $data;
@@ -231,7 +238,8 @@ function mlibrary_link_to_related_exhibits($id) {
 /**
  * This is the function that is actually used on items/show...
  **/
-function mlibrary_display_related_exhibits($item) {
+function mlibrary_display_related_exhibits($item) 
+{
   $related_exhibits_setting = get_theme_option('Related Exhibits');
   if ($related_exhibits_setting == 'yes') {
      return mlibrary_link_to_related_exhibits(get_current_record('item')->id);
@@ -239,32 +247,36 @@ function mlibrary_display_related_exhibits($item) {
 }
 
 // Used in items/show.php and exhibits/item.php
-function mlibrary_display_video() {
+function mlibrary_display_video() 
+{
 $html_video = '';
-$elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code'),array(
+$elementvideos = metadata(
+    'item', array('Item Type Metadata', 'Video_embeded_code'), array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
                                                                                    )
-                         );
+);
 
- $elementtitles = metadata('item',array('Item Type Metadata', 'video_title'),array(
+ $elementtitles = metadata(
+     'item', array('Item Type Metadata', 'video_title'), array(
                                                                              'no_escape'=>true,
                                                                              'all'=>true
                                                                             )
-                         );
+ );
 
   //Kultura video
- $elementvideos_VCM = metadata('item',array('Item Type Metadata', 'video_embeded_code_VCM'),array(
+ $elementvideos_VCM = metadata(
+     'item', array('Item Type Metadata', 'video_embeded_code_VCM'), array(
                                                                                             'no_escape' => true,
                                                                                             'all' => true
                                                                                             )
-                              );
+ );
 
   if (!empty($elementvideos_VCM)) {
     $html_video = '<div id="showcase" class="showcase">';
     foreach($elementvideos_VCM as $i => $elementvideo_VCM ) {
       if (empty($elementtitles[$i])) {
-  	       $elementtitles[$i] = strip_formatting(metadata('item',array('Dublin Core', 'Title')));
+             $elementtitles[$i] = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
       }
       $html_video .='<div>' .$elementvideo_VCM .
                 '<div class="showcase-caption">
@@ -277,8 +289,8 @@ $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code
     $html_video ='<div id="showcase" class="showcase">';
     foreach($elementvideos as $i => $elementvideo ) {
       if (empty($elementtitles[$i])) {
-  	      $elementtitles[$i] = strip_formatting(metadata('item',array('Dublin Core', 'Title')));
-  	  }
+            $elementtitles[$i] = strip_formatting(metadata('item', array('Dublin Core', 'Title')));
+      }
       $html_video .='<div>
                    <iframe src="//www.youtube.com/embed/' . $elementvideo . '" frameborder="0" width="650" height="400"></iframe>
                    <div class="showcase-caption">
@@ -293,7 +305,8 @@ $elementvideos = metadata('item',array('Item Type Metadata', 'Video_embeded_code
 
 // Display the Item source from the Identifier field. If it is valid url it will be displayed as a link other wise it will be displayed not as url.
 // Used in items/show.php & exhibits/item.php
-function mlibrary_metadata_sideinfo($item){
+function mlibrary_metadata_sideinfo($item)
+{
   $html = '';
   $item = get_current_record('item');
 
@@ -307,9 +320,9 @@ function mlibrary_metadata_sideinfo($item){
     $elementSetName = $elementInfo[0];
     $elementName = $elementInfo[1];
     $elementTexts = metadata(
-      'item',
-      array($elementSetName, $elementName),
-      array('no_escape' => true, 'all' => true)
+        'item',
+        array($elementSetName, $elementName),
+        array('no_escape' => true, 'all' => true)
     );
 
     if (!empty($elementTexts)) {
@@ -322,7 +335,7 @@ function mlibrary_metadata_sideinfo($item){
             //  $data = $elementText;
           // }
         //else {
-	$data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Item Source</a>' : $elementText;
+    $data = ($elementName == 'Identifier' && (filter_var($elementText, FILTER_VALIDATE_URL))) ? '<a href="' . $elementText . '">View Item Source</a>' : $elementText;
         //}
         $html .= '<dd>' . $data . '</dd>';
       }
@@ -350,42 +363,46 @@ function mlibrary_metadata_sideinfo($item){
  * If audio will be used in exhibit, set the Exhibit Audio configuration option.
  * This function is not used anywhere
  **/
-function mlibrary_exhibit_audio() {
-	$exhibit_audio_setting=get_theme_option('Exhibit Audio');
-	return $exhibit_audio_setting;
+function mlibrary_exhibit_audio() 
+{
+    $exhibit_audio_setting=get_theme_option('Exhibit Audio');
+    return $exhibit_audio_setting;
 }
 
 /**
  * If video will be used in exhibit, set the Exhibit video configuration option.
  * this function is not used anywhere
  **/
-function mlibrary_exhibit_video() {
-	$exhibit_video_setting=get_theme_option('Exhibit Video');
-	return $exhibit_video_setting;
+function mlibrary_exhibit_video() 
+{
+    $exhibit_video_setting=get_theme_option('Exhibit Video');
+    return $exhibit_video_setting;
 }
 
 /**
  * This function returns the Header Image based on selection in Exhibit Theme Configurations.
  * Used at exhibits/show.php and summary.php
  **/
-function mlibrary_header_banner() {
-	$header_banner = get_theme_option('Header Banner');
-	$header_text = get_theme_option('Header Text');
-	if($header_banner){
-			$output = "<h1 class='default' style='background-image: url(" . CURRENT_BASE_URL . '/files/theme_uploads/' . $header_banner . ")'>";
-	} else {
-			$output = "<h1 class='default'>";
-	}
-	if($header_text == 'yes' || !$header_text){
-			$output .= "<span>".metadata('exhibit', 'title')."</span></h1>";
-	} else {
-			$output .= "</h1>";
-	}
-	return $output;
+function mlibrary_header_banner() 
+{
+    $header_banner = get_theme_option('Header Banner');
+    $header_text = get_theme_option('Header Text');
+    if($header_banner){
+            $output = "<h1 class='default' style='background-image: url(" . CURRENT_BASE_URL . '/files/theme_uploads/' . $header_banner . ")'>";
+    } else {
+            $output = "<h1 class='default'>";
+    }
+    if($header_text == 'yes' || !$header_text){
+            $output .= "<span>".metadata('exhibit', 'title')."</span></h1>";
+    } else {
+            $output .= "</h1>";
+    }
+    return $output;
 }
 
 /** New exhibits feed to RSS **/
-function mlibrary_display_rss($feedUrl, $num = 3) {
+function mlibrary_display_rss($feedUrl, $num = 3) 
+{
   try {
    $feed = Zend_Feed_Reader::import($feedUrl);
   } catch (Zend_Feed_Exception $e) {
@@ -403,8 +420,9 @@ function mlibrary_display_rss($feedUrl, $num = 3) {
   }
 }
 
-function mlibrary_new_alt_text($item) {
-     return (strip_formatting(metadata($item,array('Dublin Core', 'Title'))));
+function mlibrary_new_alt_text($item) 
+{
+     return (strip_formatting(metadata($item, array('Dublin Core', 'Title'))));
 }
 
 
@@ -412,21 +430,22 @@ function mlibrary_new_alt_text($item) {
  * Retrieve a thumnail image for a video item type
  *  It is not used in this installation, but it can be used in the future.
  **/
-function mlibrary_new_exhibit_builder_video_attachment($item,$alt) {
+function mlibrary_new_exhibit_builder_video_attachment($item,$alt) 
+{
 $remove[] = "'";
-	$elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
-	$elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'),array('no_escape'=>true, 'all'=>true));
+    $elementids_youtube_video = metadata($item, array('Item Type Metadata', 'Video_embeded_code'), array('no_escape'=>true,'all'=>true));
+    $elementvideos_kultura_VCM = metadata($item, array('Item Type Metadata', 'video_embeded_code_VCM'), array('no_escape'=>true, 'all'=>true));
         if (!empty($elementids_youtube_video)) {
-		foreach ($elementids_youtube_video as $elementid_youtube_video) {
-			$videoid = str_replace($remove, "", $elementid_youtube_video);
-			if (!empty($videoid)) {
-				$video_gallery_image = "<img class='image-card' src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' alt=$alt>";
-			}
-		}
+        foreach ($elementids_youtube_video as $elementid_youtube_video) {
+            $videoid = str_replace($remove, "", $elementid_youtube_video);
+            if (!empty($videoid)) {
+                $video_gallery_image = "<img class='image-card' src='//i.ytimg.com/vi/".$videoid."/maxresdefault.jpg' alt=$alt>";
+            }
+        }
         }//if
         elseif (!empty($elementvideos_kultura_VCM)) {
-  	        $data = $elementvideos_kultura_VCM[0];
-		preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
+              $data = $elementvideos_kultura_VCM[0];
+        preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match);
                 $partnerId = 1038472;
                 $video_gallery_image = '<img class="image-card" src="//cdn.kaltura.com/p/'.$partnerId.'/thumbnail/entry_id/'.$match[1].'/width/400/height/400/type/1/quality/100/"/>';
         }//if
@@ -438,7 +457,8 @@ $remove[] = "'";
  * this filter is used at Exhibit builder
  **/
 add_filter('exhibit_attachment_markup', 'mlibrary_exhibit_builder_attachment');
-function mlibrary_exhibit_builder_attachment($html, $compact) {
+function mlibrary_exhibit_builder_attachment($html, $compact) 
+{
  $remove[] = "'";
   $elementids = "";
   $elementvideos_VCM = "";
@@ -451,7 +471,7 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                               if (($item_type['name'] =='Video')) {
                                 $alt_text = mlibrary_new_alt_text($item); 
                                  $video_gallery_image = mlibrary_new_exhibit_builder_video_attachment($item, $alt_text);
-                                 $html = exhibit_builder_link_to_exhibit_item($video_gallery_image,'',$item); 
+                                 $html = exhibit_builder_link_to_exhibit_item($video_gallery_image, '', $item); 
                                     if (!empty($compact['attachment']['caption'])) {
                                         $html .= $compact['attachment']['caption'];
                                     }
@@ -459,9 +479,9 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
                         }
                         // Add a query string to then end of the href so we know which exhibit you came from
                         $html = mlibrary_add_vars_to_href(
-                                  $html,
-                                  mlibrary_exhibit_item_query_string_settings()
-                                );
+                            $html,
+                            mlibrary_exhibit_item_query_string_settings()
+                        );
                  }
   return $html;
 }
@@ -470,19 +490,21 @@ function mlibrary_exhibit_builder_attachment($html, $compact) {
  * A helped function that takes a string, finds the "href" attribute in it,
  * and appends variables to the end
  */
-function mlibrary_add_vars_to_href($html, $variables) {
+function mlibrary_add_vars_to_href($html, $variables) 
+{
   return preg_replace(
-    '/href=["\']([^"\']*)/',
-    'href="$1?' . http_build_query($variables),
-    $html
+      '/href=["\']([^"\']*)/',
+      'href="$1?' . http_build_query($variables),
+      $html
   );
 }
 
 // called by items/browse.php
-function mlibrary_link_to_item_with_return($text, $attributes = []) {
+function mlibrary_link_to_item_with_return($text, $attributes = []) 
+{
   return mlibrary_add_vars_to_href(
-    link_to_item($text, $attributes),
-    [ 'page' => (isset($_GET['page'])) ? $_GET['page'] : '1' ]
+      link_to_item($text, $attributes),
+      [ 'page' => (isset($_GET['page'])) ? $_GET['page'] : '1' ]
   );
 }
 
@@ -490,7 +512,8 @@ function mlibrary_link_to_item_with_return($text, $attributes = []) {
  * Function to return common settings for exhibit item link query strings
  * called by mlibrary_exhibit_builder_attachment
  */
-function mlibrary_exhibit_item_query_string_settings() {
+function mlibrary_exhibit_item_query_string_settings() 
+{
   return [ 'exhibit' => get_current_record('exhibit_page')->exhibit_id,
            'page'    => get_current_record('exhibit_page')->id ];
 }
@@ -499,7 +522,8 @@ function mlibrary_exhibit_item_query_string_settings() {
 * function to build anchor link for subsections instead of url
 *
 */
-function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $current_page=null) {
+function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $current_page=null) 
+{
   return '<li>'
            . '<a href="' .'#'.$exhibitPage['slug']. '">'
            . metadata($exhibitPage, 'title') .'</a>';
@@ -510,7 +534,8 @@ function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $
  * This function is necessary to keep consistence with Navigation look on Omeka 1.5
  * called by exhibits/show.php
  **/
-function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) {
+function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page=null) 
+{
   if (!$exhibitPage) {
        $exhibitPage = get_current_record('exhibit_page');
   }
@@ -518,28 +543,28 @@ function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current
   if (($current_page->id == $exhibitPage->id)) {
       $html = '<li class="current">'
          . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-	 . metadata($exhibitPage, 'title') .'</a>';
-   } elseif ((!empty($parents))
+     . metadata($exhibitPage, 'title') .'</a>';
+  } elseif ((!empty($parents))
              && ($exhibitPage->id == $parents[0]->id)
           ) {
               $html = '<li class="current">'
                      . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
                      . metadata($exhibitPage, 'title') .'</a>';
-            } else {
+  } else {
                 $html  = '<li>'
-                  	  . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
+                        . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
                           . metadata($exhibitPage, 'title') .'</a>';
-            }
+  }
           //Add Children to navigation.
    $children = $exhibitPage->getChildPages();
    if ($children) {
      $html .= '<ul>';
      foreach ($children as $child) {
-       $html .= mlibrary_new_exhibit_builder_child_page_summary($child,$current_page);
+       $html .= mlibrary_new_exhibit_builder_child_page_summary($child, $current_page);
         release_object($child);
-    }
+     }
     $html .= '</ul>';
-  }
+   }
   $html .= '</li>';
   return $html;
- }
+}
