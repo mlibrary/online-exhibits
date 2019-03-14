@@ -240,13 +240,17 @@ function mlibrary_new_display_popular_tags()
 // get the type of the item
 function mlibrary_new_display_exhibit_type_of_item($rawAttachment)
 {
-   $itemType = 'Still Image';
+    $itemType = 'Still Image';
 
-   if ($rawAttachment->getItem()->getItemType()!=null) {
-       $itemType = $rawAttachment->getItem()->getItemType()->name;
- }
+    if (empty($item = $rawAttachment->getItem())) {
+        return $itemType;
+    }
 
-   return $itemType;
+    if (empty($type = $item->getItemType())) {
+        return $itemType;
+    }
+
+    return $type->name;
 }
 
 //
