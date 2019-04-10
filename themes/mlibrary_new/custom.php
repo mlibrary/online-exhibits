@@ -387,7 +387,7 @@ function mlibrary_new_display_video()
 {
 $html_video = '';
 $elementvideos = metadata(
-    'item', array('Item Type Metadata', 'Youtube ID'), array(
+    'item', array('Item Type Metadata', 'YouTube ID'), array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
                                                                                    )
@@ -542,7 +542,7 @@ function mlibrary_new_exhibit_builder_video_attachment($item, $alt)
     $remove = ["'"];
     $elementids_youtube_video = metadata(
         $item,
-        ['Item Type Metadata', 'Youtube ID'],
+        ['Item Type Metadata', 'YouTube ID'],
         ['no_escape' => true, 'all' => true]
     );
     $elementvideos_kultura_VCM = metadata(
