@@ -387,14 +387,14 @@ function mlibrary_new_display_video()
 {
 $html_video = '';
 $elementvideos = metadata(
-    'item', array('Item Type Metadata', 'Video_embeded_code'), array(
+    'item', array('Item Type Metadata', 'Youtube ID'), array(
                                                                                    'no_escape' => true,
                                                                                    'all' => true
                                                                                    )
 );
 
  $elementtitles = metadata(
-     'item', array('Item Type Metadata', 'video_title'), array(
+     'item', array('Item Type Metadata', 'Video Title'), array(
                                                                              'no_escape'=>true,
                                                                              'all'=>true
                                                                             )
@@ -402,7 +402,7 @@ $elementvideos = metadata(
 
   //Kultura video
  $elementvideos_VCM = metadata(
-     'item', array('Item Type Metadata', 'video_embeded_code_VCM'), array(
+     'item', array('Item Type Metadata', 'Embed Code'), array(
                                                                                             'no_escape' => true,
                                                                                             'all' => true
                                                                                             )
@@ -542,12 +542,12 @@ function mlibrary_new_exhibit_builder_video_attachment($item, $alt)
     $remove = ["'"];
     $elementids_youtube_video = metadata(
         $item,
-        ['Item Type Metadata', 'Video_embeded_code'],
+        ['Item Type Metadata', 'Youtube ID'],
         ['no_escape' => true, 'all' => true]
     );
     $elementvideos_kultura_VCM = metadata(
         $item,
-        ['Item Type Metadata', 'video_embeded_code_VCM'],
+        ['Item Type Metadata', 'Embed Code'],
         ['no_escape' => true, 'all' => true]
     );
     if (!empty($elementids_youtube_video)) {
