@@ -8,3 +8,15 @@
 /application/logs/
 !/application/logs/.htaccess
 .DS_Store
+
+# Preferences for PhpStorm
+.idea
+
+# Preferences for Visual Studio Code
+.vscode
+
+# Solr XML
+online-exhibits.xml
+
+# Lando configuration
+.lando.yml
