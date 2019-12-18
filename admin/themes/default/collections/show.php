@@ -31,6 +31,7 @@ $collectionTitle = __('Collection #%s', metadata('collection', 'id')) . $collect
         <?php if (is_allowed(get_current_record('collection'), 'edit')): ?>    
             <?php echo link_to_collection(__('Edit'), array('class'=>'big green button'), 'edit'); ?>
         <?php endif; ?>
+        <a href="<?php echo html_escape(public_url('collections/show/'.metadata('collection', 'id'))); ?>" class="big blue button" target="_blank"><?php echo __('View Public Page'); ?></a>
         <?php if (is_allowed(get_current_record('collection'), 'delete')): ?>    
             <?php echo link_to_collection(__('Delete'), array('class'=>'big red button delete-confirm'), 'delete-confirm'); ?>
         <?php endif; ?>

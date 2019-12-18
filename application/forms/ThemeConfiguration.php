@@ -14,7 +14,7 @@
 class Omeka_Form_ThemeConfiguration extends Omeka_Form
 {
     const THEME_FILE_HIDDEN_FIELD_NAME_PREFIX = 'hidden_file_';
-    const MAX_UPLOAD_SIZE = '30MB';
+    const MAX_UPLOAD_SIZE = '300kB';
 
     public static $allowedMimeTypes = array(
         'image/png',

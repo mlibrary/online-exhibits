@@ -386,6 +386,27 @@ function exhibit_builder_public_head($args)
 
     if ($module == 'exhibit-builder') {
         queue_css_file('exhibits');
+        $exhibitPage = get_current_record('exhibit_page', false);
+        if ($exhibitPage) {
+            $blocks = $exhibitPage->ExhibitPageBlocks;
+
+            $layouts = array();
+            foreach ($blocks as $block) {
+                $layout = $block->getLayout();
+                if (!array_key_exists($layout->id, $layouts)) {
+                    $layouts[$layout->id] = true;
+                    try {
+                        queue_css_url($layout->getAssetUrl('layout.css'));
+                    } catch (InvalidArgumentException $e) {
+                        // no CSS for this layout
+                    }
+                }
+            }
+            fire_plugin_hook('exhibit_builder_page_head', array(
+                'view' => $args['view'],
+                'layouts' => $layouts)
+            );
+        }
     }
 }
 

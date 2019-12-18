@@ -8,7 +8,7 @@
  */
 
 // Define the current version of Omeka.
-define('OMEKA_VERSION', '2.6.1');
+define('OMEKA_VERSION', '2.7');
 
 // Define the application environment.
 if (!defined('APPLICATION_ENV')) {
@@ -49,6 +49,7 @@ define('SCRIPTS_DIR', APP_DIR . '/scripts');
 if ((isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] === true))
     || (isset($_SERVER['HTTP_SCHEME']) && $_SERVER['HTTP_SCHEME'] == 'https')
     || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)
+    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')
 ) {
     $scheme = 'https';
 } else {

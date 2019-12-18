@@ -1410,21 +1410,22 @@ function max_file_size()
  * @package Omeka\Function\View\File
  * @uses Omeka_View_Helper_FileMarkup::fileMarkup()
  * @param File $files A file record or an array of File records to display.
- * @param array $props Properties to customize display for different file types.
+ * @param array $options Options to customize display for different file types.
  * @param array $wrapperAttributes Attributes HTML attributes for the div that
  * wraps each displayed file. If empty or null, this will not wrap the displayed
  * file in a div.
  * @return string HTML
  */
-function file_markup($files, array $props = array(), $wrapperAttributes = array('class' => 'item-file'))
+function file_markup($files, array $options = array(), $wrapperAttributes = array('class' => 'item-file'))
 {
     if (!is_array($files)) {
         $files = array($files);
     }
+    $files = apply_filters('file_markup_files', $files, array('options' => $options));
     $helper = new Omeka_View_Helper_FileMarkup;
     $output = '';
     foreach ($files as $file) {
-        $output .= $helper->fileMarkup($file, $props, $wrapperAttributes);
+        $output .= $helper->fileMarkup($file, $options, $wrapperAttributes);
     }
     return $output;
 }
@@ -2074,7 +2075,9 @@ function files_for_item($options = array(), $wrapperAttributes = array('class' =
     if (!isset($options['linkToMetadata'])) {
         $options['linkToMetadata'] =  (bool) get_option('link_to_file_metadata');
     }
-    return file_markup($item->Files, $options, $wrapperAttributes);
+    $options['filesForItem'] = true;
+    $html = file_markup($item->Files, $options, $wrapperAttributes);
+    return apply_filters('files_for_item', $html, compact('item', 'options', 'wrapperAttributes'));
 }
 
 /**
@@ -3295,7 +3298,10 @@ function items_output_url($output, $otherParams = array())
 
     // Provide additional query parameters if the current page is items/browse.
     $request = Zend_Controller_Front::getInstance()->getRequest();
-    if ('items' == $request->getControllerName() && 'browse' == $request->getActionName()) {
+    if ('items' == $request->getControllerName()
+        && 'browse' == $request->getActionName()
+        && 'default' == $request->getModuleName()
+    ) {
         $queryParams = $_GET;
         unset($queryParams['submit_search']);
         unset($queryParams['page']);
