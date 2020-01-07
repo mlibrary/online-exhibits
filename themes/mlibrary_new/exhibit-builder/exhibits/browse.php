@@ -42,7 +42,7 @@ $title = __('Browse Exhibits');
       $browseLink = '';
 
       if (isset($_GET['tags'])) {
-         $filterSummary =  __('with') . __(' "<span class="tag-title">%s</span>"', $_GET['tags']). __(' tag');
+         $filterSummary =  __('with') . __(' "<span class="tag-title">%s</span>"', strip_tags($_GET['tags'])). __(' tag');
          $browseLink = '<div class="col-md-3 col-xs-12 browse-link--container"><a href="'.html_escape(WEB_ROOT).'/exhibits/browse" class="browse-all--link">Browse all exhibits</a></div>'; 
       }
  
