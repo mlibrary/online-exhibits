@@ -564,9 +564,9 @@ function mlibrary_new_exhibit_builder_video_attachment($item, $alt)
     }
     elseif (!empty($elementvideos_kultura_VCM)) {
         $data = $elementvideos_kultura_VCM[0];
-        if (preg_match('/\/entry_id\/([a-zA-Z0-9\_]*)?/i', $data, $match)) {
+        if (preg_match('/&entry_id=([a-zA-Z0-9\_]*)?/i', $data, $match)) {
             $partnerId = 1038472;
-            return '<img class="image-card" src="//cdn.kaltura.com/p/' .
+            return '<img class="image-card" src="http://cdn.kaltura.com/p/' .
                 htmlentities($partnerId, ENT_QUOTES, 'UTF-8') .
                 '/thumbnail/entry_id/' .
                 htmlentities($match[1], ENT_QUOTES, 'UTF-8') .
