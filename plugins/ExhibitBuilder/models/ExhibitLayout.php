@@ -20,7 +20,7 @@ class ExhibitLayout
     /**
      * The ID for the layout to use when one can't be found.
      */
-    const FALLBACK_LAYOUT = 'file-text';
+    const FALLBACK_LAYOUT = 'single-image';
 
     /**
      * Name of the image file to use when one can't be found.
