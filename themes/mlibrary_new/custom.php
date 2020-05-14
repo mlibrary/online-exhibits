@@ -611,11 +611,15 @@ function mlibrary_new_exhibit_builder_attachment($html, $compact)
  */
 function mlibrary_new_add_vars_to_href($html, $variables)
 {
-  return preg_replace(
-      '/href=["\']([^"\']*)/',
-      'href="$1?' . http_build_query($variables),
-      $html
-  );
+    if (strpos($html, $_SERVER['HTTP_HOST']) !== false){
+        return preg_replace(
+            '/href=["\']([^"\']*)/',
+            'href="$1?' . http_build_query($variables),
+            $html
+        );
+    }
+
+    return $html;
 }
 
 /**
