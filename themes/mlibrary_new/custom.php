@@ -611,12 +611,20 @@ function mlibrary_new_exhibit_builder_attachment($html, $compact)
  */
 function mlibrary_new_add_vars_to_href($html, $variables)
 {
-    if (stripos($html, $_SERVER['HTTP_HOST']) !== false){
-        return preg_replace(
-            '/href=["\']([^"\']*)/',
-            'href="$1?' . http_build_query($variables),
-            $html
+    $offset = 0;
+    $needle = 'href';
+    $regex = '/^href=["\']https?:\/\/'.$_SERVER['HTTP_HOST'].'([^"\']*)/';
+    while (($curr_position = strpos($html, $needle, $offset))!== false) {
+        $head = substr($html,0,$curr_position);
+        $tail = substr($html,$curr_position);
+        $tail = preg_replace(
+            $regex,
+            'href="https://'.$_SERVER['HTTP_HOST'].'$1?' . http_build_query($variables),
+            $tail,
+            1
         );
+        $html = $head . $tail;
+        $offset = $curr_position + strlen($needle);
     }
 
     return $html;
