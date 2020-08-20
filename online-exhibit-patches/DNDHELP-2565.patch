@@ -1,0 +1,15 @@
+diff --git a/application/libraries/Zend/Db/Adapter/Abstract.php b/application/libraries/Zend/Db/Adapter/Abstract.php
+index 9f857c6a..24bbdb55 100644
+--- a/application/libraries/Zend/Db/Adapter/Abstract.php
++++ b/application/libraries/Zend/Db/Adapter/Abstract.php
+@@ -564,8 +564,8 @@ abstract class Zend_Db_Adapter_Abstract
+         }
+ 
+         // build the statement
+-        $sql = "INSERT INTO "
+-             . $this->quoteIdentifier($table, true)
++        $sql = ($table == 'omeka_sessions') ? 'REPLACE' : 'INSERT';
++        $sql .= ' INTO ' . $this->quoteIdentifier($table, true)
+              . ' (' . implode(', ', $cols) . ') '
+              . 'VALUES (' . implode(', ', $vals) . ')';
+ 
