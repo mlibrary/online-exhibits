@@ -45,13 +45,24 @@ class Coins_View_Helper_Coins extends Zend_View_Helper_Abstract
         $coins['rft_val_fmt'] = 'info:ofi/fmt:kev:mtx:dc';
         $coins['rfr_id'] = 'info:sid/omeka.org:generator';
 
+        // Handle Dubln Core elements that work well with multiple values in
+        // COinS
+        $multiElementNames = array('Creator', 'Contributor', 'Subject');
+        foreach ($multiElementNames as $elementName) {
+            $elementTexts = $this->_getElementText($item, $elementName, true);
+            if (!$elementTexts) {
+                continue;
+            }
+            $elementName = strtolower($elementName);
+            $coins["rft.$elementName"] = $elementTexts;
+        }
+
         // Set the Dublin Core elements that don't need special processing.
-        $elementNames = array('Creator', 'Subject', 'Publisher', 'Contributor',
-                              'Date', 'Format', 'Source', 'Language', 'Coverage',
-                              'Rights', 'Relation');
+        $elementNames = array('Description', 'Publisher', 'Date', 'Format',
+            'Source', 'Language', 'Coverage', 'Rights', 'Relation');
         foreach ($elementNames as $elementName) {
             $elementText = $this->_getElementText($item, $elementName);
-            if (false === $elementText) {
+            if (null === $elementText) {
                 continue;
             }
 
@@ -61,17 +72,10 @@ class Coins_View_Helper_Coins extends Zend_View_Helper_Abstract
 
         // Set the title key from Dublin Core:title.
         $title = $this->_getElementText($item, 'Title');
-        if (false === $title || '' == trim($title)) {
+        if (null === $title || '' == trim($title)) {
             $title = '[unknown title]';
         }
         $coins['rft.title'] = $title;
-
-        // Set the description key from Dublin Core:description.
-        $description = $this->_getElementText($item, 'Description');
-        if (false === $description) {
-            return;
-        }
-        $coins['rft.description'] = $description;
 
         // Set the type key from item type, map to Zotero item types.
         $itemTypeName = metadata($item, 'item type name');
@@ -102,14 +106,16 @@ class Coins_View_Helper_Coins extends Zend_View_Helper_Abstract
                     $type = $this->_getElementText($item, 'Type');
                 }
         }
-        $coins['rft.type'] = $type;
+        if (null !== $type) {
+            $coins['rft.type'] = $type;
+        }
 
-        // Set the identifier key as the absolute URL of the current page.
-        $coins['rft.identifier'] = absolute_url();
+        // Set the identifier key as the absolute URL to the item
+        $coins['rft.identifier'] = record_url($item, null, true);
 
         // Build and return the COinS span tag.
         $coinsSpan = '<span class="Z3988" title="';
-        $coinsSpan .= html_escape(http_build_query($coins));
+        $coinsSpan .= html_escape($this->_buildQueryString($coins));
         $coinsSpan .= '"></span>';
         return $coinsSpan;
     }
@@ -119,15 +125,48 @@ class Coins_View_Helper_Coins extends Zend_View_Helper_Abstract
      *
      * @param Item $item
      * @param string $elementName
-     * @return string|bool
+     * @param bool $all If true, return array of all texts
+     * @return string|array|bool
      */
-    protected function _getElementText(Item $item, $elementName)
+    protected function _getElementText(Item $item, $elementName, $all = false)
     {
+        $options = array('no_filter' => true, 'no_escape' => true, 'snippet' => 500);
+        if ($all) {
+            $options['all'] = true;
+        }
         $elementText = metadata(
             $item,
             array('Dublin Core', $elementName),
-            array('no_filter' => true, 'no_escape' => true, 'snippet' => 500)
+            $options
         );
         return $elementText;
+    }
+
+    /**
+     * Build a query string from the passed array of data
+     *
+     * Like the built-in http_build_query, but it supports multiple values
+     * with the same key.
+     *
+     * @param array $data
+     * @return string
+     */
+    protected function _buildQueryString($data)
+    {
+        $query = '';
+        foreach ($data as $key => $values) {
+            $encodedKey = urlencode($key);
+            if (!is_array($values)) {
+                $values = array($values);
+            }
+            foreach ($values as $value) {
+                if (strlen($query)) {
+                    $query .= '&';
+                }
+                $encodedValue = urlencode($value);
+                $query .= $encodedKey . '=' . $encodedValue;
+            }
+        }
+        return $query;
     }
 }
