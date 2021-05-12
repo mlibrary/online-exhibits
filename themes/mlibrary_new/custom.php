@@ -11,31 +11,34 @@ require_once dirname(__FILE__) . '/functions.php';
 // designed for portability across themes should be grouped into a plugin whenever
 // possible.
 
-function mlibrary_new_recent_exhibits_bootstrap($recentExhibits)
+function mlibrary_new_recent_exhibits_bootstrap($recentExhibits,$tag)
 {
-    $exhibits = exhibit_builder_recent_exhibits($recentExhibits);
-    $html = '';
-    if ($exhibits) {
-        foreach ($exhibits as $exhibit) {
-            $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
-            $exhibitImage = record_image(
-                $exhibit, 'original', array('alt' => '',
-                'class' => 'image-card')
-            );
-            if ($exhibitImage == Null) {
-                $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt=""/>';
-            }
+  $html = '';
+  $exhibits = get_records('Exhibit', array('sort_field' => 'added',
+                                           'sort_dir' => 'd',
+                                           'tags' => $tag),
+                          $recentExhibits);
+  if ($exhibits) {
+    foreach ($exhibits as $exhibit) {
+      $title =  metadata($exhibit, 'title', array('snippet'=>300,'no_escape' => true));
+      $exhibitImage = record_image(
+        $exhibit, 'original', array('alt' => '',
+                                    'class' => 'image-card')
+      );
+      if ($exhibitImage == Null) {
+        $exhibitImage = '<img class="image-card" src="'.img("defaulthbg.jpg").'" alt=""/>';
+      }
 
-            $html .= get_view()->partial(
-                'exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
-                                                                                    'exhibit' => $exhibit,
-                'title' => $title )
-            );
-        }
-    } else {
-        $html = '<p>' . __('No recent exhibits available.') . '</p>';
+      $html .= get_view()->partial(
+        'exhibit-builder/exhibits/card.php', array('exhibitImage' => $exhibitImage,
+                                                   'exhibit' => $exhibit,
+                                                   'title' => $title )
+      );
     }
-    return $html;
+  } else {
+    $html = '<p>' . __('No recent exhibits available.') . '</p>';
+  }
+  return $html;
 }
 
 function mlibrary_new_item_sequence($exhibitId, $from = NULL, $direction = NULL)

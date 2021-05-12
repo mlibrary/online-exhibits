@@ -38,19 +38,31 @@
     <div class="col-xs-12">
       <h2 class="text-center">Featured Exhibits</h2>
     </div>
-    <div class="col-xs-12">	
-        
-        <?php echo mlibrary_new_exhibit_builder_display_random_featured_exhibit(); ?>           
-     </div>
+    <div class="col-xs-12">
+      <?php echo mlibrary_new_exhibit_builder_display_random_featured_exhibit(); ?>
+    </div>
   
-       <div class="col-xs-12 index-exhibits-container">
-         <?php
-           if (plugin_is_active('ExhibitBuilder') && function_exists('mlibrary_new_recent_exhibits_bootstrap')) { 
-              echo mlibrary_new_recent_exhibits_bootstrap(6);
-           }?>
-       </div>
-
-  </div>
+    <?php
+      $tags = array('Arts','Humanities');
+      foreach($tags as $tag) {
+    ?>
+      <div class="col-xs-12 ">
+        <div class="detail-nav-border"></div>
+      </div>
+      <div class="col-xs-12">
+        <h2 class="text-center"><?php echo $tag ?></h2>
+      </div>
+      <div class="col-xs-12 index-exhibits-container">
+        <?php
+          if (plugin_is_active('ExhibitBuilder') && function_exists('mlibrary_new_recent_exhibits_bootstrap')) {
+              echo mlibrary_new_recent_exhibits_bootstrap(6,$tag);
+          }
+        ?>
+      </div>
+    <?php
+      }
+    ?>
+    </div>
 
     <div class="browse-index">
       <div class="button browse-btn"><a href="<?php echo url('exhibits'); ?>">See All Exhibits</a></div>
