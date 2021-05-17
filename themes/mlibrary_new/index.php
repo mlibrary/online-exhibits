@@ -47,7 +47,7 @@
       foreach($tags as $tag) {
     ?>
       <div class="col-xs-12 ">
-        <div class="detail-nav-border"></div>
+        <div class="landing-page-section-divider"></div>
       </div>
       <div class="col-xs-12">
         <h2 class="text-center"><?php echo $tag ?></h2>

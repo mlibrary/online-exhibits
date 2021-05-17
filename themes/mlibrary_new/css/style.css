@@ -525,6 +525,15 @@ div.browse-index {
   color: #fff;
 }
 
+.landing-page-section-divider {
+  margin-top: 2em;
+  border-bottom: 4px solid #00274c;
+  margin-bottom: 2em;
+  background-color: #FFFFFF;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 0 rgba(0,0,0,0.12), 0 2px 4px 0 rgba(0,0,0,0.24);
+}
+
 .detail-nav-border {
   border-bottom: 1px solid #CCCCCC;
   margin-bottom: 1em;
