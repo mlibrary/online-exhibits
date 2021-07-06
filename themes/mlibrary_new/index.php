@@ -43,7 +43,7 @@
     </div>
   
     <?php
-      $tags = array('Arts','Humanities');
+      $tags = array('U-M Library Exhibits','Student and Faculty Exhibits');
       foreach($tags as $tag) {
     ?>
       <div class="col-xs-12 ">
