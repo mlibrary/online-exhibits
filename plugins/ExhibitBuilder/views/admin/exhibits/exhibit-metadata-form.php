@@ -1,3 +1,13 @@
+<?php
+	$request = Zend_Controller_Front::getInstance()->getRequest();
+	if (class_exists('ListOfGroups')) {
+	    $groups_names_object = new ListOfGroups();
+	}
+	else
+   	$groups_names_object = '';
+?>
+
+
 <form id="exhibit-metadata-form" method="post" class="exhibit-builder">
     <section class="seven columns alpha">
     <fieldset>
@@ -54,6 +64,72 @@
                     <input type="submit" class="configure-button" name="configure-theme" value="<?php echo __('Configure'); ?>">
             </div>
         </div>
+        <?php
+            if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
+            ?>
+     <div class="field">
+        <?php  $user = current_user();?>
+            <div class="two columns alpha">
+                <?php if (($request->getActionName()=='add' || $request->getActionName()=='edit' ) and (($user->role=='contributor') || ($user->role=='researcher')))
+                echo $this->formLabel('Your groups', __('Your groups:'));
+                else {
+                echo $this->formLabel('Select a Group', __('Select a Group'));
+                }
+                ?>
+            </div>
+            <div class="five columns omega inputs">
+                <?php
+                      $group_names = $groups_names_object->get_groups_names();
+                      $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
+                      $groupExhibitValue[] = '';
+                      $groupValue[] = '';
+                      if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
+                             echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
+                      elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
+                              $user_group_objects =  GroupUserRelationship::findUserRelationshipRecords($user->id);
+                              if (!empty($user_group_objects)) {
+                                   foreach($user_group_objects as $user_group_object) {
+		  	   		$groupValue[]= $user_group_object['group_id'];
+	                         		     }
+	                         		}
+                    			    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
+                    	}
+                      elseif ($request->getActionName()=='edit') {
+                          if (($user->role=='super') || ($user->role=='admin')) {
+                              $current_exhibitGroups =  ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+				 if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   		$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
+	                         		}
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+                               echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
+                    		  }
+                    		  if (($user->role=='contributor') || ($user->role=='researcher')) {
+                              $current_exhibitGroups = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
+                              if (!empty($current_exhibitGroups)) {
+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
+		  	   		$groupExhibitValue[]= $current_exhibitGroup['group_id'];
+	                         		    }
+	                         		}
+                              $exhibit_ownerId =  $exhibit['owner_id'];
+                              if ($exhibit_ownerId == $user->id) {
+				  echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$group_names);
+			       }
+			       else {
+				  $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
+				  echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
+			       }
+                          }
+                      }
+                ?>
+            </div>
+        </div>
+              <?php }
+            ?>
+
+
         <div class="field">
             <div class="two columns alpha">
                 <?php echo $this->formLabel('use_summary_page', __('Use Summary Page?')); ?>
