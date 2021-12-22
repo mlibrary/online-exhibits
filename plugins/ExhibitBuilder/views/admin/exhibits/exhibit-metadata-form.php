@@ -8,49 +8,41 @@
 ?>
 <style>
 fieldset fieldset {
-	font-size:80%;
-	padding:10px 18px;
-	border: 1px solid #D6D5C2;
-	background: #FCFCFC;
-}
+    font-size:80%;
+    padding:10px 18px;
+    border: 1px solid #D6D5C2;
+    background: #FCFCFC;
+ }
 fieldset fieldset legend {
-	padding-bottom:0;
-	}
+    padding-bottom:0;
+}
 .subject-parent {
 	list-style:none;
 	padding-bottom:.3em;
-/*	background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIOTGBpgHrsGEyyrUktdQUAOw==) no-repeat left 4px;*/
 	padding-left:16px;
 }
 .subject-parent .subject-parent {
 	margin-left:-16px;
 }
 .subject-parent ul {
-/*remove by nancy
-	margin:1em;*/
 	 list-style: none outside none;
 	}
 .subject-parent label {
-	float:none;
-/*	display:inline-block;*/
-	font-size:1.4em;
-	padding-left:.4em;
-	/*added by nancy*/
-  vertical-align: middle;
-  width: 250px;
-  margin-bottom: 0;
+    float:none;
+    font-size:1.4em;
+    padding-left:.4em;
+    vertical-align: middle;
+    width: 250px;
+    margin-bottom: 0;
 }
 .list-open {
-	background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIMjI+pB+0dHjQvzWUKADs=) no-repeat left 4px;
+    background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIMjI+pB+0dHjQvzWUKADs=) no-repeat left 4px;
 }
 .inputs label {
     display: inline;
     font-weight: normal;
 }
-.sub-list {
-/*	padding:.5em;
-	margin:.5em;*/
-}
+
 #lib-tag-update {
 	float:none;
 	background-color:#AAA;
