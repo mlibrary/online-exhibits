@@ -29,7 +29,6 @@ fieldset fieldset legend {
 	}
 .subject-parent label {
     float:none;
-    font-size:1.4em;
     padding-left:.4em;
     vertical-align: middle;
     width: 250px;
