@@ -1,8 +1,8 @@
 diff --git a/plugins/ExhibitBuilder/views/admin/exhibits/exhibit-metadata-form.php b/plugins/ExhibitBuilder/views/admin/exhibits/exhibit-metadata-form.php
-index 2e680dd..2c4f3b0 100644
+index 39349179..8c669c55 100644
 --- a/plugins/ExhibitBuilder/views/admin/exhibits/exhibit-metadata-form.php
 +++ b/plugins/ExhibitBuilder/views/admin/exhibits/exhibit-metadata-form.php
-@@ -1,3 +1,77 @@
+@@ -1,3 +1,71 @@
 +<?php
 +	$request = Zend_Controller_Front::getInstance()->getRequest();
 +	if (class_exists('ListOfGroups')) {
@@ -11,48 +11,42 @@ index 2e680dd..2c4f3b0 100644
 +	else
 +   	$groups_names_object = '';
 +?>
-+
 +<style>
 +fieldset fieldset {
-+	font-size:80%;
-+	padding:10px 18px;
-+	border: 1px dotted #EDEDED;
-+	background: #FCFCFC;
-+}
++    font-size:80%;
++    padding:10px 18px;
++    border: 1px solid #D6D5C2;
++    background: #FCFCFC;
++ }
 +fieldset fieldset legend {
-+	padding-bottom:0;
-+	}
++    padding-bottom:0;
++}
 +.subject-parent {
 +	list-style:none;
 +	padding-bottom:.3em;
-+/*	background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIOTGBpgHrsGEyyrUktdQUAOw==) no-repeat left 4px;*/
 +	padding-left:16px;
 +}
 +.subject-parent .subject-parent {
 +	margin-left:-16px;
 +}
 +.subject-parent ul {
-+/*remove by nancy
-+	margin:1em;*/
 +	 list-style: none outside none;
 +	}
 +.subject-parent label {
-+	float:none;
-+/*	display:inline-block;*/
-+	font-size:1.4em;
-+	padding-left:.4em;
-+	/*added by nancy*/
-+  vertical-align: middle;
-+  width: 250px;
-+  margin-bottom: 0;
++    float:none;
++    padding-left:.4em;
++    vertical-align: middle;
++    width: 250px;
++    margin-bottom: 0;
 +}
 +.list-open {
-+	background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIMjI+pB+0dHjQvzWUKADs=) no-repeat left 4px;
++    background:url(data:image/gif;base64,R0lGODlhCAAIAIABAGRkZAAAACH5BAEAAAEALAAAAAAIAAgAAAIMjI+pB+0dHjQvzWUKADs=) no-repeat left 4px;
 +}
-+.sub-list {
-+/*	padding:.5em;
-+	margin:.5em;*/
++.inputs label {
++    display: inline;
++    font-weight: normal;
 +}
++
 +#lib-tag-update {
 +	float:none;
 +	background-color:#AAA;
@@ -80,7 +74,7 @@ index 2e680dd..2c4f3b0 100644
  <form id="exhibit-metadata-form" method="post" class="exhibit-builder">
      <section class="seven columns alpha">
      <fieldset>
-@@ -40,10 +114,49 @@
+@@ -40,10 +108,49 @@
                  <?php echo $this->formLabel('tags', __('Tags')); ?>
              </div>
              <div class="five columns omega inputs">
@@ -131,113 +125,86 @@ index 2e680dd..2c4f3b0 100644
          <div class="field">
              <div class="two columns alpha">
                  <?php echo $this->formLabel('theme', __('Theme')); ?>
-@@ -54,6 +167,72 @@
+@@ -54,6 +161,73 @@
                      <input type="submit" class="configure-button" name="configure-theme" value="<?php echo __('Configure'); ?>">
              </div>
          </div>
 +
-+  <?php
++        <?php
 +            if ((!empty($groups_names_object)) and (class_exists('GroupUserRelationship')) and (class_exists('ExhibitGroupsRelationShip'))) {
-+            ?>
-+     <div class="field">
-+        <?php  $user = current_user();?>
-+            <div class="two columns alpha">
-+                <?php if (($request->getActionName()=='add' || $request->getActionName()=='edit' ) and (($user->role=='contributor') || ($user->role=='researcher')))
-+                echo $this->formLabel('Your groups', __('Your groups:'));
-+                else {
-+                echo $this->formLabel('Select a Group', __('Select a Group'));
++        ?>
++        <div class="field">
++        <?php  $user = current_user(); ?>
++             <div class="two columns alpha">
++        <?php if (($request->getActionName()=='add' || $request->getActionName()=='edit' ) and (($user->role=='contributor') || ($user->role=='researcher'))){
++                    echo $this->formLabel('Your groups', __('Your groups:'));
++                } else {
++                    echo $this->formLabel('Select a Group', __('Select a Group'));
 +                }
-+                ?>
++        ?>
 +            </div>
 +            <div class="five columns omega inputs">
-+                <?php
-+                      $group_names = $groups_names_object->get_groups_names();
-+                      $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
-+                      $groupExhibitValue[] = '';
-+                      $groupValue[] = '';
-+                      if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
-+                             echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
-+                      elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
-+                              $user_group_objects =  GroupUserRelationship::findUserRelationshipRecords($user->id);
-+                              if (!empty($user_group_objects)) {
-+                                   foreach($user_group_objects as $user_group_object) {
-+		  	   		$groupValue[]= $user_group_object['group_id'];
-+	                         		     }
-+	                         		}
-+                    			    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
-+                    	}
-+                      elseif ($request->getActionName()=='edit') {
-+                          if (($user->role=='super') || ($user->role=='admin')) {
-+                              $current_exhibitGroups =  ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
-+				 if (!empty($current_exhibitGroups)) {
-+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
-+		  	   		$groupExhibitValue[]= $current_exhibitGroup['group_id'];
-+	                         		    }
-+	                         		}
-+                              $exhibit_ownerId =  $exhibit['owner_id'];
-+                              $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
-+                               echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
-+                    		  }
-+                    		  if (($user->role=='contributor') || ($user->role=='researcher')) {
-+                              $current_exhibitGroups = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
-+                              if (!empty($current_exhibitGroups)) {
-+                                  foreach($current_exhibitGroups as $current_exhibitGroup) {
-+		  	   		$groupExhibitValue[]= $current_exhibitGroup['group_id'];
-+	                         		    }
-+	                         		}
-+                              $exhibit_ownerId =  $exhibit['owner_id'];
-+                              if ($exhibit_ownerId == $user->id) {
-+				  echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$group_names);
-+			       }
-+			       else {
-+				  $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
-+				  echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
-+			       }
-+                          }
-+                      }
++        <?php
++                $group_names = $groups_names_object->get_groups_names();
++                $acl = Zend_Registry::get('bootstrap')->getResource('Acl');
++                $groupExhibitValue[] = '';
++                $groupValue[] = '';
++                if (($request->getActionName()=='add') and (($user->role=='super') || ($user->role=='admin')))
++                    echo $this->formSelect('group-selection','',array('multiple'=>'multiple'),$group_names);
++                elseif (($request->getActionName()=='add') and (($user->role=='contributor') || ($user->role=='researcher')))  {
++                    $user_group_objects =  GroupUserRelationship::findUserRelationshipRecords($user->id);
++                    if (!empty($user_group_objects)) {
++                        foreach($user_group_objects as $user_group_object) {
++                            $groupValue[]= $user_group_object['group_id'];
++                        }
++                    }
++                    echo $this->formSelect('group-selection',$groupValue,array('multiple'=>'multiple'),$group_names);
++                }
++                elseif ($request->getActionName()=='edit') {
++                    if (($user->role=='super') || ($user->role=='admin')) {
++                        $current_exhibitGroups =  ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
++                        if (!empty($current_exhibitGroups)) {
++                            foreach($current_exhibitGroups as $current_exhibitGroup) {
++                                $groupExhibitValue[]= $current_exhibitGroup['group_id'];
++                            }
++                        }
++                        $exhibit_ownerId =  $exhibit['owner_id'];
++                        $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
++                        echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
++                    }
++                    if (($user->role=='contributor') || ($user->role=='researcher')) {
++                        $current_exhibitGroups = ExhibitGroupsRelationShip::findGroupsBelongToExhibit($exhibit->id);
++                        if (!empty($current_exhibitGroups)) {
++                            foreach($current_exhibitGroups as $current_exhibitGroup) {
++                                $groupExhibitValue[]= $current_exhibitGroup['group_id'];
++                            }
++                        }
++                        $exhibit_ownerId =  $exhibit['owner_id'];
++                        if ($exhibit_ownerId == $user->id) {
++                            echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$group_names);
++                        }
++                        else {
++                            $groupNames =  $groups_names_object->get_groups_names_using_role($user->id,$user->role);
++                            echo $this->formSelect('group-selection',$groupExhibitValue,array('multiple'=>'multiple'),$groupNames);
++                        }
++                    }
++                }
 +                ?>
-+            </div>
-+        </div>
-+              <?php }
-+            ?>
++                                                               </div>
++                                                               </div>
++<?php }
++?>
++
 +
          <div class="field">
              <div class="two columns alpha">
                  <?php echo $this->formLabel('use_summary_page', __('Use Summary Page?')); ?>
-@@ -102,17 +281,18 @@
-             <?php endif; ?>
-             <div id="public-featured">
-                 <div class="public">
--                    <label for="public"><?php echo __('Public'); ?>:</label> 
-+                    <label for="public"><?php echo __('Public'); ?>:</label>
-                     <?php echo $this->formCheckbox('public', $exhibit->public, array(), array('1', '0')); ?>
-                 </div>
-                 <div class="featured">
--                    <label for="featured"><?php echo __('Featured'); ?>:</label> 
-+                    <label for="featured"><?php echo __('Featured'); ?>:</label>
-                     <?php echo $this->formCheckbox('featured', $exhibit->featured, array(), array('1', '0')); ?>
-                 </div>
-             </div>
-         </div>
-     </section>
- </form>
-+
- <div id="cover-image-panel" title="<?php echo html_escape(__('Choose a Cover Image')); ?>">
-     <div id="item-form">
-         <button type="button" id="revert-selected-item">Revert to Selected Item</button>
-@@ -151,7 +331,55 @@
-           <?php echo json_encode(url('exhibit-builder/files/cover-image')); ?>,
-           <?php echo js_escape(url('exhibits/attachment-item-options')); ?>
-         );
--        Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse')); ?>);
-+        Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse'));
-+?>);
+@@ -153,3 +327,49 @@
+         Omeka.ExhibitBuilder.setUpCoverImageSelect(<?php echo json_encode(url('exhibit-builder/items/browse')); ?>);
      });
- //]]>
  </script>
-+<script>
-+jQuery(window).load(function() {    
-+    //////////////////////////////
++<script type="text/javascript" charset="utf-8">
++    jQuery(document).ready(function(){
 +        jQuery.noConflict();
 +                    jQuery(".internalslidingDiv").hide();
 +        jQuery(".subject-sub-internalslidingDiv").hide();
