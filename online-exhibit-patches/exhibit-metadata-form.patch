@@ -9,7 +9,7 @@ index 39349179..8c669c55 100644
 +	    $groups_names_object = new ListOfGroups();
 +	}
 +	else
-+   	$groups_names_object = '';
++	    $groups_names_object = '';
 +?>
 +<style>
 +fieldset fieldset {
@@ -85,8 +85,8 @@ index 39349179..8c669c55 100644
          </div>
 +
 +        <div class="two columns alpha">
-+            	 <?php echo $this->formLabel('add-library-tags:', __('Add Library Tags:')); ?>
-+            	 <?php echo $this->formButton('lib-tag-update','Update Tags'); ?>
++             <?php echo $this->formLabel('add-library-tags:', __('Add Library Tags:')); ?>
++             <?php echo $this->formButton('lib-tag-update','Update Tags'); ?>
 +        </div>
 +           <div class="five columns omega inputs">
 +             <fieldset id="lib-tags">
@@ -97,7 +97,7 @@ index 39349179..8c669c55 100644
 +                    echo "<li class='subject-parent'>". $this->formCheckbox($subjectvalue['name'])."<label for='".$subjectvalue['name']."'><a href='#' class='subjectshow_hide'>".$subjectvalue['name']."</a></label>";
 +              ?>
 +                    <div class='internalslidingDiv'>
-+                 	   <ul>
++                    <ul>
 +                      <?php foreach ($subjectvalue->topic as $value) {
 +                                   if ($value->xpath("sub-topic")) {
 +                                      print "<li class='subject-parent '>".$this->formCheckbox($value['name'])."<label for='".$value['name']."'><a href='#' class='subject-nested'>".$value['name']."</a></label>"; ?>
