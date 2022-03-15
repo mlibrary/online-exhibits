@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Omeka" basedir=".">
+    <property name="lang.dir" location="application/languages"/>
+    <property name="dist" location="dist"/>
+
+    <target name="dist" description="Create the dist directory.">
+        <mkdir dir="${dist}"/>
+    </target>
+
+    <target name="get-version" unless="version">
+        <input addproperty="version" message="Omeka version number:"/>
+    </target>
+
+    <target name="zip" depends="dist,changeme,get-version"
+        description="Create a zip of Omeka.">
+        <zip destfile="${dist}/omeka-${version}.zip">
+            <zipfileset dir="." prefix="omeka-${version}">
+                <exclude name="**/*.changeme"/>
+                <exclude name="application/logs/errors.log.empty"/>
+                <exclude name="**/.tx/**"/>
+                <exclude name="dist/**"/>
+                <exclude name=".github/**"/>
+                <exclude name=".travis.yml"/>
+                <exclude name=".php_cs"/>
+                <exclude name="composer.json"/>
+                <exclude name="composer.lock"/>
+                <exclude name="**/*.po"/>
+                <exclude name="**/*.pot"/>
+                <exclude name="**/css/sass/**"/>
+                <exclude name="**/css/config.rb"/>
+                <exclude name="application/tests/**"/>
+                <exclude name="vendor/**"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+    <target name="check-changeme">
+        <available property="filesExist" file="db.ini"/>
+    </target>
+    
+    <target name="changeme"
+        description="Copy .changeme files to their proper locations."
+        depends="check-changeme" unless="filesExist">
+        <copy todir=".">
+            <filelist dir=".">
+                <file name=".htaccess.changeme"/>
+                <file name="db.ini.changeme"/>
+                <file name="application/config/config.ini.changeme"/>
+                <file name="application/tests/config.ini.changeme"/>
+            </filelist>
+            <mapper type="glob" from="*.changeme" to="*"/>
+        </copy>
+        <copy file="application/logs/errors.log.empty"
+            tofile="application/logs/errors.log"/>
+    </target>
+
+    <target name="test" description="Run automated tests.">
+        <exec executable="../../vendor/bin/phpunit" dir="application/tests"
+            failonerror="true"/>
+    </target>
+
+    <target name="test-plugins" description="Run automated tests for plugins.">
+        <apply executable="phpunit" failonerror="true">
+            <arg value="-c" />
+            <fileset dir="plugins" includes="*/tests/phpunit.xml" />
+        </apply>
+    </target>
+
+    <target name="test-all" depends="test,test-plugins"
+        description="Run all automated tests." />
+
+    <target name="update-pot" description="Update the translation template.">
+        <property name="pot.file" location="${lang.dir}/Omeka.pot"/>
+        <property name="pot.base" location="${lang.dir}/Omeka.base.pot"/>
+        <tempfile property="pot.temp" suffix=".pot" destdir="${lang.dir}"/>
+        <copy file="${pot.base}" tofile="${pot.temp}"/>
+        <apply executable="xgettext" relative="true" parallel="true"
+            verbose="true">
+            <arg value="--language=php"/>
+            <arg value="--from-code=utf-8"/>
+            <arg value="--keyword=__"/>
+            <arg value="--keyword=plural:1,2"/>
+            <arg value="--flag=__:1:pass-php-format"/>
+            <arg value="--add-comments=/"/>
+            <arg value="--omit-header"/>
+            <arg value="--join-existing"/>
+            <arg value="-o"/>
+            <arg file="${pot.temp}"/>
+            <fileset dir="." includes="**/*.php **/*.phtml"
+                excludes="themes/ plugins/"/>
+        </apply>
+        <move file="${pot.temp}" tofile="${pot.file}"/>
+    </target>
+
+    <target name="build-mo" description="Build the MO translation files.">
+        <apply executable="msgfmt" dest="${lang.dir}" verbose="true">
+            <arg value="-o"/>
+            <targetfile />
+            <srcfile />
+            <fileset dir="${lang.dir}" includes="*.po"/>
+            <mapper type="glob" from="*.po" to="*.mo"/>
+        </apply>
+    </target>
+</project>

@@ -1,0 +1,39 @@
+{
+  "name": "thanksroy",
+  "version": "2.6.5",
+  "description": "\"A tribute to Roy Rosenzweig, with updated typography and responsive styles.\"",
+  "main": "gulpfile.js",
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "glob": "^7.1.1",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sass": "^5.0.0",
+    "postcss": "^8.3.0",
+    "sass": "~1.32.13",
+    "susy": "^2.2.12"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omeka/theme-thanksroy.git"
+  },
+  "keywords": [
+    "\"white",
+    "black",
+    "serif\""
+  ],
+  "author": "\"Roy Rosenzweig Center for History and New Media\"",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/omeka/theme-thanksroy/issues"
+  },
+  "homepage": "https://github.com/omeka/theme-thanksroy#readme",
+  "browserslist": [
+    "> 5%",
+    "> 1% in US"
+  ]
+}
