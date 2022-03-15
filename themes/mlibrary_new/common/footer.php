@@ -4,6 +4,7 @@
 			<div class="container container-medium">
 				<div id="footer-content">
 			        <p>©<?php echo date('Y'); ?> Regents of the University of Michigan. For details and exceptions, see the <a href="https://www.lib.umich.edu/library-administration/library-copyright-statement">Library Copyright Policy</a>.</p>
+                    <p>We welcome your <a href="mailto:ask-omeka@umich.edu">comments, questions or feedback</a>.</p>
 				</div> 
 	    </div>
 <?php fire_plugin_hook('public_footer', array('view'=>$this)); ?>

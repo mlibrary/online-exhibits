@@ -46,11 +46,6 @@
 </head>
     <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
     <?php fire_plugin_hook('public_body', array('view'=>$this)); ?>
-   <section class="update-alert">
-     <div class="container container-medium update-alert-container">
-				<p>Welcome to the updated U-M Library Online Exhibits website. We welcome your <a href="mailto:ask-omeka@umich.edu">comments, questions or feedback</a>.</p>
-		</div>
-   </section>
     <div class="site-header">
      <div class="container container-medium ">
             <div class="site-header-container">
