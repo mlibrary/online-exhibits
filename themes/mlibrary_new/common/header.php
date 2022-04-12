@@ -23,7 +23,7 @@
     <!-- Need to add custom and third-party CSS files? Include them here -->
     <?php
         queue_css_url('//fonts.googleapis.com/css?family=Open+Sans:400,600');
-		$bootswatch_theme=get_theme_option('Style Sheet');
+        $bootswatch_theme=get_theme_option('Style Sheet');
         queue_css_file($bootswatch_theme.'/bootstrap');
         queue_css_file($bootswatch_theme.'/falafel');
         queue_css_file('style');
@@ -43,9 +43,16 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+
+    <!-- includes for the Design System components -->
+    <link href="https://unpkg.com/@umich-lib/web@1/umich-lib.css" rel="stylesheet"/>
+    <script type="module" src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.esm.js"></script>
+    <script nomodule src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.js"></script>
+
 </head>
     <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
     <?php fire_plugin_hook('public_body', array('view'=>$this)); ?>
+    <m-universal-header></m-universal-header>
     <div class="site-header">
      <div class="container container-medium ">
             <div class="site-header-container">
