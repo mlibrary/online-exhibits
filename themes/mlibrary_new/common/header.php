@@ -65,7 +65,6 @@
 		<nav class="site-header-nav" role="navigation">
        <ul class="site-header-nav-list">
             <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
-            <li><a href="<?php echo url('about'); ?>">About</a></li>
          </ul>
 		</nav>
             </div>
