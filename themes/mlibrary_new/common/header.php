@@ -27,6 +27,7 @@
         queue_css_file($bootswatch_theme.'/bootstrap');
         queue_css_file($bootswatch_theme.'/falafel');
         queue_css_file('style');
+        queue_css_file('universal-header');
         echo head_css();
     ?>
 
@@ -45,7 +46,6 @@
     <![endif]-->
 
     <!-- includes for the Design System components -->
-    <link href="https://unpkg.com/@umich-lib/web@1/umich-lib.css" rel="stylesheet"/>
     <script type="module" src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.esm.js"></script>
     <script nomodule src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.js"></script>
 
