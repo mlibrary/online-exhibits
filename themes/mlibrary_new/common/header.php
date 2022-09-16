@@ -109,7 +109,7 @@
     <ul class="share-this">
       <li>Share this Exhibit:</li>
       <li><a href="https://twitter.com/share" class="twitter-share-button" 
-                                              data-text="I just saw '<?php echo metadata('exhibit','title',array('no_escape' => true)); ?>' at the U-M Library Online Exhibits!" >
+                                              data-text="I just saw '<?php echo( str_replace('"',"'", metadata('exhibit','title',array('no_escape' => true)))); ?>' at the U-M Library Online Exhibits!" >
                                               <span class="sr-only">Tweet</span> </a>
       </li>
     </ul>
