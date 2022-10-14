@@ -46,8 +46,8 @@
     <![endif]-->
 
     <!-- includes for the Design System components -->
-    <script type="module" src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.esm.js"></script>
-    <script nomodule src="https://unpkg.com/@umich-lib/web@1/dist/umich-lib/umich-lib.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@umich-lib/web@1.3.0/dist/umich-lib/umich-lib.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@umich-lib/components@1.1.0/dist/umich-lib/umich-lib.js"></script>
 
 </head>
     <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
