@@ -1,0 +1,480 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+# Cédric Valmary <cvalmary@yahoo.fr>, 2016
+# Cédric Valmary <cvalmary@yahoo.fr>, 2016
+# fiuzzy <fiuzzy1@gmail.com>, 2016
+# Isabelle Gilles <isabelle.gillesgallet@gmail.com>, 2015
+# Julien Sicot <julien.sicot@gmail.com>, 2012
+# rcheno <remi.cheno@ideo-cairo.org>, 2014
+# symac <wikitipiac@laposte.net>, 2012,2014
+# Thierry Pasquier <thierry.pasquier@emf.ccsti.eu>, 2012-2013
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka Classic\n"
+"Report-Msgid-Bugs-To: http://github.com/omeka/plugin-ExhibitBuilder/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2012-01-10 19:03+0000\n"
+"Last-Translator: Cédric Valmary <cvalmary@yahoo.fr>, 2016\n"
+"Language-Team: Occitan (post 1500) (http://www.transifex.com/omeka/omeka/language/oc/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: oc\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "Triar las exposicions"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "Lo metòde per defaut d'utilizar per triar la lista de las exposicions sus la pagina \"Percórrer las exposicions\". Per defaut : 'Data d'apondon'."
+
+#: config_form.php:9
+msgid "Alphabetical"
+msgstr ""
+
+#: config_form.php:9
+msgid "Recent"
+msgstr ""
+
+#: controllers/ExhibitsController.php:53
+#, php-format
+msgid "This will permanently delete the entire exhibit \"%s\" and all its pages."
+msgstr "Aquesta accion suprimirà definitivament l'exposicion \"%s\" e totas sas paginas."
+
+#: controllers/ExhibitsController.php:102
+msgid "This item is not used within this exhibit."
+msgstr "Aqueste contengut es pas utilizat dins aquesta exposicion."
+
+#: controllers/ExhibitsController.php:214
+msgid "You must specifically select a theme in order to configure it."
+msgstr "Vos cal seleccionar un tèma per lo poder configurar."
+
+#: functions.php:438
+msgid "exhibits"
+msgstr "exposicions"
+
+#: functions.php:452 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "Percórrer las exposicions"
+
+#: functions.php:468 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8 views/admin/exhibits/page-form.php:6
+msgid "Exhibits"
+msgstr "Exposicions"
+
+#: functions.php:641
+msgid "Exhibit"
+msgstr "Exposicion"
+
+#: functions.php:642
+msgid "Exhibit Page"
+msgstr "Pagina de l'exposicion"
+
+#: helpers/ExhibitFunctions.php:151
+msgid "Featured Exhibit"
+msgstr "Metre en avant aquesta exposicion"
+
+#: helpers/ExhibitFunctions.php:155
+msgid "You have no featured exhibits."
+msgstr "Avètz pas cap exposicion mesa en avant."
+
+#: models/Exhibit.php:127
+msgid "Exhibits must be given a valid slug."
+msgstr "Una exposicion deu aver un identificant valid."
+
+#: models/Exhibit.php:128 models/ExhibitPage.php:99
+msgid "A slug must be 30 characters or less."
+msgstr "Un identificant deu pas depassar 30 caractèrs"
+
+#: models/Exhibit.php:129
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "L'identificant dins l'URL es ja estat atribuit a una autra exposicion. Mercé de'n causir un autre."
+
+#: models/Exhibit.php:142
+msgid "An exhibit must be given a title."
+msgstr "Una exposicion deu possedir un títol."
+
+#: models/Exhibit.php:146
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "Lo títol d'una exposicion deu pas depassar 255 caractèrs."
+
+#: models/Exhibit.php:150
+msgid "The name of your theme must be 30 characters or less."
+msgstr "Lo nom de vòstre tèma deu pas depassar 30 caractèrs."
+
+#: models/ExhibitLayout.php:143
+msgid "File with Text"
+msgstr "Fichièr que conten de tèxte"
+
+#: models/ExhibitLayout.php:144
+msgid ""
+"Default layout features files justified to left or right with text "
+"displaying to the opposite side"
+msgstr "La disposicion per defaut presenta los fichièrs justificats a dreita o a esquèrra, amb lo tèxte afichat del costat opausat."
+
+#: models/ExhibitLayout.php:147
+msgid "Gallery"
+msgstr "Galariá"
+
+#: models/ExhibitLayout.php:148
+msgid "A gallery layout featuring file thumbnails"
+msgstr "Disposicion en galariá de vinhetas"
+
+#: models/ExhibitLayout.php:151
+#: views/shared/exhibit_layouts/file-text/form.php:11
+#: views/shared/exhibit_layouts/gallery/form.php:11
+#: views/shared/exhibit_layouts/text/form.php:2
+msgid "Text"
+msgstr "Tèxte"
+
+#: models/ExhibitLayout.php:152
+msgid "Layout featuring a block of text without files"
+msgstr "Disposicion amb un blòt de tèxte sens fichièrs"
+
+#: models/ExhibitLayout.php:156
+msgid "Layout featuring a standalone file"
+msgstr "Disposicion per metre en valor un fichièr especific"
+
+#: models/ExhibitPage.php:98
+msgid "A slug must be given for each page of an exhibit."
+msgstr "Un identificant deu èsser atribuit a cada pagina d'una exposicion."
+
+#: models/ExhibitPage.php:100
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr "Aqueste identificant de pagina es ja utilizat. Mercé de modificar aqueste identificant per que siá unic."
+
+#: models/ExhibitPage.php:111
+msgid "Exhibit pages must be given a title."
+msgstr "Las paginas de l'exposicion devon possedir un títol."
+
+#: models/ExhibitPage.php:161
+msgid ""
+"Someone has edited the page while you were working on it. Your changes have "
+"been discarded to prevent losing their changes."
+msgstr ""
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "Apondre una exposicion"
+
+#: views/admin/exhibits/attachment-item-options.php:16
+#, php-format
+msgid "Selected Item: %s"
+msgstr "Contengut seleccionat : %s"
+
+#: views/admin/exhibits/attachment-item-options.php:20
+msgid "Select a file to use."
+msgstr "Seleccionatz un fichièr."
+
+#: views/admin/exhibits/attachment.php:12
+#: views/admin/exhibits/block-form.php:9
+msgid "Remove/Restore"
+msgstr "Levar / Restablir"
+
+#: views/admin/exhibits/block-form.php:8
+msgid "Block"
+msgstr "Blocar"
+
+#: views/admin/exhibits/block-form.php:10
+msgid "Expand/Collapse"
+msgstr "Desplegar / Replegar"
+
+#: views/admin/exhibits/browse.php:9
+msgid "There are no exhibits yet."
+msgstr "I a pas encara d'exposicion."
+
+#: views/admin/exhibits/browse.php:12 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr "Apondre una exposicion"
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "Tèma"
+
+#: views/admin/exhibits/browse.php:67
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "Tèma public corrent"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr "Editar l'exposicion \"%s\" "
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "Metadonadas de l'exposicion"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+msgid "Slug"
+msgstr "Identificant"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-form.php:39
+msgid "No spaces or special characters allowed"
+msgstr "Los espacis e los caractèrs especials son proscrits "
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:15
+msgid "Credits"
+msgstr "Crèdits"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:59
+msgid "Use Summary Page?"
+msgstr "Utilizar lo Resumit ?"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:62
+msgid ""
+"Start the exhibit on the summary page. If unchecked, start on the first "
+"exhibit page if it exists."
+msgstr "Aviar l'exposicion per son resumit. Se l'opcion es pas marcada, l'exposicion debuta per la primièra pagina se existís."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:68
+msgid "Cover Image"
+msgstr "Imatge de tampa"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:72
+msgid ""
+"Choose a file to represent this exhibit. The selected file will serve as the"
+" thumbnail for the exhibit."
+msgstr "Causir un fichièr per representar aquesta exposicion. Lo fichièr seleccionat servirà de vinheta per l'exposicion."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:79
+msgid "Pages"
+msgstr "Paginas"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:82
+msgid "There are no pages."
+msgstr "I a pas de paginas."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:84
+msgid ""
+"To reorder or nest pages, click and drag a page to the preferred location."
+msgstr "Per reordenar o imbricar de paginas, clicatz e desplaçatz una pagina a l'endreit volgut."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:89
+#: views/admin/exhibits/page-form.php:2
+msgid "Add Page"
+msgstr "Apondre una pagina"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:100
+msgid "Delete Exhibit"
+msgstr "Suprimir l'exposicion"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:116
+msgid "Choose a Cover Image"
+msgstr "Causir un imatge de tampa"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:120
+#: views/admin/exhibits/page-form.php:99
+msgid "Show Search Form"
+msgstr "Afichar lo formulari de recèrca"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:121
+#: views/admin/exhibits/page-form.php:100
+msgid "Hide Search Form"
+msgstr "Amagar lo formulari de recèrca"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:133
+#: views/admin/exhibits/page-form.php:112
+msgid "Change Selected Item"
+msgstr "Modificar lo contengut seleccionat"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:138
+msgid "Choose"
+msgstr "Causir"
+
+#: views/admin/exhibits/page-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr "Editar la pagina \"%s\""
+
+#: views/admin/exhibits/page-form.php:19
+msgid "Page Title"
+msgstr "Títol de la pagina"
+
+#: views/admin/exhibits/page-form.php:27
+msgid "Menu Link Title"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:30
+msgid "Optionally use a shorter title in the exhibit menu"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:36
+msgid "Page Slug"
+msgstr "Identificant de la pagina"
+
+#: views/admin/exhibits/page-form.php:45
+msgid "Content"
+msgstr "Contengut"
+
+#: views/admin/exhibits/page-form.php:47
+msgid "Expand All"
+msgstr "Desplegar tot"
+
+#: views/admin/exhibits/page-form.php:48
+msgid "Collapse All"
+msgstr "Replegar tot"
+
+#: views/admin/exhibits/page-form.php:50
+msgid ""
+"To reorder blocks and items, click and drag them to the preferred location."
+msgstr "Per re-ordenar los blòts e elements, clicatz-depausatz-los per los recaptar segon vòstra causida."
+
+#: views/admin/exhibits/page-form.php:58
+msgid "New Block"
+msgstr "Blòt novèl"
+
+#: views/admin/exhibits/page-form.php:60
+msgid "Select layout"
+msgstr "Causir la disposicion"
+
+#: views/admin/exhibits/page-form.php:78
+msgid "Add new content block"
+msgstr "Apondre un novèl blòt de contengut"
+
+#: views/admin/exhibits/page-form.php:88
+msgid "Save and Add Another Page"
+msgstr "Enregistrar e apondre una autra pagina"
+
+#: views/admin/exhibits/page-form.php:95
+msgid "Attach an Item"
+msgstr "Associar un contengut"
+
+#: views/admin/exhibits/page-form.php:116
+msgid "Provide a caption."
+msgstr "Provesir una legenda"
+
+#: views/admin/exhibits/page-form.php:123
+msgid "Apply"
+msgstr "Aplicar"
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "\t\nPercórrer las exposicions per mot clau"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "Pas cap de mot clau a afichar. Vos cal, d'en primièr n'atribuir a certanas exposicions."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr "Configurar lo tèma &#8220;%s&#8221; "
+
+#: views/admin/files/cover-image.php:3
+msgid "Omeka will use the first attached file as the cover image."
+msgstr "Omeka utilizarà lo primièr fichièr-junt en tant qu'imatge de tampa."
+
+#: views/admin/files/cover-image.php:22 views/admin/files/cover-image.php:25
+msgid "Change"
+msgstr "Modificar"
+
+#: views/admin/items/browse.php:7
+msgid "Clear Filters"
+msgstr ""
+
+#: views/admin/items/browse.php:9
+msgid "add some items"
+msgstr "Apondre de contenguts"
+
+#: views/admin/items/browse.php:9
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "I a pas de contengut de seleccionar. Mercé d'afinar vòstra recèrca o  %s."
+
+#: views/helpers/ExhibitItemListing.php:36
+msgid "Select Item"
+msgstr "Seleccionar lo contengut"
+
+#: views/public/exhibits/browse.php:43
+msgid "There are no exhibits available yet."
+msgstr "I a pas encara d'exposicion disponibla."
+
+#: views/shared/exhibit_layouts/file-text/form.php:17
+#: views/shared/exhibit_layouts/file/form.php:12
+#: views/shared/exhibit_layouts/gallery/form.php:17
+msgid "Layout Options"
+msgstr "Opcions de disposicion"
+
+#: views/shared/exhibit_layouts/file-text/form.php:22
+#: views/shared/exhibit_layouts/file/form.php:17
+msgid "File position"
+msgstr "Posicion del fichièr"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:50
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:45
+#: views/shared/exhibit_layouts/gallery/form.php:28
+#: views/shared/exhibit_layouts/gallery/form.php:41
+#: views/shared/exhibit_layouts/gallery/form.php:70
+msgid "Left"
+msgstr "Esquèrra"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:51
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:46
+#: views/shared/exhibit_layouts/gallery/form.php:29
+#: views/shared/exhibit_layouts/gallery/form.php:42
+#: views/shared/exhibit_layouts/gallery/form.php:71
+msgid "Right"
+msgstr "Dreita"
+
+#: views/shared/exhibit_layouts/file-text/form.php:31
+#: views/shared/exhibit_layouts/file/form.php:26
+msgid "File size"
+msgstr "Talha del fichièr"
+
+#: views/shared/exhibit_layouts/file-text/form.php:44
+#: views/shared/exhibit_layouts/file/form.php:39
+#: views/shared/exhibit_layouts/gallery/form.php:64
+msgid "Captions position"
+msgstr "Posicion de la legenda"
+
+#: views/shared/exhibit_layouts/file-text/form.php:49
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:44
+#: views/shared/exhibit_layouts/gallery/form.php:69
+msgid "Center"
+msgstr "Centrar"
+
+#: views/shared/exhibit_layouts/gallery/form.php:22
+msgid "Showcase file position"
+msgstr "Posicion del fichièr"
+
+#: views/shared/exhibit_layouts/gallery/form.php:27
+msgid "No showcase file"
+msgstr "Cap de fichièr pas presentat"
+
+#: views/shared/exhibit_layouts/gallery/form.php:36
+msgid "Gallery position"
+msgstr "Posicion dins la galariá"
+
+#: views/shared/exhibit_layouts/gallery/form.php:46
+msgid ""
+"If there is no showcase file or text, the gallery will use the full width of"
+" the page."
+msgstr "Se i a pas ni fichièr ni tèxte, la galariá utilizarà la pagina en plena largor."
+
+#: views/shared/exhibit_layouts/gallery/form.php:50
+msgid "Gallery file size"
+msgstr "Talha dels fichièrs de la galariá"
+
+#: views/shared/exhibits/exhibit-builder-advanced-search.php:3
+msgid "Search by Exhibit"
+msgstr "Recèrca per exposicion"

@@ -1,0 +1,473 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+# Victor Pshibytko <vpshibitko@mail.ru>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka Classic\n"
+"Report-Msgid-Bugs-To: http://github.com/omeka/plugin-ExhibitBuilder/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2012-01-10 19:03+0000\n"
+"Last-Translator: Victor Pshibytko <vpshibitko@mail.ru>, 2017\n"
+"Language-Team: Belarusian (Belarus) (http://www.transifex.com/omeka/omeka/language/be_BY/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: be_BY\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "Сарціроўка выстаў"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "Метад \"па ўмаўчанні\" які выкарыстоўваецца, калі вы хочаце адсарціраваць спіс выстаў на старонцы прагляду выстаў. Па ўмаўчанні выкарыстоўваецца \"Дата дадання\"."
+
+#: config_form.php:9
+msgid "Alphabetical"
+msgstr ""
+
+#: config_form.php:9
+msgid "Recent"
+msgstr ""
+
+#: controllers/ExhibitsController.php:53
+#, php-format
+msgid "This will permanently delete the entire exhibit \"%s\" and all its pages."
+msgstr "Гэта назаўжды выдаліць усю выставу \"%s\" і ўсе яе старонкі."
+
+#: controllers/ExhibitsController.php:102
+msgid "This item is not used within this exhibit."
+msgstr "Гэты элемент не выкарыстоўваецца ў дадзенай выставе."
+
+#: controllers/ExhibitsController.php:214
+msgid "You must specifically select a theme in order to configure it."
+msgstr "Вы павінны выбраць тэму для таго, каб настроіць яе."
+
+#: functions.php:438
+msgid "exhibits"
+msgstr "Выставы"
+
+#: functions.php:452 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "Прагляд выстаў"
+
+#: functions.php:468 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8 views/admin/exhibits/page-form.php:6
+msgid "Exhibits"
+msgstr "Выставы"
+
+#: functions.php:641
+msgid "Exhibit"
+msgstr "Выстава"
+
+#: functions.php:642
+msgid "Exhibit Page"
+msgstr "Старонка выставы"
+
+#: helpers/ExhibitFunctions.php:151
+msgid "Featured Exhibit"
+msgstr "Прапануем выставу"
+
+#: helpers/ExhibitFunctions.php:155
+msgid "You have no featured exhibits."
+msgstr "У вас няма выстаў для прапанавання."
+
+#: models/Exhibit.php:127
+msgid "Exhibits must be given a valid slug."
+msgstr "Дайце карэктны чалавеказразумелы URL-загаловак для выставы."
+
+#: models/Exhibit.php:128 models/ExhibitPage.php:99
+msgid "A slug must be 30 characters or less."
+msgstr "URL-загаловак не павінен перавышаць 30 знакаў."
+
+#: models/Exhibit.php:129
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "Ваш URL-загаловак ўжо выкарыстоўваецца ў іншай выставе. Калі ласка, выберыце іншы загаловак."
+
+#: models/Exhibit.php:142
+msgid "An exhibit must be given a title."
+msgstr "Выстава павінна мець загаловак."
+
+#: models/Exhibit.php:146
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "Загаловак выставы не павінна перавышаць 255 знакаў."
+
+#: models/Exhibit.php:150
+msgid "The name of your theme must be 30 characters or less."
+msgstr "Назва вашай тэмы не павінна перавышаць 30 знакаў."
+
+#: models/ExhibitLayout.php:143
+msgid "File with Text"
+msgstr "Файл з тэкстам"
+
+#: models/ExhibitLayout.php:144
+msgid ""
+"Default layout features files justified to left or right with text "
+"displaying to the opposite side"
+msgstr "Размяшчэнне ў макеце па ўмаўчанні, пры якім файлы выраўноўваюцца ўлева або ўправа, а тэкст пры гэтым у процілеглы бок"
+
+#: models/ExhibitLayout.php:147
+msgid "Gallery"
+msgstr "Галерэя"
+
+#: models/ExhibitLayout.php:148
+msgid "A gallery layout featuring file thumbnails"
+msgstr "Макет галерэі з мініяцюрамі файлаў"
+
+#: models/ExhibitLayout.php:151
+#: views/shared/exhibit_layouts/file-text/form.php:11
+#: views/shared/exhibit_layouts/gallery/form.php:11
+#: views/shared/exhibit_layouts/text/form.php:2
+msgid "Text"
+msgstr "Тэкст"
+
+#: models/ExhibitLayout.php:152
+msgid "Layout featuring a block of text without files"
+msgstr "Макет галерэі, пры якім блок тэкст адлюстроўваецца без файлаў"
+
+#: models/ExhibitLayout.php:156
+msgid "Layout featuring a standalone file"
+msgstr "Макет галерэі, які адлюстроўвае самастойны файл"
+
+#: models/ExhibitPage.php:98
+msgid "A slug must be given for each page of an exhibit."
+msgstr "Неабходна дадаць URL-загаловак на кожнай старонцы выставы."
+
+#: models/ExhibitPage.php:100
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr "Такі загаловак старонкі ўжо выкарыстоўваецца. Калі ласка, прыдумайце ўнікальны загаловак."
+
+#: models/ExhibitPage.php:111
+msgid "Exhibit pages must be given a title."
+msgstr "Неабходна зрабіць загалоўкі для старонак выставы."
+
+#: models/ExhibitPage.php:161
+msgid ""
+"Someone has edited the page while you were working on it. Your changes have "
+"been discarded to prevent losing their changes."
+msgstr "Хтосьці рэдагаваў старонку, пакуль вы працавалі над ёй. Вашы змены не былі прыменены, каб не страціць гэтых рэдагаванняў."
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "Дабавіць выставу"
+
+#: views/admin/exhibits/attachment-item-options.php:16
+#, php-format
+msgid "Selected Item: %s"
+msgstr "Выбраны элемент: %s"
+
+#: views/admin/exhibits/attachment-item-options.php:20
+msgid "Select a file to use."
+msgstr "Выберыце файл для выкарыстання."
+
+#: views/admin/exhibits/attachment.php:12
+#: views/admin/exhibits/block-form.php:9
+msgid "Remove/Restore"
+msgstr "Выдаліць/Аднавіць"
+
+#: views/admin/exhibits/block-form.php:8
+msgid "Block"
+msgstr "Блок"
+
+#: views/admin/exhibits/block-form.php:10
+msgid "Expand/Collapse"
+msgstr "Раскрыць/Згарнуць"
+
+#: views/admin/exhibits/browse.php:9
+msgid "There are no exhibits yet."
+msgstr "Пакуль няма ніякіх выстаў."
+
+#: views/admin/exhibits/browse.php:12 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr "Дабавіць выставу"
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "Тэма"
+
+#: views/admin/exhibits/browse.php:67
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "Бягучая карыстальніцкая тэма"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr "Рэдагаваць выставу \"%s\""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "Метаданыя выставы"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+msgid "Slug"
+msgstr "Чалавеказразумелы URL-загаловак"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-form.php:39
+msgid "No spaces or special characters allowed"
+msgstr "Прабелы і спецыяльныя сімвалы не дапускаюцца"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:15
+msgid "Credits"
+msgstr "Крэдыты"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:59
+msgid "Use Summary Page?"
+msgstr "Выкарыстоўваць зводную старонку?"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:62
+msgid ""
+"Start the exhibit on the summary page. If unchecked, start on the first "
+"exhibit page if it exists."
+msgstr "Пачатак выставы са зводнай старонкі. Калі сцяжок зняты, пачатак  з першай старонкі выставы, калі яна існуе."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:68
+msgid "Cover Image"
+msgstr "Выява вокладкі"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:72
+msgid ""
+"Choose a file to represent this exhibit. The selected file will serve as the"
+" thumbnail for the exhibit."
+msgstr "Выберыце файл, які прадставіць гэтую выставу. Абраны файл будзе служыць у якасці эскіза для выставы."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:79
+msgid "Pages"
+msgstr "Старонкі"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:82
+msgid "There are no pages."
+msgstr "Няма ніводнай старонкі"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:84
+msgid ""
+"To reorder or nest pages, click and drag a page to the preferred location."
+msgstr "Каб упарадкаваць ці ўкласці старонкі, шчоўкніце мышкай і перацягніце старонку ў неабходнае месца."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:89
+#: views/admin/exhibits/page-form.php:2
+msgid "Add Page"
+msgstr "Дадаць старонку"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:100
+msgid "Delete Exhibit"
+msgstr "Выдаліць выставу"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:116
+msgid "Choose a Cover Image"
+msgstr "Выбраць выяву вокладкі"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:120
+#: views/admin/exhibits/page-form.php:99
+msgid "Show Search Form"
+msgstr "Паказаць форму пошуку"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:121
+#: views/admin/exhibits/page-form.php:100
+msgid "Hide Search Form"
+msgstr "Схаваць форму пошуку"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:133
+#: views/admin/exhibits/page-form.php:112
+msgid "Change Selected Item"
+msgstr "Змяніць выбраны элемент"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:138
+msgid "Choose"
+msgstr "Выбраць"
+
+#: views/admin/exhibits/page-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr "Рэдагаваць старонку \"%s\""
+
+#: views/admin/exhibits/page-form.php:19
+msgid "Page Title"
+msgstr "Загаловак старонкі"
+
+#: views/admin/exhibits/page-form.php:27
+msgid "Menu Link Title"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:30
+msgid "Optionally use a shorter title in the exhibit menu"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:36
+msgid "Page Slug"
+msgstr "Чалавеказразумелы URL старонкі"
+
+#: views/admin/exhibits/page-form.php:45
+msgid "Content"
+msgstr "Змест"
+
+#: views/admin/exhibits/page-form.php:47
+msgid "Expand All"
+msgstr "Раскрыць усё"
+
+#: views/admin/exhibits/page-form.php:48
+msgid "Collapse All"
+msgstr "Згарнуць усё"
+
+#: views/admin/exhibits/page-form.php:50
+msgid ""
+"To reorder blocks and items, click and drag them to the preferred location."
+msgstr "Каб змяніць парадак блокаў і элементаў, шчоўкніце мышкай і перацягніце іх у патрэбнае месца."
+
+#: views/admin/exhibits/page-form.php:58
+msgid "New Block"
+msgstr "Новы блок"
+
+#: views/admin/exhibits/page-form.php:60
+msgid "Select layout"
+msgstr "Выбраць размяшчэнне"
+
+#: views/admin/exhibits/page-form.php:78
+msgid "Add new content block"
+msgstr "Дадать новы змястоўны блок"
+
+#: views/admin/exhibits/page-form.php:88
+msgid "Save and Add Another Page"
+msgstr "Захаваць і дадаць іншую старонку"
+
+#: views/admin/exhibits/page-form.php:95
+msgid "Attach an Item"
+msgstr "Далучыць элемент"
+
+#: views/admin/exhibits/page-form.php:116
+msgid "Provide a caption."
+msgstr "Забяспечыць подпіс."
+
+#: views/admin/exhibits/page-form.php:123
+msgid "Apply"
+msgstr "Прымяніть"
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "Прагляд выстаў па меткам"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "Няма пазнак для паказу. Спачатку неабходна пазначыць выставы."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr "Настроіць  &#8220;%s&#8221; тэму"
+
+#: views/admin/files/cover-image.php:3
+msgid "Omeka will use the first attached file as the cover image."
+msgstr "Omeka будзе выкарыстоўваць першы далучаны файл як выяву вокладкі"
+
+#: views/admin/files/cover-image.php:22 views/admin/files/cover-image.php:25
+msgid "Change"
+msgstr "Змяніць"
+
+#: views/admin/items/browse.php:7
+msgid "Clear Filters"
+msgstr ""
+
+#: views/admin/items/browse.php:9
+msgid "add some items"
+msgstr "дадаць элементы"
+
+#: views/admin/items/browse.php:9
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "Не выбраны элементы. Калі ласка, удакладніце ваш пошук, альбо %s."
+
+#: views/helpers/ExhibitItemListing.php:36
+msgid "Select Item"
+msgstr "Выберыце элемент"
+
+#: views/public/exhibits/browse.php:43
+msgid "There are no exhibits available yet."
+msgstr "Пакуль няма даступных выстаў."
+
+#: views/shared/exhibit_layouts/file-text/form.php:17
+#: views/shared/exhibit_layouts/file/form.php:12
+#: views/shared/exhibit_layouts/gallery/form.php:17
+msgid "Layout Options"
+msgstr "Варыянты размяшчэння"
+
+#: views/shared/exhibit_layouts/file-text/form.php:22
+#: views/shared/exhibit_layouts/file/form.php:17
+msgid "File position"
+msgstr "Становішча файла"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:50
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:45
+#: views/shared/exhibit_layouts/gallery/form.php:28
+#: views/shared/exhibit_layouts/gallery/form.php:41
+#: views/shared/exhibit_layouts/gallery/form.php:70
+msgid "Left"
+msgstr "Улева"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:51
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:46
+#: views/shared/exhibit_layouts/gallery/form.php:29
+#: views/shared/exhibit_layouts/gallery/form.php:42
+#: views/shared/exhibit_layouts/gallery/form.php:71
+msgid "Right"
+msgstr "Управа"
+
+#: views/shared/exhibit_layouts/file-text/form.php:31
+#: views/shared/exhibit_layouts/file/form.php:26
+msgid "File size"
+msgstr "Велічыня файла"
+
+#: views/shared/exhibit_layouts/file-text/form.php:44
+#: views/shared/exhibit_layouts/file/form.php:39
+#: views/shared/exhibit_layouts/gallery/form.php:64
+msgid "Captions position"
+msgstr "Становішча подпісу пад выявай"
+
+#: views/shared/exhibit_layouts/file-text/form.php:49
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:44
+#: views/shared/exhibit_layouts/gallery/form.php:69
+msgid "Center"
+msgstr "У цэнтры"
+
+#: views/shared/exhibit_layouts/gallery/form.php:22
+msgid "Showcase file position"
+msgstr "Размяшчэнне дэманстрацыйнага файла"
+
+#: views/shared/exhibit_layouts/gallery/form.php:27
+msgid "No showcase file"
+msgstr "Няма дэманстрацыйнага файла"
+
+#: views/shared/exhibit_layouts/gallery/form.php:36
+msgid "Gallery position"
+msgstr "Размяшчэнне галерэі"
+
+#: views/shared/exhibit_layouts/gallery/form.php:46
+msgid ""
+"If there is no showcase file or text, the gallery will use the full width of"
+" the page."
+msgstr "Калі няма дэманстрацыйнага файла або тэксту, то галерэя будзе выкарыстоўваць усю шырыню старонкі."
+
+#: views/shared/exhibit_layouts/gallery/form.php:50
+msgid "Gallery file size"
+msgstr "Велічыня файла галерэі"
+
+#: views/shared/exhibits/exhibit-builder-advanced-search.php:3
+msgid "Search by Exhibit"
+msgstr "Шукаць па выставе"

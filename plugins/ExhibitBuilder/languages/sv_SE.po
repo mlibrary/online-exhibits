@@ -1,0 +1,474 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+# Andreas Sandlund <andreas.sandlund@gmail.com>, 2016
+# Peter Krantz <peter.krantz@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka Classic\n"
+"Report-Msgid-Bugs-To: http://github.com/omeka/plugin-ExhibitBuilder/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2012-01-10 19:03+0000\n"
+"Last-Translator: Andreas Sandlund <andreas.sandlund@gmail.com>, 2016\n"
+"Language-Team: Swedish (Sweden) (http://www.transifex.com/omeka/omeka/language/sv_SE/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: sv_SE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "Sortera utställningar"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "Standardmetoden för att sortera utställningar på utställningar/visa-sidan. Den förvalda metoden är 'Datum tillagd'. "
+
+#: config_form.php:9
+msgid "Alphabetical"
+msgstr ""
+
+#: config_form.php:9
+msgid "Recent"
+msgstr ""
+
+#: controllers/ExhibitsController.php:53
+#, php-format
+msgid "This will permanently delete the entire exhibit \"%s\" and all its pages."
+msgstr "Utställningen \"%s\" och alla dess sidor kommer att raderas permanent."
+
+#: controllers/ExhibitsController.php:102
+msgid "This item is not used within this exhibit."
+msgstr "Detta objekt används inte i denna utställning."
+
+#: controllers/ExhibitsController.php:214
+msgid "You must specifically select a theme in order to configure it."
+msgstr "Du måste välja ett tema för att kunna anpassa inställningarna för det."
+
+#: functions.php:438
+msgid "exhibits"
+msgstr "utställningar"
+
+#: functions.php:452 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "Bläddra bland utställningar"
+
+#: functions.php:468 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8 views/admin/exhibits/page-form.php:6
+msgid "Exhibits"
+msgstr "Utställningar"
+
+#: functions.php:641
+msgid "Exhibit"
+msgstr "Utställning"
+
+#: functions.php:642
+msgid "Exhibit Page"
+msgstr "Utställningssida"
+
+#: helpers/ExhibitFunctions.php:151
+msgid "Featured Exhibit"
+msgstr "Utvald utställning"
+
+#: helpers/ExhibitFunctions.php:155
+msgid "You have no featured exhibits."
+msgstr "Du har inga utvalda utställningar."
+
+#: models/Exhibit.php:127
+msgid "Exhibits must be given a valid slug."
+msgstr "Utställningar måste ha en giltig kortadress."
+
+#: models/Exhibit.php:128 models/ExhibitPage.php:99
+msgid "A slug must be 30 characters or less."
+msgstr "En kortadress får bestå av max 30 tecken."
+
+#: models/Exhibit.php:129
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "Kortadressen används redan av en annan utställning. Vänligen välj en ny kortadress."
+
+#: models/Exhibit.php:142
+msgid "An exhibit must be given a title."
+msgstr "En utställning måste ha en titel."
+
+#: models/Exhibit.php:146
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "En utställnings titel får innehålla max 255 tecken."
+
+#: models/Exhibit.php:150
+msgid "The name of your theme must be 30 characters or less."
+msgstr "Namnet på ditt tema får innehålla max 30 tecken."
+
+#: models/ExhibitLayout.php:143
+msgid "File with Text"
+msgstr "Fil med text"
+
+#: models/ExhibitLayout.php:144
+msgid ""
+"Default layout features files justified to left or right with text "
+"displaying to the opposite side"
+msgstr "Standardlayout med filer vänster- eller högerjusterade och text på motstående sida."
+
+#: models/ExhibitLayout.php:147
+msgid "Gallery"
+msgstr "Galleri"
+
+#: models/ExhibitLayout.php:148
+msgid "A gallery layout featuring file thumbnails"
+msgstr "Gallerilayout som visar valda filer som tumnaglar"
+
+#: models/ExhibitLayout.php:151
+#: views/shared/exhibit_layouts/file-text/form.php:11
+#: views/shared/exhibit_layouts/gallery/form.php:11
+#: views/shared/exhibit_layouts/text/form.php:2
+msgid "Text"
+msgstr "Text"
+
+#: models/ExhibitLayout.php:152
+msgid "Layout featuring a block of text without files"
+msgstr "Layout med enbart text"
+
+#: models/ExhibitLayout.php:156
+msgid "Layout featuring a standalone file"
+msgstr "Layout med en eller flera filer utan text"
+
+#: models/ExhibitPage.php:98
+msgid "A slug must be given for each page of an exhibit."
+msgstr "En kortadress måste anges för varje sida i en utställning."
+
+#: models/ExhibitPage.php:100
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr "Kortadressen används redan. Vänligen ange en unik kortadress."
+
+#: models/ExhibitPage.php:111
+msgid "Exhibit pages must be given a title."
+msgstr "Utställningssidor måste ha en titel."
+
+#: models/ExhibitPage.php:161
+msgid ""
+"Someone has edited the page while you were working on it. Your changes have "
+"been discarded to prevent losing their changes."
+msgstr ""
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "Lägg till utställning"
+
+#: views/admin/exhibits/attachment-item-options.php:16
+#, php-format
+msgid "Selected Item: %s"
+msgstr "Valda objekt: %s"
+
+#: views/admin/exhibits/attachment-item-options.php:20
+msgid "Select a file to use."
+msgstr "Välj en fil att använda."
+
+#: views/admin/exhibits/attachment.php:12
+#: views/admin/exhibits/block-form.php:9
+msgid "Remove/Restore"
+msgstr "Ta bort/Återställ"
+
+#: views/admin/exhibits/block-form.php:8
+msgid "Block"
+msgstr "Block"
+
+#: views/admin/exhibits/block-form.php:10
+msgid "Expand/Collapse"
+msgstr "Visa/Dölj"
+
+#: views/admin/exhibits/browse.php:9
+msgid "There are no exhibits yet."
+msgstr "Det finns inga utställningar ännu."
+
+#: views/admin/exhibits/browse.php:12 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr "Lägg till en utställning"
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "Tema"
+
+#: views/admin/exhibits/browse.php:67
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "Nuvarande publikt tema"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr "Redigera utställning \"%s\""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "Metadata för utställning"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+msgid "Slug"
+msgstr "Kortadress"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-form.php:39
+msgid "No spaces or special characters allowed"
+msgstr "Inga mellanslag eller specialtecken tillåtna"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:15
+msgid "Credits"
+msgstr "Medverkande"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:59
+msgid "Use Summary Page?"
+msgstr "Skapa sammanfattning?"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:62
+msgid ""
+"Start the exhibit on the summary page. If unchecked, start on the first "
+"exhibit page if it exists."
+msgstr "Markera om du vill att utställningen skall starta på en sammanfattningssida som skapas automatiskt. Annars används den första tillagda sidan i utställningen."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:68
+msgid "Cover Image"
+msgstr "Omslagsbild"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:72
+msgid ""
+"Choose a file to represent this exhibit. The selected file will serve as the"
+" thumbnail for the exhibit."
+msgstr "Välj en bildfil som representerar utställningen. Den valda filen kommer att användas som tumnagel för utställningen."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:79
+msgid "Pages"
+msgstr "Sidor"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:82
+msgid "There are no pages."
+msgstr "Det finns inga sidor."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:84
+msgid ""
+"To reorder or nest pages, click and drag a page to the preferred location."
+msgstr "Dra och släpp en sida för att ändra dess ordning eller gruppering."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:89
+#: views/admin/exhibits/page-form.php:2
+msgid "Add Page"
+msgstr "Lägg till sida"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:100
+msgid "Delete Exhibit"
+msgstr "Radera utställning"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:116
+msgid "Choose a Cover Image"
+msgstr "Välj en omslagsbild"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:120
+#: views/admin/exhibits/page-form.php:99
+msgid "Show Search Form"
+msgstr "Visa sökformulär"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:121
+#: views/admin/exhibits/page-form.php:100
+msgid "Hide Search Form"
+msgstr "Dölj sökformulär"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:133
+#: views/admin/exhibits/page-form.php:112
+msgid "Change Selected Item"
+msgstr "Ändra valt objekt"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:138
+msgid "Choose"
+msgstr "Välj"
+
+#: views/admin/exhibits/page-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr "Redigera sida \"%s\""
+
+#: views/admin/exhibits/page-form.php:19
+msgid "Page Title"
+msgstr "Sidans titel"
+
+#: views/admin/exhibits/page-form.php:27
+msgid "Menu Link Title"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:30
+msgid "Optionally use a shorter title in the exhibit menu"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:36
+msgid "Page Slug"
+msgstr "Sidans kortadress"
+
+#: views/admin/exhibits/page-form.php:45
+msgid "Content"
+msgstr "innehåll"
+
+#: views/admin/exhibits/page-form.php:47
+msgid "Expand All"
+msgstr "Visa alla"
+
+#: views/admin/exhibits/page-form.php:48
+msgid "Collapse All"
+msgstr "Dölj alla"
+
+#: views/admin/exhibits/page-form.php:50
+msgid ""
+"To reorder blocks and items, click and drag them to the preferred location."
+msgstr "Dra och släpp block eller objekt för att ändra deras ordning."
+
+#: views/admin/exhibits/page-form.php:58
+msgid "New Block"
+msgstr "Nytt block"
+
+#: views/admin/exhibits/page-form.php:60
+msgid "Select layout"
+msgstr "Välj layout"
+
+#: views/admin/exhibits/page-form.php:78
+msgid "Add new content block"
+msgstr "Lägg till detta innehållsblock"
+
+#: views/admin/exhibits/page-form.php:88
+msgid "Save and Add Another Page"
+msgstr "Spara och lägg till en ny sida"
+
+#: views/admin/exhibits/page-form.php:95
+msgid "Attach an Item"
+msgstr "Lägg till ett objekt"
+
+#: views/admin/exhibits/page-form.php:116
+msgid "Provide a caption."
+msgstr "Ange bildtext."
+
+#: views/admin/exhibits/page-form.php:123
+msgid "Apply"
+msgstr "Lägg till"
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "Bläddra i utställningar via taggar"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "Det finns inga taggar att visa. Du måste först tagga några utställningar."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr "Konfigurera &#8220;%s&#8221;-temat"
+
+#: views/admin/files/cover-image.php:3
+msgid "Omeka will use the first attached file as the cover image."
+msgstr "Omeka använder den först tillagda filen som omslagsbild."
+
+#: views/admin/files/cover-image.php:22 views/admin/files/cover-image.php:25
+msgid "Change"
+msgstr "Ändra"
+
+#: views/admin/items/browse.php:7
+msgid "Clear Filters"
+msgstr ""
+
+#: views/admin/items/browse.php:9
+msgid "add some items"
+msgstr "lägg till objekt"
+
+#: views/admin/items/browse.php:9
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "Det finns inga objekt att välja bland. Vänligen förfina din sökning eller %s."
+
+#: views/helpers/ExhibitItemListing.php:36
+msgid "Select Item"
+msgstr "Välj objekt"
+
+#: views/public/exhibits/browse.php:43
+msgid "There are no exhibits available yet."
+msgstr "Det finns inga utställningar tillgängliga ännu."
+
+#: views/shared/exhibit_layouts/file-text/form.php:17
+#: views/shared/exhibit_layouts/file/form.php:12
+#: views/shared/exhibit_layouts/gallery/form.php:17
+msgid "Layout Options"
+msgstr "Inställningar för layout"
+
+#: views/shared/exhibit_layouts/file-text/form.php:22
+#: views/shared/exhibit_layouts/file/form.php:17
+msgid "File position"
+msgstr "Filplacering"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:50
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:45
+#: views/shared/exhibit_layouts/gallery/form.php:28
+#: views/shared/exhibit_layouts/gallery/form.php:41
+#: views/shared/exhibit_layouts/gallery/form.php:70
+msgid "Left"
+msgstr "Vänsterställd"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:51
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:46
+#: views/shared/exhibit_layouts/gallery/form.php:29
+#: views/shared/exhibit_layouts/gallery/form.php:42
+#: views/shared/exhibit_layouts/gallery/form.php:71
+msgid "Right"
+msgstr "Högerställd"
+
+#: views/shared/exhibit_layouts/file-text/form.php:31
+#: views/shared/exhibit_layouts/file/form.php:26
+msgid "File size"
+msgstr "Bildstorlek"
+
+#: views/shared/exhibit_layouts/file-text/form.php:44
+#: views/shared/exhibit_layouts/file/form.php:39
+#: views/shared/exhibit_layouts/gallery/form.php:64
+msgid "Captions position"
+msgstr "Placering bildtext"
+
+#: views/shared/exhibit_layouts/file-text/form.php:49
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:44
+#: views/shared/exhibit_layouts/gallery/form.php:69
+msgid "Center"
+msgstr "Centrerad"
+
+#: views/shared/exhibit_layouts/gallery/form.php:22
+msgid "Showcase file position"
+msgstr "Placering visningsbild"
+
+#: views/shared/exhibit_layouts/gallery/form.php:27
+msgid "No showcase file"
+msgstr "Ingen visningsbild"
+
+#: views/shared/exhibit_layouts/gallery/form.php:36
+msgid "Gallery position"
+msgstr "Placering galleri"
+
+#: views/shared/exhibit_layouts/gallery/form.php:46
+msgid ""
+"If there is no showcase file or text, the gallery will use the full width of"
+" the page."
+msgstr "Om det inte finns någon visningsbild eller text använder galleriet sidans hela bredd."
+
+#: views/shared/exhibit_layouts/gallery/form.php:50
+msgid "Gallery file size"
+msgstr "Bildstorlek galleri"
+
+#: views/shared/exhibits/exhibit-builder-advanced-search.php:3
+msgid "Search by Exhibit"
+msgstr "Sök i utställning"

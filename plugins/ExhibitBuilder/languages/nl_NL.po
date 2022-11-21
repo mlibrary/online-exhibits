@@ -1,0 +1,476 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+# Brian Cho <briancho@ezuserguide.com>, 2015
+# hans schraven <hans.schraven@gmail.com>, 2015
+# Iwe Muiser <e.c.muiser@utwente.nl>, 2013
+# Peter Baan <exnihilo@xs4all.nl>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka Classic\n"
+"Report-Msgid-Bugs-To: http://github.com/omeka/plugin-ExhibitBuilder/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2012-01-10 19:03+0000\n"
+"Last-Translator: Brian Cho <briancho@ezuserguide.com>, 2015\n"
+"Language-Team: Dutch (Netherlands) (http://www.transifex.com/omeka/omeka/language/nl_NL/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl_NL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "Tentoonstellingen sorteren"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "De standaardmethode waarmee u de lijst met tentoonstellingen wilt sorteren op de tentoonstellingen/doorbladerpagina. Standaard is 'Toegevoegd op datum'."
+
+#: config_form.php:9
+msgid "Alphabetical"
+msgstr ""
+
+#: config_form.php:9
+msgid "Recent"
+msgstr ""
+
+#: controllers/ExhibitsController.php:53
+#, php-format
+msgid "This will permanently delete the entire exhibit \"%s\" and all its pages."
+msgstr "Hierdoor verwijdert u de hele tentoonstelling '%s' en alle bijbehorende pagina's."
+
+#: controllers/ExhibitsController.php:102
+msgid "This item is not used within this exhibit."
+msgstr "Dit item wordt niet gebruikt in deze tentoonstelling."
+
+#: controllers/ExhibitsController.php:214
+msgid "You must specifically select a theme in order to configure it."
+msgstr "U dient een specifiek thema te selecteren om het te kunnen configureren."
+
+#: functions.php:438
+msgid "exhibits"
+msgstr "tentoonstellingen"
+
+#: functions.php:452 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "Blader door tentoonstellingen"
+
+#: functions.php:468 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8 views/admin/exhibits/page-form.php:6
+msgid "Exhibits"
+msgstr "Tentoonstellingen"
+
+#: functions.php:641
+msgid "Exhibit"
+msgstr "Tentoonstelling"
+
+#: functions.php:642
+msgid "Exhibit Page"
+msgstr "Tentoonstellingspagina"
+
+#: helpers/ExhibitFunctions.php:151
+msgid "Featured Exhibit"
+msgstr "Aanbevolen tentoonstelling"
+
+#: helpers/ExhibitFunctions.php:155
+msgid "You have no featured exhibits."
+msgstr "U hebt geen aanbevolen tentoonstellingen."
+
+#: models/Exhibit.php:127
+msgid "Exhibits must be given a valid slug."
+msgstr "Tentoonstellingen horen een geldige <em>slug</em> te krijgen."
+
+#: models/Exhibit.php:128 models/ExhibitPage.php:99
+msgid "A slug must be 30 characters or less."
+msgstr "Een <em>slug</em> moet tenminste 30 tekens lang zijn."
+
+#: models/Exhibit.php:129
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "Uw URL-<em>slug</em> is al in gebruik bij een andere tentoonstelling. Kies een andere."
+
+#: models/Exhibit.php:142
+msgid "An exhibit must be given a title."
+msgstr "Een tentoonstelling hoort een titel te krijgen."
+
+#: models/Exhibit.php:146
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "De titel van een tentoonstelling kan niet meer dan 255 tekens bevatten."
+
+#: models/Exhibit.php:150
+msgid "The name of your theme must be 30 characters or less."
+msgstr "De naam van uw thema moet tenminste 30 tekens bevatten."
+
+#: models/ExhibitLayout.php:143
+msgid "File with Text"
+msgstr "Bestand met tekst"
+
+#: models/ExhibitLayout.php:144
+msgid ""
+"Default layout features files justified to left or right with text "
+"displaying to the opposite side"
+msgstr "Standaardlayout is voorzien van uitlijning van links of rechts. De tekst verschijnt aan de tegenovergestelde kant"
+
+#: models/ExhibitLayout.php:147
+msgid "Gallery"
+msgstr "Gallerij"
+
+#: models/ExhibitLayout.php:148
+msgid "A gallery layout featuring file thumbnails"
+msgstr "Een gallerij-layout met thumbnails van de bestanden"
+
+#: models/ExhibitLayout.php:151
+#: views/shared/exhibit_layouts/file-text/form.php:11
+#: views/shared/exhibit_layouts/gallery/form.php:11
+#: views/shared/exhibit_layouts/text/form.php:2
+msgid "Text"
+msgstr "Tekst"
+
+#: models/ExhibitLayout.php:152
+msgid "Layout featuring a block of text without files"
+msgstr "Layout met een tekstblok zonder bestanden"
+
+#: models/ExhibitLayout.php:156
+msgid "Layout featuring a standalone file"
+msgstr ""
+
+#: models/ExhibitPage.php:98
+msgid "A slug must be given for each page of an exhibit."
+msgstr "Iedere pagina van een tentoonstelling dient een <em>slug</em> te krijgen."
+
+#: models/ExhibitPage.php:100
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr "Deze pagina <em>slug</em> is al gebruikt. Pas de <em>slug</em> aan zodat hij uniek is."
+
+#: models/ExhibitPage.php:111
+msgid "Exhibit pages must be given a title."
+msgstr "Tentoonstellingspagina's horen een titel te hebben."
+
+#: models/ExhibitPage.php:161
+msgid ""
+"Someone has edited the page while you were working on it. Your changes have "
+"been discarded to prevent losing their changes."
+msgstr ""
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "Tentoonstelling toevoegen"
+
+#: views/admin/exhibits/attachment-item-options.php:16
+#, php-format
+msgid "Selected Item: %s"
+msgstr "Geselecteerd item:  %s"
+
+#: views/admin/exhibits/attachment-item-options.php:20
+msgid "Select a file to use."
+msgstr "Selecteer een bestand om te gebruiken."
+
+#: views/admin/exhibits/attachment.php:12
+#: views/admin/exhibits/block-form.php:9
+msgid "Remove/Restore"
+msgstr "Verwijderen/terugzetten"
+
+#: views/admin/exhibits/block-form.php:8
+msgid "Block"
+msgstr "Blokkeren"
+
+#: views/admin/exhibits/block-form.php:10
+msgid "Expand/Collapse"
+msgstr "Uitklappen/inklappen"
+
+#: views/admin/exhibits/browse.php:9
+msgid "There are no exhibits yet."
+msgstr "Er zijn nog geen tentoonstellingen."
+
+#: views/admin/exhibits/browse.php:12 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr "Voeg een tentoonstelling toe"
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "Thema"
+
+#: views/admin/exhibits/browse.php:67
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "Huidige publieke thema"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr "Bewerk tentoonstelling \"%s\""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "Metadata tentoonstelling"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+msgid "Slug"
+msgstr "Slug"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-form.php:39
+msgid "No spaces or special characters allowed"
+msgstr "Geen spaties of speciale tekens toegestaan"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:15
+msgid "Credits"
+msgstr "Credits"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:59
+msgid "Use Summary Page?"
+msgstr "Samenvattingspagina gebruiken?"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:62
+msgid ""
+"Start the exhibit on the summary page. If unchecked, start on the first "
+"exhibit page if it exists."
+msgstr "Begin op de samenvattingspagina met de tentoonstelling. Als deze niet aangevinkt is, begin dan op de pagina van de tentoonstelling, indien die beschikbaar is."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:68
+msgid "Cover Image"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:72
+msgid ""
+"Choose a file to represent this exhibit. The selected file will serve as the"
+" thumbnail for the exhibit."
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:79
+msgid "Pages"
+msgstr "Pagina's"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:82
+msgid "There are no pages."
+msgstr "Er zijn geen pagina's."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:84
+msgid ""
+"To reorder or nest pages, click and drag a page to the preferred location."
+msgstr "Klik op een pagina en sleep hem naar de gewenste locatie om pagina's opnieuw te ordenen of naast elkaar te zetten."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:89
+#: views/admin/exhibits/page-form.php:2
+msgid "Add Page"
+msgstr "Pagina toevoegen"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:100
+msgid "Delete Exhibit"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:116
+msgid "Choose a Cover Image"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:120
+#: views/admin/exhibits/page-form.php:99
+msgid "Show Search Form"
+msgstr "Zoekformulier weergeven"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:121
+#: views/admin/exhibits/page-form.php:100
+msgid "Hide Search Form"
+msgstr "Zoekformulier verbergen"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:133
+#: views/admin/exhibits/page-form.php:112
+msgid "Change Selected Item"
+msgstr "Geselecteerd item wijzigen"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:138
+msgid "Choose"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr "Bewerk pagina \"%s\""
+
+#: views/admin/exhibits/page-form.php:19
+msgid "Page Title"
+msgstr "Paginatitel"
+
+#: views/admin/exhibits/page-form.php:27
+msgid "Menu Link Title"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:30
+msgid "Optionally use a shorter title in the exhibit menu"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:36
+msgid "Page Slug"
+msgstr "Paginaslug"
+
+#: views/admin/exhibits/page-form.php:45
+msgid "Content"
+msgstr "Inhoud"
+
+#: views/admin/exhibits/page-form.php:47
+msgid "Expand All"
+msgstr "Alles uitvouwen"
+
+#: views/admin/exhibits/page-form.php:48
+msgid "Collapse All"
+msgstr "Alles inklappen"
+
+#: views/admin/exhibits/page-form.php:50
+msgid ""
+"To reorder blocks and items, click and drag them to the preferred location."
+msgstr "Om blokken en items opnieuw te ordenen, klik en sleep de ze omhoog of omlaag naar de gewenste locatie."
+
+#: views/admin/exhibits/page-form.php:58
+msgid "New Block"
+msgstr "Nieuw blok"
+
+#: views/admin/exhibits/page-form.php:60
+msgid "Select layout"
+msgstr "Lay-out kiezen"
+
+#: views/admin/exhibits/page-form.php:78
+msgid "Add new content block"
+msgstr "Nieuw contentblok toevoegen"
+
+#: views/admin/exhibits/page-form.php:88
+msgid "Save and Add Another Page"
+msgstr "Opslaan en nog een pagina toevoegen"
+
+#: views/admin/exhibits/page-form.php:95
+msgid "Attach an Item"
+msgstr "Voeg een item bij."
+
+#: views/admin/exhibits/page-form.php:116
+msgid "Provide a caption."
+msgstr "Een titel toevoegen"
+
+#: views/admin/exhibits/page-form.php:123
+msgid "Apply"
+msgstr "Toepassen"
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "Blader door tentoonstellingen op tag"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "Er kunnen nog geen tags worden weergegeven. U dient eerst enkele tentoonstellingen van een tag te voorzien."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr "Configureer het &#8220;%s&#8221; thema"
+
+#: views/admin/files/cover-image.php:3
+msgid "Omeka will use the first attached file as the cover image."
+msgstr ""
+
+#: views/admin/files/cover-image.php:22 views/admin/files/cover-image.php:25
+msgid "Change"
+msgstr ""
+
+#: views/admin/items/browse.php:7
+msgid "Clear Filters"
+msgstr ""
+
+#: views/admin/items/browse.php:9
+msgid "add some items"
+msgstr "enkele items toevoegen"
+
+#: views/admin/items/browse.php:9
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "Er zijn geen items om uit te kiezen. Verfijn uw zoekopdracht of %s."
+
+#: views/helpers/ExhibitItemListing.php:36
+msgid "Select Item"
+msgstr "Item selecteren"
+
+#: views/public/exhibits/browse.php:43
+msgid "There are no exhibits available yet."
+msgstr "Er zijn nog geen tentoonstellingen beschikbaar."
+
+#: views/shared/exhibit_layouts/file-text/form.php:17
+#: views/shared/exhibit_layouts/file/form.php:12
+#: views/shared/exhibit_layouts/gallery/form.php:17
+msgid "Layout Options"
+msgstr "Opties voor lay-out"
+
+#: views/shared/exhibit_layouts/file-text/form.php:22
+#: views/shared/exhibit_layouts/file/form.php:17
+msgid "File position"
+msgstr "Positie bestand"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:50
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:45
+#: views/shared/exhibit_layouts/gallery/form.php:28
+#: views/shared/exhibit_layouts/gallery/form.php:41
+#: views/shared/exhibit_layouts/gallery/form.php:70
+msgid "Left"
+msgstr "Links"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:51
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:46
+#: views/shared/exhibit_layouts/gallery/form.php:29
+#: views/shared/exhibit_layouts/gallery/form.php:42
+#: views/shared/exhibit_layouts/gallery/form.php:71
+msgid "Right"
+msgstr "Rechts"
+
+#: views/shared/exhibit_layouts/file-text/form.php:31
+#: views/shared/exhibit_layouts/file/form.php:26
+msgid "File size"
+msgstr "Bestandsgrootte"
+
+#: views/shared/exhibit_layouts/file-text/form.php:44
+#: views/shared/exhibit_layouts/file/form.php:39
+#: views/shared/exhibit_layouts/gallery/form.php:64
+msgid "Captions position"
+msgstr "Positie titel"
+
+#: views/shared/exhibit_layouts/file-text/form.php:49
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:44
+#: views/shared/exhibit_layouts/gallery/form.php:69
+msgid "Center"
+msgstr "Midden"
+
+#: views/shared/exhibit_layouts/gallery/form.php:22
+msgid "Showcase file position"
+msgstr "Voorbeeld van de positie van het bestand weergeven"
+
+#: views/shared/exhibit_layouts/gallery/form.php:27
+msgid "No showcase file"
+msgstr "Geen voorbeeldbestand"
+
+#: views/shared/exhibit_layouts/gallery/form.php:36
+msgid "Gallery position"
+msgstr "Positie in de gallerij"
+
+#: views/shared/exhibit_layouts/gallery/form.php:46
+msgid ""
+"If there is no showcase file or text, the gallery will use the full width of"
+" the page."
+msgstr "Als er geen voorbeeldbestand of -tekst beschikbaar is, zal de gallerij de volle breedte van de pagina in beslag nemen."
+
+#: views/shared/exhibit_layouts/gallery/form.php:50
+msgid "Gallery file size"
+msgstr "Grootte gallerijbestand"
+
+#: views/shared/exhibits/exhibit-builder-advanced-search.php:3
+msgid "Search by Exhibit"
+msgstr "Zoeken op tentoonstelling"

@@ -1,0 +1,474 @@
+# Translation for the Exhibit Builder plugin for Omeka.
+# Copyright (C) 2013 Roy Rosenzweig Center for History and New Media
+# This file is distributed under the same license as the Omeka package.
+# 
+# Translators:
+# rijekateam <digitalizacija@gkri.hr>, 2013-2014
+# rijekateam <digitalizacija@gkri.hr>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: Omeka Classic\n"
+"Report-Msgid-Bugs-To: http://github.com/omeka/plugin-ExhibitBuilder/issues\n"
+"POT-Creation-Date: 2013-01-23 21:49-0500\n"
+"PO-Revision-Date: 2012-01-10 19:03+0000\n"
+"Last-Translator: rijekateam <digitalizacija@gkri.hr>, 2013-2014\n"
+"Language-Team: Croatian (http://www.transifex.com/omeka/omeka/language/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#: config_form.php:3
+msgid "Sorting Exhibits"
+msgstr "Sortiranje izložbi"
+
+#: config_form.php:7
+msgid ""
+"The default method by which you wish to sort the listing of exhibits on the "
+"exhibits/browse page. Default is 'Date Added'."
+msgstr "Zadana metoda po kojoj želite sortirati prikaz izložbi na stranici izložbe/pregledaj. Zadano je 'Datum unosa'."
+
+#: config_form.php:9
+msgid "Alphabetical"
+msgstr ""
+
+#: config_form.php:9
+msgid "Recent"
+msgstr ""
+
+#: controllers/ExhibitsController.php:53
+#, php-format
+msgid "This will permanently delete the entire exhibit \"%s\" and all its pages."
+msgstr ""
+
+#: controllers/ExhibitsController.php:102
+msgid "This item is not used within this exhibit."
+msgstr "Ovaj dokument se ne koristi u ovoj izložbi."
+
+#: controllers/ExhibitsController.php:214
+msgid "You must specifically select a theme in order to configure it."
+msgstr "Morate odabrati temu kako biste je podesili."
+
+#: functions.php:438
+msgid "exhibits"
+msgstr "izložbe"
+
+#: functions.php:452 views/admin/exhibits/browse.php:2
+#: views/public/exhibits/browse.php:2
+msgid "Browse Exhibits"
+msgstr "Izložbe"
+
+#: functions.php:468 views/admin/exhibits/add.php:6
+#: views/admin/exhibits/edit.php:8 views/admin/exhibits/page-form.php:6
+msgid "Exhibits"
+msgstr "Izložbe"
+
+#: functions.php:641
+msgid "Exhibit"
+msgstr "Izložba"
+
+#: functions.php:642
+msgid "Exhibit Page"
+msgstr "Stranica izložbe"
+
+#: helpers/ExhibitFunctions.php:151
+msgid "Featured Exhibit"
+msgstr "Preporučena izložba"
+
+#: helpers/ExhibitFunctions.php:155
+msgid "You have no featured exhibits."
+msgstr "Nema preporučenih izložbi."
+
+#: models/Exhibit.php:127
+msgid "Exhibits must be given a valid slug."
+msgstr "Izložba mora imati valjani slug"
+
+#: models/Exhibit.php:128 models/ExhibitPage.php:99
+msgid "A slug must be 30 characters or less."
+msgstr "Slug mora imati 30 ili manje znakova."
+
+#: models/Exhibit.php:129
+msgid ""
+"Your URL slug is already in use by another exhibit.  Please choose another."
+msgstr "URL slug se već koristi u drugoj izložbi. Molimo odaberite drugi."
+
+#: models/Exhibit.php:142
+msgid "An exhibit must be given a title."
+msgstr "Izložba mora imati naslov."
+
+#: models/Exhibit.php:146
+msgid "The title for an exhibit must be 255 characters or less."
+msgstr "Naslov izložbe mora imati 255 ili manje znakova."
+
+#: models/Exhibit.php:150
+msgid "The name of your theme must be 30 characters or less."
+msgstr "Ime teme mora imati 30 ili manje znakova."
+
+#: models/ExhibitLayout.php:143
+msgid "File with Text"
+msgstr "Datoteka s tekstom"
+
+#: models/ExhibitLayout.php:144
+msgid ""
+"Default layout features files justified to left or right with text "
+"displaying to the opposite side"
+msgstr "Zadane postavke izgleda: datoteka s lijevim ili desnim poravnanjem, tekst prikazan na suprotnoj strani"
+
+#: models/ExhibitLayout.php:147
+msgid "Gallery"
+msgstr "Galerija"
+
+#: models/ExhibitLayout.php:148
+msgid "A gallery layout featuring file thumbnails"
+msgstr "Izgled galerije sadrži umanjene sličice datoteka"
+
+#: models/ExhibitLayout.php:151
+#: views/shared/exhibit_layouts/file-text/form.php:11
+#: views/shared/exhibit_layouts/gallery/form.php:11
+#: views/shared/exhibit_layouts/text/form.php:2
+msgid "Text"
+msgstr "Tekst"
+
+#: models/ExhibitLayout.php:152
+msgid "Layout featuring a block of text without files"
+msgstr "Izgled koji sadrži blok teksta bez datoteka"
+
+#: models/ExhibitLayout.php:156
+msgid "Layout featuring a standalone file"
+msgstr ""
+
+#: models/ExhibitPage.php:98
+msgid "A slug must be given for each page of an exhibit."
+msgstr "Svaka stranica izložbe mora imati slug."
+
+#: models/ExhibitPage.php:100
+msgid ""
+"This page slug has already been used.  Please modify the slug so that it is "
+"unique."
+msgstr "Slug ove stranice je već korišten. Molimo prilagodite slug tako da bude jedinstven."
+
+#: models/ExhibitPage.php:111
+msgid "Exhibit pages must be given a title."
+msgstr "Stranice izložbe moraju imati naslov."
+
+#: models/ExhibitPage.php:161
+msgid ""
+"Someone has edited the page while you were working on it. Your changes have "
+"been discarded to prevent losing their changes."
+msgstr ""
+
+#: views/admin/exhibits/add.php:2
+msgid "Add Exhibit"
+msgstr "Dodaj izložbu"
+
+#: views/admin/exhibits/attachment-item-options.php:16
+#, php-format
+msgid "Selected Item: %s"
+msgstr "Odaberi dokument: %s"
+
+#: views/admin/exhibits/attachment-item-options.php:20
+msgid "Select a file to use."
+msgstr "Odaberi datoteku koja će se koristiti."
+
+#: views/admin/exhibits/attachment.php:12
+#: views/admin/exhibits/block-form.php:9
+msgid "Remove/Restore"
+msgstr "Ukloni/Vrati"
+
+#: views/admin/exhibits/block-form.php:8
+msgid "Block"
+msgstr "Blok"
+
+#: views/admin/exhibits/block-form.php:10
+msgid "Expand/Collapse"
+msgstr "Proširi/Suzi"
+
+#: views/admin/exhibits/browse.php:9
+msgid "There are no exhibits yet."
+msgstr "Nema izložbi."
+
+#: views/admin/exhibits/browse.php:12 views/admin/exhibits/browse.php:19
+msgid "Add an Exhibit"
+msgstr "Dodaj novu izložbu."
+
+#: views/admin/exhibits/browse.php:31
+#: views/admin/exhibits/exhibit-metadata-form.php:49
+msgid "Theme"
+msgstr "Tema"
+
+#: views/admin/exhibits/browse.php:67
+#: views/admin/exhibits/exhibit-metadata-form.php:52
+msgid "Current Public Theme"
+msgstr "Trenutna javna tema"
+
+#: views/admin/exhibits/edit.php:3
+#, php-format
+msgid "Edit Exhibit \"%s\""
+msgstr "Uredi izložbu \"%s\""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:4
+msgid "Exhibit Metadata"
+msgstr "Metapodaci izložbe"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:15
+msgid "Slug"
+msgstr "Slug"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:18
+#: views/admin/exhibits/page-form.php:39
+msgid "No spaces or special characters allowed"
+msgstr "Nisu dozvoljeni razmaci ni posebni znakovi."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:24
+#: views/public/exhibits/summary.php:15
+msgid "Credits"
+msgstr "Zasluge"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:59
+msgid "Use Summary Page?"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:62
+msgid ""
+"Start the exhibit on the summary page. If unchecked, start on the first "
+"exhibit page if it exists."
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:68
+msgid "Cover Image"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:72
+msgid ""
+"Choose a file to represent this exhibit. The selected file will serve as the"
+" thumbnail for the exhibit."
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:79
+msgid "Pages"
+msgstr "Stranice"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:82
+msgid "There are no pages."
+msgstr "Nema stranica."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:84
+msgid ""
+"To reorder or nest pages, click and drag a page to the preferred location."
+msgstr "Za promjenu redoslijeda ili grupiranje stranica, klikni i odvuci stranicu do željene lokacije."
+
+#: views/admin/exhibits/exhibit-metadata-form.php:89
+#: views/admin/exhibits/page-form.php:2
+msgid "Add Page"
+msgstr "Dodaj stranicu"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:100
+msgid "Delete Exhibit"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:116
+msgid "Choose a Cover Image"
+msgstr ""
+
+#: views/admin/exhibits/exhibit-metadata-form.php:120
+#: views/admin/exhibits/page-form.php:99
+msgid "Show Search Form"
+msgstr "Prikaži obrazac za pretragu"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:121
+#: views/admin/exhibits/page-form.php:100
+msgid "Hide Search Form"
+msgstr "Sakrij obrazac za pretraživanje"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:133
+#: views/admin/exhibits/page-form.php:112
+msgid "Change Selected Item"
+msgstr "Promijeni odabrani dokument"
+
+#: views/admin/exhibits/exhibit-metadata-form.php:138
+msgid "Choose"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:2
+#, php-format
+msgid "Edit Page \"%s\""
+msgstr "Uredi stranicu \"%s\""
+
+#: views/admin/exhibits/page-form.php:19
+msgid "Page Title"
+msgstr "Naslov stranice"
+
+#: views/admin/exhibits/page-form.php:27
+msgid "Menu Link Title"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:30
+msgid "Optionally use a shorter title in the exhibit menu"
+msgstr ""
+
+#: views/admin/exhibits/page-form.php:36
+msgid "Page Slug"
+msgstr "Slug stranice"
+
+#: views/admin/exhibits/page-form.php:45
+msgid "Content"
+msgstr "Sadržaj"
+
+#: views/admin/exhibits/page-form.php:47
+msgid "Expand All"
+msgstr "Proširi sve"
+
+#: views/admin/exhibits/page-form.php:48
+msgid "Collapse All"
+msgstr "Suzi sve"
+
+#: views/admin/exhibits/page-form.php:50
+msgid ""
+"To reorder blocks and items, click and drag them to the preferred location."
+msgstr "Za promjenu redoslijeda blokova i dokumenata, kliki i odvuci ih do željene lokacije."
+
+#: views/admin/exhibits/page-form.php:58
+msgid "New Block"
+msgstr "Novi blok"
+
+#: views/admin/exhibits/page-form.php:60
+msgid "Select layout"
+msgstr "Odaberi izgled"
+
+#: views/admin/exhibits/page-form.php:78
+msgid "Add new content block"
+msgstr "Dodaj novi blok sadržaja"
+
+#: views/admin/exhibits/page-form.php:88
+msgid "Save and Add Another Page"
+msgstr "Pohrani i dodaj novu stranicu"
+
+#: views/admin/exhibits/page-form.php:95
+msgid "Attach an Item"
+msgstr "Priloži dokument"
+
+#: views/admin/exhibits/page-form.php:116
+msgid "Provide a caption."
+msgstr "Unesite kratki opis/naslov"
+
+#: views/admin/exhibits/page-form.php:123
+msgid "Apply"
+msgstr "Primijeni"
+
+#: views/admin/exhibits/tags.php:2 views/public/exhibits/tags.php:2
+msgid "Browse Exhibits by Tag"
+msgstr "Pregledaj izložbe prema oznaci"
+
+#: views/admin/exhibits/tags.php:12
+msgid "There are no tags to display. You must first tag some exhibits."
+msgstr "Nema oznaka za prikaz. Prvo morate označiti neke izložbe."
+
+#: views/admin/exhibits/theme-config.php:16
+#, php-format
+msgid "Configure the &#8220;%s&#8221; Theme"
+msgstr "Podesi &#8220;%s&#8221; temu"
+
+#: views/admin/files/cover-image.php:3
+msgid "Omeka will use the first attached file as the cover image."
+msgstr ""
+
+#: views/admin/files/cover-image.php:22 views/admin/files/cover-image.php:25
+msgid "Change"
+msgstr ""
+
+#: views/admin/items/browse.php:7
+msgid "Clear Filters"
+msgstr ""
+
+#: views/admin/items/browse.php:9
+msgid "add some items"
+msgstr "dodaj dokumente"
+
+#: views/admin/items/browse.php:9
+#, php-format
+msgid "There are no items to choose from.  Please refine your search or %s."
+msgstr "Nema dokumenata za izabrati. Molimo preformulirajte svoju pretragu ili %s."
+
+#: views/helpers/ExhibitItemListing.php:36
+msgid "Select Item"
+msgstr "Odaberi dokument"
+
+#: views/public/exhibits/browse.php:43
+msgid "There are no exhibits available yet."
+msgstr "Izložbe još nisu dostupne"
+
+#: views/shared/exhibit_layouts/file-text/form.php:17
+#: views/shared/exhibit_layouts/file/form.php:12
+#: views/shared/exhibit_layouts/gallery/form.php:17
+msgid "Layout Options"
+msgstr "Opcije izgleda"
+
+#: views/shared/exhibit_layouts/file-text/form.php:22
+#: views/shared/exhibit_layouts/file/form.php:17
+msgid "File position"
+msgstr "Pozicija datoteke"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:50
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:45
+#: views/shared/exhibit_layouts/gallery/form.php:28
+#: views/shared/exhibit_layouts/gallery/form.php:41
+#: views/shared/exhibit_layouts/gallery/form.php:70
+msgid "Left"
+msgstr "Lijevo"
+
+#: views/shared/exhibit_layouts/file-text/form.php:26
+#: views/shared/exhibit_layouts/file-text/form.php:51
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:46
+#: views/shared/exhibit_layouts/gallery/form.php:29
+#: views/shared/exhibit_layouts/gallery/form.php:42
+#: views/shared/exhibit_layouts/gallery/form.php:71
+msgid "Right"
+msgstr "Desno"
+
+#: views/shared/exhibit_layouts/file-text/form.php:31
+#: views/shared/exhibit_layouts/file/form.php:26
+msgid "File size"
+msgstr "Veličina datoteke"
+
+#: views/shared/exhibit_layouts/file-text/form.php:44
+#: views/shared/exhibit_layouts/file/form.php:39
+#: views/shared/exhibit_layouts/gallery/form.php:64
+msgid "Captions position"
+msgstr "Pozicija kratkog opisa"
+
+#: views/shared/exhibit_layouts/file-text/form.php:49
+#: views/shared/exhibit_layouts/file/form.php:21
+#: views/shared/exhibit_layouts/file/form.php:44
+#: views/shared/exhibit_layouts/gallery/form.php:69
+msgid "Center"
+msgstr "Sredina"
+
+#: views/shared/exhibit_layouts/gallery/form.php:22
+msgid "Showcase file position"
+msgstr "Pozicija ogledne datoteke"
+
+#: views/shared/exhibit_layouts/gallery/form.php:27
+msgid "No showcase file"
+msgstr "Nema ogledne datoteke"
+
+#: views/shared/exhibit_layouts/gallery/form.php:36
+msgid "Gallery position"
+msgstr "Pozicija galerije"
+
+#: views/shared/exhibit_layouts/gallery/form.php:46
+msgid ""
+"If there is no showcase file or text, the gallery will use the full width of"
+" the page."
+msgstr "Ako nema ogledne datoteke ili teksta, galerija će koristiti punu širinu stranice."
+
+#: views/shared/exhibit_layouts/gallery/form.php:50
+msgid "Gallery file size"
+msgstr "Veličina datoteke u galeriji"
+
+#: views/shared/exhibits/exhibit-builder-advanced-search.php:3
+msgid "Search by Exhibit"
+msgstr "Pretraži po izložbama"

@@ -55,7 +55,7 @@ fieldset fieldset legend {
 }
 </style>
 <?php
-$url = 'http://www.lib.umich.edu/browse/categories/xml.php';
+$url = 'https://apps.lib.umich.edu/browse/categories/xml.php';
 if ($xml = file_get_contents($url))
 	{
 			$xml = utf8_encode($xml);
