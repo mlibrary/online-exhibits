@@ -38,7 +38,6 @@ class CsvImport_ColumnMap_File extends CsvImport_ColumnMap
      */
     public function map($row, $result)
     {
-  
         $urlString = trim($row[$this->_columnName]);
         if ($urlString) {
             if ($this->_fileDelimiter == '') {

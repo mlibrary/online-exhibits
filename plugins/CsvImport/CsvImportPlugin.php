@@ -119,7 +119,7 @@ class CsvImportPlugin extends Omeka_Plugin_AbstractPlugin
            `is_public` tinyint(1) default '0',
            `is_featured` tinyint(1) default '0',
            `serialized_column_maps` text collate utf8_unicode_ci NOT NULL,
-           `added` timestamp NOT NULL default '0000-00-00 00:00:00',
+           `added` timestamp NOT NULL default '2000-01-01 00:00:00',
            PRIMARY KEY  (`id`)
            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;");
 
@@ -161,6 +161,13 @@ class CsvImportPlugin extends Omeka_Plugin_AbstractPlugin
         $newVersion = $args['new_version'];
         $db = $this->_db;
 
+        // Do this first because MySQL will complain about any ALTERs to a table with an
+        // invalid default if we don't fix it first
+        if (version_compare($oldVersion, '2.0.3', '<=')) {
+            $sql = "ALTER TABLE `{$db->prefix}csv_import_imports` MODIFY `added` timestamp NOT NULL default '2000-01-01 00:00:00'";
+            $db->query($sql);
+        }
+
         if (version_compare($oldVersion, '2.0-dev', '<=')) {
             $sql = "UPDATE `{$db->prefix}csv_import_imports` SET `status` = ? WHERE `status` = ?";
             $db->query($sql, array('other_error', 'error'));
@@ -197,12 +204,11 @@ class CsvImportPlugin extends Omeka_Plugin_AbstractPlugin
     public function hookDefineAcl($args)
     {
         $acl = $args['acl']; // get the Zend_Acl
-        if (!($acl->has('CsvImport_Index'))) {
-           $acl->addResource('CsvImport_Index');
-        }
+
+        $acl->addResource('CsvImport_Index');
+
         // Hack to disable CRUD actions.
         $acl->deny(null, 'CsvImport_Index', array('show', 'add', 'edit', 'delete'));
-        $acl->deny('admin', 'CsvImport_Index');
     }
 
     /**
