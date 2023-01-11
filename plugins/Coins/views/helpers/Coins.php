@@ -116,7 +116,7 @@ class Coins_View_Helper_Coins extends Zend_View_Helper_Abstract
         // Build and return the COinS span tag.
         $coinsSpan = '<span class="Z3988" title="';
         $coinsSpan .= html_escape($this->_buildQueryString($coins));
-        $coinsSpan .= '"></span>';
+        $coinsSpan .= '" aria-hidden="true"></span>';
         return $coinsSpan;
     }
 

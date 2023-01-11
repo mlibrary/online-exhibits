@@ -1,6 +1,6 @@
 {
   "name": "berlin",
-  "version": "2.7.2",
+  "version": "2.7.3",
   "description": "\"Abstraction of the Making the History of 1989 theme.\"",
   "main": "gulpfile.js",
   "devDependencies": {

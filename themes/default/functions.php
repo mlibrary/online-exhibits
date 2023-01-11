@@ -25,3 +25,33 @@ function thanksroy_brighten($color, $steps) {
 
      return '#'.$r_hex.$g_hex.$b_hex;
 }
+
+
+/**
+ * Return the HTML for summarizing a random featured exhibit
+ *
+ * @return string
+ */
+function thanksroy_exhibit_builder_display_random_featured_records($type = null, $count = 2, $hasImage = null)
+{
+    $records = get_records(strtoupper($type), array('featured' => 1,
+                                     'sort_field' => 'random',
+                                     'hasImage' => $hasImage), $count);
+
+    $recordPaths = [
+        'collection' => 'collections/',
+        'exhibit' => 'exhibit-builder/exhibits/',
+        'item' => 'items/'
+    ];
+    if ($records) {
+        $html = '';
+        foreach ($records as $record) {
+            $html .= get_view()->partial($recordPaths[$type] . 'single.php', array($type => $record));
+            release_object($record);
+        }
+    } else {
+        $html .= '<p>' . __('You have no featured exhibits.') . '</p>';
+    }
+    $html = apply_filters('exhibit_builder_display_random_featured_exhibit', $html);
+    return $html;
+}
