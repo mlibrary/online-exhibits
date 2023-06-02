@@ -9,11 +9,11 @@
 <div id="featured-records">
     <?php if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')): ?>
     <!-- Featured Exhibit(s) -->
-    <?php echo thanksroy_exhibit_builder_display_random_featured_records('exhibit', 2); ?>
+    <?php echo thanksroy_display_random_featured_records('exhibit', 2); ?>
     <?php endif; ?>
     <?php if (get_theme_option('Display Featured Collection')): ?>
     <!-- Featured Collection(s) -->
-    <?php echo thanksroy_exhibit_builder_display_random_featured_records('collection', 2); ?>
+    <?php echo thanksroy_display_random_featured_records('collection', 2); ?>
     <?php endif; ?>	
     <?php if (get_theme_option('Display Featured Item') == 1): ?>
     <!-- Featured Item(s) -->

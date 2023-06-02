@@ -478,7 +478,7 @@ nav.pagination .pagination_list .pagination_previous a:after, nav.pagination .pa
     right: 36px;
   }
 
-  .show-advanced.button {
+  #search-form .show-advanced.button {
     width: 36px;
     height: 35px;
     text-indent: -9999px;
@@ -488,16 +488,15 @@ nav.pagination .pagination_list .pagination_previous a:after, nav.pagination .pa
     top: 0;
     right: 36px;
     line-height: 30px;
-    background-color: #4b6569;
     box-sizing: content-box;
   }
-  .show-advanced.button:focus {
+  #search-form .show-advanced.button:focus {
     outline: -webkit-focus-ring-color auto 5px;
   }
-  .show-advanced.button:link, .show-advanced.button:hover, .show-advanced.button:active, .show-advanced.button:visited {
+  #search-form .show-advanced.button:link, #search-form .show-advanced.button:hover, #search-form .show-advanced.button:active, #search-form .show-advanced.button:visited {
     color: #fff;
   }
-  .show-advanced.button:after {
+  #search-form .show-advanced.button:after {
     width: 36px;
     content: "…";
     display: block;
@@ -962,15 +961,12 @@ nav.pagination .pagination_list .pagination_previous a:after, nav.pagination .pa
     margin-top: 12px;
   }
 
-  .search-entry select {
-    width: calc(49% - 2.25em);
-    margin-bottom: 6px;
+  .search-entry {
+    justify-content: space-between;
   }
-  .search-entry input[type=text] {
-    width: calc(100% - 48px);
-  }
-  .search-entry select {
-    margin-right: 1%;
+  .search-entry select,
+.search-entry input[type=text] {
+    margin-bottom: 0 !important;
   }
   .search-entry:first-of-type {
     padding-bottom: 0;
@@ -979,29 +975,13 @@ nav.pagination .pagination_list .pagination_previous a:after, nav.pagination .pa
     display: none;
   }
   .search-entry .advanced-search-joiner {
-    width: 4em;
+    width: 100%;
+  }
+  .search-entry .advanced-search-joiner select {
+    width: auto;
   }
   .search-entry:only-of-type {
     margin-bottom: 0;
-  }
-
-  .remove_search {
-    text-indent: -9999px;
-    width: 36px;
-    position: relative;
-    height: 36px;
-  }
-  .remove_search:after {
-    content: "";
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    text-indent: 0;
-    text-align: center;
-    width: 100%;
-    top: 0;
-    left: 0;
-    position: absolute;
-    line-height: 36px;
   }
 
   .advanced-search button {
@@ -2241,7 +2221,7 @@ nav.top .nav-item > a.open {
   /* !---------- Advanced Search ---------- */
   .search-entry select,
 .search-entry input[type=text] {
-    width: 24%;
+    width: 100%;
   }
 
   /* !---------- Content --------- */

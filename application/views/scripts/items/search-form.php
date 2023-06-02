@@ -26,11 +26,11 @@ $formAttributes['method'] = 'GET';
     </div>
     <div id="search-narrow-by-fields" class="field">
         <div id="search-narrow-by-fields-label" class="label"><?php echo __('Narrow by Specific Fields'); ?></div>
-        <div id="search-narrow-by-fields-property" class="label sr-only" aria-hidden="true"><?php echo __('Search Property'); ?></div>
+        <div id="search-narrow-by-fields-property" class="label sr-only" aria-hidden="true"><?php echo __('Search Field'); ?></div>
         <div id="search-narrow-by-fields-type" class="label sr-only" aria-hidden="true"><?php echo __('Search Type'); ?></div>
         <div id="search-narrow-by-fields-terms" class="label sr-only" aria-hidden="true"><?php echo __('Search Terms'); ?></div>
         <div id="search-narrow-by-fields-joiner" class="label sr-only" aria-hidden="true"><?php echo __('Search Joiner'); ?></div>
-        <div id="search-narrow-by-fields-remove-field" class="label aria-hidden="true"><?php echo __('Remove field'); ?></div>
+        <div id="search-narrow-by-fields-remove-field" class="label" aria-hidden="true"><?php echo __('Remove field'); ?></div>
         <div class="inputs">
         <?php
         // If the form has been submitted, retain the number of search
@@ -68,7 +68,7 @@ $formAttributes['method'] = 'GET';
                     ?>
                 </div>
                 <div class="input advanced-search-element"> 
-                    <span aria-hidden="true" class="visible-label"><?php echo __('Property'); ?></span>
+                    <span aria-hidden="true" class="visible-label"><?php echo __('Field'); ?></span>
                     <?php 
                     echo $this->formSelect(
                         "advanced[$i][element_id]",
@@ -138,7 +138,7 @@ $formAttributes['method'] = 'GET';
         </div>
     </div>
 
-    <div class="field">
+    <div id="search-by-collection" class="field">
         <?php echo $this->formLabel('collection-search', __('Search By Collection')); ?>
         <div class="inputs">
         <?php
@@ -152,7 +152,7 @@ $formAttributes['method'] = 'GET';
         </div>
     </div>
 
-    <div class="field">
+    <div id="search-by-type" class="field">
         <?php echo $this->formLabel('item-type-search', __('Search By Type')); ?>
         <div class="inputs">
         <?php
@@ -167,7 +167,7 @@ $formAttributes['method'] = 'GET';
     </div>
 
     <?php if (is_allowed('Users', 'browse')): ?>
-    <div class="field">
+    <div id="search-by-user" class="field">
     <?php
         echo $this->formLabel('user-search', __('Search By User'));?>
         <div class="inputs">
@@ -183,7 +183,7 @@ $formAttributes['method'] = 'GET';
     </div>
     <?php endif; ?>
 
-    <div class="field">
+    <div id="search-by-tag" class="field">
         <?php echo $this->formLabel('tag-search', __('Search By Tags')); ?>
         <div class="inputs">
         <?php
@@ -196,7 +196,7 @@ $formAttributes['method'] = 'GET';
 
 
     <?php if (is_allowed('Items', 'showNotPublic')): ?>
-    <div class="field">
+    <div id="search-by-public" class="field">
         <?php echo $this->formLabel('public', __('Public/Non-Public')); ?>
         <div class="inputs">
         <?php
@@ -214,7 +214,7 @@ $formAttributes['method'] = 'GET';
     </div>
     <?php endif; ?>
 
-    <div class="field">
+    <div id="search-by-featured" class="field">
         <?php echo $this->formLabel('featured', __('Featured/Non-Featured')); ?>
         <div class="inputs">
         <?php
