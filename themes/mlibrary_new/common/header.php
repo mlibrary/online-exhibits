@@ -85,6 +85,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
+    <div class="alert-banner">
+      <div class="container container-medium">
+            <h2>We need your feedback!</h2>
+                We are currently looking for feedback to our Online Exhibits site. This information will help with a planned redesign of this website!
+                It should only take a few minutes, and there is even a chance to win a $25 gift card for your efforts:<br>
+            <h3><a href='https://umich.qualtrics.com/jfe/form/SV_79WcLFkZqTD4a2O'>Fill out the survey here!</a></h3>
+       </div>
+    </div>
+
     <div class="search-panel">
         <div class="form-group search-box container container-medium">
          <?php echo search_form(array('show_advanced' => false, 'form_attributes'=>array('id'=>'navbar-search', 'class'=>'form-inline'))); ?>
