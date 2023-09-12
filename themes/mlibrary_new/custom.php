@@ -616,16 +616,17 @@ function mlibrary_new_add_vars_to_href($html, $variables)
 {
     $offset = 0;
     $needle = 'href';
-    $regex = '/href="\/exhibits\/show\/(.*?)\/item\/(.*?)"/';
+    $regex = '/^href=["\']https?:\/\/'.$_SERVER['HTTP_HOST'].'([^"\']*)/';
     while (($curr_position = strpos($html, $needle, $offset))!== false) {
         $head = substr($html,0,$curr_position);
         $tail = substr($html,$curr_position);
-        if(preg_match($regex,$tail,$m)){
-          $original_link = $m[0];
-          $appended_link = rtrim($original_link,'"') . '?' . http_build_query($variables) . '"';
-        }
-        $new_tail = substr($tail,strlen($original_link));
-        $html = $head . $appended_link . $new_tail;
+        $tail = preg_replace(
+            $regex,
+            'href="https://'.$_SERVER['HTTP_HOST'].'$1?' . http_build_query($variables),
+            $tail,
+            1
+        );
+        $html = $head . $tail;
         $offset = $curr_position + strlen($needle);
     }
 
