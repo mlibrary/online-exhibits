@@ -38,12 +38,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         queue_css_file('universal-header');
         echo head_css();
     ?>
-
     <!-- Need more JavaScript files? Include them here -->
     <?php
         queue_js_file('lib/bootstrap.min');
         queue_js_file('globals');
         queue_js_file('image_viewer');
+        queue_js_file('jquery-3.7.1.min');
+        queue_js_file('alert_banner');
         queue_js_file('openseadragon/openseadragon.min');
         queue_js_file('openseadragon/openseadragon-viewerinputhook.min');
         echo head_js();
@@ -85,7 +86,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
-    <div class="alert-banner">
+    <div class="alert-banner" id="survey-alert-banner">
       <div class="container container-medium">
             <h2>We need your feedback!</h2>
                 We are currently looking for feedback to our Online Exhibits site. This information will help with a planned redesign of this website!
