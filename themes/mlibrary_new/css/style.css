@@ -96,6 +96,17 @@ div.site-header {
   background: #00274c;
 }
 
+div.alert-banner {
+  background: #96DBAA;
+  color: #212B36;
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+#survey-alert-banner {
+  display: none;
+}
+
 .logo-link {
   height: 2.5rem;
   display: inline-block;
