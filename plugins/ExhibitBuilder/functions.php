@@ -110,6 +110,7 @@ function exhibit_builder_uninstall()
 
     // delete plugin options
     delete_option('exhibit_builder_sort_browse');
+    delete_option('exhibit_builder_researcher_permissions');
 }
 
 /**
@@ -325,6 +326,7 @@ function exhibit_builder_config_form()
 function exhibit_builder_config()
 {
     set_option('exhibit_builder_sort_browse', $_POST['exhibit_builder_sort_browse']);
+    set_option('exhibit_builder_researcher_permissions', $_POST['exhibit_builder_researcher_permissions']);
 }
 
 /**
@@ -362,6 +364,10 @@ function exhibit_builder_define_acl($args)
 
     $acl->allow(null, 'ExhibitBuilder_Exhibits', array('edit', 'delete'),
         new Omeka_Acl_Assert_Ownership);
+
+    if (get_option('exhibit_builder_researcher_permissions')==1) {
+        $acl->allow('researcher', 'ExhibitBuilder_Exhibits', 'showNotPublic');   
+    }
 }
 
 /**
