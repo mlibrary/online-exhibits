@@ -44,7 +44,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         queue_js_file('globals');
         queue_js_file('image_viewer');
         queue_js_file('jquery-3.7.1.min');
-        queue_js_file('alert_banner');
         queue_js_file('openseadragon/openseadragon.min');
         queue_js_file('openseadragon/openseadragon-viewerinputhook.min');
         echo head_js();
@@ -84,15 +83,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</nav>
             </div>
         </div>
-    </div>
-
-    <div class="alert-banner" id="survey-alert-banner">
-      <div class="container container-medium">
-            <h2>We need your feedback!</h2>
-                We are currently looking for feedback to our Online Exhibits site. This information will help with a planned redesign of this website!
-                It should only take a few minutes, and there is even a chance to win a $25 gift card for your efforts:<br>
-            <h3><a href='https://umich.qualtrics.com/jfe/form/SV_79WcLFkZqTD4a2O'>Fill out the survey here!</a></h3>
-       </div>
     </div>
 
     <div class="search-panel">
