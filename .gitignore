@@ -20,3 +20,6 @@ online-exhibits.xml
 
 # Lando configuration
 .lando.yml
+
+# In case a db dump is stored with the codebase
+lamp.*.sql
