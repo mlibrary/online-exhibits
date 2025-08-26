@@ -1,0 +1,25 @@
+---
+services:
+  db:
+    image: mariadb:11.5
+    env_file:
+    - .env
+    volumes:
+    - "db:/var/lib/mysql"
+    - "./db/init-data-tables.sql:/docker-entrypoint-initdb.d/init-data.sql"
+
+  web:
+    build:
+      context: .
+      target: development
+    env_file:
+    - .env
+    volumes:
+    - .:/var/www/html/online-exhibits
+    ports:
+    - "3000:80"
+    depends_on:
+    - db
+
+volumes:
+  db:

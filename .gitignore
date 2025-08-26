@@ -1,3 +1,5 @@
+/.env
+/db
 /.htaccess
 /db.ini
 /files-dev
