@@ -20,8 +20,8 @@ class Metadata_MetadataController extends Omeka_Controller_AbstractActionControl
                 'tags' => array_map(function($tag) { return $tag->name; }, $exhibit->getTags()),
             ];
         }
-        header('Content-Type: application/json');
-        echo json_encode($results, JSON_PRETTY_PRINT);
-        exit;
+        $this->_helper->viewRenderer->setNoRender(true);
+        $this->getResponse()->setHeader('Content-Type', 'application/json', true);
+        $this->getResponse()->setBody(json_encode($results, JSON_PRETTY_PRINT));
     }
 }
