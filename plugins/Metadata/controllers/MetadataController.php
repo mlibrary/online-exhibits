@@ -14,9 +14,9 @@ class Metadata_MetadataController extends Omeka_Controller_AbstractActionControl
         foreach ($db->getTable('Exhibit')->findBy(['public' => 1]) as $exhibit) {
             $results[] = [
                 'title' => $exhibit->title,
-                'url' => WEB_ROOT . "/exhibits/show/{$exhibit->slug}", // I need the absolute URL here.  Neither url() nor public_url() will work.
+                'url' => absolute_url("/exhibits/show/{$exhibit->slug}"),
                 'description' => $exhibit->description,
-                "modified" => $exhibit->modified,
+                'modified' => $exhibit->modified,
                 'tags' => array_map(function($tag) { return $tag->name; }, $exhibit->getTags()),
             ];
         }
