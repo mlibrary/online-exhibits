@@ -14,7 +14,7 @@ class Metadata_MetadataController extends Omeka_Controller_AbstractActionControl
         foreach ($db->getTable('Exhibit')->findBy(['public' => 1]) as $exhibit) {
             $results[] = [
                 'title' => $exhibit->title,
-                'url' => WEB_ROOT . "/exhibits/show/{$exhibit->slug}",
+                'url' => WEB_ROOT . "/exhibits/show/{$exhibit->slug}", // I need the absolute URL here.  Neither url() nor public_url() will work.
                 'description' => $exhibit->description,
                 "modified" => $exhibit->modified,
                 'tags' => array_map(function($tag) { return $tag->name; }, $exhibit->getTags()),
@@ -22,6 +22,16 @@ class Metadata_MetadataController extends Omeka_Controller_AbstractActionControl
         }
         $this->_helper->viewRenderer->setNoRender(true);
         $this->getResponse()->setHeader('Content-Type', 'application/json', true);
-        $this->getResponse()->setBody(json_encode($results, JSON_PRETTY_PRINT));
+        $json = json_encode($results, JSON_PRETTY_PRINT);
+        if ($json === false) {
+             $errorMsg = [
+                 'error' => 'JSON encoding failed',
+                 'code' => json_last_error(),
+                 'message' => json_last_error_msg(),
+             ];
+             $this->getResponse()->setHttpResponseCode(500);
+             $json = json_encode($errorMsg, JSON_PRETTY_PRINT);
+        }
+        $this->getResponse()->setBody($json);
     }
 }
