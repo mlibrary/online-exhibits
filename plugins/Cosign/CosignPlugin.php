@@ -135,7 +135,7 @@ class Omeka_Auth_Adapter_Cosign implements Zend_Auth_Adapter_Interface
     {
         // Omeka needs the user ID (not username)
         $omekaUser = get_db()->getTable('User')->findBySql(
-            "username = ?",
+            "username = ? AND active = 1",
             array($this->_userId),
             true
         );
