@@ -135,7 +135,7 @@ class Omeka_Auth_Adapter_Cosign implements Zend_Auth_Adapter_Interface
     {
         // Omeka needs the user ID (not username)
         $omekaUser = get_db()->getTable('User')->findBySql(
-            "username = ?",
+            "username = ? AND active = 1",
             array($this->_userId),
             true
         );
@@ -148,7 +148,7 @@ class Omeka_Auth_Adapter_Cosign implements Zend_Auth_Adapter_Interface
             );
         } else {
             $messages = array();
-            $messages[] = 'Login information incorrect. Please try again.';
+            $messages[] = 'This user has not been authorized to used this system.';
             return new Zend_Auth_Result(
                 Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND,
                 $this->_userId,
