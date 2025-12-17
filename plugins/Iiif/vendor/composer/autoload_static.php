@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInita6e5e9fcf4b0b59e853953d01e7073d9
 {
     public static $files = array (
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
     );
 
@@ -56,11 +57,16 @@ class ComposerStaticInita6e5e9fcf4b0b59e853953d01e7073d9
         ),
     );
 
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInita6e5e9fcf4b0b59e853953d01e7073d9::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInita6e5e9fcf4b0b59e853953d01e7073d9::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInita6e5e9fcf4b0b59e853953d01e7073d9::$classMap;
 
         }, null, ClassLoader::class);
     }
