@@ -128,7 +128,7 @@ p {
 a {
   color: #126DC1;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: underline;
   font-weight: inherit; }
 
 *::-moz-selection {
