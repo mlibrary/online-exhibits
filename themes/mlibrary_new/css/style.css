@@ -40,6 +40,23 @@
   overflow: hidden;
 }
 
+.view-exhibit--link a, 
+.exhibit-item-back-button a, 
+.previous-item--nav a, 
+.next-item--nav a, 
+.metadata--list a,
+.exhibit-content a {
+ text-decoration: underline; }
+
+footer a:hover {
+ color: #fff;
+ box-shadow: inset 0 -.5px #E9F2F5;
+}
+
+footer a:focus{
+ color: #fff;
+}
+
 /** Base styles **/
 p {
   font-size: 1.1em;
