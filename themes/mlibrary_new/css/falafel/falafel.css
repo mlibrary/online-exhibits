@@ -128,8 +128,16 @@ p {
 a {
   color: #126DC1;
   cursor: pointer;
-  text-decoration: underline;
+  text-decoration: none;
   font-weight: inherit; }
+
+.view-exhibit--link a, 
+.exhibit-item-back-button a, 
+.previous-item--nav a, 
+.next-item--nav a, 
+.metadata--list a,
+.exhibit-content a {
+ text-decoration: underline; }
 
 *::-moz-selection {
   background: #CCE6FF; }
