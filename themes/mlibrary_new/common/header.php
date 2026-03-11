@@ -66,6 +66,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <?php fire_plugin_hook('public_body', array('view'=>$this)); ?>
+
+    <!-- Skip link -->
+
+    <div role="navigation" class="skip-links" aria-label="Skip links">
+      <div class="viewport-container">
+        <ul>
+          <li><a href="#content">Skip to main content</a></li>
+          <li><a href="#footer-content">Skip to footer content</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- End skip link -->
+
     <m-universal-header></m-universal-header>
     <div class="site-header">
      <div class="container container-medium ">
