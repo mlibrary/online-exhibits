@@ -36,7 +36,7 @@ class ExhibitBuilder_View_Helper_ExhibitAttachment extends Zend_View_Helper_Abst
                 if (!isset($fileOptions['linkAttributes']['href'])) {
                     $fileOptions['linkAttributes']['href'] = exhibit_builder_exhibit_item_uri($item);
                 }
-                $html = file_markup($file, $fileOptions, null);
+                $html = preg_replace('/\s*title\s*=\s*(["\'])(.*?)\1/', '', file_markup($file, $fileOptions, null));
             }
         } else if($item) {
             $html = exhibit_builder_link_to_exhibit_item(null, $linkProps, $item);
