@@ -16,6 +16,16 @@ footer a:focus{
  color: #fff;
 }
 
+.exhibit-theme-item.panel a,
+.exhibit-gallery-theme-item.panel a {
+ text-decoration: none;
+}
+  
+.exhibit-theme-item.panel:hover,
+.exhibit-gallery-theme-item.panel:hover {
+ box-shadow: 0 0 2px 0 rgba(29, 116, 145, 1), 0 2px 4px 0 rgba(29, 116, 145, 1);
+}
+
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
