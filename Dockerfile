@@ -1,4 +1,4 @@
-FROM php:8.3-apache AS base
+FROM php:8.3-apache@sha256:7912dada009d971264115de9e43cb2e97878ddfd09bd19418901217b8aa3c09a AS base
 
 RUN apt-get update \
  && apt-get upgrade -y \
