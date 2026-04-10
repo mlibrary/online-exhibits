@@ -41,8 +41,12 @@ class ExhibitBuilder_View_Helper_ExhibitAttachment extends Zend_View_Helper_Abst
                 // If the file's original filename is used as the alt text, replace it with the item's title for better accessibility.
                 if(is_string($file->original_filename) && strpos($html, 'alt="'.$file->original_filename.'"') !== false) {
                     $itemTitle = trim(str_replace("\xC2\xA0", ' ', strip_tags(metadata($item, array('Dublin Core', 'Title')))));
-                    if (is_string($itemTitle) && $itemTitle !== '') {
+                    if (is_string($itemTitle) && $itemTitle !== '' && $itemTitle !== '[Untitled]') {
+                        // Replace the alt text with the item's title for better accessibility.
                         $html = str_replace('alt="'.$file->original_filename.'"', 'alt="'.$itemTitle.'"', $html);
+                    }else{
+                        // If the item doesn't have a title, remove the alt attribute to avoid redundancy.
+                        $html = str_replace('alt="'.$file->original_filename.'"', '', $html);
                     }
                 }
             }
