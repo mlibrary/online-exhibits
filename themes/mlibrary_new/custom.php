@@ -653,38 +653,30 @@ function mlibrary_new_exhibit_builder_child_page_summary ($exhibitPage = null, $
  * This function is necessary to keep consistence with Navigation look on Omeka 1.5
  * called by exhibits/show.php
  **/
-function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page=null)
+function mlibrary_new_exhibit_builder_page_summary($exhibitPage = null, $current_page = null)
 {
   if (!$exhibitPage) {
-       $exhibitPage = get_current_record('exhibit_page');
+    $exhibitPage = get_current_record("exhibit_page");
   }
   $parents = $current_page->getAncestors();
-  if (($current_page->id == $exhibitPage->id)) {
-      $html = '<li class="current">'
-         . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-     . metadata($exhibitPage, 'title') .'</a>';
-  } elseif ((!empty($parents))
-             && ($exhibitPage->id == $parents[0]->id)
-          ) {
-              $html = '<li class="current">'
-                     . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-                     . metadata($exhibitPage, 'title') .'</a>';
+  if ($current_page->id == $exhibitPage->id) {
+    $html = '<li class="current">' . '<a href="' . exhibit_builder_exhibit_uri(get_current_record("exhibit"), $exhibitPage) . '">' . metadata($exhibitPage, "title") . "</a>";
+  } elseif (!empty($parents) && $exhibitPage->id == $parents[0]->id) {
+    $html = '<li class="current">' . '<a href="' . exhibit_builder_exhibit_uri(get_current_record("exhibit"), $exhibitPage) . '">' . metadata($exhibitPage, "title") . "</a>";
   } else {
-                $html  = '<li>'
-                        . '<a href="' . exhibit_builder_exhibit_uri(get_current_record('exhibit'), $exhibitPage) . '">'
-                          . metadata($exhibitPage, 'title') .'</a>';
+    $html = "<li>" . '<a href="' . exhibit_builder_exhibit_uri(get_current_record("exhibit"), $exhibitPage) . '">' . metadata($exhibitPage, "title") . "</a>";
   }
-          //Add Children to navigation.
-   $children = $exhibitPage->getChildPages();
-   if ($children) {
-     $html .= '<ul>';
-     foreach ($children as $child) {
-       $html .= mlibrary_new_exhibit_builder_child_page_summary($child, $current_page);
-        release_object($child);
-     }
-    $html .= '</ul>';
-   }
-  $html .= '</li>';
+  //Add Children to navigation.
+  $children = $exhibitPage->getChildPages();
+  if ($children) {
+    $html .= "<ul>";
+    foreach ($children as $child) {
+      $html .= mlibrary_new_exhibit_builder_child_page_summary($child, $current_page);
+      release_object($child);
+    }
+    $html .= "</ul>";
+  }
+  $html .= "</li>";
   return $html;
 }
 
