@@ -4,6 +4,7 @@
 .previous-item--nav a, 
 .next-item--nav a, 
 .metadata--list a,
+.about-online-exhibits a,
 .exhibit-content a {
  text-decoration: underline; }
 
