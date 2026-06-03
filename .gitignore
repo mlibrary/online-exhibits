@@ -24,4 +24,6 @@ online-exhibits.xml
 .lando.yml
 
 # In case a db dump is stored with the codebase
-lamp.*.sql
+lamp.*.
+db_backups/
+
