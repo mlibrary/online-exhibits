@@ -23,6 +23,9 @@ online-exhibits.xml
 # Lando configuration
 .lando.yml
 
+# DDev configuration
+.ddev
+
 # In case a db dump is stored with the codebase
 lamp.*.
 db_backups/
