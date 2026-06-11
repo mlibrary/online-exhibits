@@ -48,10 +48,10 @@ class Omeka_Form extends Zend_Form
      */
     public function loadDefaultDecorators()
     {
-        $this->setDecorators(array(
+        $this->setDecorators([
             'FormElements',
             'Form'
-        ));
+        ]);
     }
 
     /**
@@ -80,14 +80,17 @@ class Omeka_Form extends Zend_Form
         // <input type="submit" />
         // </div>
 
-        return array(
-                        array('Description', array('tag' => 'p', 'class' => 'explanation', 'escape' => false)),
+        $defaultLabelOptions = ['placement' => 'prepend', 'tag' => 'div', 'tagClass' => 'two columns alpha', 'requiredSuffix' => sprintf('<span class="required-label">%s</span>', __('required field'))];
+        $defaultLabel = new Omeka_Form_Decorator_RawAffixLabel($defaultLabelOptions);
+
+        return [
+                        ['Description', ['tag' => 'p', 'class' => 'explanation', 'escape' => false]],
                         'ViewHelper',
-                        array('Errors', array('class' => 'error')),
-                        array(array('InputsTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'inputs five columns omega')),
-                        array('Label', array('tag' => 'div', 'tagClass' => 'two columns alpha')),
-                        array(array('FieldTag' => 'HtmlTag'), array('tag' => 'div', 'class' => 'field'))
-                    );
+                        ['Errors', ['class' => 'error']],
+                        [['InputsTag' => 'HtmlTag'], ['tag' => 'div', 'class' => 'inputs five columns omega']],
+                        'Label' => $defaultLabel,
+                        [['FieldTag' => 'HtmlTag'], ['tag' => 'div', 'class' => 'field']]
+                    ];
     }
 
     /**
@@ -102,9 +105,9 @@ class Omeka_Form extends Zend_Form
             if ($element instanceof Zend_Form_Element_Submit) {
                 // All submit form elements should be wrapped in a div with
                 // no class.
-                $element->setDecorators(array(
+                $element->setDecorators([
                     'ViewHelper',
-                    array('HtmlTag', array('tag' => 'div'))));
+                    ['HtmlTag', ['tag' => 'div']]]);
             } elseif ($element instanceof Zend_Form_Element_File) {
                 // Zend modifies the decorator order so we have to switch it
                 // back here. The File decorator is first, we want it second.
@@ -119,7 +122,7 @@ class Omeka_Form extends Zend_Form
                 $element->setSeparator('');
             } elseif ($element instanceof Zend_Form_Element_Hidden
                     || $element instanceof Zend_Form_Element_Hash) {
-                $element->setDecorators(array('ViewHelper'));
+                $element->setDecorators(['ViewHelper']);
             }
         }
     }
@@ -139,7 +142,7 @@ class Omeka_Form extends Zend_Form
      */
     public function getMessagesAsString($messageDelimiter = '  ', $elementDelimiter = ', ')
     {
-        $errors = array();
+        $errors = [];
         foreach ($this->getMessages() as $elementName => $errorArray) {
             $errors[] = Inflector::humanize($elementName) . ': ' . join($messageDelimiter, $errorArray);
         }
@@ -163,7 +166,7 @@ class Omeka_Form extends Zend_Form
      * @param Zend_View_Interface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(?Zend_View_Interface $view = null)
     {
         if ($this->_autoApplyOmekaStyles) {
             $this->applyOmekaStyles();

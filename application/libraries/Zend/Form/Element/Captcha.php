@@ -161,7 +161,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
      * @param  Zend_View_Interface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(?Zend_View_Interface $view = null)
     {
         $captcha    = $this->getCaptcha();
         $captcha->setName($this->getFullyQualifiedName());
@@ -228,7 +228,7 @@ class Zend_Form_Element_Captcha extends Zend_Form_Element_Xhtml
      */
     public function addPrefixPath($prefix, $path, $type = null)
     {
-        $type = strtoupper($type);
+        $type = is_string($type) ? strtoupper($type) : $type;
         switch ($type) {
             case null:
                 $loader = $this->getPluginLoader(self::CAPTCHA);

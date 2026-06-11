@@ -44,10 +44,10 @@ class Omeka_View_Helper_ElementForm extends Zend_View_Helper_Abstract
     protected $_element;
     protected $_record;
 
-    public function elementForm(Element $element, Omeka_Record_AbstractRecord $record, $options = array())
+    public function elementForm(Element $element, Omeka_Record_AbstractRecord $record, $options = [])
     {
-        $divWrap = isset($options['divWrap']) ? $options['divWrap'] : true;
-        $extraFieldCount = isset($options['extraFieldCount']) ? $options['extraFieldCount'] : null;
+        $divWrap = $options['divWrap'] ?? true;
+        $extraFieldCount = $options['extraFieldCount'] ?? null;
 
         $this->_element = $element;
 
@@ -62,24 +62,24 @@ class Omeka_View_Helper_ElementForm extends Zend_View_Helper_Abstract
         $descriptionComponent = $this->_getDescriptionComponent();
         $commentComponent = $this->_getCommentComponent();
         $addInputComponent = $this->_getAddInputComponent();
-        $components = array(
+        $components = [
             'label' => $labelComponent,
             'inputs' => $inputsComponent,
             'description' => $descriptionComponent,
             'comment' => $commentComponent,
             'add_input' => $addInputComponent,
             'html' => null
-        );
+        ];
 
         $elementSetName = $element->set_name;
         $recordType = get_class($record);
-        $filterName = array('ElementForm', $recordType, $elementSetName, $element->name);
+        $filterName = ['ElementForm', $recordType, $elementSetName, $element->name];
         $components = apply_filters(
             $filterName,
             $components,
-            array('record' => $record,
+            ['record' => $record,
                   'element' => $element,
-                  'options' => $options)
+                  'options' => $options]
         );
 
         if ($components['html'] !== null) {
@@ -87,7 +87,10 @@ class Omeka_View_Helper_ElementForm extends Zend_View_Helper_Abstract
         }
 
         // Compose html for element form
-        $html = $divWrap ? '<div class="field" id="element-' . html_escape($element->id) . '" aria-live="polite">' : '';
+        $html = '<div id="element-' . $element->id . '-alerts" class="sr-only alerts" aria-atomic="true" aria-live="polite">';
+        $html .= __('Number of rows in "%s":', $components['label']) . '<span class="count">1</span>';
+        $html .= '</div>';
+        $html .= $divWrap ? '<div class="field" id="element-' . html_escape($element->id) . '">' : '';
 
         $html .= '<div class="field-meta two columns alpha">';
         $html .= $components['label'];
@@ -137,7 +140,7 @@ class Omeka_View_Helper_ElementForm extends Zend_View_Helper_Abstract
         if (isset($_POST['Elements'][$elementId])) {
             return $_POST['Elements'][$elementId];
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -271,10 +274,10 @@ class Omeka_View_Helper_ElementForm extends Zend_View_Helper_Abstract
         $html = $this->view->formButton(
           $elementAddId,
           __('Add Input'),
-          array(
+          [
             'class' => 'add-element',
-            'aria-labelledby' => join(' ', array($elementLabelId, $elementAddId))
-          )
+            'aria-labelledby' => join(' ', [$elementLabelId, $elementAddId])
+          ]
         );
 
         return $html;

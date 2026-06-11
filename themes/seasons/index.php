@@ -4,11 +4,13 @@
 <p><?php echo get_theme_option('Homepage Text'); ?></p>
 <?php endif; ?>
 
+<h1 class="sr-only"><?php echo __('Featured'); ?></h1>
+
 <?php if (get_theme_option('Display Featured Item') !== '0'): ?>
 <!-- Featured Item -->
 <div id="featured-item">
     <h2><?php echo __('Featured Item'); ?></h2>
-    <?php echo random_featured_items(1); ?>
+    <?php echo display_records('Item', 1); ?>
 </div><!--end featured-item-->
 <?php endif; ?>
 
@@ -18,15 +20,17 @@
 <!-- Featured Collection -->
 <div id="featured-collection">
     <h2><?php echo __('Featured Collection'); ?></h2>
-    <?php echo random_featured_collection(); ?>
+    <?php echo display_records('Collection', 1); ?>
 </div><!-- end featured collection -->
 <?php endif; ?>
 
 <?php if ((get_theme_option('Display Featured Exhibit') !== '0')
-        && plugin_is_active('ExhibitBuilder')
-        && function_exists('exhibit_builder_display_random_featured_exhibit')): ?>
+        && plugin_is_active('ExhibitBuilder')): ?>
 <!-- Featured Exhibit -->
-<?php echo exhibit_builder_display_random_featured_exhibit(); ?>
+<div id="featured-exhibit">
+    <h2><?php echo __('Featured Exhibit'); ?></h2>
+    <?php echo display_records('Exhibit', 1, 'exhibits/single.php', ); ?>
+</div>
 <?php endif; ?>
 
 <?php

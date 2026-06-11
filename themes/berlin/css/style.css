@@ -654,8 +654,7 @@ header:after {
 #search-container input[type=text], #search-container button {
   border: 1px solid #ccc;
   background: #fafafa;
-  -webkit-appearance: none;
-          appearance: none;
+  appearance: none;
   border-radius: 0;
   height: 30px;
 }
@@ -873,7 +872,7 @@ header:after {
 #primary-nav .nav-item > a.open {
   border: 1px solid #dedede;
   border-right: 0;
-  margin: 0 -1px 0 0;
+  margin: 0;
   border-bottom: 0;
 }
 #primary-nav .nav-item > a.open {
@@ -1566,6 +1565,10 @@ ul.title-list {
 .field {
   margin-bottom: 18px;
   overflow: hidden;
+}
+
+.inputs select {
+  max-width: 100%;
 }
 
 .search-entry {

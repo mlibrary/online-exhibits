@@ -36,19 +36,7 @@ class ExhibitBuilder_View_Helper_ExhibitAttachment extends Zend_View_Helper_Abst
                 if (!isset($fileOptions['linkAttributes']['href'])) {
                     $fileOptions['linkAttributes']['href'] = exhibit_builder_exhibit_item_uri($item);
                 }
-                // This is very hacky, but it allows us to use the file markup without the title attribute, which can be redundant and cause issues with screen readers. 
-                $html = preg_replace('/\s*title\s*=\s*(["\'])(.*?)\1/', '', file_markup($file, $fileOptions, null));
-                // If the file's original filename is used as the alt text, replace it with the item's title for better accessibility.
-                if(is_string($file->original_filename) && strpos($html, 'alt="'.$file->original_filename.'"') !== false) {
-                    $itemTitle = trim(str_replace("\xC2\xA0", ' ', strip_tags(metadata($item, array('Dublin Core', 'Title')))));
-                    if (is_string($itemTitle) && $itemTitle !== '' && $itemTitle !== '[Untitled]') {
-                        // Replace the alt text with the item's title for better accessibility.
-                        $html = str_replace('alt="'.$file->original_filename.'"', 'alt="'.$itemTitle.'"', $html);
-                    }else{
-                        // If the item doesn't have a title, remove the alt attribute to avoid redundancy.
-                        $html = str_replace('alt="'.$file->original_filename.'"', '', $html);
-                    }
-                }
+                $html = file_markup($file, $fileOptions, null);
             }
         } else if($item) {
             $html = exhibit_builder_link_to_exhibit_item(null, $linkProps, $item);

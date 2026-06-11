@@ -14,7 +14,7 @@ class ThemesController extends Omeka_Controller_AbstractActionController
     public function browseAction()
     {
         $config = $this->getInvokeArg('bootstrap')->getResource('Config');
-        $versionNotifications = isset($config->versionNotifications) ? $config->versionNotifications : true;
+        $versionNotifications = $config->versionNotifications ?? true;
 
         $csrfForm = new Omeka_Form_SessionCsrf;
         $themes = apply_filters('browse_themes', Theme::getAllThemes());
@@ -53,7 +53,7 @@ class ThemesController extends Omeka_Controller_AbstractActionController
         set_option(Theme::PUBLIC_THEME_OPTION, $themeName);
 
         if (!Theme::getOptions($themeName)
-            && ($configForm = new Omeka_Form_ThemeConfiguration(array('themeName' => $themeName)))
+            && ($configForm = new Omeka_Form_ThemeConfiguration(['themeName' => $themeName]))
         ) {
             Theme::setOptions($themeName, $configForm->getValues());
         }
@@ -74,7 +74,7 @@ class ThemesController extends Omeka_Controller_AbstractActionController
         $themeOptions = Theme::getOptions($themeName);
 
         // get the configuration form
-        $form = new Omeka_Form_ThemeConfiguration(array('themeName' => $themeName));
+        $form = new Omeka_Form_ThemeConfiguration(['themeName' => $themeName]);
         $form->removeDecorator('Form');
 
         // process the form if posted

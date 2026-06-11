@@ -103,7 +103,7 @@ class Zend_Ldap
      * @return boolean True if the DN was successfully parsed or false if the string is
      * not a valid DN.
      */
-    public static function explodeDn($dn, array &$keys = null, array &$vals = null)
+    public static function explodeDn($dn, ?array &$keys = null, ?array &$vals = null)
     {
         /**
          * @see Zend_Ldap_Dn
@@ -184,7 +184,7 @@ class Zend_Ldap
      * @param  array $errorMessages
      * @return string
      */
-    public function getLastError(&$errorCode = null, array &$errorMessages = null)
+    public function getLastError(&$errorCode = null, ?array &$errorMessages = null)
     {
         $errorCode = $this->getLastErrorCode();
         $errorMessages = array();
@@ -639,7 +639,7 @@ class Zend_Ldap
      * @return array An array of the attributes representing the account
      * @throws Zend_Ldap_Exception
      */
-    protected function _getAccount($acctname, array $attrs = null)
+    protected function _getAccount($acctname, ?array $attrs = null)
     {
         $baseDn = $this->getBaseDn();
         if (!$baseDn) {
@@ -811,7 +811,7 @@ class Zend_Ldap
 
         // Security check: remove null bytes in password
         // @see https://net.educause.edu/ir/library/pdf/csd4875.pdf
-        $password = str_replace("\0", '', $password);
+        $password = str_replace("\0", '', (string) $password);
 
         if ($username === null) {
             $username = $this->_getUsername();

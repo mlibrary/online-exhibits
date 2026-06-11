@@ -28,19 +28,19 @@ class Omeka_View extends Zend_View_Abstract
      *
      * @var array
      */
-    protected $_asset_paths = array();
+    protected $_asset_paths = [];
 
     /**
      * Flag indicated whether theme custom scripts have been loaded.
      *
      * @var bool
      */
-    private $_customScriptsLoaded = false;
+    public static $customScriptsLoaded = false;
 
     /**
      * @param array $config View configuration.
      */
-    public function __construct($config = array())
+    public function __construct($config = [])
     {
         parent::__construct($config);
 
@@ -77,7 +77,7 @@ class Omeka_View extends Zend_View_Abstract
      */
     public function addAssetPath($physical, $web)
     {
-        array_unshift($this->_asset_paths, array($physical, $web));
+        array_unshift($this->_asset_paths, [$physical, $web]);
     }
 
     /**
@@ -88,8 +88,8 @@ class Omeka_View extends Zend_View_Abstract
      */
     public function setAssetPath($physical, $web)
     {
-        $this->_asset_paths = array();
-        $this->_asset_paths[] = array($physical, $web);
+        $this->_asset_paths = [];
+        $this->_asset_paths[] = [$physical, $web];
     }
 
     /**
@@ -125,7 +125,7 @@ class Omeka_View extends Zend_View_Abstract
      */
     private function _loadCustomThemeScripts()
     {
-        if ($this->_customScriptsLoaded) {
+        if (self::$customScriptsLoaded) {
             return;
         }
 
@@ -144,7 +144,7 @@ class Omeka_View extends Zend_View_Abstract
         if ($pluginBroker) {
             $pluginBroker->setCurrentPluginDirName($tmpPluginDir);
         }
-        $this->_customScriptsLoaded = true;
+        self::$customScriptsLoaded = true;
     }
 
     /**

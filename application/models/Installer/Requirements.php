@@ -11,14 +11,14 @@
  */
 class Installer_Requirements
 {
-    const OMEKA_PHP_VERSION = '5.6';
-    const OMEKA_MYSQL_VERSION = '5.0';
+    const OMEKA_PHP_VERSION = '7.1';
+    const OMEKA_MYSQL_VERSION = '5.5.5';
 
     private $_dbAdapter;
     private $_storage;
 
-    private $_errorMessages = array();
-    private $_warningMessages = array();
+    private $_errorMessages = [];
+    private $_warningMessages = [];
 
     public function check()
     {
@@ -77,7 +77,7 @@ class Installer_Requirements
 
     private function _checkPhpExtensionsAreAvailable()
     {
-        $requiredExtensions = array('dom', 'filter');
+        $requiredExtensions = ['dom', 'filter'];
         foreach ($requiredExtensions as $extension) {
             if (!extension_loaded($extension)) {
                 $header = "$extension extension is not available";

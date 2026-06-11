@@ -4,7 +4,13 @@
     $subtitle = (get_theme_option('Display Featured Subtitle')) ? '<span class="subtitle">' . __('Featured Item') . '</span>' : '';
     $description = metadata($item, array('Dublin Core', 'Description'), array('snippet' => 150));
     $thumbnailSetting = (option('use_square_thumbnail')) ? 'square_thumbnail' : 'fullsize';
-    $itemImage = (record_image($item)) ? record_image($item, $thumbnailSetting, array('class' => 'image')) : '';
+    if (record_image($item)) {
+        $itemImageFile = $item->getFile(0);
+        $itemImageTitle = metadata($itemImageFile, 'rich_title', array('no_escape' => true));
+        $itemImage = record_image($item, $thumbnailSetting, array('class' => 'image', 'alt' => '', 'title' => $itemImageTitle));
+    } else {
+        $itemImage = '';
+    }
     ?>
     <div class="title"><?php echo link_to($this->item, 'show', $itemImage . $subtitle . $title); ?></div>
     <?php if ($description): ?>

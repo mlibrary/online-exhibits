@@ -24,6 +24,7 @@ if (!Omeka) {
             entities: "160,nbsp,173,shy,8194,ensp,8195,emsp,8201,thinsp,8204,zwnj,8205,zwj,8206,lrm,8207,rlm",
             verify_html: false,
             add_unload_trigger: false,
+            cache_suffix: '?v=' + tinymce.majorVersion + '.' + tinymce.minorVersion,
         };
 
         tinymce.init($.extend(initParams, params));
@@ -68,6 +69,43 @@ if (!Omeka) {
             });
         }
     };
+
+    /**
+     * Add link that collapses and expands content.
+     */
+    Omeka.manageDrawers = function (drawerList, containerName) {
+        if (!containerName) {
+            containerName = '.element';
+        }
+        $(drawerList).on('click', containerName + ' > .drawer button', function() { 
+            var drawerButton = $(this);
+            var container = drawerButton.parents(containerName).first();
+            var drawerActionSelector = drawerButton.data('action-selector');
+            container.find('.drawer').first().toggleClass(drawerActionSelector);
+            container.find('.drawer-contents').first().toggleClass(drawerActionSelector);
+            if (drawerButton.attr('aria-expanded') && drawerButton.hasClass('drawer-toggle')) {
+                Omeka.toggleAriaExpanded(drawerButton);
+                drawerButton.trigger('omeka:toggle-drawer');
+            }
+            if (drawerButton.hasClass('delete-drawer')) {
+                container.find('.undo-delete').first().focus();
+                drawerButton.trigger('omeka:delete-drawer');
+                
+            }
+            if (drawerButton.hasClass('undo-delete')) {
+                container.find('.delete-drawer').first().focus();
+                drawerButton.trigger('omeka:undo-drawer-delete');
+            }
+        });
+    };
+
+    Omeka.toggleAriaExpanded = function(element) {
+        if (element.attr('aria-expanded') == 'true') {
+            element.attr('aria-expanded', 'false');
+        } else {
+            element.attr('aria-expanded', 'true');
+        }
+    };
     
     Omeka.toggleMobileMenu = function() {
 	    $('.mobile-menu').click(function (event) {
@@ -75,11 +113,7 @@ if (!Omeka) {
 			var target = button.data('target');
 			$(target).toggleClass('in');
             button.parent('nav').toggleClass('open');
-            if (button.attr('aria-expanded') == 'true') {
-                button.attr('aria-expanded', 'false');
-            } else {
-                button.attr('aria-expanded', 'true');
-            }
+            Omeka.toggleAriaExpanded(button);
 	    });
     };
     
@@ -89,21 +123,14 @@ if (!Omeka) {
     };
 
     Omeka.showAdvancedForm = function () {
-        var advancedForm = $('#advanced-form');
-        advancedForm.click(function (event) {
-            event.stopPropagation();
-        });
-        $("#advanced-search").click(function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            advancedForm.fadeToggle();
-            $(document).click(function (event) {
-                if (event.target.id == 'query') {
-                    return;
-                }
-                advancedForm.fadeOut();
-                $(this).unbind(event);
-            });
+        $('#search-form').on('click', '.show-advanced', function() {
+            var advanced_toggle = $(this);
+            advanced_toggle.toggleClass('open');
+            if (advanced_toggle.hasClass('open')) {
+                advanced_toggle.attr('aria-expanded', true);
+            } else {
+                advanced_toggle.attr('aria-expanded', false);
+            }
         });
     };
 

@@ -2,7 +2,6 @@
 /**
  * Omeka
  * 
- * @copyright Copyright 2007-2012 Roy Rosenzweig Center for History and New Media
  * @license http://www.gnu.org/licenses/gpl-3.0.txt GNU GPLv3
  */
 
@@ -11,38 +10,85 @@
  * 
  * @package Omeka\Auth
  */
-class Omeka_Auth_Adapter_UserTable extends Zend_Auth_Adapter_DbTable
+class Omeka_Auth_Adapter_UserTable implements Zend_Auth_Adapter_Interface
 {
+    protected $_db;
+    protected $_identity;
+    protected $_credential;
+
     /**
      * @param Omeka_Db $db Database object.
      */
     public function __construct(Omeka_Db $db)
     {
-        parent::__construct($db->getAdapter(),
-                            $db->User,
-                            'username',
-                            'password',
-                            'SHA1(CONCAT(salt, ?)) AND active = 1');
+        $this->_db = $db;
     }
 
     /**
-     * Validate the identity returned from the database.
-     *
-     * Overrides the Zend implementation to provide user IDs, not usernames
-     * upon successful validation.
-     *
-     * @param array $resultIdentity
-     * @todo Should this instead override _authenticateCreateAuthResult()?
+     * @param string $identity
+     * @return Omeka_Auth_Adapter_UserTable
      */
-    protected function _authenticateValidateResult($resultIdentity)
+    public function setIdentity($identity)
     {
-        $authResult = parent::_authenticateValidateResult($resultIdentity);
-        if (!$authResult->isValid()) {
-            return $authResult;
+        $this->_identity = $identity;
+        return $this;
+    }
+
+    /**
+     * @param string $credential
+     * @return Omeka_Auth_Adapter_UserTable
+     */
+    public function setCredential($credential)
+    {
+        $this->_credential = $credential;
+        return $this;
+    }
+
+    /**
+     * Authenticate with the provided identity and credential
+     *
+     * Uses PHP's password_hash to check the credential.
+     *
+     * @throws Zend_Auth_Adapter_Exception
+     * @return Zend_Auth_Result
+     */
+    public function authenticate()
+    {
+        $db = $this->_db;
+        $identity = $this->_identity;
+        $credential = $this->_credential;
+        if ($identity === null) {
+            throw new Zend_Auth_Adapter_Exception('A value for the identity was not provided prior to authentication.');
         }
-        // This auth result uses the username as the identity, what we need
-        // instead is the user ID.
-        $correctResult = new Zend_Auth_Result($authResult->getCode(), $this->_resultRow['id'], $authResult->getMessages());
-        return $correctResult;
+        if ($credential === null) {
+            throw new Zend_Auth_Adapter_Exception('A credential value was not provided prior to authentication.');
+        }
+
+        $sql = "SELECT id, password FROM `{$db->User}` WHERE username = ? AND active = 1";
+        try {
+            $resultIdentities = $this->_db->fetchAll($sql, [$identity], Zend_Db::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Zend_Auth_Adapter_Exception('The supplied parameters failed to produce a valid sql statement.', 0, $e);
+        }
+
+        if (count($resultIdentities) < 1) {
+            $code = Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND;
+            $message = 'A record with the supplied identity could not be found.';
+        } elseif (count($resultIdentities) > 1) {
+            $code = Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS;
+            $message = 'More than one record matches the supplied identity.';
+        } else {
+            $identityRow = $resultIdentities[0];
+            // Returned auth result must be the user ID, not name
+            $identity = $identityRow['id'];
+            if (password_verify($credential, $identityRow['password'])) {
+                $code = Zend_Auth_Result::SUCCESS;
+                $message = 'Authentication successful.';
+            } else {
+                $code = Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID;
+                $message = 'Supplied credential is invalid.';
+            }
+        }
+        return new Zend_Auth_Result($code, $identity, [$message]);
     }
 }

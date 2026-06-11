@@ -33,6 +33,9 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
     /**
      * The salt for the hashed password.
      *
+     * The value "bcrypt" here indicates that $password is a modern PHP
+     * password_hash hash that already includes the salt
+     *
      * @var string
      */
     public $salt;
@@ -125,15 +128,15 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
      */
     protected function filterPostData($post)
     {
-        $options = array('inputNamespace' => 'Omeka_Filter');
+        $options = ['inputNamespace' => 'Omeka_Filter'];
 
         // Alphanumeric with no whitespace allowed, lowercase
-        $username_filter = array(new Zend_Filter_Alnum(false), 'StringToLower');
+        $username_filter = [new Zend_Filter_Alnum(false), 'StringToLower'];
 
         // User form input does not allow HTML tags or superfluous whitespace
-        $filters = array('*' => array('StripTags', 'StringTrim'),
+        $filters = ['*' => ['StripTags', 'StringTrim'],
                          'username' => 'StringTrim',
-                         'active' => 'Boolean');
+                         'active' => 'Boolean'];
 
         $filter = new Zend_Filter_Input($filters, null, $post, $options);
 
@@ -184,7 +187,7 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
         // Validate the username
         if (strlen($this->username) < self::USERNAME_MIN_LENGTH || strlen($this->username) > self::USERNAME_MAX_LENGTH) {
             $this->addError('username', __('The username "%1$s" must be between %2$s and %3$s characters.', $this->username, self::USERNAME_MIN_LENGTH, self::USERNAME_MAX_LENGTH));
-        } elseif (! Zend_Validate::is($this->username, 'Regex', array('pattern' => '#^[a-zA-Z0-9.*@+!\-_%\#\^&$]*$#u'))) {
+        } elseif (! Zend_Validate::is($this->username, 'Regex', ['pattern' => '#^[a-zA-Z0-9.*@+!\-_%\#\^&$]*$#u'])) {
             $this->addError('username', __('Whitespace is not allowed. Only these special characters may be used: %s', ' + ! @ # $ % ^ & * . - _'));
         } elseif (!$this->fieldIsUnique('username')) {
             $this->addError('username', __("'%s' is already in use. Please choose another username.", $this->username));
@@ -198,17 +201,32 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
      * incorrect, or if same has been upgraded already.
      * 
      * @since 1.3
-     * @param string $username
+     * @param string|User $username
      * @param string $password
      * @return bool False if incorrect username/password given, otherwise true
-     * when password can be or has been upgraded.
+     * when password has been upgraded.
      */
     public static function upgradeHashedPassword($username, $password)
     {
-        $userTable = get_db()->getTable('User');
-        $user = $userTable->findBySql("username = ? AND salt IS NULL AND password = SHA1(?)",
-                                             array($username, $password), true);
-        if (!$user) {
+        if (is_string($username)) {
+            $userTable = get_db()->getTable('User');
+            $user = $userTable->findBySql("username = ?", [$username], true);
+        } else {
+            $user = $username;
+        }
+        if (!($user instanceof User)) {
+            return false;
+        }
+        // stored password_hash password: doesn't need upgrade
+        if ($user->salt === 'bcrypt') {
+            return false;
+        }
+        // stored salted SHA1 password, but provided doesn't match
+        if (!empty($user->salt) && $user->password !== sha1($user->salt . $password)) {
+            return false;
+        }
+        // stored unsalted SHA1 password, but provided doesn't match
+        if (empty($user->salt) && $user->password !== sha1($password)) {
             return false;
         }
         $user->setPassword($password);
@@ -244,14 +262,6 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
     }
 
     /**
-     * Generate a simple 16 character salt for the user.
-     */
-    public function generateSalt()
-    {
-        $this->salt = substr(md5(mt_rand()), 0, 16);
-    }
-
-    /**
      * Set a new password for the user.
      *
      * Always use this method to set a password, do not directly set the
@@ -261,20 +271,18 @@ class User extends Omeka_Record_AbstractRecord implements Zend_Acl_Resource_Inte
      */
     public function setPassword($password)
     {
-        if ($this->salt === null) {
-            $this->generateSalt();
-        }
         $this->password = $this->hashPassword($password);
+        $this->salt = 'bcrypt';
     }
 
     /**
-     * SHA-1 hash the given password with the current salt.
+     * Hash the given password
      *
      * @param string $password Plain-text password.
-     * @return string Salted and hashed password.
+     * @return string Hashed password.
      */
     public function hashPassword($password)
     {
-        return sha1($this->salt . $password);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

@@ -18,6 +18,9 @@ Omeka.Search = {};
 
         function incrementScreenReaderLabels(attribute, element, index) {
             var oldAttribute = element.attr(attribute);
+            if (!oldAttribute) {
+                return;
+            }
             var newAttribute = oldAttribute.replace(/\d+/, parseInt(index) + 1);
             element.attr(attribute, newAttribute);
         }
@@ -91,6 +94,7 @@ Omeka.Search = {};
             $(button).parent().remove();
             handleRemoveButtons();
             updateAdvancedSearchCount('#search-narrow-by-fields', '#search-narrow-by-field-alerts', '.search-entry');
+            addButton.focus();
         }
 
         /**

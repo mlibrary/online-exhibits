@@ -22,8 +22,8 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
     {
         $db = Zend_Registry::get('bootstrap')->getResource('Db');
         $tableName = $db->prefix . 'sessions';
-        $this->_metadata = array(
-            'id' => array(
+        $this->_metadata = [
+            'id' => [
                 'SCHEMA_NAME' => null,
                 'TABLE_NAME' => $tableName,
                 'COLUMN_NAME' => 'id',
@@ -38,8 +38,8 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
                 'PRIMARY' => true,
                 'PRIMARY_POSITION' => 1,
                 'IDENTITY' => false,
-            ),
-            'modified' => array(
+            ],
+            'modified' => [
                 'SCHEMA_NAME' => null,
                 'TABLE_NAME' => $tableName,
                 'COLUMN_NAME' => 'modified',
@@ -54,8 +54,8 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
                 'PRIMARY' => false,
                 'PRIMARY_POSITION' => null,
                 'IDENTITY' => false,
-            ),
-            'lifetime' => array(
+            ],
+            'lifetime' => [
                 'SCHEMA_NAME' => null,
                 'TABLE_NAME' => $tableName,
                 'COLUMN_NAME' => 'lifetime',
@@ -70,8 +70,8 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
                 'PRIMARY' => false,
                 'PRIMARY_POSITION' => null,
                 'IDENTITY' => false,
-            ),
-            'data' => array(
+            ],
+            'data' => [
                 'SCHEMA_NAME' => null,
                 'TABLE_NAME' => $tableName,
                 'COLUMN_NAME' => 'data',
@@ -86,8 +86,8 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
                 'PRIMARY' => false,
                 'PRIMARY_POSITION' => null,
                 'IDENTITY' => false,
-            )
-        );
+            ]
+        ];
     }
 
     /**
@@ -102,6 +102,22 @@ class Omeka_Session_SaveHandler_DbTable extends Zend_Session_SaveHandler_DbTable
         parent::write($id, $data);
 
         // Discard parent's return value and return true (PHP 7 actually cares about this)
+        return true;
+    }
+
+    /**
+     * Garbage Collection
+     *
+     * Overrides Zend's gc to always use the same lifetime rather than the stored column
+     *
+     * @param int $maxlifetime
+     * @return true
+     */
+    public function gc($maxlifetime)
+    {
+        $this->delete($this->getAdapter()->quoteIdentifier($this->_modifiedColumn, true) . ' < '
+                    . $this->getAdapter()->quote(time() - $this->_lifetime));
+
         return true;
     }
 }

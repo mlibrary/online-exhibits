@@ -39,12 +39,12 @@ class Omeka_View_Helper_FormInput extends Zend_View_Helper_FormElement
         }
 
         $type = 'text';
-        if ($attribs['type']) {
+        if (isset($attribs['type'])) {
             $type = $attribs['type'];
             unset($attribs['type']);
         }
 
-        $xhtml = '<input type="' . $type . '"'
+        $xhtml = '<input type="' . $this->view->escape($type) . '"'
                 . ' name="' . $this->view->escape($name) . '"'
                 . ($id === '' ? '' : ' id="' . $this->view->escape($id) . '"')
                 . ' value="' . $this->view->escape($value) . '"'

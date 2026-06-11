@@ -7,6 +7,7 @@
 <?php endif; ?>
 
 <div id="featured-records">
+    <h1 class="sr-only"><?php echo __('Featured'); ?></h1>
     <?php if ((get_theme_option('Display Featured Exhibit')) && function_exists('exhibit_builder_display_random_featured_exhibit')): ?>
     <!-- Featured Exhibit(s) -->
     <?php echo thanksroy_display_random_featured_records('exhibit', 2); ?>
@@ -31,7 +32,7 @@ endif;
 if ($recentItems):
 ?>
 <div id="recent-items">
-    <div class="recent-title"><?php echo __('Recently Added Items'); ?></div>
+    <h2 class="recent-title"><?php echo __('Recently Added Items'); ?></h2>
     <?php echo recent_items($recentItems); ?>
     <p class="view-items-link"><a href="<?php echo html_escape(url('items')); ?>"><?php echo __('View All Items'); ?></a></p>
 </div><!--end recent-items -->

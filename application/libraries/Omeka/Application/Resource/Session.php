@@ -34,11 +34,11 @@ class Omeka_Application_Resource_Session extends Zend_Application_Resource_Sessi
     private function _getSessionConfig()
     {
         $bootstrap = $this->getBootstrap();
-        $bootstrap->bootstrap(array('Config', 'Db', 'Options'));
+        $bootstrap->bootstrap(['Config', 'Db', 'Options']);
         $config = $bootstrap->getResource('Config');
         $sessionConfig = isset($config->session)
                        ? $config->session->toArray()
-                       : array();
+                       : [];
 
         if (!array_key_exists('name', $sessionConfig)
             || empty($sessionConfig['name'])
@@ -51,21 +51,28 @@ class Omeka_Application_Resource_Session extends Zend_Application_Resource_Sessi
             && !array_key_exists('saveHandler', $sessionConfig)
         ) {
             $db = $bootstrap->db;
-            $sessionConfig['saveHandler'] = array(
+            $sessionConfig['saveHandler'] = [
                 'class' => "Omeka_Session_SaveHandler_DbTable",
-                'options' => array(
+                'options' => [
                     'name' => $db->Session,
                     'primary' => "id",
                     'modifiedColumn' => "modified",
                     'dataColumn' => "data",
                     'lifetimeColumn' => "lifetime",
-                ),
-            );
+                ],
+            ];
         } elseif (empty($sessionConfig['saveHandler'])) {
             // Set session.saveHandler = false to use the filesystem for storing
             // sessions.
             unset($sessionConfig['saveHandler']);
         }
+
+        // Override servers that disable GC, unless allowNoGc is set in config
+        if (empty($sessionConfig['allowNoGc']) && ini_get('session.gc_probability') == 0) {
+            $sessionConfig['gc_probability'] = 1;
+            $sessionConfig['gc_divisor'] = 1000;
+        }
+        unset($sessionConfig['allowNoGc']);
 
         return $sessionConfig;
     }

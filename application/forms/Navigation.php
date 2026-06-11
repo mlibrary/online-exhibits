@@ -44,7 +44,11 @@ class Omeka_Form_Navigation extends Omeka_Form
         $html = '<ul id="navigation_main_list">';
         $pageCount = 0;
         foreach ($this->_nav as $page) {
-            $html .= $this->_displayNavigationPageLink($page, $pageCount);
+            $pageCount++;
+            $html .= get_view()->partial('settings/edit-navigation-link.php', [
+                'page' => $page,
+                'pageCount' => $pageCount,
+            ]);
         }
         $html .= '</ul>';
         return $html;
@@ -72,10 +76,10 @@ class Omeka_Form_Navigation extends Omeka_Form
         $this->_addHiddenElement();
         $this->_addHomepageSelectElement();
         $this->addElement('hash', 'navigation_csrf',
-            array(
-                'decorators' => array('ViewHelper'),
+            [
+                'decorators' => ['ViewHelper'],
                 'timeout' => 3600
-            )
+            ]
         );
     }
 
@@ -86,65 +90,15 @@ class Omeka_Form_Navigation extends Omeka_Form
     {
         $this->addElement('hidden',
             self::HIDDEN_ELEMENT_ID,
-            array(
+            [
                 'value' => '',
-                'decorators' => array(
+                'decorators' => [
                     'ViewHelper',
-                    array('Description', array('escape' => false, 'tag' => false)),
-                    array('HtmlTag', array('tag' => 'div')),
-                    array('Label'),
-                    'Errors', )
-        ));
-    }
-
-    /**
-     * Returns the html for a navigation page link and its sublinks. 
-     *
-     * @param Zend_Navigation_Page $page The navigation page
-     * @param int $pageCount The number of pages added so far to the form
-     * @return String The html for a navigation page link and its sublinks
-     */
-    protected function _displayNavigationPageLink(Zend_Navigation_Page $page, &$pageCount)
-    {
-        $pageCount++;
-        $checkboxId = 'main_nav_checkboxes_' . $pageCount;
-        $checkboxValue = $this->_getPageHiddenInfo($page);
-        $checkboxChecked = $page->isVisible() ? 'checked="checked"' : '';
-        $checkboxClasses = array();
-        if ($page->can_delete) {
-            $checkboxClasses[] = 'can_delete_nav_link';
-        }
-        $checkboxClass = implode(' ', $checkboxClasses);
-        $html = '<li>';
-        $html .= '<div class="main_link">';
-        $html .= '<div class="sortable-item">';
-        $html .= '<input type="checkbox" name="'
-                 . $checkboxId
-                 . '" id="'
-                 . $checkboxId
-                 . '" value="' . html_escape($checkboxValue)
-                 . '" '
-                 . $checkboxChecked
-                 . ' class="'
-                 . $checkboxClass
-                 . '">';
-        $html .= html_escape($page->getLabel());
-        $html .= '</div>';
-        $html .= '<div class="drawer-contents">';
-        $html .= '<label>' . __('Label') . '</label><input type="text" class="navigation-label" />';
-        $html .= '<label>' . __('URL') . '</label><input type="text" class="navigation-uri" />';
-        $html .= '<div class="main_link_buttons"></div>';
-        $html .= '</div>';
-        $html .= '</div>';
-        if ($page->hasChildren()) {
-            $html .= '<ul>';
-            foreach ($page as $childPage) {
-                $html .= $this->_displayNavigationPageLink($childPage, $pageCount);
-            }
-            $html .= '</ul>';
-        }
-        $html .= '</li>';
-        return $html;
+                    ['Description', ['escape' => false, 'tag' => false]],
+                    ['HtmlTag', ['tag' => 'div']],
+                    ['Label'],
+                    'Errors', ]
+        ]);
     }
 
     /**
@@ -152,30 +106,30 @@ class Omeka_Form_Navigation extends Omeka_Form
      */
     protected function _addHomepageSelectElement()
     {
-        $elementIds = array();
-        $pageLinks = array();
+        $elementIds = [];
+        $pageLinks = [];
         $pageLinks['/'] = __('[Default]'); // Add the default homepage link option
         $iterator = new RecursiveIteratorIterator($this->_nav, RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $page) {
             $pageLinks[$page->getHref()] = $page->getLabel();
         }
-        $this->addElement('select', self::SELECT_HOMEPAGE_ELEMENT_ID, array(
+        $this->addElement('select', self::SELECT_HOMEPAGE_ELEMENT_ID, [
             'label' => __('Select a Homepage'),
             'multiOptions' => $pageLinks,
             'value' => get_option(self::HOMEPAGE_URI_OPTION_NAME),
             'registerInArrayValidator' => false,
-            'decorators' => array(
+            'decorators' => [
                     'ViewHelper',
-                    array('Description', array('escape' => false, 'tag' => false)),
-                    array('HtmlTag', array('tag' => 'div')),
-                    array('Label'),
-                    'Errors', )
-        ));
+                    ['Description', ['escape' => false, 'tag' => false]],
+                    ['HtmlTag', ['tag' => 'div']],
+                    ['Label'],
+                    'Errors', ]
+        ]);
         $elementIds[] = self::SELECT_HOMEPAGE_ELEMENT_ID;
         $this->addDisplayGroup(
             $elementIds,
             self::HOMEPAGE_SELECT_DISPLAY_ELEMENT_ID,
-            array('class' => 'field')
+            ['class' => 'field']
         );
     }
 
@@ -198,14 +152,14 @@ class Omeka_Form_Navigation extends Omeka_Form
     {
         $nav = new Omeka_Navigation();
         $nav->loadAsOption(Omeka_Navigation::PUBLIC_NAVIGATION_MAIN_OPTION_NAME);
-        $pageUids = array();
+        $pageUids = [];
         if ($pageLinks = $this->getValue(self::HIDDEN_ELEMENT_ID)) {
             if ($pageLinks = json_decode($pageLinks, true)) {
                 // add and update the pages in the navigation
                 $pageOrder = 0;
-                $pages = array();
-                $parentPageIds = array();
-                $pageIdsToPageUids = array();
+                $pages = [];
+                $parentPageIds = [];
+                $pageIdsToPageUids = [];
                 foreach ($pageLinks as $pageLink) {
                     $pageOrder++;
                     // add or update the page in the navigation
@@ -251,7 +205,7 @@ class Omeka_Form_Navigation extends Omeka_Form
         }
         // prune the remaining expired pages from navigation
         $otherPages = $nav->getOtherPages($pageUids);
-        $expiredPages = array();
+        $expiredPages = [];
         foreach ($otherPages as $otherPage) {
             $nav->prunePage($otherPage);
         }
@@ -280,23 +234,6 @@ class Omeka_Form_Navigation extends Omeka_Form
     }
 
     /**
-     * Returns JSON with the hidden info for a navigation page link. 
-     *
-     * @param Zend_Navigation_Page $page The navigation page
-     * @return String JSON with the hidden info for a navigation page link. 
-     */
-    protected function _getPageHiddenInfo(Zend_Navigation_Page $page)
-    {
-        $hiddenInfo = array(
-          'can_delete' => (bool) $page->can_delete,
-          'uri' => $page->getHref(),
-          'label' => $page->getLabel(),
-          'visible' => $page->isVisible(),
-        );
-        return json_encode($hiddenInfo);
-    }
-
-    /**
      * Validate the form
      *
      * @param  array $data
@@ -311,7 +248,7 @@ class Omeka_Form_Navigation extends Omeka_Form
         $missingLabel = false;
         $missingURI = false;
         $duplicateURI = false;
-        $uids = array();
+        $uids = [];
         if ($pageLinks = $this->getValue(self::HIDDEN_ELEMENT_ID)) {
             if ($pageLinks = json_decode($pageLinks, true)) {
                 foreach ($pageLinks as $pageLink) {
@@ -361,7 +298,7 @@ class Omeka_Form_Navigation extends Omeka_Form
         // get undeleteable page uids from new navigation
         $nav = $this->_getNavigationFromPost();
         $iterator = new RecursiveIteratorIterator($nav, RecursiveIteratorIterator::SELF_FIRST);
-        $newUndeleteableUids = array();
+        $newUndeleteableUids = [];
         foreach ($iterator as $page) {
             if ($page->can_delete == false) {
                 $newUndeleteableUids[] = $page->uid;
