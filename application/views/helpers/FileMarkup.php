@@ -329,6 +329,15 @@ class Omeka_View_Helper_FileMarkup extends Zend_View_Helper_Abstract
                 'href' => $file->getWebPath($derivative)
                 ];
             $linkAttributes = array_merge($defaultLinkAttributes, $linkAttributes);
+
+            // Let's make sure the alt text is set to the title of the item if it exists, otherwise "not defined"
+            $item = $file->getItem();
+            if($item) {
+                $item_title = strip_formatting(metadata($item, array('Dublin Core', 'Title')));
+            }
+            $item_title = $item_title ?? 'not defined';
+            $html = str_replace('alt=""', 'alt="' . html_escape($item_title) . '" ', $html);
+
             $html = '<a ' . tag_attributes($linkAttributes) . '>' . $html . '</a>';
         }
         return $html;
