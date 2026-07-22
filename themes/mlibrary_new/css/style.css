@@ -257,6 +257,10 @@ main#content {
   padding-left: 0;
 }
 
+#breadcrumbs {
+  background-color: #f2f2f2;
+}
+
 .container.breadcrumb-container {
   padding-left: 0;
 }

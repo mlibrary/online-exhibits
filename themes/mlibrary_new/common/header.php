@@ -120,7 +120,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <?php endif; ?>
 
     <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid =='exhibit')) :?>
-    <section aria-label="Breadcrumbs">
+    <section aria-label="Breadcrumbs" id="breadcrumbs">
     <div class="container breadcrumb-container">
     <div class="col-xs-12 col-sm-9">
       <ol class="breadcrumb">
