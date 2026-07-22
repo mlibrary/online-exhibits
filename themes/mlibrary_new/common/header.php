@@ -81,7 +81,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End skip link -->
 
     <m-universal-header></m-universal-header>
-    <div class="site-header">
+     <section class="site-header" aria-label="Online Exhibits site header"> 
      <div class="container container-medium ">
             <div class="site-header-container">
                 <div class="site-heading">
@@ -120,7 +120,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <?php endif; ?>
 
     <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid =='exhibit')) :?>
-    <section>
+    <section aria-label="Breadcrumbs">
     <div class="container breadcrumb-container">
     <div class="col-xs-12 col-sm-9">
       <ol class="breadcrumb">
