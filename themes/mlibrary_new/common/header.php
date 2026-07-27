@@ -81,22 +81,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End skip link -->
 
     <m-universal-header></m-universal-header>
-      <section class="site-header" aria-label="Online Exhibits site header">
-       <div class="container container-medium ">
-            <div class="site-header-container">
-                <div class="site-heading">
-                  <ul class="logo-list">
-                    <li class="libary-logo"><a href="http://lib.umich.edu" class="logo-link"><img src="<?php echo img('logo.png'); ?>" alt="Link to Mlibrary website"></a></li>
-                    <li class="exhibits-text"><?php echo bs_link_logo_to_navbar(); ?></li>
-                  </ul>
-                </div>
-		<nav class="site-header-nav" role="navigation">
-       <ul class="site-header-nav-list">
-            <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
-         </ul>
-		</nav>
-            </div>
+    <section class="site-header" aria-label="Online Exhibits site header">
+      <div class="container container-medium ">
+        <div class="site-header-container">
+          <div class="site-heading">
+            <ul class="logo-list">
+              <li class="libary-logo"><a href="http://lib.umich.edu" class="logo-link"><img src="<?php echo img('logo.png'); ?>" alt="Link to Mlibrary website"></a></li>
+              <li class="exhibits-text"><?php echo bs_link_logo_to_navbar(); ?></li>
+            </ul>
+          </div>
+          <nav class="site-header-nav" role="navigation">
+            <ul class="site-header-nav-list">
+              <li><a href="<?php echo url('exhibits'); ?>">Browse Exhibits</a></li>
+            </ul>
+          </nav>
         </div>
+      </div>
     </section>
 
     <div class="search-panel">
