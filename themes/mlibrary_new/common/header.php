@@ -81,8 +81,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End skip link -->
 
     <m-universal-header></m-universal-header>
-     <section class="site-header" aria-label="Online Exhibits site header"> 
-     <div class="container container-medium ">
+      <section class="site-header" aria-label="Online Exhibits site header">
+       <div class="container container-medium ">
             <div class="site-header-container">
                 <div class="site-heading">
                   <ul class="logo-list">
@@ -97,7 +97,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		</nav>
             </div>
         </div>
-    </div>
+    </section>
 
     <div class="search-panel">
         <div class="form-group search-box container container-medium">
@@ -111,7 +111,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="container container-medium banner-container">
                      <h1 class="banner-text--large">Online Exhibits</h1>
                         <p class="banner-text--medium">Brought to you by the <a href="http://lib.umich.edu">University of Michigan Library</a></p>
-                       
                 </div>
             </div>
              <p class="banner-text--caption">Image: Jasper Francis Cropsey's painting of the University of Michigan campus from <a href="<?php echo url('exhibits/show/creating-a-campus/'); ?>"> Creating a Campus: A Cartographic Celebration of U-M's Bicentennial</a></p>
@@ -121,34 +120,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <?php if (isset($bodyid) and (get_theme_option('display_header') !== '0') and ($bodyid =='exhibit')) :?>
     <section aria-label="Breadcrumbs" id="breadcrumbs">
-    <div class="container breadcrumb-container">
-    <div class="col-xs-12 col-sm-9">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
-        <?php if ($bodyclass =='show') {?>
-              <li class="breadcrumb-item active"><a href="<?php echo html_escape(exhibit_builder_exhibit_uri(get_current_record('exhibit')));?>">
-                                                          <?php echo snippet_by_word_count(metadata('exhibit','title',array('no_escape' => true)),5,'..'); ?></a></li>
-              <li class="breadcrumb-item active"><?php echo metadata('exhibit_page','title',array('no_escape' => true));?></li>
-        <?php } else {?> 
-              <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true));?></li><?php }?>
-      </ol>
-    </div>
-  <div class="col-xs-12 col-sm-3">
-    <ul class="share-this">
-      <li>Share this Exhibit:</li>
-      <li><a href="https://twitter.com/share" class="twitter-share-button" 
+      <div class="container breadcrumb-container">
+        <div class="col-xs-12 col-sm-9">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><?php echo link_to_home_page(__('Home')); ?></li>
+            <?php if ($bodyclass =='show') {?>
+              <li class="breadcrumb-item active">
+                <a href="<?php echo html_escape(exhibit_builder_exhibit_uri(get_current_record('exhibit')));?>">
+                  <?php echo snippet_by_word_count(metadata('exhibit','title',array('no_escape' => true)),5,'..'); ?>
+                </a>
+              </li>
+              <li class="breadcrumb-item active">
+                <?php echo metadata('exhibit_page','title',array('no_escape' => true));?>
+              </li>
+            <?php } else {?>
+              <li class="breadcrumb-item active"><?php echo metadata('exhibit','title',array('no_escape' => true));?></li>
+            <?php }?>
+          </ol>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+          <ul class="share-this">
+            <li>Share this Exhibit:</li>
+            <li><a href="https://twitter.com/share" class="twitter-share-button"
                                               data-text="I just saw '<?php echo( str_replace('"',"'", metadata('exhibit','title',array('no_escape' => true)))); ?>' at the U-M Library Online Exhibits!" >
                                               <span class="sr-only">Tweet</span> </a>
-      </li>
-    </ul>
-   </div>
-    </div>
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
     <header
         id="banner"
         class="<?php echo get_theme_option('header_flow'); ?> page-header"
         style="background-size:cover;background-position: center center;background-image:url('<?php  echo bs_header_bg(); ?>');">
-
     </header>
 <?php endif;?>
 
