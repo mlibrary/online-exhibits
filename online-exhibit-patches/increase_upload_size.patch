@@ -8,6 +8,6 @@ index 5ae18d78..777e0cb9 100644
      const THEME_FILE_HIDDEN_FIELD_NAME_PREFIX = 'hidden_file_';
 -    const MAX_UPLOAD_SIZE = '1MB';
 +    const MAX_UPLOAD_SIZE = '30MB';
- 
-     public static $allowedMimeTypes = array(
+
+     public static $allowedMimeTypes = [
          'image/png',
