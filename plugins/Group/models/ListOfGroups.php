@@ -11,7 +11,7 @@ class ListOfGroups extends Omeka_Record_AbstractRecord {
 //list all groups available
 function get_groups_names() {
   $db = get_db();
-  $group_list='';
+  $group_list=array();
   $groups='';
   $groups = $this->getTable('ListOfGroups')->findAll();
   if(!empty($groups)) {
@@ -25,7 +25,7 @@ function get_groups_names() {
 // get groups related to specific role
 function get_groups_names_using_role($id, $role) {
   $db = get_db();
-  $group_list='';
+  $group_list=array();
   $groups='';
 
   $select = new Omeka_Db_Select();
