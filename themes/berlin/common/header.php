@@ -52,7 +52,7 @@
             </div>
         </header>
 
-         <div id="primary-nav" role="navigation">
+         <div id="primary-nav" role="navigation" aria-label="<?php echo __('Main navigation'); ?>">
              <?php
                   echo public_nav_main();
              ?>

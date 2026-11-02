@@ -18,6 +18,7 @@ class Omeka_Db_Table
 {
     const SORT_PARAM = 'sort_field';
     const SORT_DIR_PARAM = 'sort_dir';
+    const COUNT_FLAG_PARAM = '__count';
 
     /**
      * The name of the model for which this table will retrieve objects.
@@ -600,7 +601,12 @@ class Omeka_Db_Table
      */
     public function getSelectForCount($params = [])
     {
-        $select = $params ? $this->getSelectForFindBy($params) : $this->getSelect();
+        if ($params) {
+            $params[self::COUNT_FLAG_PARAM] = true;
+            $select = $this->getSelectForFindBy($params);
+        } else {
+            $select = $this->getSelect();
+        }
 
         // Make sure the SELECT only pulls down the COUNT() column.
         $select->reset(Zend_Db_Select::COLUMNS);
@@ -696,11 +702,11 @@ class Omeka_Db_Table
      */
     private function _getSortParams($params)
     {
-        if (array_key_exists(self::SORT_PARAM, $params)) {
+        if (($params[self::COUNT_FLAG_PARAM] ?? false) !== true && isset($params[self::SORT_PARAM])) {
             $sortField = trim($params[self::SORT_PARAM]);
             $dir = 'ASC';
             // Default to ascending sort with no dir param.
-            if (array_key_exists(self::SORT_DIR_PARAM, $params)) {
+            if (isset($params[self::SORT_DIR_PARAM])) {
                 $sortDir = trim($params[self::SORT_DIR_PARAM]);
                 if ($sortDir === 'a') {
                     $dir = 'ASC';

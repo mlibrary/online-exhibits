@@ -329,15 +329,6 @@ class Omeka_View_Helper_FileMarkup extends Zend_View_Helper_Abstract
                 'href' => $file->getWebPath($derivative)
                 ];
             $linkAttributes = array_merge($defaultLinkAttributes, $linkAttributes);
-
-            // Let's make sure the alt text is set to the title of the item if it exists, otherwise "not defined"
-            $item = $file->getItem();
-            if($item) {
-                $item_title = strip_formatting(metadata($item, array('Dublin Core', 'Title')));
-            }
-            $item_title = $item_title ?? 'not defined';
-            $html = str_replace('alt=""', 'alt="' . html_escape($item_title) . '" ', $html);
-
             $html = '<a ' . tag_attributes($linkAttributes) . '>' . $html . '</a>';
         }
         return $html;
@@ -449,20 +440,20 @@ class Omeka_View_Helper_FileMarkup extends Zend_View_Helper_Abstract
         // Should we ever include more image sizes by default, this will be
         // easier to modify.
         $imgClasses = [
-            null => 'thumb',
             'thumbnail' => 'thumb',
             'square_thumbnail' => 'thumb',
-            'fullsize' => 'full'];
+            'fullsize' => 'full',
+        ];
         $imageSize = $options['imageSize'];
 
         // If we can make an image from the given image size.
-        if (array_key_exists($imageSize, $imgClasses)) {
+        if ($imageSize === null || array_key_exists($imageSize, $imgClasses)) {
 
             // A class is given to all of the images by default to make it
             // easier to style. This can be modified by passing it in as an
             // option, but recommended against. Can also modify alt text via an
             // option.
-            $imgClass = $imgClasses[$imageSize];
+            $imgClass = $imageSize ? $imgClasses[$imageSize] : 'thumb';
             $imgAttributes = array_merge(['class' => $imgClass],
                                 (array) $options['imgAttributes']);
             $imgHtml = $this->image_tag($file, $imgAttributes, $imageSize);
@@ -644,7 +635,7 @@ class Omeka_View_Helper_FileMarkup extends Zend_View_Helper_Abstract
         if (isset($attrs['alt'])) {
             $alt = $attrs['alt'];
         } else {
-            $alt = ($file->getAltText()) ? $file->getAltText() : '';
+            $alt = $file->getAltText() ?? '';
         }
         $attrs['alt'] = $alt;
 

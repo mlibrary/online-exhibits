@@ -106,7 +106,9 @@ class ErrorController extends Omeka_Controller_AbstractActionController
     protected function is404(Exception $e, $handler)
     {
         return ($e instanceof Omeka_Controller_Exception_404
+                || $e instanceof Omeka_Record_InvalidSearchTypeException
                 || $e instanceof Zend_View_Exception
+                || $e instanceof Zend_Controller_Action_ContextNotFoundException
                 || $handler->type == 'EXCEPTION_NO_CONTROLLER'
                 || $handler->type == 'EXCEPTION_NO_ACTION');
     }

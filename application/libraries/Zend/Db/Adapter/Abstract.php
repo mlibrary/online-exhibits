@@ -564,8 +564,8 @@ abstract class Zend_Db_Adapter_Abstract
         }
 
         // build the statement
-        $sql = ($table == 'omeka_sessions') ? 'REPLACE' : 'INSERT';
-        $sql .= ' INTO ' . $this->quoteIdentifier($table, true)
+        $sql = "INSERT INTO "
+             . $this->quoteIdentifier($table, true)
              . ' (' . implode(', ', $cols) . ') '
              . 'VALUES (' . implode(', ', $vals) . ')';
 

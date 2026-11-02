@@ -13,8 +13,7 @@
     <title><?php echo implode(' &middot; ', $titleParts); ?></title>
 
 <?php
-    queue_css_file(['iconfonts', 'skeleton', 'jquery-ui', 'style']);
-    queue_css_url('//fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400');
+    queue_css_file(['core-fonts', 'iconfonts', 'skeleton', 'jquery-ui', 'style']);
 
     queue_js_file(['vendor/respond', 'vendor/modernizr']);
     queue_js_file('vendor/selectivizr', 'javascripts', ['conditional' => '(gte IE 6)&(lte IE 8)']);
@@ -33,16 +32,16 @@
 </head>
 
 <?php echo body_tag(['id' => @$bodyid, 'class' => @$bodyclass]); ?>
-<a href="#content" id="skipnav"><?php echo __('Skip to main content'); ?></a>
 
-<header role="banner">
+<header>
+    <a href="#content" id="skipnav"><?php echo __('Skip to main content'); ?></a>
     <?php fire_plugin_hook('admin_header_top', ['view'=>$this]); ?>
     <div id="site-title" class="two columns">
         <?php echo link_to_home_page(option('site_title'), ['target' => '_blank']); ?>
     </div>
 	<button id="mobile-navbar-toggle" class="mobile-menu" data-target="#global-nav" title="<?php echo __('Admin'); ?>" aria-label="<?php echo __('Admin'); ?>" aria-expanded="false"><span class="admin-icon" aria-role="hidden"></span></button>
 
-    <nav id="global-nav">
+    <nav id="global-nav" aria-label="<?php echo __('Admin'); ?>">
         <?php echo common('global-nav'); ?>
         
         <ul id="user-nav">

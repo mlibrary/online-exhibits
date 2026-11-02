@@ -124,7 +124,7 @@ class UsersController extends Omeka_Controller_AbstractActionController
     public function activateAction()
     {
         $hash = $this->_getParam('u');
-        $ua = $this->_helper->db->getTable('UsersActivations')->findBySql("url = ?", [$hash], true);
+        $ua = $this->_helper->db->getTable('UsersActivations')->findByUrl($hash);
 
         if (!$ua) {
             $this->_helper->flashMessenger(__('Invalid activation code given.'), 'error');
@@ -143,7 +143,7 @@ class UsersController extends Omeka_Controller_AbstractActionController
             $user->setPassword($_POST['new_password1']);
             $user->active = 1;
             if ($user->save(false)) {
-                $ua->delete();
+                $this->_helper->db->getTable('UsersActivations')->deleteAllByUser($user);
                 $this->_helper->flashMessenger(__('You may now log in to Omeka.'), 'success');
                 $this->_helper->redirector('login');
             } else {
@@ -198,7 +198,8 @@ class UsersController extends Omeka_Controller_AbstractActionController
     public function editAction()
     {
         $user = $this->_helper->db->findById();
-        $ua = $this->_helper->db->getTable('UsersActivations')->findByUser($user);
+        $uaTable = $this->_helper->db->getTable('UsersActivations');
+        $ua = $uaTable->findByUser($user);
 
         $form = $this->_getUserForm($user, $ua);
         $form->setDefaults([
@@ -237,19 +238,13 @@ class UsersController extends Omeka_Controller_AbstractActionController
                 $this->_helper->flashMessenger(__('There was an invalid entry on the form. Please try again.'), 'error');
                 return;
             }
-            //check to see if user has been manually deactivated. if so, delete ua (if exists)
-            if ($user->active == 1 && ($form->getValue('active') == 0)) {
-                //couldn't really do a migration to remove useless ua's, so just to be safe double-check
-                //that the ua exists
-                if ($ua) {
-                    $ua->delete();
-                }
-            }
-            //reverse situation from above. If manually activating, also delete the ua
-            if ($user->active == 0 && ($form->getValue('active') == 1)) {
-                if ($ua) {
-                    $ua->delete();
-                }
+
+            // Delete any open activations if the user is being manually activated or deactivated
+            if (
+                ($user->active == 1 && $form->getValue('active') == 0) ||
+                ($user->active == 0 && $form->getValue('active') == 1)
+            ) {
+                $uaTable->deleteAllByUser($user);
             }
 
             $user->setPostData($form->getValues());
@@ -319,13 +314,17 @@ class UsersController extends Omeka_Controller_AbstractActionController
                 $key = new Key;
                 $key->user_id = $user->id;
                 $key->label = $this->getParam('api_key_label');
-                $key->key = sha1($user->username . microtime() . rand());
+                $key->key = bin2hex(random_bytes(20));
                 $key->save();
                 $this->_helper->flashMessenger(__('A new API key was successfully created.'), 'success');
             }
             // Rescend API keys.
             if ($this->getParam('api_key_rescind')) {
                 foreach ($this->getParam('api_key_rescind') as $keyId) {
+                    $key = $keyTable->find($keyId);
+                    if (!$key || ($key->user_id !== $user->id)) {
+                        throw new Omeka_Controller_Exception_404;
+                    }
                     $keyTable->find($keyId)->delete();
                 }
                 $this->_helper->flashMessenger(__('An existing API key was successfully rescinded.'), 'success');
@@ -345,10 +344,7 @@ class UsersController extends Omeka_Controller_AbstractActionController
     public function deleteAction()
     {
         $user = $this->_helper->db->findById();
-        $ua = $this->_helper->db->getTable('UsersActivations')->findByUser($user);
-        if ($ua) {
-            $ua->delete();
-        }
+        $ua = $this->_helper->db->getTable('UsersActivations')->deleteAllByUser($user);
         parent::deleteAction();
     }
 
@@ -375,21 +371,27 @@ class UsersController extends Omeka_Controller_AbstractActionController
      */
     protected function sendActivationEmail($user)
     {
-        $ua = $this->_helper->db->getTable('UsersActivations')->findByUser($user);
-        if ($ua) {
-            $ua->delete();
-        }
+        $this->_helper->db->getTable('UsersActivations')->deleteAllByUser($user);
+
         $ua = new UsersActivations;
         $ua->user_id = $user->id;
         $ua->save();
         // send the user an email telling them about their new user account
         $siteTitle = get_option('site_title');
         $from = get_option('administrator_email');
-        $body = __('Welcome!')
-                    ."\n\n"
-                    . __('Your account for the %s repository has been created. Please click the following link to activate your account:', $siteTitle)."\n\n"
-                    . WEB_ROOT . "/admin/users/activate?u={$ua->url}\n\n"
-                    . __('%s Administrator', $siteTitle);
+
+        set_theme_base_url('admin');
+        $url = $this->view->serverUrl() . $this->view->url([
+            'controller' => 'users',
+            'action' => 'activate',
+            'u' => $ua->url
+        ], 'default');
+        revert_theme_base_url();
+
+        $body = __('Welcome!') . "\n\n"
+            . __('Your account for the %s repository has been created. Please click the following link to activate your account:', $siteTitle) . "\n\n"
+            . "{$url}\n\n"
+            . __('%s Administrator', $siteTitle);
         $subject = __('Activate your account with the %s repository', $siteTitle);
 
         $mail = new Zend_Mail('UTF-8');

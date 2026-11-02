@@ -27,9 +27,7 @@
     .button, button,
     input[type="reset"],
     input[type="submit"],
-    input[type="button"],
-    .pagination_next a,
-    .pagination_previous a {
+    input[type="button"] {
         background-color: var(--button-color);
         color: var(--button-text-color);
     }

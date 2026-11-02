@@ -1,6 +1,6 @@
 {
   "name": "thanksroy",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "\"A tribute to Roy Rosenzweig, with updated typography and responsive styles.\"",
   "main": "gulpfile.js",
   "devDependencies": {
@@ -10,7 +10,7 @@
     "gulp-cli": "^3.0.0",
     "gulp-postcss": "^9.0.0",
     "gulp-sass": "^5.0.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.10",
     "sass": "~1.32.13"
   },
   "scripts": {

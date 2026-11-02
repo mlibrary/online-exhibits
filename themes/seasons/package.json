@@ -1,6 +1,6 @@
 {
   "name": "seasons",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "\"A colorful theme with a configuration option to switch style sheets for a particular season, plus 'night'.\"",
   "main": "gulpfile.js",
   "devDependencies": {
@@ -10,9 +10,9 @@
     "gulp-cli": "^3.0.0",
     "gulp-postcss": "^9.0.0",
     "gulp-sass": "^5.0.0",
-    "postcss": "^8.4.31",
+    "postcss": "^8.5.15",
     "sass": "~1.32.13",
-    "susy": "^2.2.12"
+    "susy": "^2.2.14"
   },
   "scripts": {
     "test": "test"

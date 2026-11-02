@@ -45,9 +45,16 @@ function set_option($name, $value)
     $sql = "REPLACE INTO {$db->Option} (name, value) VALUES (?, ?)";
     $db->query($sql, [$name, $value]);
 
-    // Update the options cache.
     $bootstrap = Zend_Registry::get('bootstrap');
     $options = $bootstrap->getResource('Options');
+
+    if (!isset($options[$name])) {
+        fire_plugin_hook('insert_option', ['name' => $name, 'value' => $value]);
+    } elseif ($options[$name] !== $value) {
+        fire_plugin_hook('update_option', ['name' => $name, 'value' => $value]);
+    }
+
+    // Update the options cache.
     $options[$name] = $value;
     $bootstrap->getContainer()->options = $options;
 }
@@ -71,6 +78,8 @@ function delete_option($name)
         unset($options[$name]);
     }
     $bootstrap->getContainer()->options = $options;
+
+    fire_plugin_hook('delete_option', ['name' => $name]);
 }
 
 /**
@@ -1167,9 +1176,9 @@ function head_js($includeDefaults = true)
                 ->prependFile(src('vendor/jquery', $dir, 'js'));
         } else {
             $headScript->prependScript('window.jQuery.ui || document.write(' . js_escape(js_tag('vendor/jquery-ui')) . ')')
-                ->prependFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js')
-                ->prependScript('window.jQuery || document.write(' . js_escape(js_tag('vendor/jquery')) . ')')
-                ->prependFile('//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js');
+                ->prependFile('https://code.jquery.com/ui/1.14.1/jquery-ui.min.js')
+                ->prependScript('window.jQuery || document.write(' . js_escape(js_tag('vendor/jquery')) . '); window.jQuery.uiBackCompat = true')
+                ->prependFile('https://code.jquery.com/jquery-3.7.1.min.js');
         }
     }
     return $headScript;
@@ -2008,12 +2017,12 @@ function browse_sort_links($links, $wrapperTags = [])
             }
             $url = html_escape(url([], null, $urlParams));
             if ($sortlistWrappers['link_tag'] !== '') {
-                $sortlist .= "<{$sortlistWrappers['link_tag']} $class $linkAttr><a href=\"$url\" title=\"$sortingLabel\">$label <span role=\"presentation\" class=\"sort-icon\"></span></a></{$sortlistWrappers['link_tag']}>";
+                $sortlist .= "<{$sortlistWrappers['link_tag']} $class $linkAttr><a href=\"$url\" title=\"$sortingLabel\">$label <span class=\"sort-icon\"></span></a></{$sortlistWrappers['link_tag']}>";
             } else {
-                $sortlist .= "<a href=\"$url\" title=\"$sortingLabel\" $class $linkAttr>$label <span aria-hidden=\"true\" class=\"sort-icon\"></span></a>";
+                $sortlist .= "<a href=\"$url\" title=\"$sortingLabel\" $class $linkAttr>$label <span class=\"sort-icon\"></span></a>";
             }
         } else {
-            $sortlist .= "<{$sortlistWrappers['link_tag']} title=\"$sortingLabel\">$label <span aria-hidden=\"true\" class=\"sort-icon\"></span></{$sortlistWrappers['link_tag']}>";
+            $sortlist .= "<{$sortlistWrappers['link_tag']}>$label</{$sortlistWrappers['link_tag']}>";
         }
     }
     if (!empty($sortlistWrappers['list_tag'])) {
@@ -3333,7 +3342,7 @@ function url($options = [], $route = null, $queryParams = [],
  * directly because a view may not be registered.
  *
  * @package Omeka\Function\View\Navigation
- * @uses Zend_View_Helper_ServerUrl::serverUrl()
+ * @uses Omeka_View_Helper_ServerUrl::serverUrl()
  * @uses Omeka_View_Helper_Url::url()
  * @param mixed $options If a string is passed it is treated as an
  *  Omeka-relative link. So, passing 'items' would create a link to the items
@@ -3348,7 +3357,7 @@ function url($options = [], $route = null, $queryParams = [],
 function absolute_url($options = [], $route = null, $queryParams = [],
     $reset = false, $encode = true
 ) {
-    $serverUrlHelper = new Zend_View_Helper_ServerUrl;
+    $serverUrlHelper = new Omeka_View_Helper_ServerUrl;
     $urlHelper = new Omeka_View_Helper_Url;
     return $serverUrlHelper->serverUrl()
          . $urlHelper->url($options, $route, $queryParams, $reset, $encode);
