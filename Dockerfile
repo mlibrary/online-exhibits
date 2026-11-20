@@ -11,10 +11,11 @@ RUN apt-get update \
  && chown www-data:www-data /var/cache/apache2/mod_auth_openidc/oidc-sessions \
  && docker-php-ext-install pdo_mysql mysqli
 
-COPY auth_openidc.conf /etc/apache2/mods-enabled/auth_openidc.conf
-
 FROM base AS development
 
 FROM base AS production
 
-COPY . /var/www/html/online-exhibits
+COPY auth_openidc.conf /etc/apache2/mods-enabled/auth_openidc.conf
+COPY root/.htaccess /var/www/html/.htaccess
+COPY root/login.php /var/www/html/login.php
+COPY --exclude=root --exclude=auth_openidc.conf . /var/www/html/online-exhibits
