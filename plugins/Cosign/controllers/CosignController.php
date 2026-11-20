@@ -8,6 +8,19 @@ require_once 'Zend/Application.php';
 
 class Cosign_CosignController extends Omeka_Controller_AbstractActionController
 {
+  public function loginAction()
+  {
+      $redirectUri = $this->getRequest()->getUserParam('redirect_uri');
+      if (!$redirectUri) {
+          throw new Omeka_Controller_Exception_404;
+      }
+
+      $this->_helper->redirector->gotoUrlAndExit(
+          $redirectUri,
+          array('prependBase' => false)
+      );
+  }
+
   public function logoutAction()
   {
       Zend_Session::destroy();
