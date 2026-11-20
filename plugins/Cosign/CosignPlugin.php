@@ -116,7 +116,7 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
     private function redirectedURL()
     {
         $rootPath = parse_url(WEB_ROOT, PHP_URL_PATH);
-        $destination = rawurlencode(rtrim($rootPath ? $rootPath : '', '/') . '/admin');
+        $destination = rtrim($rootPath ? $rootPath : '', '/') . '/admin';
 
         return '/login?dest=' . $destination;
     }
