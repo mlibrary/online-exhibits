@@ -43,14 +43,12 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function filterAdminWhitelist($list)
     {
-        array_push(
-            $list,
-            [
-                'module' => 'admin',
-                'controller' => 'redirector',
-                'action' => 'index',
-            ]
-        );
+        $list[] = [
+            'module' => 'cosign',
+            'controller' => 'Cosign',
+            'action' => 'login',
+        ];
+
         return $list;
     }
 
@@ -96,9 +94,9 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
             new Zend_Controller_Router_Route(
                 'users/login',
                 array(
-                    'module'     => 'admin',
-                    'controller' => 'redirector',
-                    'action'     => 'index',
+                    'module'     => 'cosign',
+                    'controller' => 'Cosign',
+                    'action'     => 'login',
                     'redirect_uri' => $this->redirectedURL(),
                 )
             )
@@ -117,8 +115,10 @@ class CosignPlugin extends Omeka_Plugin_AbstractPlugin
 
     private function redirectedURL()
     {
-        return (isset($_SERVER['HTTPS']) ? 'https' : 'http') .
-           "://{$_SERVER['HTTP_HOST']}/login?dest={$GLOBALS['rootPath']}/admin";
+        $rootPath = parse_url(WEB_ROOT, PHP_URL_PATH);
+        $destination = rawurlencode(rtrim($rootPath ? $rootPath : '', '/') . '/admin');
+
+        return '/login?dest=' . $destination;
     }
 }
 
